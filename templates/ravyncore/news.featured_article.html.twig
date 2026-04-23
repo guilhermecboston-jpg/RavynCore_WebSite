@@ -1,0 +1,37 @@
+<div class="TableContainer" style="margin-bottom: 12px;">
+	<table class="Table3" cellpadding="0" cellspacing="0" style="width:100%;">
+		<tbody>
+		<tr>
+			<td>
+				<div class="InnerTableContainer">
+					<div class="TableContentContainer">
+						<table class="TableContent" width="100%">
+							<tbody>
+							<tr class="LabelH"><td><strong>Featured Article</strong></td></tr>
+							<tr class="Odd">
+								<td>
+									{% if article.read_more is not empty %}
+										<a href="{{ article.read_more }}"><strong>{{ article.title|raw }}</strong></a>
+									{% else %}
+										<strong>{{ article.title|raw }}</strong>
+									{% endif %}
+									{% if article.image is not empty %}
+										<div style="margin-top: 10px;">
+											<img src="{{ article.image }}" alt="" style="max-width: 100%; border-radius: 8px; border: 1px solid #445178;">
+										</div>
+									{% endif %}
+									<div style="margin-top: 10px;">{{ article.text|raw }}</div>
+									{% if article.read_more is not empty %}
+										<div style="margin-top: 10px; text-align: right;"><a href="{{ article.read_more }}">Read more</a></div>
+									{% endif %}
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>

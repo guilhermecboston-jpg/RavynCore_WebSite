@@ -1,0 +1,44 @@
+<h2>Lost Account Recovery</h2>
+<p>Use this form to recover account access with character name or email.</p>
+
+<div class="TableContainer">
+	<table class="Table3" cellpadding="0" cellspacing="0">
+		<tbody>
+		<tr>
+			<td>
+				<div class="InnerTableContainer">
+					<div class="TableContentContainer">
+						<form action="?subtopic=lostaccount&amp;action=step1" method="post">
+							<input type="hidden" name="character" value="">
+							<table class="TableContent" width="100%">
+								<tbody>
+								<tr class="LabelH"><td colspan="2">Recovery Data</td></tr>
+								<tr>
+									<td class="LabelV150">Character Name</td>
+									<td><input type="text" name="nick" maxlength="40" autofocus /></td>
+								</tr>
+								<tr>
+									<td class="LabelV150">Email Address</td>
+									<td><input type="text" name="email_rcv" maxlength="80" /></td>
+								</tr>
+								<tr>
+									<td class="LabelV150">Action</td>
+									<td>
+										<div><input type="radio" name="action_type" id="action_type_email" value="email"> <label for="action_type_email">Send new password to email</label></div>
+										<div><input type="radio" name="action_type" id="action_type_key" value="reckey"> <label for="action_type_key">I have recovery key</label></div>
+										<div><input type="radio" name="action_type" id="action_type_no_char" value="no_char"> <label for="action_type_no_char">Recover account without character</label></div>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+							<div style="text-align:center; margin-top: 14px;">
+								<button type="submit" class="rc-btn rc-btn-highlight">Submit Recovery</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>

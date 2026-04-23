@@ -1,0 +1,27 @@
+{% if tickers|length > 0 %}
+<div class="TableContainer" style="margin-bottom: 12px;">
+	<table class="Table3" cellpadding="0" cellspacing="0" style="width:100%;">
+		<tbody>
+		<tr>
+			<td>
+				<div class="InnerTableContainer">
+					<div class="TableContentContainer">
+						<table class="TableContent" width="100%">
+							<tbody>
+							<tr class="LabelH"><td colspan="2"><strong>Latest News</strong></td></tr>
+							{% for ticker in tickers %}
+								<tr class="{% if loop.index is even %}Even{% else %}Odd{% endif %}">
+									<td style="width: 110px;"><small>{{ ticker.date|date("d M Y") }}</small></td>
+									<td>{{ ticker.body|raw }}</td>
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+{% endif %}
