@@ -43,15 +43,12 @@
                 var currentUrl = new URL(window.location.href);
                 var sameDocument = targetUrl.origin === currentUrl.origin &&
                     targetUrl.pathname === currentUrl.pathname &&
-                    targetUrl.search === currentUrl.search;
+                    targetUrl.search === currentUrl.search &&
+                    targetUrl.hash === currentUrl.hash;
 
-                event.preventDefault();
-                mainGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                if (!sameDocument) {
-                    setTimeout(function () {
-                        window.location.href = targetUrl.href;
-                    }, 240);
+                if (sameDocument) {
+                    event.preventDefault();
+                    mainGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
         });

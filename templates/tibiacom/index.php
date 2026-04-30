@@ -173,7 +173,7 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
                 <img class="rc-logo-image header-logo" src="<?= $logoPath; ?>" alt="RavynCore">
                 <div class="rc-logo-text">
                     <?php if ($hasBrandSlogan): ?>
-                        <img class="rc-logo-wordmark" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
+                        <img class="rc-logo-wordmark header-slogan" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
                     <?php else: ?>
                         <strong class="header-title">RavynCore</strong>
                     <?php endif; ?>
@@ -234,13 +234,17 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
         <div class="rc-hero-ice"></div>
         <div class="rc-hero-content hero-ravyncore-content">
             <?php if ($hasBrandSlogan): ?>
-                <img class="rc-hero-wordmark hero-logo-text" src="<?= $brandSloganPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
-                <img class="rc-hero-emblem hero-logo-round" src="<?= $logoPath; ?>" alt="RavynCore Emblem">
+                <img class="rc-hero-wordmark hero-logo-text hero-main-slogan" src="<?= $brandSloganPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
+                <img class="rc-hero-emblem hero-logo-round hero-main-emblem" src="<?= $logoPath; ?>" alt="RavynCore Emblem">
             <?php else: ?>
                 <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
             <?php endif; ?>
-            <p class="rc-hero-tagline hero-text">DOMINE, <span>CONQUISTE</span>, SEJA LENDARIO</p>
-            <p class="rc-hero-kicker hero-subtext">THE TIBIA EXPERIENCE</p>
+            <h1 class="rc-hero-tagline hero-title">
+                <span class="orn orn-left">&rarr;</span>
+                DOMINE, <span class="under">CONQUISTE, SEJA LENDARIO</span>
+                <span class="orn orn-right">&larr;</span>
+            </h1>
+            <p class="rc-hero-kicker hero-subtitle">THE ULTIMATE TIBIA EXPERIENCE</p>
 
             <div class="rc-hero-ctas">
                 <a class="rc-btn rc-btn-play" href="<?= $downloadUrl; ?>">Play Now</a>

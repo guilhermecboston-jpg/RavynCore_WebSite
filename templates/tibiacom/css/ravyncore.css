@@ -73,7 +73,7 @@ a:hover {
 }
 
 .rc-site {
-    width: min(1800px, 100%);
+    width: 100%;
     margin: 0 auto 30px;
     position: relative;
     z-index: 1;
@@ -90,25 +90,30 @@ a:hover {
 
 .rc-header {
     margin-bottom: 0;
-    position: relative;
-    z-index: 20;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 150px;
+    z-index: 30;
     overflow: hidden;
-    border: 1px solid rgba(142, 168, 220, 0.26);
+    border: 1px solid rgba(120, 140, 180, 0.22);
     border-radius: 16px;
-    background: rgba(10, 15, 30, 0.38);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    background: rgba(5, 9, 18, 0.58);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
 .rc-header-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
-    padding: 16px 22px;
-    border-bottom: 1px solid rgba(172, 190, 228, 0.16);
-    background: rgba(10, 15, 30, 0.2);
+    gap: 18px;
+    min-height: 108px;
+    padding: 14px 24px;
+    border-bottom: 1px solid rgba(120, 140, 180, 0.22);
+    background: rgba(5, 9, 18, 0.22);
 }
 
 .rc-logo-link {
@@ -120,10 +125,10 @@ a:hover {
 
 .rc-logo-image,
 .header-logo {
-    width: 76px;
-    height: 76px;
+    width: 105px;
+    height: 105px;
     object-fit: contain;
-    filter: drop-shadow(0 0 14px rgba(240, 174, 80, 0.35));
+    filter: drop-shadow(0 0 16px rgba(240, 174, 80, 0.32));
 }
 
 .rc-logo-text {
@@ -147,32 +152,55 @@ a:hover {
 
 .rc-logo-text span,
 .header-subtitle {
-    color: #aaa;
-    font-size: 14px;
-    letter-spacing: 2.6px;
+    color: #e6dcc8;
+    font-size: 22px;
+    letter-spacing: 3px;
     text-transform: uppercase;
+    font-family: 'Cinzel', 'Georgia', serif;
+    line-height: 1;
 }
 
 .rc-logo-wordmark {
-    width: min(430px, 62vw);
+    width: 260px;
     max-width: 100%;
-    height: 64px;
+    height: 62px;
     object-fit: contain;
     object-position: left center;
     display: block;
-    filter: drop-shadow(0 0 18px rgba(122, 85, 186, 0.26));
+    filter: drop-shadow(0 0 18px rgba(122, 85, 186, 0.34));
 }
 
 .rc-header-actions {
     display: flex;
     gap: 10px;
+    margin-left: auto;
+}
+
+.rc-header-actions .rc-btn {
+    height: 44px;
+    padding: 0 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.rc-header-actions .rc-btn-subtle {
+    border-color: rgba(138, 160, 202, 0.62);
+    background: rgba(18, 30, 52, 0.68);
+}
+
+.rc-header-actions .rc-btn-primary {
+    border-color: rgba(229, 176, 90, 0.7);
+    background: linear-gradient(90deg, rgba(160, 66, 34, 0.92), rgba(114, 73, 176, 0.92));
 }
 
 .rc-nav-wrap {
     display: flex;
     align-items: center;
-    padding: 0 16px;
-    background: rgba(5, 9, 18, 0.2);
+    height: 42px;
+    padding: 0 18px;
+    background: rgba(0, 0, 0, 0.28);
+    border-top: 1px solid rgba(120, 140, 180, 0.18);
 }
 
 .rc-nav-toggle {
@@ -197,9 +225,10 @@ a:hover {
     padding: 0;
     list-style: none;
     display: flex;
+    height: 42px;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 0;
 }
 
 .rc-nav-item {
@@ -209,21 +238,22 @@ a:hover {
 .rc-nav-item > a {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    color: #d7e2fd;
+    justify-content: center;
+    padding: 0 28px;
+    height: 42px;
+    color: #e4e9f7;
     border-radius: 10px;
     border: 1px solid transparent;
-    font-weight: 600;
-    letter-spacing: 0.03em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    font-size: 0.93rem;
+    font-size: 14px;
 }
 
 .rc-nav-item > a:hover {
-    border-color: rgba(224, 171, 77, 0.42);
-    background: linear-gradient(90deg, rgba(42, 31, 20, 0.7), rgba(26, 24, 46, 0.7));
-    color: #fff;
+    color: #d7a85c;
+    border-color: transparent;
+    background: rgba(0, 0, 0, 0.16);
 }
 
 .rc-nav-dropdown {
@@ -268,21 +298,19 @@ a:hover {
 
 .rc-hero,
 .hero-ravyncore {
-    margin-bottom: 12px;
-    margin-top: -150px;
-    padding: 198px 0 108px;
+    margin-bottom: 24px;
+    margin-top: 0;
+    padding: 150px 0 122px;
     position: relative;
     overflow: hidden;
-    min-height: clamp(700px, 78vh, 790px);
+    min-height: 900px;
+    width: 100%;
     border: none;
     border-radius: 0;
     box-shadow: none;
     background-color: transparent !important;
     background:
         var(--rc-bg-image, url('../images/brand/ravyncore-background.png')) center top / cover no-repeat !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .hero-ravyncore::before,
@@ -297,15 +325,15 @@ a:hover {
     z-index: 1;
     background:
         linear-gradient(90deg,
-            rgba(145, 45, 8, 0.3) 0%,
-            rgba(5, 8, 18, 0.12) 46%,
-            rgba(14, 68, 145, 0.32) 100%),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.45));
+            rgba(90, 25, 0, 0.16) 0%,
+            rgba(0, 0, 0, 0.08) 45%,
+            rgba(0, 55, 120, 0.18) 100%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.18) 45%, rgba(0, 0, 0, 0.48) 100%);
 }
 
 .hero-ravyncore::after {
     z-index: 2;
-    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.44));
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.38));
 }
 
 .rc-hero-fire,
@@ -317,44 +345,53 @@ a:hover {
 .hero-ravyncore-content {
     position: relative;
     z-index: 3;
-    width: min(1400px, 100%);
+    width: min(1600px, 100%);
     margin: 0 auto;
-    min-height: clamp(700px, 78vh, 790px);
+    min-height: 690px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
     gap: 6px;
-    padding-top: 24px;
+    padding-top: 0;
 }
 
 .rc-hero-kicker {
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #cbb98a;
-    margin: 0;
     font-family: 'Cinzel', 'Georgia', serif;
-    font-size: 14px;
+    font-size: 16px;
+    letter-spacing: 2.8px;
+    color: #d8bd7a;
+    text-shadow: 0 2px 8px #000;
+    margin: 0;
     font-weight: 700;
-    text-shadow: 0 2px 10px rgba(2, 5, 11, 0.95), 0 0 20px rgba(12, 18, 30, 0.75);
+    text-transform: uppercase;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 0;
 }
 
 .rc-hero-kicker::before,
 .rc-hero-kicker::after {
-    content: "\2014";
-    color: #c8a96a;
-    text-shadow: 0 0 10px rgba(15, 11, 4, 0.7);
+    color: #c59a4e;
+    text-shadow: 0 0 8px rgba(15, 11, 4, 0.8);
 }
 
-.hero-subtext {
-    font-size: 14px;
-    letter-spacing: 3px;
-    color: #cbb98a;
+.rc-hero-kicker::before {
+    content: "\2192";
+    margin-right: 14px;
+}
+
+.rc-hero-kicker::after {
+    content: "\2190";
+    margin-left: 14px;
+}
+
+.hero-subtitle {
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 16px;
+    letter-spacing: 2.8px;
+    color: #d8bd7a;
+    text-shadow: 0 2px 8px #000;
 }
 
 .rc-hero-logo {
@@ -365,27 +402,30 @@ a:hover {
     filter: drop-shadow(0 0 22px rgba(84, 110, 186, 0.25));
 }
 
+.hero-main-slogan,
 .rc-hero-wordmark,
 .hero-logo-text {
-    width: 860px;
-    max-width: 95vw;
-    max-height: 340px;
+    width: 780px;
+    max-width: 82vw;
+    max-height: 360px;
     object-fit: contain;
-    margin: 88px auto 0;
-    transform: translateY(26px);
+    margin-top: 70px;
+    margin-bottom: -8px;
     display: block;
-    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.9));
+    filter: drop-shadow(0 0 28px rgba(0, 0, 0, 0.95));
 }
 
+.hero-main-emblem,
 .rc-hero-emblem,
 .hero-logo-round {
-    width: 320px;
-    max-width: 55vw;
+    width: 300px;
+    max-width: 40vw;
     max-height: 320px;
     object-fit: contain;
-    margin: -8px auto 4px;
+    margin-top: 0;
+    margin-bottom: 12px;
     display: block;
-    filter: drop-shadow(0 0 30px rgba(0, 0, 0, 1));
+    filter: drop-shadow(0 0 32px rgba(0, 0, 0, 1));
 }
 
 .rc-hero h1 {
@@ -397,38 +437,27 @@ a:hover {
     text-shadow: 0 2px 16px rgba(2, 5, 11, 0.95);
 }
 
-.rc-hero-tagline,
-.hero-text {
-    margin: 0;
-    color: #e8dcc0;
+.hero-title,
+.rc-hero-tagline {
+    margin-top: 8px;
+    margin-bottom: 6px;
     font-family: 'Cinzel', 'Georgia', serif;
-    font-size: clamp(1.65rem, 2.2vw, 2.2rem);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-shadow: 0 2px 14px rgba(2, 5, 11, 0.95), 0 0 28px rgba(8, 11, 18, 0.7);
+    font-size: 31px;
+    letter-spacing: 1.5px;
+    color: #eee0c5;
+    text-shadow: 0 3px 10px #000;
     line-height: 1.1;
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
+    font-weight: 700;
 }
 
-.hero-text::before,
-.hero-text::after {
-    color: #c8a96a;
-    text-shadow: 0 0 10px rgba(15, 11, 4, 0.7);
+.hero-title .orn {
+    color: #c59a4e;
+    font-size: 22px;
+    margin: 0 14px;
 }
 
-.hero-text::before {
-    content: "\2190";
-}
-
-.hero-text::after {
-    content: "\2192";
-}
-
-.hero-text span {
-    border-bottom: 1px solid rgba(200, 169, 106, 0.5);
+.hero-title .under {
+    border-bottom: 1px solid rgba(197, 154, 78, 0.55);
     padding-bottom: 4px;
 }
 
@@ -436,8 +465,18 @@ a:hover {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 8px;
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.rc-hero-ctas .rc-btn {
+    height: 48px;
+    padding: 0 34px;
+    border-radius: 8px;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .rc-hero-stats {
@@ -445,7 +484,7 @@ a:hover {
     z-index: 3;
     left: 22px;
     right: 22px;
-    bottom: 16px;
+    bottom: 8px;
     margin-top: 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1135,10 +1174,48 @@ body.rc-page option {
     }
 }
 
+@media (max-width: 1200px) {
+    .rc-hero,
+    .hero-ravyncore {
+        min-height: 720px;
+        padding-top: 150px;
+    }
+
+    .rc-hero-content,
+    .hero-ravyncore-content {
+        min-height: 620px;
+    }
+
+    .hero-main-slogan,
+    .rc-hero-wordmark,
+    .hero-logo-text {
+        width: 560px;
+        max-width: 86vw;
+        margin-top: 54px;
+    }
+
+    .hero-main-emblem,
+    .rc-hero-emblem,
+    .hero-logo-round {
+        width: 230px;
+        max-width: 46vw;
+    }
+
+    .hero-title,
+    .rc-hero-tagline {
+        font-size: 26px;
+    }
+}
+
 @media (max-width: 1140px) {
     .rc-site {
         width: 100%;
         margin: 0 auto 22px;
+    }
+
+    .rc-header {
+        position: relative;
+        min-height: auto;
     }
 
     .rc-header-top {
@@ -1178,10 +1255,14 @@ body.rc-page option {
     .rc-nav ul {
         flex-direction: column;
         align-items: stretch;
+        height: auto;
     }
 
     .rc-nav-item > a {
         width: 100%;
+        justify-content: flex-start;
+        padding: 11px 16px;
+        height: auto;
     }
 
     .rc-nav-dropdown {
@@ -1198,13 +1279,13 @@ body.rc-page option {
 
 @media (max-width: 760px) {
     .rc-logo-image {
-        width: 56px;
-        height: 56px;
+        width: 74px;
+        height: 74px;
     }
 
     .rc-logo-wordmark {
-        width: min(255px, 64vw);
-        height: 40px;
+        width: min(240px, 62vw);
+        height: 48px;
     }
 
     .rc-logo-text strong {
@@ -1212,8 +1293,8 @@ body.rc-page option {
     }
 
     .rc-logo-text span {
-        font-size: 11px;
-        letter-spacing: 1.8px;
+        font-size: 14px;
+        letter-spacing: 2px;
     }
 
     .rc-header-actions {
@@ -1226,43 +1307,46 @@ body.rc-page option {
 
     .rc-hero,
     .hero-ravyncore {
-        margin-top: -96px;
-        padding: 132px 10px 14px;
-        min-height: clamp(520px, 66vh, 620px);
+        padding: 24px 10px 14px;
+        min-height: 620px;
         background-position: center top !important;
     }
 
     .rc-hero-content,
     .hero-ravyncore-content {
-        min-height: clamp(520px, 66vh, 620px);
+        min-height: 520px;
     }
 
+    .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        width: min(560px, 94vw);
+        width: 88vw;
         max-height: 150px;
-        margin-top: 34px;
-        transform: translateY(12px);
+        margin-top: 26px;
     }
 
+    .hero-main-emblem,
     .rc-hero-emblem,
     .hero-logo-round {
-        width: min(220px, 56vw);
-        max-height: 220px;
+        width: 210px;
+        max-height: 210px;
         margin-top: 0;
     }
 
-    .rc-hero-tagline,
-    .hero-text {
-        font-size: clamp(1rem, 4.9vw, 1.5rem);
-        letter-spacing: 1.2px;
-        gap: 8px;
+    .hero-title,
+    .rc-hero-tagline {
+        font-size: 22px;
     }
 
-    .rc-hero-kicker,
-    .hero-subtext {
+    .hero-subtitle,
+    .rc-hero-kicker {
         font-size: 11px;
         letter-spacing: 2px;
+    }
+
+    .hero-title .orn {
+        font-size: 17px;
+        margin: 0 8px;
     }
 
     .rc-footer-bottom {
