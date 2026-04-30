@@ -56,7 +56,8 @@ $pageTitle = !empty($title) ? $title : ucfirst((string)PAGE);
 
 $brandDir = $template_path . '/images/brand';
 $brandLogoPreferred = $brandDir . '/ravyncore-logo.png';
-$brandBackgroundPreferred = $brandDir . '/ravyncore-background.jpg';
+$brandBackgroundPreferred = $brandDir . '/ravyncore-background.png';
+$brandBackgroundLegacy = $brandDir . '/ravyncore-background.jpg';
 $brandSloganPreferred = $brandDir . '/sloganRC.png';
 
 $logoFile = $config['logo_image'] ?? 'tibia-logo-artwork-top.gif';
@@ -69,18 +70,24 @@ if (!file_exists(BASE . $logoPath)) {
     $logoPath = $template_path . '/images/header/tibia-logo-artwork-top.gif';
 }
 
+$hasBrandBackground = file_exists(BASE . $brandBackgroundPreferred) || file_exists(BASE . $brandBackgroundLegacy);
+
 $backgroundFile = $template_path . '/images/header/bgs/12.jpg';
 if (file_exists(BASE . $brandBackgroundPreferred)) {
     $backgroundFile = $brandBackgroundPreferred;
+} elseif (file_exists(BASE . $brandBackgroundLegacy)) {
+    $backgroundFile = $brandBackgroundLegacy;
 }
 
 $configuredBackground = $config['background_image'] ?? '';
-if (!empty($configuredBackground)) {
+if (!$hasBrandBackground && !empty($configuredBackground)) {
     $candidate = $template_path . '/images/header/' . $configuredBackground;
     if (file_exists(BASE . $candidate)) {
         $backgroundFile = $candidate;
     }
 }
+
+$backgroundUrl = BASE_URL . ltrim($backgroundFile, '/');
 
 $hasBrandSlogan = file_exists(BASE . $brandSloganPreferred);
 
@@ -155,7 +162,7 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
     <script>var JS_DIR_IMAGES = "<?= $template_path; ?>/images/";</script>
     <?= template_place_holder('head_end'); ?>
 </head>
-<body class="rc-page rc-page-<?= escapeHtml((string)PAGE); ?>" style="--rc-bg-image: url('<?= $backgroundFile; ?>')">
+<body class="rc-page rc-page-<?= escapeHtml((string)PAGE); ?>" style="--rc-bg-image: url('<?= $backgroundUrl; ?>')">
 <?= template_place_holder('body_start'); ?>
 
 <div class="rc-atmosphere"></div>
@@ -222,13 +229,13 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
         </div>
     </header>
 
-    <section class="rc-hero">
+    <section class="rc-hero hero-ravyncore">
         <div class="rc-hero-fire"></div>
         <div class="rc-hero-ice"></div>
-        <div class="rc-hero-content">
+        <div class="rc-hero-content hero-ravyncore-content">
             <?php if ($hasBrandSlogan): ?>
-                <img class="rc-hero-wordmark" src="<?= $brandSloganPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
-                <img class="rc-hero-emblem" src="<?= $logoPath; ?>" alt="RavynCore Emblem">
+                <img class="rc-hero-wordmark hero-logo-text" src="<?= $brandSloganPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
+                <img class="rc-hero-emblem hero-logo-round" src="<?= $logoPath; ?>" alt="RavynCore Emblem">
             <?php else: ?>
                 <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
             <?php endif; ?>

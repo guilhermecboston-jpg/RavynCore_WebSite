@@ -89,7 +89,7 @@ a:hover {
 }
 
 .rc-header {
-    margin-bottom: 18px;
+    margin-bottom: 0;
     overflow: hidden;
 }
 
@@ -250,53 +250,66 @@ a:hover {
     pointer-events: auto;
 }
 
-.rc-hero {
+.rc-hero,
+.hero-ravyncore {
     margin-bottom: 12px;
-    padding: 36px 24px 118px;
+    padding: 0 0 126px;
     position: relative;
     overflow: hidden;
-    min-height: clamp(620px, 72vh, 800px);
-    border: 1px solid rgba(142, 168, 220, 0.4);
-    border-radius: 16px;
-    box-shadow: var(--rc-shadow);
+    min-height: clamp(720px, 78vh, 820px);
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent !important;
     background:
-        var(--rc-bg-image, url('../images/brand/ravyncore-background.jpg')) center center / cover no-repeat !important;
+        var(--rc-bg-image, url('../images/brand/ravyncore-background.png')) center top / cover no-repeat !important;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.hero-ravyncore::before,
+.hero-ravyncore::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.hero-ravyncore::before {
+    z-index: 1;
+    background:
+        linear-gradient(90deg,
+            rgba(120, 35, 0, 0.28) 0%,
+            rgba(0, 0, 0, 0.12) 45%,
+            rgba(0, 60, 130, 0.3) 100%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.58));
+}
+
+.hero-ravyncore::after {
+    z-index: 2;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
 }
 
 .rc-hero-fire,
 .rc-hero-ice {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
+    display: none;
 }
 
-.rc-hero-fire {
-    background:
-        linear-gradient(90deg,
-            rgba(183, 72, 28, 0.52) 0%,
-            rgba(16, 18, 26, 0.62) 48%,
-            rgba(35, 93, 195, 0.56) 100%);
-}
-
-.rc-hero-ice {
-    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
-}
-
-.rc-hero-content {
-    text-align: center;
+.rc-hero-content,
+.hero-ravyncore-content {
     position: relative;
-    z-index: 2;
-    width: min(960px, 100%);
+    z-index: 3;
+    width: min(1200px, 100%);
     margin: 0 auto;
+    min-height: clamp(720px, 78vh, 820px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    text-align: center;
+    gap: 10px;
+    padding-top: 80px;
 }
 
 .rc-hero-kicker {
@@ -341,20 +354,24 @@ a:hover {
     filter: drop-shadow(0 0 22px rgba(84, 110, 186, 0.25));
 }
 
-.rc-hero-wordmark {
-    width: min(760px, 100%);
-    max-height: 240px;
+.rc-hero-wordmark,
+.hero-logo-text {
+    width: 520px;
+    max-width: 80vw;
+    max-height: 260px;
     object-fit: contain;
-    margin: 0 auto 2px;
+    margin: 120px auto 0;
     display: block;
     filter: drop-shadow(0 0 30px rgba(125, 88, 195, 0.38));
 }
 
-.rc-hero-emblem {
-    width: min(250px, 42vw);
-    max-height: 250px;
+.rc-hero-emblem,
+.hero-logo-round {
+    width: 260px;
+    max-width: 55vw;
+    max-height: 260px;
     object-fit: contain;
-    margin: 2px auto 6px;
+    margin: 18px auto 6px;
     display: block;
     filter: drop-shadow(0 0 26px rgba(214, 144, 58, 0.38));
 }
@@ -372,8 +389,8 @@ a:hover {
     margin: 2px 0 2px;
     color: #ebdcc1;
     font-family: 'Cinzel', 'Georgia', serif;
-    font-size: clamp(1.5rem, 2.65vw, 2.58rem);
-    letter-spacing: 0.04em;
+    font-size: clamp(1.75rem, 2.8vw, 2.9rem);
+    letter-spacing: 0.03em;
     text-transform: uppercase;
     text-shadow: 0 2px 12px rgba(2, 5, 11, 0.95), 0 0 24px rgba(8, 11, 18, 0.6);
     line-height: 1.1;
@@ -389,9 +406,9 @@ a:hover {
 
 .rc-hero-stats {
     position: absolute;
-    z-index: 2;
-    left: 24px;
-    right: 24px;
+    z-index: 3;
+    left: 22px;
+    right: 22px;
     bottom: 16px;
     margin-top: 0;
     display: grid;
@@ -1169,19 +1186,22 @@ body.rc-page option {
         flex: 1;
     }
 
-    .rc-hero {
-        padding: 22px 14px;
-        min-height: 620px;
+    .rc-hero,
+    .hero-ravyncore {
+        padding: 0 14px;
+        min-height: clamp(560px, 64vh, 650px);
+        background-position: center top !important;
     }
 
     .rc-hero-wordmark {
-        width: min(520px, 100%);
+        width: min(520px, 80vw);
         max-height: 140px;
+        margin-top: 88px;
     }
 
     .rc-hero-emblem {
-        width: min(150px, 46vw);
-        max-height: 150px;
+        width: min(220px, 55vw);
+        max-height: 220px;
     }
 
     .rc-hero-tagline {
