@@ -452,7 +452,7 @@ a:hover {
     max-width: 92vw;
     max-height: 480px;
     object-fit: contain;
-    margin-top: 130px;
+    margin-top: 90px;
     margin-bottom: -42px;
     transform: none;
     display: block;
@@ -466,7 +466,7 @@ a:hover {
     max-width: 44vw;
     max-height: 400px;
     object-fit: contain;
-    margin-top: 0;
+    margin-top: -90px;
     margin-bottom: 4px;
     display: block;
     filter: drop-shadow(0 0 32px rgba(0, 0, 0, 1));
@@ -1557,7 +1557,7 @@ body.rc-page option {
     .hero-logo-text {
         width: 940px;
         max-width: 90vw;
-        margin-top: 90px;
+        margin-top: 60px;
         margin-bottom: -34px;
         max-height: 360px;
     }
@@ -1567,6 +1567,7 @@ body.rc-page option {
     .hero-logo-round {
         width: 280px;
         max-height: 290px;
+        margin-top: -70px;
     }
 
     .rc-hero-ctas {
@@ -1605,7 +1606,7 @@ body.rc-page option {
     .hero-logo-text {
         width: 800px;
         max-width: 90vw;
-        margin-top: 56px;
+        margin-top: 36px;
         margin-bottom: -26px;
         max-height: 290px;
     }
@@ -1615,6 +1616,7 @@ body.rc-page option {
     .hero-logo-round {
         width: 240px;
         max-height: 240px;
+        margin-top: -55px;
     }
 
     .rc-hero-kicker,
