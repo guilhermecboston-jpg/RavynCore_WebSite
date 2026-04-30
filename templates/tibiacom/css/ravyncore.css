@@ -132,7 +132,7 @@ a:hover {
 .rc-logo-link {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 0;
     color: var(--rc-text);
 }
 
@@ -190,8 +190,12 @@ a:hover {
 
 .rc-header-actions {
     display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-end;
     gap: 10px;
     margin-left: auto;
+    max-width: 420px;
 }
 
 .rc-header-actions .rc-btn {
@@ -210,6 +214,36 @@ a:hover {
 .rc-header-actions .rc-btn-primary {
     border-color: rgba(229, 176, 90, 0.7);
     background: linear-gradient(90deg, rgba(160, 66, 34, 0.92), rgba(114, 73, 176, 0.92));
+}
+
+.rc-social-icons {
+    flex: 0 0 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: -2px;
+}
+
+.rc-social-icons a {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(154, 176, 224, 0.24);
+    border-radius: 999px;
+    color: #d7e5ff;
+    background: rgba(11, 18, 31, 0.34);
+    transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.rc-social-icons a:hover {
+    color: #f0c77f;
+    border-color: rgba(216, 154, 47, 0.58);
+    background: rgba(216, 154, 47, 0.12);
+    box-shadow: 0 0 14px rgba(216, 154, 47, 0.16);
+    transform: translateY(-1px);
 }
 
 .rc-nav-wrap,
@@ -250,18 +284,22 @@ a:hover {
     height: 42px;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0;
+    justify-content: space-between;
+    gap: 8px;
 }
 
 .rc-nav-item {
     position: relative;
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .rc-nav-item > a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0 28px;
+    width: 100%;
+    padding: 0 clamp(10px, 1.4vw, 28px);
     height: 42px;
     color: #e4e9f7;
     border-radius: 10px;
@@ -270,12 +308,14 @@ a:hover {
     letter-spacing: 0.5px;
     text-transform: uppercase;
     font-size: 14px;
+    transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 
 .rc-nav-item > a:hover {
-    color: #d7a85c;
-    border-color: transparent;
-    background: rgba(0, 0, 0, 0.16);
+    color: #f0c77f;
+    border-color: rgba(216, 154, 47, 0.34);
+    background: rgba(216, 154, 47, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(255, 223, 170, 0.04), 0 0 14px rgba(216, 154, 47, 0.12);
 }
 
 .rc-nav-dropdown {
@@ -588,6 +628,7 @@ a:hover {
     display: flex;
     flex-direction: column;
     gap: 14px;
+    min-width: 0;
 }
 
 .rc-sidebar {
@@ -598,6 +639,7 @@ a:hover {
 
 .rc-panel {
     padding: 14px;
+    min-width: 0;
 }
 
 .rc-panel h3 {
@@ -668,6 +710,7 @@ a:hover {
     background: rgba(24, 33, 52, 0.55);
     color: #dce7ff;
     font-weight: 600;
+    text-align: center;
 }
 
 .rc-links a:hover {
@@ -720,20 +763,32 @@ a:hover {
     border-radius: 10px;
     border: 1px solid rgba(152, 170, 215, 0.25);
     background: rgba(19, 27, 44, 0.58);
+    color: inherit;
+    transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.rc-rank-row:hover {
+    color: inherit;
+    border-color: rgba(216, 154, 47, 0.42);
+    background: linear-gradient(90deg, rgba(31, 44, 70, 0.82), rgba(38, 34, 67, 0.82));
+    box-shadow: 0 0 18px rgba(216, 154, 47, 0.1);
+    transform: translateY(-1px);
 }
 
 .rc-rank-position {
     color: #efb65a;
     font-weight: 700;
     text-align: center;
+    font-size: 1.08rem;
 }
 
 .rc-rank-outfit {
     width: 64px;
     height: 64px;
     object-fit: contain;
-    object-position: left center;
-    justify-self: start;
+    object-position: center center;
+    justify-self: center;
+    align-self: center;
     border-radius: 0;
     background: transparent;
     border: 0;
@@ -743,13 +798,14 @@ a:hover {
     min-width: 0;
 }
 
-.rc-rank-player a {
+.rc-rank-player strong {
     display: block;
     color: #f4f8ff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-weight: 700;
+    line-height: 1.1;
 }
 
 .rc-rank-player small {
@@ -837,14 +893,17 @@ a:hover {
 
 .rc-footer {
     margin-top: 16px;
-    padding: 14px;
+    padding: 18px 14px 14px;
     width: 100%;
+    background:
+        linear-gradient(90deg, rgba(145, 59, 28, 0.08), rgba(26, 35, 57, 0.94) 38%, rgba(35, 29, 62, 0.94) 100%),
+        linear-gradient(160deg, rgba(12, 18, 31, 0.96), rgba(7, 10, 18, 0.96));
 }
 
 .rc-footer-top {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 18px;
     flex-wrap: wrap;
     border-bottom: 1px solid rgba(165, 183, 220, 0.2);
@@ -854,13 +913,9 @@ a:hover {
 .rc-footer-brand {
     display: flex;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    gap: 0;
     color: var(--rc-text);
-}
-
-.rc-footer-logo {
-    width: 72px !important;
-    height: 72px !important;
 }
 
 .rc-footer-brand-text {
@@ -905,7 +960,7 @@ a:hover {
 }
 
 .rc-footer-links {
-    display: flex;
+    display: none;
     flex-wrap: wrap;
     gap: 8px;
 }
@@ -1383,6 +1438,10 @@ body.rc-page option {
         gap: 14px;
     }
 
+    .rc-header-actions {
+        max-width: none;
+    }
+
     .rc-main-grid {
         grid-template-columns: 1fr;
     }
@@ -1424,6 +1483,10 @@ body.rc-page option {
         justify-content: flex-start;
         padding: 11px 16px;
         height: auto;
+    }
+
+    .rc-nav-item {
+        flex: 1 1 100%;
     }
 
     .rc-nav-dropdown {
@@ -1476,6 +1539,10 @@ body.rc-page option {
 
     .rc-header-actions .rc-btn {
         flex: 1;
+    }
+
+    .rc-social-icons {
+        justify-content: center;
     }
 
     .rc-hero,
@@ -1644,13 +1711,13 @@ body.rc-page option {
 
 @media (min-width: 1900px) {
     .rc-site {
-        max-width: 1880px;
+        max-width: none;
     }
 }
 
 @media (min-width: 2400px) {
     .rc-site {
-        max-width: 2120px;
+        max-width: none;
     }
 }
 
@@ -1886,4 +1953,142 @@ body.rc-page-serverinfo .rc-rich-content .TableContent td {
     background: rgba(28, 44, 69, 0.92) !important;
     color: #dfebff !important;
     border-color: rgba(126, 151, 201, 0.3) !important;
+}
+
+/* Final RavynCore polish: forms, character view and high-zoom containment */
+.rc-panel-content,
+.rc-panel-body,
+.rc-rich-content {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.rc-rich-content {
+    overflow-x: auto;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .TableContainer {
+    margin: 8px 0 !important;
+    border: 1px solid rgba(154, 176, 224, 0.24) !important;
+    border-radius: 12px !important;
+    background: rgba(13, 20, 34, 0.72) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025) !important;
+    overflow: hidden;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .TableContainer .TableContainer {
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .TableContent {
+    border-color: rgba(154, 176, 224, 0.18) !important;
+}
+
+body.rc-page-accountmanagement .rc-rich-content td.LabelV,
+body.rc-page-accountmanagement .rc-rich-content td.LabelV175,
+body.rc-page-accountmanagement .rc-rich-content td.LabelV80 {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+body.rc-page-accountmanagement .rc-rich-content td.LabelV > span,
+body.rc-page-accountmanagement .rc-rich-content td.LabelV175 > span,
+body.rc-page-accountmanagement .rc-rich-content td.LabelV80 > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+body.rc-page-accountmanagement .rc-rich-content label a[href*="rules"] {
+    color: #f0c982 !important;
+    font-weight: 700;
+}
+
+body.rc-page-characters .rc-rich-content {
+    overflow-x: hidden;
+}
+
+body.rc-page-characters .rc-rich-content > br {
+    display: none;
+}
+
+body.rc-page-characters .rc-rich-content .TableContainer {
+    margin: 8px 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .InnerTableContainer,
+body.rc-page-characters .rc-rich-content .BoxContent,
+body.rc-page-characters .rc-rich-content .Message {
+    padding: 6px 8px !important;
+    margin: 4px 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .TableContent td,
+body.rc-page-characters .rc-rich-content .TableContent th {
+    padding: 6px 8px !important;
+    vertical-align: middle;
+}
+
+body.rc-page-characters .rc-rich-content table,
+body.rc-page-characters .rc-rich-content .TableContent,
+body.rc-page-characters .rc-rich-content .TableContentContainer {
+    max-width: 100%;
+}
+
+body.rc-page-characters .rc-rich-content .progress {
+    width: 100%;
+    max-width: 100%;
+    height: 12px;
+    overflow: hidden;
+    border-radius: 999px;
+    border: 1px solid rgba(166, 188, 229, 0.34);
+    background: rgba(9, 15, 28, 0.84);
+}
+
+body.rc-page-characters .rc-rich-content .progress-bar {
+    display: block;
+    height: 100%;
+    max-width: 100%;
+    border-radius: inherit;
+}
+
+body.rc-page-characters .rc-rich-content .bg-danger {
+    background: linear-gradient(90deg, #d73348, #f15b66) !important;
+}
+
+body.rc-page-characters .rc-rich-content .bg-default {
+    background: linear-gradient(90deg, #0978de, #22a2ff) !important;
+}
+
+body.rc-page-characters .rc-rich-content .bg-success {
+    background: linear-gradient(90deg, #49a65a, #87d76f) !important;
+}
+
+body.rc-page-characters .rc-rich-content table[style*="background: #292929"],
+body.rc-page-characters .rc-rich-content table[style*="background:#292929"] {
+    background: transparent !important;
+}
+
+body.rc-page-characters .rc-rich-content td[style*="border:1px solid #808080"],
+body.rc-page-characters .rc-rich-content td[style*="border: 1px solid #808080"] {
+    border: 1px solid rgba(154, 176, 224, 0.2) !important;
+    background: rgba(17, 26, 43, 0.74) !important;
+}
+
+body.rc-page-lostaccount .BigButtonText,
+body.rc-page-lostaccount input[type="submit"][value="Back"],
+body.rc-page-lostaccount input[type="button"][value="Back"] {
+    border: 1px solid rgba(159, 177, 222, 0.45) !important;
+    border-radius: 10px !important;
+    background: linear-gradient(90deg, rgba(30, 44, 72, 0.9), rgba(32, 29, 62, 0.9)) !important;
+    color: #deebff !important;
+    min-width: 130px;
+    padding: 9px 15px !important;
+    height: auto !important;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.03em;
 }

@@ -135,7 +135,6 @@ $quickLinks = [
     ['name' => 'Downloads', 'url' => $templateLinks['link_downloads'] ?? getLink('downloads')],
     ['name' => 'Highscores', 'url' => $templateLinks['link_highscores'] ?? getLink('highscores')],
     ['name' => 'Guilds', 'url' => $templateLinks['link_guilds'] ?? getLink('guilds')],
-    ['name' => 'Powergamers', 'url' => $templateLinks['link_powergamers'] ?? getLink('powergamers')],
     ['name' => 'Server Info', 'url' => $templateLinks['link_serverInfo'] ?? getLink('serverInfo')],
 ];
 
@@ -143,11 +142,20 @@ $accountManageUrl = $templateLinks['link_account_manage'] ?? getLink('account/ma
 $accountCreateUrl = $templateLinks['link_account_create'] ?? getLink('account/create');
 $accountLogoutUrl = $templateLinks['link_account_logout'] ?? getLink('account/logout');
 $downloadUrl = $templateLinks['link_downloads'] ?? getLink('downloads');
+$ticketsUrl = $templateLinks['link_team'] ?? getLink('team');
+$recordOnline = (int)($status['playersPeak'] ?? $status['playersRecord'] ?? $status['record'] ?? 0);
 $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
 $tiktokUrl = 'https://www.tiktok.com/@ravyncore_';
 $whatsappUrl = 'https://chat.whatsapp.com/D1D7BPj6I7l5tN2QzSSPmQ';
 $facebookUrl = 'https://www.facebook.com/profile.php?id=61560518895177';
 $instagramUrl = 'https://www.instagram.com/ravyncore_/';
+$socialLinks = [
+    ['name' => 'Discord', 'url' => $discordUrl, 'icon' => 'fab fa-discord'],
+    ['name' => 'WhatsApp', 'url' => $whatsappUrl, 'icon' => 'fab fa-whatsapp'],
+    ['name' => 'Instagram', 'url' => $instagramUrl, 'icon' => 'fab fa-instagram'],
+    ['name' => 'TikTok', 'url' => $tiktokUrl, 'icon' => 'fab fa-tiktok'],
+    ['name' => 'Facebook', 'url' => $facebookUrl, 'icon' => 'fab fa-facebook-f'],
+];
 ?>
 <!doctype html>
 <html lang="en">
@@ -176,7 +184,6 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
     <header class="rc-header">
         <div class="rc-header-top">
             <a class="rc-logo-link" href="<?= getLink('news'); ?>">
-                <img class="rc-logo-image header-logo" src="<?= $logoPath; ?>" alt="RavynCore">
                 <div class="rc-logo-text">
                     <?php if ($hasBrandSlogan): ?>
                         <img class="rc-logo-wordmark header-slogan" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
@@ -195,6 +202,15 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
                     <a class="rc-btn rc-btn-subtle" href="<?= $accountManageUrl; ?>">Login</a>
                     <a class="rc-btn rc-btn-primary" href="<?= $accountCreateUrl; ?>">Create Account</a>
                 <?php endif; ?>
+                <div class="rc-social-icons" aria-label="RavynCore social links">
+                    <?php foreach ($socialLinks as $social): ?>
+                        <?php if (!empty($social['url'])): ?>
+                            <a href="<?= $social['url']; ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= escapeHtml($social['name']); ?>" title="<?= escapeHtml($social['name']); ?>">
+                                <i class="<?= escapeHtml($social['icon']); ?>"></i>
+                            </a>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
 
@@ -205,10 +221,20 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
             <nav id="rcNav" class="rc-nav">
                 <ul>
                     <?php if (!empty($menus)): ?>
+                        <?php $ticketsRendered = false; ?>
                         <?php foreach ($menus as $categoryId => $items): ?>
                             <?php
                             $categoryName = $menuCategories[$categoryId]['name'] ?? 'Menu';
+                            $categoryKey = strtolower((string)($menuCategories[$categoryId]['id'] ?? $categoryName));
                             $firstItem = $items[0] ?? null;
+                            if ($categoryKey === 'community') {
+                                $ticketsRendered = true;
+                                echo '<li class="rc-nav-item"><a href="' . escapeHtml($ticketsUrl) . '">Tickets</a></li>';
+                                continue;
+                            }
+                            if ($categoryKey === 'forum') {
+                                continue;
+                            }
                             ?>
                             <li class="rc-nav-item">
                                 <a href="<?= $firstItem ? $firstItem['link_full'] : '#'; ?>"><?= escapeHtml($categoryName); ?></a>
@@ -223,9 +249,13 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
+                        <?php if (!$ticketsRendered): ?>
+                            <li class="rc-nav-item"><a href="<?= $ticketsUrl; ?>">Tickets</a></li>
+                        <?php endif; ?>
                     <?php else: ?>
                         <li class="rc-nav-item"><a href="<?= getLink('news'); ?>">News</a></li>
                         <li class="rc-nav-item"><a href="<?= getLink('downloads'); ?>">Downloads</a></li>
+                        <li class="rc-nav-item"><a href="<?= $ticketsUrl; ?>">Tickets</a></li>
                         <li class="rc-nav-item"><a href="<?= getLink('highscores'); ?>">Ranking</a></li>
                         <li class="rc-nav-item"><a href="<?= getLink('guilds'); ?>">Guilds</a></li>
                         <li class="rc-nav-item"><a href="<?= getLink('serverInfo'); ?>">Info</a></li>
@@ -286,6 +316,10 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
                     <span>Players</span>
                     <strong><?= $playersOnline; ?></strong>
                 </div>
+                <div class="rc-status-line">
+                    <span>Record Online</span>
+                    <strong><?= $recordOnline; ?></strong>
+                </div>
             </section>
 
             <section class="rc-panel">
@@ -325,7 +359,7 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
                 <h3>Top Players</h3>
                 <div class="rc-ranking">
                     <?php foreach ($topPlayers as $player): ?>
-                        <div class="rc-rank-row">
+                        <a class="rc-rank-row" href="<?= getPlayerLink($player['name'], false); ?>" aria-label="View <?= escapeHtml($player['name']); ?>">
                             <span class="rc-rank-position">#<?= (int)$player['rank']; ?></span>
                             <?php if (!empty($player['outfit_url'])): ?>
                                 <img class="rc-rank-outfit" src="<?= $player['outfit_url']; ?>" alt="<?= escapeHtml($player['name']); ?>">
@@ -333,10 +367,10 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
                                 <img class="rc-rank-outfit" src="<?= $player['vocation_icon']; ?>" alt="<?= escapeHtml($player['vocation_name']); ?>">
                             <?php endif; ?>
                             <div class="rc-rank-player">
-                                <a href="<?= getPlayerLink($player['name'], false); ?>"><?= escapeHtml($player['name']); ?></a>
+                                <strong><?= escapeHtml($player['name']); ?></strong>
                                 <small>Level <?= (int)$player['level']; ?> - <?= escapeHtml($player['vocation_name']); ?></small>
                             </div>
-                        </div>
+                        </a>
                     <?php endforeach; ?>
                 </div>
                 <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= getLink('highscores'); ?>">Full Ranking</a>
@@ -345,20 +379,9 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
             <section class="rc-panel">
                 <h3>Search Character</h3>
                 <form method="post" action="<?= getLink('characters'); ?>" class="rc-search-form">
-                    <input type="text" name="name" maxlength="29" placeholder="Character name">
-                    <button type="submit" class="rc-btn rc-btn-primary rc-btn-block">Search</button>
+                    <input type="text" name="name" maxlength="29" placeholder="Character name" pattern="[A-Za-zÀ-ÿ\s]+" title="Use only letters and spaces" data-rc-letters-only>
+                    <button type="submit" class="rc-btn rc-btn-subtle rc-btn-block">Search</button>
                 </form>
-            </section>
-
-            <section class="rc-panel">
-                <h3>Community</h3>
-                <?php if ($discordUrl): ?>
-                    <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $discordUrl; ?>" target="_blank" rel="noopener noreferrer">Discord</a>
-                <?php endif; ?>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $tiktokUrl; ?>" target="_blank" rel="noopener noreferrer">TikTok</a>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $whatsappUrl; ?>" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $facebookUrl; ?>" target="_blank" rel="noopener noreferrer">Facebook</a>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $instagramUrl; ?>" target="_blank" rel="noopener noreferrer">Instagram</a>
             </section>
         </aside>
     </main>
@@ -366,7 +389,6 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
     <footer class="rc-footer">
         <div class="rc-footer-top">
             <a class="rc-footer-brand" href="<?= getLink('news'); ?>">
-                <img class="rc-footer-logo" src="<?= $logoPath; ?>" alt="RavynCore">
                 <div class="rc-footer-brand-text rc-logo-text">
                     <?php if ($hasBrandSlogan): ?>
                         <img class="rc-footer-wordmark rc-logo-wordmark" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
@@ -376,14 +398,6 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
                     <span class="rc-footer-subtitle"><?= escapeHtml($headerSubtitle); ?></span>
                 </div>
             </a>
-
-            <nav class="rc-footer-links">
-                <a href="<?= getLink('news'); ?>">News</a>
-                <a href="<?= getLink('downloads'); ?>">Download</a>
-                <a href="<?= getLink('highscores'); ?>">Ranking</a>
-                <a href="<?= getLink('guilds'); ?>">Guilds</a>
-                <a href="<?= getLink('serverInfo'); ?>">Server Info</a>
-            </nav>
         </div>
         <div class="rc-footer-bottom">
             <span>&copy; <?= date('Y'); ?> RavynCore. All rights reserved.</span>
