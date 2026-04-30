@@ -144,6 +144,10 @@ $accountCreateUrl = $templateLinks['link_account_create'] ?? getLink('account/cr
 $accountLogoutUrl = $templateLinks['link_account_logout'] ?? getLink('account/logout');
 $downloadUrl = $templateLinks['link_downloads'] ?? getLink('downloads');
 $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
+$tiktokUrl = 'https://www.tiktok.com/@ravyncore_';
+$whatsappUrl = 'https://chat.whatsapp.com/D1D7BPj6I7l5tN2QzSSPmQ';
+$facebookUrl = 'https://www.facebook.com/profile.php?id=61560518895177';
+$instagramUrl = 'https://www.instagram.com/ravyncore_/';
 ?>
 <!doctype html>
 <html lang="en">
@@ -353,6 +357,10 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
                 <?php if ($discordUrl): ?>
                     <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $discordUrl; ?>" target="_blank" rel="noopener noreferrer">Discord</a>
                 <?php endif; ?>
+                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $tiktokUrl; ?>" target="_blank" rel="noopener noreferrer">TikTok</a>
+                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $whatsappUrl; ?>" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $facebookUrl; ?>" target="_blank" rel="noopener noreferrer">Facebook</a>
+                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $instagramUrl; ?>" target="_blank" rel="noopener noreferrer">Instagram</a>
                 <a class="rc-btn rc-btn-primary rc-btn-block" href="<?= getLink('donate'); ?>">Donate</a>
             </section>
         </aside>

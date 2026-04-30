@@ -452,7 +452,7 @@ a:hover {
     max-width: 92vw;
     max-height: 480px;
     object-fit: contain;
-    margin-top: 90px;
+    margin-top: 122px;
     margin-bottom: -42px;
     transform: none;
     display: block;
@@ -462,11 +462,11 @@ a:hover {
 .hero-main-emblem,
 .rc-hero-emblem,
 .hero-logo-round {
-    width: 320px;
-    max-width: 44vw;
-    max-height: 400px;
+    width: 360px;
+    max-width: 46vw;
+    max-height: 430px;
     object-fit: contain;
-    margin-top: -90px;
+    margin-top: -64px;
     margin-bottom: 4px;
     display: block;
     filter: drop-shadow(0 0 32px rgba(0, 0, 0, 1));
@@ -575,10 +575,12 @@ a:hover {
 
 .rc-main-grid {
     display: grid;
-    grid-template-columns: 290px minmax(0, 1fr) 290px;
-    gap: 14px;
+    grid-template-columns: clamp(250px, 17vw, 290px) minmax(0, 1fr) clamp(250px, 17vw, 290px);
+    gap: clamp(10px, 0.85vw, 14px);
     align-items: start;
-    margin-top: 16px;
+    width: 100%;
+    max-width: 1560px;
+    margin: 16px auto 0;
     scroll-margin-top: 12px;
 }
 
@@ -591,7 +593,7 @@ a:hover {
 .rc-sidebar {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
 }
 
 .rc-panel {
@@ -1323,7 +1325,8 @@ body.rc-page option {
 
 @media (max-width: 1300px) {
     .rc-main-grid {
-        grid-template-columns: 255px minmax(0, 1fr) 255px;
+        grid-template-columns: minmax(230px, 255px) minmax(0, 1fr) minmax(230px, 255px);
+        max-width: 100%;
     }
 }
 
@@ -1343,7 +1346,7 @@ body.rc-page option {
     .hero-logo-text {
         width: 520px;
         max-width: 74vw;
-        margin-top: 90px;
+        margin-top: 112px;
         margin-bottom: -24px;
         transform: none;
     }
@@ -1351,9 +1354,9 @@ body.rc-page option {
     .hero-main-emblem,
     .rc-hero-emblem,
     .hero-logo-round {
-        width: 226px;
-        max-width: 40vw;
-        margin-top: 0;
+        width: 258px;
+        max-width: 44vw;
+        margin-top: -18px;
     }
 
     .hero-title,
@@ -1490,17 +1493,17 @@ body.rc-page option {
     .hero-logo-text {
         width: 88vw;
         max-height: 150px;
-        margin-top: 52px;
-        margin-bottom: -20px;
+        margin-top: 66px;
+        margin-bottom: -24px;
         transform: translateY(0);
     }
 
     .hero-main-emblem,
     .rc-hero-emblem,
     .hero-logo-round {
-        width: 205px;
-        max-height: 210px;
-        margin-top: 0;
+        width: 220px;
+        max-height: 225px;
+        margin-top: -10px;
         margin-bottom: 4px;
     }
 
