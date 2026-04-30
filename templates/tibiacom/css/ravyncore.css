@@ -88,7 +88,9 @@ a:hover {
     background: linear-gradient(160deg, rgba(14, 19, 31, 0.95) 0%, rgba(9, 12, 21, 0.95) 100%);
 }
 
-.rc-header {
+.rc-header,
+.header,
+.site-header {
     margin-bottom: 0;
     position: absolute;
     top: 0;
@@ -99,7 +101,7 @@ a:hover {
     overflow: hidden;
     border: 1px solid rgba(138, 160, 206, 0.16);
     border-radius: 16px;
-    background: rgba(5, 8, 18, 0.34);
+    background: rgba(5, 8, 18, 0.45);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
@@ -113,7 +115,7 @@ a:hover {
     min-height: 98px;
     padding: 10px 24px 8px;
     border-bottom: 1px solid rgba(138, 160, 206, 0.16);
-    background: rgba(5, 9, 18, 0.14);
+    background: rgba(5, 9, 18, 0.12);
 }
 
 .rc-logo-link {
@@ -125,8 +127,8 @@ a:hover {
 
 .rc-logo-image,
 .header-logo {
-    width: 92px;
-    height: 92px;
+    width: 72px;
+    height: 72px;
     object-fit: contain;
     filter: drop-shadow(0 0 16px rgba(240, 174, 80, 0.32));
 }
@@ -136,7 +138,7 @@ a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 6px;
+    gap: 2px;
     min-width: 0;
 }
 
@@ -159,14 +161,14 @@ a:hover {
     text-transform: uppercase;
     font-family: 'Cinzel', 'Georgia', serif;
     line-height: 1;
-    width: 168px;
+    width: 140px;
     text-align: center;
-    margin-top: 6px;
+    margin-top: 0;
     white-space: nowrap;
 }
 
 .rc-logo-wordmark {
-    width: 168px;
+    width: 140px;
     max-width: 100%;
     height: auto;
     object-fit: contain;
@@ -199,12 +201,15 @@ a:hover {
     background: linear-gradient(90deg, rgba(160, 66, 34, 0.92), rgba(114, 73, 176, 0.92));
 }
 
-.rc-nav-wrap {
+.rc-nav-wrap,
+.navbar,
+.main-nav,
+.header-nav {
     display: flex;
     align-items: center;
     height: 42px;
     padding: 0 18px;
-    background: rgba(0, 0, 0, 0.14);
+    background: rgba(0, 0, 0, 0.25);
     border-top: 1px solid rgba(176, 196, 232, 0.13);
     border-bottom: 1px solid rgba(176, 196, 232, 0.14);
 }
@@ -306,10 +311,10 @@ a:hover {
 .hero-ravyncore {
     margin-bottom: 24px;
     margin-top: 0;
-    padding: 140px 0 28px;
+    padding: 110px 0 16px;
     position: relative;
     overflow: hidden;
-    min-height: 680px;
+    min-height: 580px;
     width: 100%;
     border: none;
     border-radius: 0;
@@ -359,17 +364,17 @@ a:hover {
     align-items: center;
     justify-content: flex-start;
     text-align: center;
-    gap: 6px;
+    gap: 4px;
     padding-top: 0;
 }
 
 .rc-hero-kicker {
     font-family: 'Cinzel', 'Georgia', serif;
-    font-size: 16px;
+    font-size: 14px;
     letter-spacing: 2.8px;
     color: #d8bd7a;
     text-shadow: 0 2px 8px #000;
-    margin: 0;
+    margin: 0 0 6px 0;
     font-weight: 700;
     text-transform: uppercase;
     display: inline-flex;
@@ -394,10 +399,11 @@ a:hover {
 
 .hero-subtitle {
     font-family: 'Cinzel', 'Georgia', serif;
-    font-size: 16px;
+    font-size: 14px;
     letter-spacing: 2.8px;
     color: #d8bd7a;
     text-shadow: 0 2px 8px #000;
+    margin: 0 0 6px 0;
 }
 
 .rc-hero-logo {
@@ -411,12 +417,12 @@ a:hover {
 .hero-main-slogan,
 .rc-hero-wordmark,
 .hero-logo-text {
-    width: 650px;
-    max-width: 78vw;
+    width: 600px;
+    max-width: 70vw;
     max-height: 320px;
     object-fit: contain;
-    margin-top: 96px;
-    margin-bottom: -16px;
+    margin-top: 120px;
+    margin-bottom: -30px;
     transform: none;
     display: block;
     filter: drop-shadow(0 0 28px rgba(0, 0, 0, 0.95));
@@ -425,12 +431,12 @@ a:hover {
 .hero-main-emblem,
 .rc-hero-emblem,
 .hero-logo-round {
-    width: 292px;
+    width: 260px;
     max-width: 38vw;
     max-height: 320px;
     object-fit: contain;
-    margin-top: -8px;
-    margin-bottom: 10px;
+    margin-top: 0;
+    margin-bottom: 4px;
     display: block;
     filter: drop-shadow(0 0 32px rgba(0, 0, 0, 1));
 }
@@ -477,8 +483,8 @@ a:hover {
     justify-content: center;
     flex-wrap: wrap;
     gap: 14px;
-    margin-top: 14px;
-    margin-bottom: 24px;
+    margin-top: 8px;
+    margin-bottom: 10px;
 }
 
 .rc-hero-ctas .rc-btn {
@@ -497,10 +503,10 @@ a:hover {
     left: auto;
     right: auto;
     bottom: auto;
-    margin-top: 18px;
+    margin-top: 10px;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
     width: calc(100% - 48px);
     max-width: 1500px;
     margin-left: auto;
@@ -1240,6 +1246,11 @@ body.rc-page option {
 }
 
 @media (max-width: 1300px) {
+    .rc-hero,
+    .hero-ravyncore {
+        min-height: 560px;
+    }
+
     .rc-main-grid {
         grid-template-columns: 255px minmax(0, 1fr) 255px;
     }
@@ -1248,8 +1259,8 @@ body.rc-page option {
 @media (max-width: 1200px) {
     .rc-hero,
     .hero-ravyncore {
-        min-height: 640px;
-        padding-top: 136px;
+        min-height: 540px;
+        padding: 102px 0 12px;
     }
 
     .rc-hero-content,
@@ -1260,19 +1271,19 @@ body.rc-page option {
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        width: 560px;
-        max-width: 86vw;
-        margin-top: 72px;
-        margin-bottom: -14px;
+        width: 520px;
+        max-width: 74vw;
+        margin-top: 90px;
+        margin-bottom: -24px;
         transform: none;
     }
 
     .hero-main-emblem,
     .rc-hero-emblem,
     .hero-logo-round {
-        width: 246px;
-        max-width: 46vw;
-        margin-top: -8px;
+        width: 226px;
+        max-width: 40vw;
+        margin-top: 0;
     }
 
     .hero-title,
@@ -1354,12 +1365,12 @@ body.rc-page option {
 
 @media (max-width: 760px) {
     .rc-logo-image {
-        width: 70px;
-        height: 70px;
+        width: 62px;
+        height: 62px;
     }
 
     .rc-logo-wordmark {
-        width: 132px;
+        width: 120px;
         height: auto;
         object-position: left center;
     }
@@ -1370,8 +1381,8 @@ body.rc-page option {
 
     .rc-logo-text span {
         font-size: 11px;
-        letter-spacing: 1.5px;
-        width: 132px;
+        letter-spacing: 1.2px;
+        width: 120px;
         color: #d8c79a;
         text-align: center;
         white-space: nowrap;
@@ -1387,8 +1398,8 @@ body.rc-page option {
 
     .rc-hero,
     .hero-ravyncore {
-        padding: 24px 10px 18px;
-        min-height: 590px;
+        padding: 24px 10px 12px;
+        min-height: 520px;
         background-position: center top !important;
     }
 
@@ -1400,19 +1411,20 @@ body.rc-page option {
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        width: 86vw;
+        width: 88vw;
         max-height: 150px;
-        margin-top: 56px;
-        margin-bottom: -14px;
+        margin-top: 52px;
+        margin-bottom: -20px;
         transform: translateY(0);
     }
 
     .hero-main-emblem,
     .rc-hero-emblem,
     .hero-logo-round {
-        width: 220px;
+        width: 205px;
         max-height: 210px;
-        margin-top: -6px;
+        margin-top: 0;
+        margin-bottom: 4px;
     }
 
     .hero-title,
@@ -1422,8 +1434,8 @@ body.rc-page option {
 
     .hero-subtitle,
     .rc-hero-kicker {
-        font-size: 11px;
-        letter-spacing: 2px;
+        font-size: 10px;
+        letter-spacing: 1.6px;
     }
 
     .hero-title .orn {
