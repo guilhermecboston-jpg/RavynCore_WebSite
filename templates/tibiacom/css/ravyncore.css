@@ -54,11 +54,8 @@ a:hover {
     inset: 0;
     z-index: -3;
     background:
-        radial-gradient(circle at 18% 24%, rgba(173, 70, 40, 0.28), transparent 42%),
-        radial-gradient(circle at 82% 22%, rgba(62, 115, 222, 0.25), transparent 44%),
-        radial-gradient(circle at 50% 85%, rgba(104, 57, 154, 0.22), transparent 42%),
-        linear-gradient(180deg, rgba(5, 7, 13, 0.5) 0%, rgba(3, 4, 8, 0.88) 72%),
-        var(--rc-bg-image) center / cover no-repeat fixed;
+        linear-gradient(180deg, rgba(3, 6, 12, 0.58) 0%, rgba(2, 4, 10, 0.84) 62%, rgba(2, 4, 10, 0.95) 100%),
+        var(--rc-bg-image) center top / cover no-repeat fixed;
 }
 
 .rc-atmosphere::before,
@@ -71,14 +68,12 @@ a:hover {
 
 .rc-atmosphere::before {
     background:
-        linear-gradient(90deg, rgba(179, 84, 35, 0.22) 0%, rgba(0, 0, 0, 0) 46%, rgba(57, 114, 208, 0.2) 100%);
+        radial-gradient(circle at 16% 42%, rgba(173, 70, 40, 0.14), transparent 40%),
+        radial-gradient(circle at 84% 38%, rgba(62, 115, 222, 0.14), transparent 42%);
 }
 
 .rc-atmosphere::after {
-    opacity: 0.18;
-    background-image:
-        repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.15) 0 1px, transparent 1px 20px),
-        repeating-linear-gradient(60deg, rgba(255, 255, 255, 0.1) 0 1px, transparent 1px 18px);
+    display: none;
 }
 
 .rc-site {
@@ -265,13 +260,16 @@ a:hover {
     padding: 26px 26px 18px;
     position: relative;
     overflow: hidden;
+    min-height: clamp(560px, 62vw, 900px);
+    background:
+        linear-gradient(180deg, rgba(4, 8, 15, 0.18) 0%, rgba(4, 8, 15, 0.58) 64%, rgba(4, 8, 15, 0.78) 100%),
+        var(--rc-bg-image) center 35% / cover no-repeat !important;
+    border-color: rgba(152, 176, 224, 0.38);
 }
 
 .rc-hero-fire,
 .rc-hero-ice {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+    display: none;
 }
 
 .rc-hero-fire {
@@ -294,6 +292,7 @@ a:hover {
     color: #c4d3f6;
     margin: 0;
     font-weight: 600;
+    text-shadow: 0 2px 16px rgba(2, 5, 11, 0.95);
 }
 
 .rc-hero-logo {
@@ -305,21 +304,21 @@ a:hover {
 }
 
 .rc-hero-wordmark {
-    width: min(760px, 100%);
-    max-height: 240px;
+    width: min(820px, 100%);
+    max-height: 270px;
     object-fit: contain;
-    margin: 8px auto 6px;
+    margin: 10px auto 4px;
     display: block;
-    filter: drop-shadow(0 0 24px rgba(125, 88, 195, 0.28));
+    filter: drop-shadow(0 0 28px rgba(125, 88, 195, 0.34));
 }
 
 .rc-hero-emblem {
-    width: min(220px, 40vw);
-    max-height: 220px;
+    width: min(245px, 42vw);
+    max-height: 245px;
     object-fit: contain;
-    margin: 0 auto 4px;
+    margin: 4px auto 10px;
     display: block;
-    filter: drop-shadow(0 0 20px rgba(214, 144, 58, 0.28));
+    filter: drop-shadow(0 0 24px rgba(214, 144, 58, 0.34));
 }
 
 .rc-hero h1 {
@@ -328,6 +327,7 @@ a:hover {
     font-size: clamp(1.7rem, 3vw, 2.6rem);
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    text-shadow: 0 2px 16px rgba(2, 5, 11, 0.95);
 }
 
 .rc-hero-tagline {
@@ -336,6 +336,7 @@ a:hover {
     font-size: 1.03rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    text-shadow: 0 2px 12px rgba(2, 5, 11, 0.95);
 }
 
 .rc-hero-ctas {
@@ -1100,6 +1101,8 @@ body.rc-page option {
 
     .rc-hero {
         padding: 16px;
+        min-height: auto;
+        background-position: center top !important;
     }
 
     .rc-hero-wordmark {
@@ -1211,4 +1214,68 @@ body.rc-page .note {
     border: 1px solid rgba(128, 158, 218, 0.55) !important;
     background: rgba(21, 31, 48, 0.84) !important;
     color: #d7e6ff !important;
+}
+
+body.rc-page .rc-rich-content .Title {
+    display: none !important;
+}
+
+body.rc-page-news .rc-panel-news h3,
+body.rc-page-serverinfo .rc-panel-content h3 {
+    color: #cbdfff;
+}
+
+body.rc-page-news .rc-panel-news .BoxContent,
+body.rc-page-news .rc-panel-news #newsticker .BoxContent,
+body.rc-page-news .rc-panel-news #FeaturedArticle .BoxContent {
+    background: rgba(20, 31, 50, 0.9) !important;
+}
+
+body.rc-page-news .rc-panel-news #newsticker .Odd,
+body.rc-page-news .rc-panel-news #newsticker .Even,
+body.rc-page-news .rc-panel-news #newsticker .Row > div {
+    background: rgba(23, 36, 58, 0.9) !important;
+}
+
+body.rc-page-news .rc-panel-news .NewsTickerDate,
+body.rc-page-news .rc-panel-news .NewsTickerText,
+body.rc-page-news .rc-panel-news .NewsTickerText a,
+body.rc-page-news .rc-panel-news .NewsTickerShortText,
+body.rc-page-news .rc-panel-news .NewsTickerFullText {
+    color: #d8e7ff !important;
+}
+
+body.rc-page-serverinfo .rc-rich-content .Text {
+    color: #cfe2ff !important;
+}
+
+body.rc-page-serverinfo .rc-rich-content div[style*="background-color: #d4c0a1"],
+body.rc-page-serverinfo .rc-rich-content div[style*="background-color:#d4c0a1"],
+body.rc-page-serverinfo .rc-rich-content div[style*="background-color: #f1e0c6"],
+body.rc-page-serverinfo .rc-rich-content div[style*="background-color:#f1e0c6"] {
+    background: linear-gradient(180deg, #243958 0%, #1f304b 100%) !important;
+    border-color: rgba(113, 141, 196, 0.5) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 16px rgba(5, 10, 20, 0.42) !important;
+    color: #d7e7ff !important;
+}
+
+body.rc-page-serverinfo .rc-rich-content #timerServerSave_hour,
+body.rc-page-serverinfo .rc-rich-content #timerServerSave_minute,
+body.rc-page-serverinfo .rc-rich-content #timerServerSave_second,
+body.rc-page-serverinfo .rc-rich-content div[style*="background-color: #d4c0a1"] label,
+body.rc-page-serverinfo .rc-rich-content div[style*="background-color:#d4c0a1"] label,
+body.rc-page-serverinfo .rc-rich-content div[style*="background-color: #f1e0c6"] label,
+body.rc-page-serverinfo .rc-rich-content div[style*="background-color:#f1e0c6"] label {
+    color: #d7e7ff !important;
+}
+
+body.rc-page-serverinfo .rc-rich-content tr[bgcolor] td,
+body.rc-page-serverinfo .rc-rich-content td[bgcolor],
+body.rc-page-serverinfo .rc-rich-content th[bgcolor],
+body.rc-page-serverinfo .rc-rich-content tr[style*="background-color"] td,
+body.rc-page-serverinfo .rc-rich-content td[style*="background-color"],
+body.rc-page-serverinfo .rc-rich-content th[style*="background-color"] {
+    background: rgba(28, 44, 69, 0.92) !important;
+    color: #dfebff !important;
+    border-color: rgba(126, 151, 201, 0.3) !important;
 }
