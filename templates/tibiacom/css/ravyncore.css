@@ -1655,6 +1655,74 @@ body.rc-page option {
     }
 }
 
+@media (min-width: 1900px) {
+    .rc-site {
+        max-width: 1880px;
+    }
+}
+
+@media (min-width: 2400px) {
+    .rc-site {
+        max-width: 2120px;
+    }
+}
+
+@media (min-width: 1700px) and (min-height: 921px) {
+    .hero-main-slogan,
+    .rc-hero-wordmark,
+    .hero-logo-text {
+        width: 1340px;
+        max-height: 560px;
+        margin-top: 110px;
+    }
+
+    .hero-main-emblem,
+    .rc-hero-emblem,
+    .hero-logo-round {
+        width: 380px;
+        max-height: 460px;
+        margin-top: -110px;
+    }
+
+    .rc-hero-ctas {
+        margin-top: 100px;
+    }
+
+    .rc-hero-ctas .rc-btn {
+        height: 52px;
+        padding: 0 38px;
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 2200px) and (min-height: 921px) {
+    .hero-main-slogan,
+    .rc-hero-wordmark,
+    .hero-logo-text {
+        width: 1540px;
+        max-height: 640px;
+        margin-top: 130px;
+    }
+
+    .hero-main-emblem,
+    .rc-hero-emblem,
+    .hero-logo-round {
+        width: 440px;
+        max-height: 520px;
+        margin-top: -130px;
+    }
+
+    .rc-hero-ctas {
+        margin-top: 120px;
+    }
+
+    .rc-hero-ctas .rc-btn {
+        height: 56px;
+        padding: 0 44px;
+        font-size: 17px;
+    }
+}
+
 body.rc-page .rc-rich-content input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="image"]):not([type="button"]):not([type="reset"]):not([type="hidden"]),
 body.rc-page .rc-rich-content select,
 body.rc-page .rc-rich-content textarea,
