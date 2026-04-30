@@ -362,7 +362,7 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
         <div class="rc-footer-top">
             <a class="rc-footer-brand" href="<?= getLink('news'); ?>">
                 <img class="rc-footer-logo" src="<?= $logoPath; ?>" alt="RavynCore">
-                <div class="rc-footer-brand-text rc-logo-text hero-brand-bottom">
+                <div class="rc-footer-brand-text rc-logo-text">
                     <?php if ($hasBrandSlogan): ?>
                         <img class="rc-footer-wordmark rc-logo-wordmark" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
                     <?php else: ?>

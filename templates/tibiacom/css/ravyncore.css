@@ -890,26 +890,6 @@ a:hover {
     white-space: nowrap;
 }
 
-.hero-brand-bottom {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-}
-
-.hero-brand-bottom img {
-    width: 140px;
-}
-
-.hero-brand-bottom span {
-    color: #d8c79a;
-    letter-spacing: 3px;
-    font-size: 15px;
-    width: 140px;
-    text-align: center;
-    margin-top: 0;
-}
-
 .rc-footer-brand strong {
     display: block;
     font-family: 'Cinzel', 'Georgia', serif;
