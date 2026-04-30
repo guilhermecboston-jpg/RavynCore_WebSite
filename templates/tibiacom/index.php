@@ -156,9 +156,11 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="tools/fonts/fontawesome/all.css">
-    <link rel="stylesheet" href="<?= $template_path; ?>/css/ravyncore.css">
+    <?php $rcCssVer = @filemtime(BASE . $template_path . '/css/ravyncore.css') ?: time(); ?>
+    <link rel="stylesheet" href="<?= $template_path; ?>/css/ravyncore.css?v=<?= $rcCssVer; ?>">
     <script src="tools/basic.js"></script>
-    <script src="<?= $template_path; ?>/ticker.js"></script>
+    <?php $rcTickerVer = @filemtime(BASE . $template_path . '/ticker.js') ?: time(); ?>
+    <script src="<?= $template_path; ?>/ticker.js?v=<?= $rcTickerVer; ?>"></script>
     <script>var JS_DIR_IMAGES = "<?= $template_path; ?>/images/";</script>
     <?= template_place_holder('head_end'); ?>
 </head>
