@@ -73,8 +73,8 @@ a:hover {
 }
 
 .rc-site {
-    width: min(1800px, calc(100% - 12px));
-    margin: 6px auto 30px;
+    width: min(1800px, 100%);
+    margin: 0 auto 30px;
     position: relative;
     z-index: 1;
 }
@@ -90,7 +90,15 @@ a:hover {
 
 .rc-header {
     margin-bottom: 0;
+    position: relative;
+    z-index: 20;
     overflow: hidden;
+    border: 1px solid rgba(142, 168, 220, 0.26);
+    border-radius: 16px;
+    background: rgba(10, 15, 30, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 }
 
 .rc-header-top {
@@ -98,9 +106,9 @@ a:hover {
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    padding: 16px 20px;
+    padding: 16px 22px;
     border-bottom: 1px solid rgba(172, 190, 228, 0.16);
-    background: linear-gradient(90deg, rgba(8, 14, 26, 0.82), rgba(23, 17, 44, 0.62));
+    background: rgba(10, 15, 30, 0.38);
 }
 
 .rc-logo-link {
@@ -110,9 +118,10 @@ a:hover {
     color: var(--rc-text);
 }
 
-.rc-logo-image {
-    width: 108px;
-    height: 108px;
+.rc-logo-image,
+.header-logo {
+    width: 70px;
+    height: 70px;
     object-fit: contain;
     filter: drop-shadow(0 0 14px rgba(240, 174, 80, 0.35));
 }
@@ -127,21 +136,27 @@ a:hover {
 
 .rc-logo-text strong {
     font-family: 'Cinzel', 'Georgia', serif;
-    font-size: 1.6rem;
+    font-size: 22px;
     letter-spacing: 0.05em;
 }
 
-.rc-logo-text span {
-    color: var(--rc-text-soft);
-    font-size: 1rem;
-    letter-spacing: 0.08em;
+.header-title {
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 22px;
+}
+
+.rc-logo-text span,
+.header-subtitle {
+    color: #aaa;
+    font-size: 12px;
+    letter-spacing: 2px;
     text-transform: uppercase;
 }
 
 .rc-logo-wordmark {
-    width: min(320px, 46vw);
+    width: min(360px, 52vw);
     max-width: 100%;
-    height: 50px;
+    height: 56px;
     object-fit: contain;
     object-position: left center;
     display: block;
@@ -157,6 +172,7 @@ a:hover {
     display: flex;
     align-items: center;
     padding: 0 16px;
+    background: rgba(5, 9, 18, 0.38);
 }
 
 .rc-nav-toggle {
@@ -253,10 +269,11 @@ a:hover {
 .rc-hero,
 .hero-ravyncore {
     margin-bottom: 12px;
-    padding: 0 0 126px;
+    margin-top: -120px;
+    padding: 160px 0 132px;
     position: relative;
     overflow: hidden;
-    min-height: clamp(720px, 78vh, 820px);
+    min-height: clamp(820px, 86vh, 920px);
     border: none;
     border-radius: 0;
     box-shadow: none;
@@ -280,15 +297,15 @@ a:hover {
     z-index: 1;
     background:
         linear-gradient(90deg,
-            rgba(120, 35, 0, 0.28) 0%,
-            rgba(0, 0, 0, 0.12) 45%,
-            rgba(0, 60, 130, 0.3) 100%),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.58));
+            rgba(145, 45, 8, 0.3) 0%,
+            rgba(5, 8, 18, 0.12) 46%,
+            rgba(14, 68, 145, 0.32) 100%),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.55));
 }
 
 .hero-ravyncore::after {
     z-index: 2;
-    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.62));
 }
 
 .rc-hero-fire,
@@ -300,50 +317,44 @@ a:hover {
 .hero-ravyncore-content {
     position: relative;
     z-index: 3;
-    width: min(1200px, 100%);
+    width: min(1500px, 100%);
     margin: 0 auto;
-    min-height: clamp(720px, 78vh, 820px);
+    min-height: clamp(820px, 86vh, 920px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     gap: 10px;
-    padding-top: 80px;
+    padding-top: 0;
 }
 
 .rc-hero-kicker {
-    letter-spacing: 0.1em;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    color: #ead7ac;
+    color: #cbb98a;
     margin: 0;
     font-family: 'Cinzel', 'Georgia', serif;
-    font-size: clamp(0.92rem, 1.5vw, 1.22rem);
+    font-size: 14px;
     font-weight: 700;
-    text-shadow: 0 2px 16px rgba(2, 5, 11, 0.95), 0 0 20px rgba(12, 18, 30, 0.75);
-    position: relative;
-    display: inline-block;
-    padding: 0 14px;
+    text-shadow: 0 2px 10px rgba(2, 5, 11, 0.95), 0 0 20px rgba(12, 18, 30, 0.75);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
 }
 
 .rc-hero-kicker::before,
 .rc-hero-kicker::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: min(12vw, 130px);
-    height: 1px;
-    background: linear-gradient(90deg, rgba(227, 192, 129, 0), rgba(227, 192, 129, 0.7), rgba(227, 192, 129, 0));
+    content: "\2014";
+    color: #c8a96a;
+    text-shadow: 0 0 10px rgba(15, 11, 4, 0.7);
 }
 
-.rc-hero-kicker::before {
-    right: 100%;
-    margin-right: 8px;
-}
-
-.rc-hero-kicker::after {
-    left: 100%;
-    margin-left: 8px;
+.hero-subtext {
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: #cbb98a;
 }
 
 .rc-hero-logo {
@@ -356,24 +367,25 @@ a:hover {
 
 .rc-hero-wordmark,
 .hero-logo-text {
-    width: 520px;
-    max-width: 80vw;
-    max-height: 260px;
+    width: 780px;
+    max-width: 95vw;
+    max-height: 340px;
     object-fit: contain;
-    margin: 120px auto 0;
+    margin: 40px auto 0;
+    transform: translateY(-40px);
     display: block;
-    filter: drop-shadow(0 0 30px rgba(125, 88, 195, 0.38));
+    filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.9));
 }
 
 .rc-hero-emblem,
 .hero-logo-round {
-    width: 260px;
+    width: 300px;
     max-width: 55vw;
-    max-height: 260px;
+    max-height: 300px;
     object-fit: contain;
-    margin: 18px auto 6px;
+    margin: -30px auto 6px;
     display: block;
-    filter: drop-shadow(0 0 26px rgba(214, 144, 58, 0.38));
+    filter: drop-shadow(0 0 30px rgba(0, 0, 0, 1));
 }
 
 .rc-hero h1 {
@@ -385,15 +397,39 @@ a:hover {
     text-shadow: 0 2px 16px rgba(2, 5, 11, 0.95);
 }
 
-.rc-hero-tagline {
+.rc-hero-tagline,
+.hero-text {
     margin: 2px 0 2px;
-    color: #ebdcc1;
+    color: #e8dcc0;
     font-family: 'Cinzel', 'Georgia', serif;
-    font-size: clamp(1.75rem, 2.8vw, 2.9rem);
-    letter-spacing: 0.03em;
+    font-size: clamp(1.65rem, 2.2vw, 2.2rem);
+    letter-spacing: 2px;
     text-transform: uppercase;
-    text-shadow: 0 2px 12px rgba(2, 5, 11, 0.95), 0 0 24px rgba(8, 11, 18, 0.6);
+    text-shadow: 0 2px 14px rgba(2, 5, 11, 0.95), 0 0 28px rgba(8, 11, 18, 0.7);
     line-height: 1.1;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hero-text::before,
+.hero-text::after {
+    color: #c8a96a;
+    text-shadow: 0 0 10px rgba(15, 11, 4, 0.7);
+}
+
+.hero-text::before {
+    content: "\2190";
+}
+
+.hero-text::after {
+    content: "\2192";
+}
+
+.hero-text span {
+    border-bottom: 1px solid rgba(200, 169, 106, 0.5);
+    padding-bottom: 4px;
 }
 
 .rc-hero-ctas {
@@ -1101,12 +1137,13 @@ body.rc-page option {
 
 @media (max-width: 1140px) {
     .rc-site {
-        width: calc(100% - 8px);
-        margin: 4px auto 22px;
+        width: 100%;
+        margin: 0 auto 22px;
     }
 
     .rc-header-top {
         flex-wrap: wrap;
+        gap: 14px;
     }
 
     .rc-main-grid {
@@ -1161,13 +1198,13 @@ body.rc-page option {
 
 @media (max-width: 760px) {
     .rc-logo-image {
-        width: 82px;
-        height: 82px;
+        width: 56px;
+        height: 56px;
     }
 
     .rc-logo-wordmark {
-        width: min(230px, 56vw);
-        height: 40px;
+        width: min(220px, 58vw);
+        height: 34px;
     }
 
     .rc-logo-text strong {
@@ -1175,7 +1212,8 @@ body.rc-page option {
     }
 
     .rc-logo-text span {
-        font-size: 0.84rem;
+        font-size: 10px;
+        letter-spacing: 1.3px;
     }
 
     .rc-header-actions {
@@ -1188,29 +1226,43 @@ body.rc-page option {
 
     .rc-hero,
     .hero-ravyncore {
-        padding: 0 14px;
-        min-height: clamp(560px, 64vh, 650px);
+        margin-top: -84px;
+        padding: 122px 10px 18px;
+        min-height: clamp(560px, 70vh, 650px);
         background-position: center top !important;
     }
 
-    .rc-hero-wordmark {
-        width: min(520px, 80vw);
-        max-height: 140px;
-        margin-top: 88px;
+    .rc-hero-content,
+    .hero-ravyncore-content {
+        min-height: clamp(560px, 70vh, 650px);
     }
 
-    .rc-hero-emblem {
-        width: min(220px, 55vw);
-        max-height: 220px;
+    .rc-hero-wordmark,
+    .hero-logo-text {
+        width: min(520px, 92vw);
+        max-height: 150px;
+        margin-top: 24px;
+        transform: translateY(0);
     }
 
-    .rc-hero-tagline {
-        font-size: clamp(1.1rem, 5.4vw, 1.85rem);
+    .rc-hero-emblem,
+    .hero-logo-round {
+        width: min(210px, 54vw);
+        max-height: 210px;
+        margin-top: -8px;
     }
 
-    .rc-hero-kicker::before,
-    .rc-hero-kicker::after {
-        display: none;
+    .rc-hero-tagline,
+    .hero-text {
+        font-size: clamp(1rem, 4.9vw, 1.5rem);
+        letter-spacing: 1.2px;
+        gap: 8px;
+    }
+
+    .rc-hero-kicker,
+    .hero-subtext {
+        font-size: 11px;
+        letter-spacing: 2px;
     }
 
     .rc-footer-bottom {

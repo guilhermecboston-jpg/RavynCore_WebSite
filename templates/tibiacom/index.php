@@ -51,7 +51,7 @@ $templateLinks = isset($template) && is_array($template) ? $template : [];
 
 $serverName = $config['lua']['serverName'] ?? 'RavynCore';
 $serverTagline = 'Domine, Conquiste, Seja Lendario';
-$headerSubtitle = 'Global Custom MMORPG';
+$headerSubtitle = 'Custom MMORPG';
 $pageTitle = !empty($title) ? $title : ucfirst((string)PAGE);
 
 $brandDir = $template_path . '/images/brand';
@@ -170,14 +170,14 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
     <header class="rc-header">
         <div class="rc-header-top">
             <a class="rc-logo-link" href="<?= getLink('news'); ?>">
-                <img class="rc-logo-image" src="<?= $logoPath; ?>" alt="RavynCore">
+                <img class="rc-logo-image header-logo" src="<?= $logoPath; ?>" alt="RavynCore">
                 <div class="rc-logo-text">
                     <?php if ($hasBrandSlogan): ?>
                         <img class="rc-logo-wordmark" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
                     <?php else: ?>
-                        <strong>RavynCore</strong>
+                        <strong class="header-title">RavynCore</strong>
                     <?php endif; ?>
-                    <span><?= escapeHtml($headerSubtitle); ?></span>
+                    <span class="header-subtitle"><?= escapeHtml($headerSubtitle); ?></span>
                 </div>
             </a>
 
@@ -239,8 +239,8 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
             <?php else: ?>
                 <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
             <?php endif; ?>
-            <p class="rc-hero-tagline"><?= escapeHtml($serverTagline); ?></p>
-            <p class="rc-hero-kicker">THE ULTIMATE TIBIA EXPERIENCE</p>
+            <p class="rc-hero-tagline hero-text">DOMINE, <span>CONQUISTE</span>, SEJA LENDARIO</p>
+            <p class="rc-hero-kicker hero-subtext">THE TIBIA EXPERIENCE</p>
 
             <div class="rc-hero-ctas">
                 <a class="rc-btn rc-btn-play" href="<?= $downloadUrl; ?>">Play Now</a>
