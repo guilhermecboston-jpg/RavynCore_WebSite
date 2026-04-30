@@ -239,11 +239,6 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
             <?php else: ?>
                 <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
             <?php endif; ?>
-            <h1 class="rc-hero-tagline hero-title">
-                <span class="orn orn-left">&rarr;</span>
-                DOMINE, <span class="under">CONQUISTE, SEJA LENDARIO</span>
-                <span class="orn orn-right">&larr;</span>
-            </h1>
             <p class="rc-hero-kicker hero-subtitle">THE ULTIMATE TIBIA EXPERIENCE</p>
 
             <div class="rc-hero-ctas">
@@ -286,13 +281,6 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
                     <span>Players</span>
                     <strong><?= $playersOnline; ?>/<?= $playersMax; ?></strong>
                 </div>
-                <div class="rc-progress">
-                    <span style="width: <?= $onlinePercent; ?>%"></span>
-                </div>
-                <div class="rc-status-line">
-                    <span>Capacity</span>
-                    <strong><?= $onlinePercent; ?>%</strong>
-                </div>
             </section>
 
             <section class="rc-panel">
@@ -306,19 +294,6 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
                 </ul>
             </section>
 
-            <section class="rc-panel">
-                <h3>Daily Info</h3>
-                <div class="rc-status-line">
-                    <span>Rashid City</span>
-                    <strong><?= escapeHtml(rc_rashid_city()); ?></strong>
-                </div>
-                <div class="rc-vocations">
-                    <div><img src="<?= BASE_URL; ?>images/knight.png" alt="Knight"><span>Knight</span></div>
-                    <div><img src="<?= BASE_URL; ?>images/paladin.png" alt="Paladin"><span>Paladin</span></div>
-                    <div><img src="<?= BASE_URL; ?>images/sorcerer.png" alt="Sorcerer"><span>Sorcerer</span></div>
-                    <div><img src="<?= BASE_URL; ?>images/druid.png" alt="Druid"><span>Druid</span></div>
-                </div>
-            </section>
         </aside>
 
         <section class="rc-content-column">
@@ -385,10 +360,14 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
     <footer class="rc-footer">
         <div class="rc-footer-top">
             <a class="rc-footer-brand" href="<?= getLink('news'); ?>">
-                <img src="<?= $logoPath; ?>" alt="RavynCore">
-                <div>
-                    <strong>RavynCore</strong>
-                    <span><?= escapeHtml($serverName); ?></span>
+                <img class="rc-footer-logo" src="<?= $logoPath; ?>" alt="RavynCore">
+                <div class="rc-footer-brand-text">
+                    <?php if ($hasBrandSlogan): ?>
+                        <img class="rc-footer-wordmark" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
+                    <?php else: ?>
+                        <strong>RavynCore</strong>
+                    <?php endif; ?>
+                    <span class="rc-footer-subtitle"><?= escapeHtml($headerSubtitle); ?></span>
                 </div>
             </a>
 
@@ -402,7 +381,6 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
         </div>
         <div class="rc-footer-bottom">
             <span>&copy; <?= date('Y'); ?> RavynCore. All rights reserved.</span>
-            <span><?= template_footer(); ?></span>
         </div>
     </footer>
 </div>
