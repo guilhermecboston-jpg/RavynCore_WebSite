@@ -51,6 +51,7 @@ $templateLinks = isset($template) && is_array($template) ? $template : [];
 
 $serverName = $config['lua']['serverName'] ?? 'RavynCore';
 $serverTagline = 'Domine, Conquiste, Seja Lendario';
+$headerSubtitle = 'Global Custom MMORPG';
 $pageTitle = !empty($title) ? $title : ucfirst((string)PAGE);
 
 $brandDir = $template_path . '/images/brand';
@@ -164,8 +165,12 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
             <a class="rc-logo-link" href="<?= getLink('news'); ?>">
                 <img class="rc-logo-image" src="<?= $logoPath; ?>" alt="RavynCore">
                 <div class="rc-logo-text">
-                    <strong>RavynCore</strong>
-                    <span>Dark Fantasy MMORPG</span>
+                    <?php if ($hasBrandSlogan): ?>
+                        <img class="rc-logo-wordmark" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
+                    <?php else: ?>
+                        <strong>RavynCore</strong>
+                    <?php endif; ?>
+                    <span><?= escapeHtml($headerSubtitle); ?></span>
                 </div>
             </a>
 
