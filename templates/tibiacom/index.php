@@ -267,7 +267,7 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
         </div>
     </section>
 
-    <main class="rc-main-grid">
+    <main id="rcMain" class="rc-main-grid">
         <aside class="rc-sidebar">
             <section class="rc-panel">
                 <h3>Server Status</h3>

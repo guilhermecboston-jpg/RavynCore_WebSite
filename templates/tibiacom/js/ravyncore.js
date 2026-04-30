@@ -8,6 +8,22 @@
         });
     }
 
+    var loc = window.location;
+    var pathPart = loc.pathname.replace(/\/+$/, '').split('/').pop().toLowerCase();
+    var qs = new URLSearchParams(loc.search);
+    var subtopicParam = (qs.get('subtopic') || '').toLowerCase();
+    var queryFirst = loc.search.length > 1
+        ? loc.search.slice(1).split('&')[0].split('=')[0].toLowerCase()
+        : '';
+    var marker = subtopicParam || pathPart || queryFirst;
+    var homeMarkers = ['', 'index.php', 'news', 'latestnews', 'home'];
+    if (homeMarkers.indexOf(marker) === -1 && !loc.hash) {
+        var main = document.getElementById('rcMain');
+        if (main) {
+            window.scrollTo(0, Math.max(0, main.offsetTop - 16));
+        }
+    }
+
     var countdownNode = document.getElementById('rcServerSaveCountdown');
     if (!countdownNode) {
         return;
