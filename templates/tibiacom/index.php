@@ -226,20 +226,19 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
         <div class="rc-hero-fire"></div>
         <div class="rc-hero-ice"></div>
         <div class="rc-hero-content">
-            <p class="rc-hero-kicker">The Ultimate Tibia Experience</p>
             <?php if ($hasBrandSlogan): ?>
                 <img class="rc-hero-wordmark" src="<?= $brandSloganPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
                 <img class="rc-hero-emblem" src="<?= $logoPath; ?>" alt="RavynCore Emblem">
             <?php else: ?>
                 <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
-                <h1><?= escapeHtml($serverName); ?></h1>
             <?php endif; ?>
             <p class="rc-hero-tagline"><?= escapeHtml($serverTagline); ?></p>
+            <p class="rc-hero-kicker">THE ULTIMATE TIBIA EXPERIENCE</p>
 
             <div class="rc-hero-ctas">
-                <a class="rc-btn rc-btn-primary" href="<?= $downloadUrl; ?>">Play Now</a>
-                <a class="rc-btn rc-btn-subtle" href="<?= $accountCreateUrl; ?>">Create Account</a>
-                <a class="rc-btn rc-btn-subtle" href="<?= getLink('highscores'); ?>">View Ranking</a>
+                <a class="rc-btn rc-btn-play" href="<?= $downloadUrl; ?>">Play Now</a>
+                <a class="rc-btn rc-btn-violet" href="<?= $accountCreateUrl; ?>">Create Account</a>
+                <a class="rc-btn rc-btn-outline" href="<?= getLink('highscores'); ?>">View Ranking</a>
             </div>
         </div>
 
