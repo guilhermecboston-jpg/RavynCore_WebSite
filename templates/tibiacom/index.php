@@ -239,7 +239,6 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
             <?php else: ?>
                 <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
             <?php endif; ?>
-            <p class="rc-hero-kicker hero-subtitle">THE ULTIMATE TIBIA EXPERIENCE</p>
 
             <div class="rc-hero-ctas">
                 <a class="rc-btn rc-btn-play" href="<?= $downloadUrl; ?>">Play Now</a>
