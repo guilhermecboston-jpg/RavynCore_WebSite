@@ -59,21 +59,25 @@
 <br>
 <div style="display: flex;">
   <div
+    class="rc-server-save-area"
     style="width: 100%; display: grid; justify-content: center; text-align: center; max-height: 120px; margin-top: 3%;">
     <p style="font-size: 24px; font-weight: bold; margin: 0;">Server Save<br></p>
     <small style="margin: 0 0 10px 0;">Every day {{ serverSave.0 }}:{{ serverSave.1 }}</small>
-    <div style="display: flex;">
+    <div class="rc-server-save-grid" style="display: flex;">
       <div
+        class="rc-server-save-box"
         style="padding: 10px; box-shadow: 3px 3px 2px #875f3e; border: 1px solid #5f4d41; background-color: #d4c0a1; border-radius: 5px 0 0 5px;">
         <label>hours</label>
         <div id="timerServerSave_hour" style="font-size: 24px; font-weight: bold;"></div>
       </div>
       <div
+        class="rc-server-save-box"
         style="padding: 10px; box-shadow: 3px 3px 2px #875f3e; border: 1px solid #5f4d41; background-color: #d4c0a1;">
         <label>minutes</label>
         <div id="timerServerSave_minute" style="font-size: 24px; font-weight: bold;"></div>
       </div>
       <div
+        class="rc-server-save-box"
         style="padding: 10px; box-shadow: 3px 3px 2px #875f3e; border: 1px solid #5f4d41; background-color: #d4c0a1; border-radius: 0 5px 5px 0;">
         <label>seconds</label>
         <div id="timerServerSave_second" style="font-size: 24px; font-weight: bold;"></div>

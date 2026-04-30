@@ -232,8 +232,8 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
                 <img class="rc-hero-emblem" src="<?= $logoPath; ?>" alt="RavynCore Emblem">
             <?php else: ?>
                 <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
+                <h1><?= escapeHtml($serverName); ?></h1>
             <?php endif; ?>
-            <h1><?= escapeHtml($serverName); ?></h1>
             <p class="rc-hero-tagline"><?= escapeHtml($serverTagline); ?></p>
 
             <div class="rc-hero-ctas">
