@@ -352,8 +352,6 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
 
             <section class="rc-panel">
                 <h3>Community</h3>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= getLink('guilds'); ?>">Guilds</a>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= getLink('powergamers'); ?>">Powergamers</a>
                 <?php if ($discordUrl): ?>
                     <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $discordUrl; ?>" target="_blank" rel="noopener noreferrer">Discord</a>
                 <?php endif; ?>
@@ -361,7 +359,6 @@ $instagramUrl = 'https://www.instagram.com/ravyncore_/';
                 <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $whatsappUrl; ?>" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                 <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $facebookUrl; ?>" target="_blank" rel="noopener noreferrer">Facebook</a>
                 <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $instagramUrl; ?>" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a class="rc-btn rc-btn-primary rc-btn-block" href="<?= getLink('donate'); ?>">Donate</a>
             </section>
         </aside>
     </main>
