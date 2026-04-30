@@ -711,10 +711,10 @@ a:hover {
 
 .rc-rank-row {
     display: grid;
-    grid-template-columns: 30px 52px minmax(0, 1fr);
+    grid-template-columns: 28px 64px minmax(0, 1fr);
     align-items: center;
-    gap: 8px;
-    padding: 8px;
+    gap: 6px;
+    padding: 8px 10px 8px 6px;
     border-radius: 10px;
     border: 1px solid rgba(152, 170, 215, 0.25);
     background: rgba(19, 27, 44, 0.58);
@@ -723,12 +723,15 @@ a:hover {
 .rc-rank-position {
     color: #efb65a;
     font-weight: 700;
+    text-align: center;
 }
 
 .rc-rank-outfit {
-    width: 52px;
-    height: 52px;
+    width: 64px;
+    height: 64px;
     object-fit: contain;
+    object-position: left center;
+    justify-self: start;
     border-radius: 0;
     background: transparent;
     border: 0;
