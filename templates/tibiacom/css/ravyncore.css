@@ -557,7 +557,7 @@ a:hover {
     grid-template-columns: 290px minmax(0, 1fr) 290px;
     gap: 14px;
     align-items: start;
-    margin-top: 30px;
+    margin-top: 16px;
     scroll-margin-top: 12px;
 }
 
@@ -838,8 +838,8 @@ a:hover {
 }
 
 .rc-footer-logo {
-    width: 84px !important;
-    height: 84px !important;
+    width: 72px !important;
+    height: 72px !important;
 }
 
 .rc-footer-brand-text {
@@ -847,11 +847,11 @@ a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 4px;
+    gap: 2px;
 }
 
 .rc-footer-wordmark {
-    width: 168px;
+    width: 140px;
     max-width: 100%;
     height: auto;
     object-fit: contain;
@@ -865,16 +865,16 @@ a:hover {
     letter-spacing: 3px;
     color: #d8c79a;
     text-transform: uppercase;
-    width: 168px;
+    width: 140px;
     text-align: center;
-    margin-top: 6px;
+    margin-top: 0;
     white-space: nowrap;
 }
 
 .hero-brand-bottom {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 2px;
 }
 
@@ -886,6 +886,9 @@ a:hover {
     color: #d8c79a;
     letter-spacing: 3px;
     font-size: 15px;
+    width: 140px;
+    text-align: center;
+    margin-top: 0;
 }
 
 .rc-footer-brand strong {

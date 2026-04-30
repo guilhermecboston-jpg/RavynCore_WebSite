@@ -1,68 +1,10 @@
 (function () {
     var navToggle = document.getElementById('rcNavToggle');
     var nav = document.getElementById('rcNav');
-    var mainGrid = document.querySelector('.rc-main-grid');
 
     if (navToggle && nav) {
         navToggle.addEventListener('click', function () {
             nav.classList.toggle('is-open');
-        });
-    }
-
-    if (nav && mainGrid) {
-        var topNavLinks = nav.querySelectorAll('.rc-nav-item > a');
-
-        function isModifiedClick(event) {
-            return event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
-        }
-
-        topNavLinks.forEach(function (link) {
-            link.addEventListener('click', function (event) {
-                if (isModifiedClick(event)) {
-                    return;
-                }
-
-                if (link.getAttribute('target') === '_blank') {
-                    return;
-                }
-
-                var href = link.getAttribute('href');
-                if (!href || href === '#') {
-                    event.preventDefault();
-                    mainGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    return;
-                }
-
-                var targetUrl;
-                try {
-                    targetUrl = new URL(href, window.location.href);
-                } catch (error) {
-                    return;
-                }
-
-                var currentUrl = new URL(window.location.href);
-                var isInternal = targetUrl.origin === currentUrl.origin;
-                var sameDocument = targetUrl.origin === currentUrl.origin &&
-                    targetUrl.pathname === currentUrl.pathname &&
-                    targetUrl.search === currentUrl.search &&
-                    targetUrl.hash === currentUrl.hash;
-
-                if (!isInternal) {
-                    return;
-                }
-
-                // First click at the top should always reveal the page content.
-                if (window.scrollY < 120) {
-                    event.preventDefault();
-                    mainGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    return;
-                }
-
-                if (sameDocument) {
-                    event.preventDefault();
-                    mainGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
         });
     }
 
