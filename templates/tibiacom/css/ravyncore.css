@@ -317,7 +317,7 @@ a:hover {
 .hero-ravyncore {
     margin-bottom: 0;
     margin-top: 0;
-    padding: 80px 0 22px;
+    padding: 80px 0 0;
     min-height: unset;
     height: auto;
     display: flex;
@@ -338,10 +338,13 @@ a:hover {
     .rc-hero,
     .hero-ravyncore {
         min-height: 100vh;
+        padding-bottom: 0;
     }
 
-    .rc-hero-stats {
+    .rc-hero .rc-hero-stats,
+    .hero-ravyncore .rc-hero-stats {
         margin-top: auto;
+        margin-bottom: 0;
     }
 }
 
