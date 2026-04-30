@@ -14,6 +14,53 @@
         });
     });
 
+    if (document.body.classList.contains('rc-page-accountmanagement')) {
+        document.querySelectorAll('.rc-rich-content input[type="text"]').forEach(function (input) {
+            var row = input.closest('tr');
+            var cell = input.closest('td');
+            if (!row || !cell) {
+                return;
+            }
+
+            var rowText = (row.textContent || '').toLowerCase();
+            var cellText = (cell.textContent || '').toLowerCase();
+            if (rowText.indexOf('character name') !== -1 || cellText.indexOf('suggest name') !== -1) {
+                input.classList.add('rc-charname-input');
+                var hint = cell.querySelector('small');
+                if (hint && (hint.textContent || '').toLowerCase().indexOf('suggest') !== -1) {
+                    hint.classList.add('rc-charname-suggest');
+                }
+            }
+        });
+    }
+
+    if (document.body.classList.contains('rc-page-lostaccount')) {
+        var backImageInputs = document.querySelectorAll('input[type="image"][src*="back"], input[type="image"][alt*="Back"], input[type="image"][name*="back"]');
+        backImageInputs.forEach(function (input) {
+            var form = input.closest('form');
+            if (!form) {
+                return;
+            }
+
+            var button = document.createElement('button');
+            button.type = 'submit';
+            button.className = 'rc-btn rc-btn-subtle';
+            button.textContent = 'Back';
+            button.value = input.value || 'Back';
+            if (input.name) {
+                button.name = input.name;
+            }
+
+            var wrapper = document.createElement('div');
+            wrapper.style.display = 'inline-flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.justifyContent = 'center';
+            wrapper.appendChild(button);
+
+            input.parentNode.replaceChild(wrapper, input);
+        });
+    }
+
     var loc = window.location;
     var pathPart = loc.pathname.replace(/\/+$/, '').split('/').pop().toLowerCase();
     var qs = new URLSearchParams(loc.search);
