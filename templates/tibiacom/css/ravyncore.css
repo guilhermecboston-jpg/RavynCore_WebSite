@@ -317,7 +317,7 @@ a:hover {
 .hero-ravyncore {
     margin-bottom: 0;
     margin-top: 0;
-    padding: 110px 0 0;
+    padding: 80px 0 0;
     min-height: unset;
     height: auto;
     display: flex;
@@ -431,7 +431,7 @@ a:hover {
     max-width: 70vw;
     max-height: 320px;
     object-fit: contain;
-    margin-top: 110px;
+    margin-top: 85px;
     margin-bottom: -28px;
     transform: none;
     display: block;
