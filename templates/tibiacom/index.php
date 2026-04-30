@@ -53,13 +53,25 @@ $serverName = $config['lua']['serverName'] ?? 'RavynCore';
 $serverTagline = 'Domine, Conquiste, Seja Lendario';
 $pageTitle = !empty($title) ? $title : ucfirst((string)PAGE);
 
+$brandDir = $template_path . '/images/brand';
+$brandLogoPreferred = $brandDir . '/ravyncore-logo.png';
+$brandBackgroundPreferred = $brandDir . '/ravyncore-background.jpg';
+
 $logoFile = $config['logo_image'] ?? 'tibia-logo-artwork-top.gif';
 $logoPath = $template_path . '/images/header/' . $logoFile;
+if (file_exists(BASE . $brandLogoPreferred)) {
+    $logoPath = $brandLogoPreferred;
+}
+
 if (!file_exists(BASE . $logoPath)) {
     $logoPath = $template_path . '/images/header/tibia-logo-artwork-top.gif';
 }
 
 $backgroundFile = $template_path . '/images/header/bgs/12.jpg';
+if (file_exists(BASE . $brandBackgroundPreferred)) {
+    $backgroundFile = $brandBackgroundPreferred;
+}
+
 $configuredBackground = $config['background_image'] ?? '';
 if (!empty($configuredBackground)) {
     $candidate = $template_path . '/images/header/' . $configuredBackground;

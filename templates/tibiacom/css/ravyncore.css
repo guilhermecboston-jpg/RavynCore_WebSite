@@ -717,6 +717,7 @@ a:hover {
     border: 1px solid rgba(118, 138, 182, 0.24);
     padding: 9px 10px;
     color: #e5edff;
+    background: rgba(21, 30, 48, 0.72) !important;
 }
 
 .rc-rich-content tr:nth-child(even) td {
@@ -752,6 +753,50 @@ a:hover {
     color: #f0c982 !important;
 }
 
+.rc-rich-content table[style],
+.rc-rich-content tr[style],
+.rc-rich-content td[style],
+.rc-rich-content th[style],
+.rc-rich-content div[style*="background-color"],
+.rc-rich-content div[style*="background-image"],
+.rc-rich-content span[style*="background-image"] {
+    background-image: none !important;
+}
+
+.rc-rich-content tr[bgcolor] td,
+.rc-rich-content td[bgcolor],
+.rc-rich-content th[bgcolor] {
+    background: rgba(24, 34, 53, 0.84) !important;
+    color: #e7efff !important;
+}
+
+.rc-rich-content td[style*="background-color:#D4C0A1"],
+.rc-rich-content td[style*="background-color:#F1E0C6"],
+.rc-rich-content td[style*="background-color:#505050"],
+.rc-rich-content tr[style*="background-color:#D4C0A1"] td,
+.rc-rich-content tr[style*="background-color:#F1E0C6"] td,
+.rc-rich-content tr[style*="background-color:#505050"] td {
+    background: rgba(24, 34, 53, 0.84) !important;
+    color: #e7efff !important;
+}
+
+.rc-rich-content tr[style*="background-color"] td {
+    background: rgba(24, 34, 53, 0.84) !important;
+}
+
+.rc-rich-content .Odd,
+.rc-rich-content .Even {
+    background: rgba(20, 28, 44, 0.82) !important;
+}
+
+.rc-rich-content .NewsTickerDate,
+.rc-rich-content .NewsTickerText a,
+.rc-rich-content #TickerEntry-0-FullText,
+.rc-rich-content [id^="TickerEntry-"][id$="-FullText"],
+.rc-rich-content [id^="TickerEntry-"][id$="-ShortText"] {
+    color: #d4e1fa !important;
+}
+
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -765,13 +810,14 @@ textarea {
     width: 100%;
     min-height: 40px;
     border-radius: 10px;
-    border: 1px solid rgba(153, 173, 216, 0.46);
-    background: linear-gradient(180deg, #1f2a3e 0%, #1a2334 100%);
-    color: #f3f7ff;
+    border: 1px solid rgba(153, 173, 216, 0.46) !important;
+    background: linear-gradient(180deg, #1f2a3e 0%, #1a2334 100%) !important;
+    color: #f3f7ff !important;
     padding: 9px 11px;
     font-family: 'Rajdhani', 'Segoe UI', sans-serif;
     font-size: 1rem;
     line-height: 1.2;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 textarea {
@@ -844,6 +890,31 @@ button {
     border: 1px solid rgba(147, 168, 214, 0.5);
     background: rgba(21, 31, 48, 0.8);
     padding: 7px;
+}
+
+select {
+    appearance: none;
+    background-image:
+        linear-gradient(45deg, transparent 50%, #d2ddf7 50%),
+        linear-gradient(135deg, #d2ddf7 50%, transparent 50%),
+        linear-gradient(180deg, #1f2a3e 0%, #1a2334 100%) !important;
+    background-position:
+        calc(100% - 18px) calc(50% - 3px),
+        calc(100% - 12px) calc(50% - 3px),
+        0 0;
+    background-size: 6px 6px, 6px 6px, 100% 100%;
+    background-repeat: no-repeat;
+    padding-right: 34px;
+}
+
+option {
+    background: #1a2538;
+    color: #eef4ff;
+}
+
+.rc-rich-content .MediumButtonForm,
+.rc-rich-content .BigButton {
+    margin: 0;
 }
 
 .rc-form-button {
