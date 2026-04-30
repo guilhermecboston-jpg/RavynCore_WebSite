@@ -10,7 +10,7 @@
 
     document.querySelectorAll('[data-rc-letters-only]').forEach(function (input) {
         input.addEventListener('input', function () {
-            input.value = input.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '');
+            input.value = input.value.replace(/[^A-Za-z\s]/g, '');
         });
     });
 

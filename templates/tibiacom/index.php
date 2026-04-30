@@ -379,7 +379,7 @@ $socialLinks = [
             <section class="rc-panel">
                 <h3>Search Character</h3>
                 <form method="post" action="<?= getLink('characters'); ?>" class="rc-search-form">
-                    <input type="text" name="name" maxlength="29" placeholder="Character name" pattern="[A-Za-zÀ-ÿ\s]+" title="Use only letters and spaces" data-rc-letters-only>
+                    <input type="text" name="name" maxlength="29" placeholder="Character name" pattern="[A-Za-z\s]+" title="Use only letters and spaces" data-rc-letters-only>
                     <button type="submit" class="rc-btn rc-btn-subtle rc-btn-block">Search</button>
                 </form>
             </section>

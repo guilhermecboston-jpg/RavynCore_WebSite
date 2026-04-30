@@ -764,6 +764,7 @@ a:hover {
     border: 1px solid rgba(152, 170, 215, 0.25);
     background: rgba(19, 27, 44, 0.58);
     color: inherit;
+    cursor: pointer;
     transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
@@ -779,7 +780,7 @@ a:hover {
     color: #efb65a;
     font-weight: 700;
     text-align: center;
-    font-size: 1.08rem;
+    font-size: 1.28rem;
 }
 
 .rc-rank-outfit {
@@ -789,6 +790,7 @@ a:hover {
     object-position: center center;
     justify-self: center;
     align-self: center;
+    transform: translateY(-2px);
     border-radius: 0;
     background: transparent;
     border: 0;
@@ -2091,4 +2093,117 @@ body.rc-page-lostaccount input[type="button"][value="Back"] {
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 0.03em;
+}
+
+body.rc-page-lostaccount .BigButton,
+body.rc-page-lostaccount a[href*="lostaccount"] .BigButton {
+    border: 1px solid rgba(159, 177, 222, 0.45) !important;
+    border-radius: 10px !important;
+    background: linear-gradient(90deg, rgba(30, 44, 72, 0.9), rgba(32, 29, 62, 0.9)) !important;
+    box-shadow: none !important;
+}
+
+/* Create Account finishing polish */
+body[class*="rc-page-account"] .rc-rich-content label a[href*="rules"],
+body[class*="rc-page-account"] .rc-rich-content label a[href*="rules"]:hover,
+body[class*="rc-page-account"] .rc-rich-content label a[href*="rules"]:focus,
+body[class*="createaccount"] .rc-rich-content label a[href*="rules"],
+body[class*="createaccount"] .rc-rich-content label a[href*="rules"]:hover,
+body[class*="createaccount"] .rc-rich-content label a[href*="rules"]:focus,
+body[class*="account/create"] .rc-rich-content label a[href*="rules"],
+body[class*="account/create"] .rc-rich-content label a[href*="rules"]:hover,
+body[class*="account/create"] .rc-rich-content label a[href*="rules"]:focus {
+    color: #f0c982 !important;
+    font-weight: 700;
+    text-decoration: none !important;
+}
+
+body[class*="createaccount"] .rc-rich-content .TableContainer,
+body[class*="account/create"] .rc-rich-content .TableContainer {
+    border: 1px solid rgba(154, 176, 224, 0.24) !important;
+    border-radius: 12px !important;
+    background: rgba(13, 20, 34, 0.72) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025) !important;
+    overflow: hidden !important;
+}
+
+body[class*="createaccount"] .rc-rich-content .TableContainer .TableContainer,
+body[class*="account/create"] .rc-rich-content .TableContainer .TableContainer,
+body[class*="createaccount"] .rc-rich-content .InnerTableContainer,
+body[class*="account/create"] .rc-rich-content .InnerTableContainer,
+body[class*="createaccount"] .rc-rich-content .TableContentContainer,
+body[class*="account/create"] .rc-rich-content .TableContentContainer {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 6px 8px !important;
+}
+
+body[class*="createaccount"] .rc-rich-content .TableContent tr + tr td,
+body[class*="createaccount"] .rc-rich-content .TableContent tr + tr th,
+body[class*="account/create"] .rc-rich-content .TableContent tr + tr td,
+body[class*="account/create"] .rc-rich-content .TableContent tr + tr th {
+    border-top: 0 !important;
+}
+
+body[class*="createaccount"] .rc-rich-content td.LabelV,
+body[class*="account/create"] .rc-rich-content td.LabelV {
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+}
+
+body[class*="createaccount"] .rc-rich-content td.LabelV br,
+body[class*="account/create"] .rc-rich-content td.LabelV br {
+    display: none !important;
+}
+
+body[class*="createaccount"] .rc-rich-content td.LabelV .red,
+body[class*="account/create"] .rc-rich-content td.LabelV .red {
+    display: inline !important;
+    margin-left: 4px !important;
+}
+
+body[class*="createaccount"] .rc-rich-content input[type="text"],
+body[class*="account/create"] .rc-rich-content input[type="text"] {
+    height: 42px !important;
+    min-height: 42px !important;
+    width: 100% !important;
+    padding: 0 12px !important;
+}
+
+/* Character page compactness + high-zoom containment */
+body.rc-page-characters .rc-rich-content .TableContainer + .TableContainer {
+    margin-top: 6px !important;
+}
+
+body.rc-page-characters .rc-rich-content .InnerTableContainer,
+body.rc-page-characters .rc-rich-content .TableContentContainer,
+body.rc-page-characters .rc-rich-content .BoxContent,
+body.rc-page-characters .rc-rich-content .Message {
+    padding: 5px 7px !important;
+    margin: 2px 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .TableContent td,
+body.rc-page-characters .rc-rich-content .TableContent th {
+    padding: 5px 7px !important;
+}
+
+body.rc-page-characters .rc-rich-content .progress {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 160px;
+    overflow: hidden !important;
+}
+
+body.rc-page-characters .rc-rich-content .progress-bar {
+    max-width: 100% !important;
+}
+
+@media (max-width: 1280px) {
+    body.rc-page-characters .rc-rich-content .progress {
+        min-width: 0;
+    }
 }

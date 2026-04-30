@@ -6,5 +6,5 @@ $config['menu_categories'] = [
     MENU_CATEGORY_FORUM      => ['id' => 'forum',          'name' => 'Forum'],
     MENU_CATEGORY_LIBRARY    => ['id' => 'library',        'name' => 'Library'],
     MENU_CATEGORY_CHARBAAZAR => ['id' => 'charactertrade', 'name' => 'Char Baazar'],
-    MENU_CATEGORY_SHOP       => ['id' => 'shops',          'name' => 'Shop']
+    MENU_CATEGORY_SHOP       => ['id' => 'shops',          'name' => 'Donate']
 ];
