@@ -16,7 +16,7 @@
         ? loc.search.slice(1).split('&')[0].split('=')[0].toLowerCase()
         : '';
     var marker = subtopicParam || pathPart || queryFirst;
-    var homeMarkers = ['', 'index.php', 'news', 'latestnews', 'home'];
+    var homeMarkers = ['', 'index.php', 'home'];
     if (homeMarkers.indexOf(marker) === -1 && !loc.hash) {
         var main = document.getElementById('rcMain');
         if (main) {
