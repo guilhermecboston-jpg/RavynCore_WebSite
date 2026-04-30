@@ -338,7 +338,7 @@ a:hover {
     .rc-hero,
     .hero-ravyncore {
         min-height: 100vh;
-        padding-bottom: 0;
+        padding-bottom: 24px;
     }
 
     .rc-hero .rc-hero-stats,
@@ -1542,7 +1542,7 @@ body.rc-page option {
 @media (min-width: 1141px) and (max-height: 920px) {
     .rc-hero,
     .hero-ravyncore {
-        padding: 60px 0 0;
+        padding-top: 60px;
     }
 
     .hero-main-slogan,
@@ -1589,7 +1589,7 @@ body.rc-page option {
 @media (min-width: 1141px) and (max-height: 780px) {
     .rc-hero,
     .hero-ravyncore {
-        padding: 50px 0 0;
+        padding-top: 50px;
     }
 
     .hero-main-slogan,
