@@ -36,15 +36,9 @@ class __TwigTemplate_dadc585a90d2b9a2cfbfb234c9a5429d extends \Twig\Template
         // line 1
         ob_start(function () { return ''; });
         // line 2
-        echo "<div class=\"BigButton\" style=\"background-image:url(";
-        echo twig_escape_filter($this->env, ($context["template_path"] ?? null), "html", null, true);
-        echo "/images/global/buttons/sbutton_red.gif)\">
-<div onmouseover=\"MouseOverBigButton(this);\" onmouseout=\"MouseOutBigButton(this);\"><div class=\"BigButtonOver\" style=\"background-image: url(";
-        // line 3
-        echo twig_escape_filter($this->env, ($context["template_path"] ?? null), "html", null, true);
-        echo "/images/global/buttons/sbutton_red_over.gif); visibility: hidden;\"></div>
-<input class=\"BigButtonText\" type=\"submit\" value=\"Logout\"></div>
-</div>
+        echo "  <button class=\"rc-btn rc-btn-danger rc-form-button\" type=\"submit\">
+    Logout
+  </button>
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
     }
@@ -54,14 +48,9 @@ class __TwigTemplate_dadc585a90d2b9a2cfbfb234c9a5429d extends \Twig\Template
         return "buttons.logout.html.twig";
     }
 
-    public function isTraitable()
-    {
-        return false;
-    }
-
     public function getDebugInfo()
     {
-        return array (  44 => 3,  39 => 2,  37 => 1,);
+        return array (  39 => 2,  37 => 1,);
     }
 
     public function getSourceContext()

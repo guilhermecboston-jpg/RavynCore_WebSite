@@ -88,7 +88,7 @@ $config = array(
 	),
 
 	// images
-	'outfit_images_url' => './outfit/animoutfit.php', // set to animoutfit.php for animated outfit
+	'outfit_images_url' => 'http://177.55.153.178/images/animated-outfits/animoutfit.php', // set to animoutfit.php for animated outfit
 	'item_images_url' => 'images/items/', // set to images/items if you host your own items in images folder
 
 	// account
@@ -314,12 +314,13 @@ $config = array(
 	'banner_image' => '500x660.png', // templates->tibiacom->images->carousel
 	'banner_link' => 'www.instagram.com',
 
+
 	// status bar
 	'status_bar' => true,
-	'client_link' => 'https://github.com/zimbadev/gameclient/releases', // link to download tibia client
-	'discord_link' => 'https://discord.com/invite/7AYJEHTghQ', // link to join discord channel
+	'client_link' => 'https://github.com/.../gameclient/releases', // link to download tibia client
+	'discord_link' => 'https://discord.gg/7TVemZum', // link to join discord channel
 	'whatsapp_link' => '5511912345678', // wa.me/5511912345678
-	'instagram_link' => 'profile', // www.instagram.com/profile
+	'instagram_link' => 'ravyncore_', // www.instagram.com/profile
 	'facebook_link' => 'page', // www.facebook.com/page
 	'collapse_status' => true,
 

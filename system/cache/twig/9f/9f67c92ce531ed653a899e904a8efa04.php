@@ -36,25 +36,16 @@ class __TwigTemplate_c958c7782a64e8fe0a38a73b33ce2bb2 extends \Twig\Template
         // line 1
         ob_start(function () { return ''; });
         // line 2
-        echo "  <div class=\"BigButton\" style=\"background-image:url(";
-        echo twig_escape_filter($this->env, ($context["template_path"] ?? null), "html", null, true);
-        echo "/images/global/buttons/sbutton.gif)\">
-    <div onmouseover=\"MouseOverBigButton(this);\" onmouseout=\"MouseOutBigButton(this);\">
-      <div class=\"BigButtonOver\"
-           style=\"background-image: url(";
-        // line 5
-        echo twig_escape_filter($this->env, ($context["template_path"] ?? null), "html", null, true);
-        echo "/images/global/buttons/sbutton_over.gif); visibility: hidden;\"></div>
-      <input class=\"BigButtonText\" type=\"submit\" value=\"";
-        // line 6
-        echo twig_escape_filter($this->env, ($context["button_name"] ?? null), "html", null, true);
-        echo "\" title=\"";
+        echo "  <button class=\"rc-btn rc-btn-subtle rc-form-button\" type=\"submit\" title=\"";
         echo twig_escape_filter($this->env, ($context["button_name"] ?? null), "html", null, true);
         echo " ";
-        echo twig_escape_filter($this->env, ($context["button_title"] ?? null), "html", null, true);
+        echo twig_escape_filter($this->env, ((array_key_exists("button_title", $context)) ? (_twig_default_filter(($context["button_title"] ?? null), "")) : ("")), "html", null, true);
         echo "\">
-    </div>
-  </div>
+    ";
+        // line 3
+        echo twig_escape_filter($this->env, ($context["button_name"] ?? null), "html", null, true);
+        echo "
+  </button>
 ";
         echo trim(preg_replace('/>\s+</', '><', ob_get_clean()));
     }
@@ -71,7 +62,7 @@ class __TwigTemplate_c958c7782a64e8fe0a38a73b33ce2bb2 extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  50 => 6,  46 => 5,  39 => 2,  37 => 1,);
+        return array (  46 => 3,  39 => 2,  37 => 1,);
     }
 
     public function getSourceContext()
