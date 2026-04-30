@@ -56,6 +56,7 @@ $pageTitle = !empty($title) ? $title : ucfirst((string)PAGE);
 $brandDir = $template_path . '/images/brand';
 $brandLogoPreferred = $brandDir . '/ravyncore-logo.png';
 $brandBackgroundPreferred = $brandDir . '/ravyncore-background.jpg';
+$brandSloganPreferred = $brandDir . '/sloganRC.png';
 
 $logoFile = $config['logo_image'] ?? 'tibia-logo-artwork-top.gif';
 $logoPath = $template_path . '/images/header/' . $logoFile;
@@ -79,6 +80,8 @@ if (!empty($configuredBackground)) {
         $backgroundFile = $candidate;
     }
 }
+
+$hasBrandSlogan = file_exists(BASE . $brandSloganPreferred);
 
 $playersOnline = (int)($status['players'] ?? 0);
 $playersMax = (int)($status['playersMax'] ?? 0);
@@ -219,7 +222,12 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
         <div class="rc-hero-ice"></div>
         <div class="rc-hero-content">
             <p class="rc-hero-kicker">The Ultimate Tibia Experience</p>
-            <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
+            <?php if ($hasBrandSlogan): ?>
+                <img class="rc-hero-wordmark" src="<?= $brandSloganPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
+                <img class="rc-hero-emblem" src="<?= $logoPath; ?>" alt="RavynCore Emblem">
+            <?php else: ?>
+                <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
+            <?php endif; ?>
             <h1><?= escapeHtml($serverName); ?></h1>
             <p class="rc-hero-tagline"><?= escapeHtml($serverTagline); ?></p>
 

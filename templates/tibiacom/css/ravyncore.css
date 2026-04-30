@@ -291,6 +291,24 @@ a:hover {
     filter: drop-shadow(0 0 22px rgba(84, 110, 186, 0.25));
 }
 
+.rc-hero-wordmark {
+    width: min(760px, 100%);
+    max-height: 240px;
+    object-fit: contain;
+    margin: 8px auto 6px;
+    display: block;
+    filter: drop-shadow(0 0 24px rgba(125, 88, 195, 0.28));
+}
+
+.rc-hero-emblem {
+    width: min(220px, 40vw);
+    max-height: 220px;
+    object-fit: contain;
+    margin: 0 auto 4px;
+    display: block;
+    filter: drop-shadow(0 0 20px rgba(214, 144, 58, 0.28));
+}
+
 .rc-hero h1 {
     margin: 0;
     font-family: 'Cinzel', 'Georgia', serif;
@@ -1071,6 +1089,16 @@ option {
 
     .rc-hero {
         padding: 16px;
+    }
+
+    .rc-hero-wordmark {
+        width: min(640px, 100%);
+        max-height: 160px;
+    }
+
+    .rc-hero-emblem {
+        width: min(170px, 48vw);
+        max-height: 170px;
     }
 
     .rc-footer-bottom {
