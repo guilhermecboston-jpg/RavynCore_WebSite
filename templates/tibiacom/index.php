@@ -45,13 +45,38 @@ if (!function_exists('rc_rashid_city')) {
     }
 }
 
+if (!function_exists('rc_link_with_main_anchor')) {
+    function rc_link_with_main_anchor($url)
+    {
+        $value = trim((string)$url);
+        if ($value === '' || $value === '#' || strpos($value, '#rcMainGrid') !== false) {
+            return $value;
+        }
+
+        if (preg_match('/^(mailto:|tel:|javascript:)/i', $value)) {
+            return $value;
+        }
+
+        if (preg_match('/^https?:\/\//i', $value)) {
+            $targetHost = parse_url($value, PHP_URL_HOST);
+            $baseHost = parse_url(BASE_URL, PHP_URL_HOST);
+
+            if (!empty($targetHost) && !empty($baseHost) && strcasecmp($targetHost, $baseHost) !== 0) {
+                return $value;
+            }
+        }
+
+        return strpos($value, '#') === false ? $value . '#rcMainGrid' : $value;
+    }
+}
+
 $menuCategories = config('menu_categories') ?: [];
 $menus = get_template_menus();
 $templateLinks = isset($template) && is_array($template) ? $template : [];
 
 $serverName = $config['lua']['serverName'] ?? 'RavynCore';
 $serverTagline = 'Domine, Conquiste, Seja Lendario';
-$headerSubtitle = 'Custom MMORPG';
+$headerSubtitle = 'Custom Map';
 $pageTitle = !empty($title) ? $title : ucfirst((string)PAGE);
 
 $brandDir = $template_path . '/images/brand';
@@ -183,11 +208,11 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
 
             <div class="rc-header-actions">
                 <?php if ($logged): ?>
-                    <a class="rc-btn rc-btn-subtle" href="<?= $accountManageUrl; ?>">My Account</a>
+                    <a class="rc-btn rc-btn-subtle" href="<?= rc_link_with_main_anchor($accountManageUrl); ?>">My Account</a>
                     <a class="rc-btn rc-btn-danger" href="<?= $accountLogoutUrl; ?>">Logout</a>
                 <?php else: ?>
-                    <a class="rc-btn rc-btn-subtle" href="<?= $accountManageUrl; ?>">Login</a>
-                    <a class="rc-btn rc-btn-primary" href="<?= $accountCreateUrl; ?>">Create Account</a>
+                    <a class="rc-btn rc-btn-subtle" href="<?= rc_link_with_main_anchor($accountManageUrl); ?>">Login</a>
+                    <a class="rc-btn rc-btn-primary" href="<?= rc_link_with_main_anchor($accountCreateUrl); ?>">Create Account</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -242,9 +267,9 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
             <p class="rc-hero-kicker hero-subtitle">THE ULTIMATE TIBIA EXPERIENCE</p>
 
             <div class="rc-hero-ctas">
-                <a class="rc-btn rc-btn-play" href="<?= $downloadUrl; ?>">Play Now</a>
-                <a class="rc-btn rc-btn-violet" href="<?= $accountCreateUrl; ?>">Create Account</a>
-                <a class="rc-btn rc-btn-outline" href="<?= getLink('highscores'); ?>">View Ranking</a>
+                <a class="rc-btn rc-btn-play" href="<?= rc_link_with_main_anchor($downloadUrl); ?>">Play Now</a>
+                <a class="rc-btn rc-btn-violet" href="<?= rc_link_with_main_anchor($accountCreateUrl); ?>">Create Account</a>
+                <a class="rc-btn rc-btn-outline" href="<?= rc_link_with_main_anchor(getLink('highscores')); ?>">View Ranking</a>
             </div>
         </div>
 
@@ -267,7 +292,7 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
         </div>
     </section>
 
-    <main class="rc-main-grid">
+    <main id="rcMainGrid" class="rc-main-grid">
         <aside class="rc-sidebar">
             <section class="rc-panel">
                 <h3>Server Status</h3>
@@ -288,7 +313,7 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
                 <ul class="rc-links">
                     <?php foreach ($quickLinks as $link): ?>
                         <li>
-                            <a href="<?= $link['url']; ?>"><?= escapeHtml($link['name']); ?></a>
+                            <a href="<?= rc_link_with_main_anchor($link['url']); ?>"><?= escapeHtml($link['name']); ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -334,7 +359,7 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= getLink('highscores'); ?>">Full Ranking</a>
+                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= rc_link_with_main_anchor(getLink('highscores')); ?>">Full Ranking</a>
             </section>
 
             <section class="rc-panel">
@@ -347,12 +372,12 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
 
             <section class="rc-panel">
                 <h3>Community</h3>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= getLink('guilds'); ?>">Guilds</a>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= getLink('powergamers'); ?>">Powergamers</a>
+                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= rc_link_with_main_anchor(getLink('guilds')); ?>">Guilds</a>
+                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= rc_link_with_main_anchor(getLink('powergamers')); ?>">Powergamers</a>
                 <?php if ($discordUrl): ?>
                     <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= $discordUrl; ?>" target="_blank" rel="noopener noreferrer">Discord</a>
                 <?php endif; ?>
-                <a class="rc-btn rc-btn-primary rc-btn-block" href="<?= getLink('donate'); ?>">Donate</a>
+                <a class="rc-btn rc-btn-primary rc-btn-block" href="<?= rc_link_with_main_anchor(getLink('donate')); ?>">Donate</a>
             </section>
         </aside>
     </main>
