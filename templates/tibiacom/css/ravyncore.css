@@ -688,7 +688,7 @@ a:hover {
 
 .rc-rank-row {
     display: grid;
-    grid-template-columns: 30px 34px minmax(0, 1fr);
+    grid-template-columns: 30px 52px minmax(0, 1fr);
     align-items: center;
     gap: 8px;
     padding: 8px;
@@ -703,12 +703,12 @@ a:hover {
 }
 
 .rc-rank-outfit {
-    width: 34px;
-    height: 34px;
+    width: 52px;
+    height: 52px;
     object-fit: contain;
-    border-radius: 6px;
-    background: rgba(3, 5, 11, 0.55);
-    border: 1px solid rgba(160, 178, 215, 0.34);
+    border-radius: 0;
+    background: transparent;
+    border: 0;
 }
 
 .rc-rank-player {
@@ -959,19 +959,26 @@ a:hover {
     margin: 6px 0;
 }
 
-/* Override legacy inline cream border on TableContent and remove form gridlines */
-body.rc-page .rc-rich-content table.TableContent,
+/* Override legacy inline cream border on TableContent (we re-style it below) */
 body.rc-page .rc-rich-content table.TableContent[style] {
-    border: 0 !important;
+    border: 1px solid rgba(154, 176, 224, 0.22) !important;
+    border-radius: 12px;
+    background: rgba(15, 21, 34, 0.55) !important;
+}
+
+body.rc-page .rc-rich-content .TableContent td,
+body.rc-page .rc-rich-content .TableContent th,
+body.rc-page .rc-rich-content td.LabelV,
+body.rc-page .rc-rich-content td.LabelV175,
+body.rc-page .rc-rich-content td.LabelV80 {
+    border-left: 0 !important;
+    border-right: 0 !important;
     background: transparent !important;
 }
 
-body.rc-page .rc-rich-content .TableContent tr,
-body.rc-page .rc-rich-content .TableContent td,
-body.rc-page .rc-rich-content .TableContent th,
-body.rc-page .rc-rich-content td.LabelV {
-    border: 0 !important;
-    background: transparent !important;
+body.rc-page .rc-rich-content .TableContent tr + tr td,
+body.rc-page .rc-rich-content .TableContent tr + tr th {
+    border-top: 1px solid rgba(154, 176, 224, 0.14) !important;
 }
 
 .rc-rich-content .CaptionContainer,
@@ -1020,23 +1027,39 @@ body.rc-page .rc-rich-content td.LabelV {
 
 .rc-rich-content table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     background: transparent !important;
+}
+
+.rc-rich-content table.TableContent {
+    border: 1px solid rgba(154, 176, 224, 0.22) !important;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(15, 21, 34, 0.55) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
 .rc-rich-content th,
 .rc-rich-content td {
-    border: 1px solid rgba(118, 138, 182, 0.24);
-    padding: 9px 10px;
+    border: 0;
+    padding: 9px 12px;
     color: #e5edff;
-    background: rgba(21, 30, 48, 0.72) !important;
+    background: transparent !important;
+}
+
+.rc-rich-content table.TableContent tr + tr td,
+.rc-rich-content table.TableContent tr + tr th {
+    border-top: 1px solid rgba(154, 176, 224, 0.14);
 }
 
 .rc-rich-content tr:nth-child(even) td {
-    background: rgba(28, 37, 58, 0.38);
+    background: rgba(28, 37, 58, 0.32) !important;
 }
 
-.rc-rich-content .LabelV {
+.rc-rich-content .LabelV,
+.rc-rich-content .LabelV175,
+.rc-rich-content .LabelV80 {
     width: 180px;
     font-weight: 700;
     color: #f0c982;
@@ -1044,9 +1067,10 @@ body.rc-page .rc-rich-content td.LabelV {
 
 .rc-rich-content .LabelH td,
 .rc-rich-content .LabelH th {
-    background: rgba(57, 37, 27, 0.6) !important;
+    background: rgba(57, 37, 27, 0.55) !important;
     color: #ffe7bf;
     font-weight: 700;
+    border-bottom: 1px solid rgba(208, 158, 84, 0.32) !important;
 }
 
 .rc-rich-content .TopButtonContainer,
