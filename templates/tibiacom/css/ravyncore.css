@@ -31,6 +31,11 @@ body {
     padding: 0;
 }
 
+html,
+body {
+    overflow-x: clip;
+}
+
 body.rc-page {
     min-height: 100vh;
     font-family: 'Rajdhani', 'Segoe UI', sans-serif;
@@ -325,7 +330,9 @@ a:hover {
     justify-content: flex-start;
     position: relative;
     overflow: hidden;
-    width: 100%;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     border: none;
     border-radius: 0;
     box-shadow: none;
