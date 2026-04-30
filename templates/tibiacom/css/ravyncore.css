@@ -1525,6 +1525,111 @@ body.rc-page option {
     }
 }
 
+@media (min-width: 1141px) and (max-height: 920px) {
+    .rc-hero,
+    .hero-ravyncore {
+        padding: 60px 0 0;
+    }
+
+    .hero-main-slogan,
+    .rc-hero-wordmark,
+    .hero-logo-text {
+        width: 520px;
+        margin-top: 38px;
+        margin-bottom: -22px;
+        max-height: 210px;
+    }
+
+    .hero-main-emblem,
+    .rc-hero-emblem,
+    .hero-logo-round {
+        width: 220px;
+        max-height: 220px;
+    }
+
+    .rc-hero-ctas {
+        gap: 12px;
+        margin-top: 4px;
+        margin-bottom: 6px;
+    }
+
+    .rc-hero-ctas .rc-btn {
+        height: 42px;
+        padding: 0 26px;
+        font-size: 14px;
+    }
+
+    .rc-hero-stats {
+        margin-top: 10px;
+    }
+
+    .rc-stat {
+        padding: 8px 10px;
+    }
+
+    .rc-stat strong {
+        font-size: 1.15rem;
+    }
+}
+
+@media (min-width: 1141px) and (max-height: 780px) {
+    .rc-hero,
+    .hero-ravyncore {
+        padding: 50px 0 0;
+    }
+
+    .hero-main-slogan,
+    .rc-hero-wordmark,
+    .hero-logo-text {
+        width: 460px;
+        margin-top: 22px;
+        margin-bottom: -18px;
+        max-height: 170px;
+    }
+
+    .hero-main-emblem,
+    .rc-hero-emblem,
+    .hero-logo-round {
+        width: 180px;
+        max-height: 180px;
+    }
+
+    .rc-hero-kicker,
+    .hero-subtitle {
+        font-size: 12px;
+        letter-spacing: 2.2px;
+        margin-bottom: 4px;
+    }
+
+    .rc-hero-ctas {
+        gap: 10px;
+        margin-top: 2px;
+        margin-bottom: 4px;
+    }
+
+    .rc-hero-ctas .rc-btn {
+        height: 38px;
+        padding: 0 22px;
+        font-size: 13px;
+    }
+
+    .rc-hero-stats {
+        margin-top: 6px;
+    }
+
+    .rc-stat {
+        padding: 6px 8px;
+    }
+
+    .rc-stat strong {
+        font-size: 1.05rem;
+    }
+
+    .rc-stat span {
+        font-size: 0.72rem;
+    }
+}
+
 body.rc-page .rc-rich-content input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="image"]):not([type="button"]):not([type="reset"]):not([type="hidden"]),
 body.rc-page .rc-rich-content select,
 body.rc-page .rc-rich-content textarea,
