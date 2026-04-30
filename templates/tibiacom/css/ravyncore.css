@@ -431,7 +431,7 @@ a:hover {
     max-width: 70vw;
     max-height: 320px;
     object-fit: contain;
-    margin-top: 85px;
+    margin-top: 75px;
     margin-bottom: -28px;
     transform: none;
     display: block;
@@ -557,6 +557,7 @@ a:hover {
     grid-template-columns: 290px minmax(0, 1fr) 290px;
     gap: 14px;
     align-items: start;
+    margin-top: 30px;
     scroll-margin-top: 12px;
 }
 

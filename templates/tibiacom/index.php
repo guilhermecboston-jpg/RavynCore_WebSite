@@ -277,7 +277,7 @@ $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
             <div class="rc-stat">
                 <span>Online</span>
                 <strong><?= $playersOnline; ?></strong>
-                <small>/ <?= $playersMax; ?> players</small>
+                <small>players</small>
             </div>
             <div class="rc-stat">
                 <span>Uptime</span>
