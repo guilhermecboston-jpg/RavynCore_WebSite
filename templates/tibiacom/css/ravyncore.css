@@ -35,8 +35,14 @@ body.rc-page {
     min-height: 100vh;
     font-family: 'Rajdhani', 'Segoe UI', sans-serif;
     color: var(--rc-text);
-    background: #02040a;
+    background: #050812;
     position: relative;
+}
+
+body,
+.main-content,
+.wrapper {
+    background: #050812;
 }
 
 a {
@@ -309,12 +315,16 @@ a:hover {
 
 .rc-hero,
 .hero-ravyncore {
-    margin-bottom: 24px;
+    margin-bottom: 0;
     margin-top: 0;
-    padding: 110px 0 16px;
+    padding: 110px 0 0;
+    min-height: unset;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     position: relative;
     overflow: hidden;
-    min-height: 580px;
     width: 100%;
     border: none;
     border-radius: 0;
@@ -324,8 +334,7 @@ a:hover {
         var(--rc-bg-image, url('../images/brand/ravyncore-background.png')) center top / cover no-repeat !important;
 }
 
-.hero-ravyncore::before,
-.hero-ravyncore::after {
+.hero-ravyncore::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -343,8 +352,9 @@ a:hover {
 }
 
 .hero-ravyncore::after {
-    z-index: 2;
-    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.38));
+    content: "";
+    display: block;
+    height: 0;
 }
 
 .rc-hero-fire,
@@ -421,8 +431,8 @@ a:hover {
     max-width: 70vw;
     max-height: 320px;
     object-fit: contain;
-    margin-top: 120px;
-    margin-bottom: -30px;
+    margin-top: 110px;
+    margin-bottom: -28px;
     transform: none;
     display: block;
     filter: drop-shadow(0 0 28px rgba(0, 0, 0, 0.95));
@@ -503,7 +513,8 @@ a:hover {
     left: auto;
     right: auto;
     bottom: auto;
-    margin-top: 10px;
+    margin-top: 12px;
+    margin-bottom: 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
@@ -857,6 +868,23 @@ a:hover {
     text-align: center;
     margin-top: 6px;
     white-space: nowrap;
+}
+
+.hero-brand-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.hero-brand-bottom img {
+    width: 140px;
+}
+
+.hero-brand-bottom span {
+    color: #d8c79a;
+    letter-spacing: 3px;
+    font-size: 15px;
 }
 
 .rc-footer-brand strong {
@@ -1246,11 +1274,6 @@ body.rc-page option {
 }
 
 @media (max-width: 1300px) {
-    .rc-hero,
-    .hero-ravyncore {
-        min-height: 560px;
-    }
-
     .rc-main-grid {
         grid-template-columns: 255px minmax(0, 1fr) 255px;
     }
@@ -1259,8 +1282,7 @@ body.rc-page option {
 @media (max-width: 1200px) {
     .rc-hero,
     .hero-ravyncore {
-        min-height: 540px;
-        padding: 102px 0 12px;
+        padding: 102px 0 0;
     }
 
     .rc-hero-content,
@@ -1398,14 +1420,13 @@ body.rc-page option {
 
     .rc-hero,
     .hero-ravyncore {
-        padding: 24px 10px 12px;
-        min-height: 520px;
+        padding: 24px 10px 0;
         background-position: center top !important;
     }
 
     .rc-hero-content,
     .hero-ravyncore-content {
-        min-height: 450px;
+        min-height: auto;
     }
 
     .hero-main-slogan,
