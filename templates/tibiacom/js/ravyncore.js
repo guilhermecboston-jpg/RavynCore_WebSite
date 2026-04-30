@@ -41,10 +41,22 @@
                 }
 
                 var currentUrl = new URL(window.location.href);
+                var isInternal = targetUrl.origin === currentUrl.origin;
                 var sameDocument = targetUrl.origin === currentUrl.origin &&
                     targetUrl.pathname === currentUrl.pathname &&
                     targetUrl.search === currentUrl.search &&
                     targetUrl.hash === currentUrl.hash;
+
+                if (!isInternal) {
+                    return;
+                }
+
+                // First click at the top should always reveal the page content.
+                if (window.scrollY < 120) {
+                    event.preventDefault();
+                    mainGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    return;
+                }
 
                 if (sameDocument) {
                     event.preventDefault();

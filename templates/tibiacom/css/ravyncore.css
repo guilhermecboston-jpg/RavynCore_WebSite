@@ -161,9 +161,9 @@ a:hover {
 }
 
 .rc-logo-wordmark {
-    width: 260px;
+    width: 380px;
     max-width: 100%;
-    height: 62px;
+    height: 78px;
     object-fit: contain;
     object-position: left center;
     display: block;
@@ -300,10 +300,10 @@ a:hover {
 .hero-ravyncore {
     margin-bottom: 24px;
     margin-top: 0;
-    padding: 150px 0 122px;
+    padding: 150px 0 86px;
     position: relative;
     overflow: hidden;
-    min-height: 900px;
+    min-height: 780px;
     width: 100%;
     border: none;
     border-radius: 0;
@@ -347,7 +347,7 @@ a:hover {
     z-index: 3;
     width: min(1600px, 100%);
     margin: 0 auto;
-    min-height: 690px;
+    min-height: 580px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -405,12 +405,13 @@ a:hover {
 .hero-main-slogan,
 .rc-hero-wordmark,
 .hero-logo-text {
-    width: 780px;
+    width: 860px;
     max-width: 82vw;
     max-height: 360px;
     object-fit: contain;
-    margin-top: 70px;
-    margin-bottom: -8px;
+    margin-top: 118px;
+    margin-bottom: -128px;
+    transform: translateY(82px);
     display: block;
     filter: drop-shadow(0 0 28px rgba(0, 0, 0, 0.95));
 }
@@ -422,7 +423,7 @@ a:hover {
     max-width: 40vw;
     max-height: 320px;
     object-fit: contain;
-    margin-top: 0;
+    margin-top: -58px;
     margin-bottom: 12px;
     display: block;
     filter: drop-shadow(0 0 32px rgba(0, 0, 0, 1));
@@ -484,7 +485,7 @@ a:hover {
     z-index: 3;
     left: 22px;
     right: 22px;
-    bottom: 8px;
+    bottom: 2px;
     margin-top: 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1177,13 +1178,13 @@ body.rc-page option {
 @media (max-width: 1200px) {
     .rc-hero,
     .hero-ravyncore {
-        min-height: 720px;
+        min-height: 690px;
         padding-top: 150px;
     }
 
     .rc-hero-content,
     .hero-ravyncore-content {
-        min-height: 620px;
+        min-height: 520px;
     }
 
     .hero-main-slogan,
@@ -1191,7 +1192,9 @@ body.rc-page option {
     .hero-logo-text {
         width: 560px;
         max-width: 86vw;
-        margin-top: 54px;
+        margin-top: 84px;
+        margin-bottom: -64px;
+        transform: translateY(44px);
     }
 
     .hero-main-emblem,
@@ -1199,6 +1202,7 @@ body.rc-page option {
     .hero-logo-round {
         width: 230px;
         max-width: 46vw;
+        margin-top: -34px;
     }
 
     .hero-title,
@@ -1284,8 +1288,8 @@ body.rc-page option {
     }
 
     .rc-logo-wordmark {
-        width: min(240px, 62vw);
-        height: 48px;
+        width: min(320px, 82vw);
+        height: 58px;
     }
 
     .rc-logo-text strong {
@@ -1322,7 +1326,9 @@ body.rc-page option {
     .hero-logo-text {
         width: 88vw;
         max-height: 150px;
-        margin-top: 26px;
+        margin-top: 62px;
+        margin-bottom: -52px;
+        transform: translateY(30px);
     }
 
     .hero-main-emblem,
@@ -1330,7 +1336,7 @@ body.rc-page option {
     .hero-logo-round {
         width: 210px;
         max-height: 210px;
-        margin-top: 0;
+        margin-top: -24px;
     }
 
     .hero-title,
