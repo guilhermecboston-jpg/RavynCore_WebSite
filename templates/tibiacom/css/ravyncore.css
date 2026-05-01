@@ -2609,7 +2609,7 @@ body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 {
     display: table !important;
     table-layout: fixed !important;
     border-collapse: separate !important;
-    border-spacing: 8px 0 !important;
+    border-spacing: 10px 0 !important;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody {
@@ -2626,15 +2626,17 @@ body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-side {
-    width: 168px !important;
-    min-width: 168px !important;
-    max-width: 168px !important;
+    width: 236px !important;
+    min-width: 236px !important;
+    max-width: 236px !important;
+    text-align: center !important;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-main {
     width: auto !important;
     min-width: 0 !important;
     overflow: hidden !important;
+    padding-left: 0 !important;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-main .rc-character-box,
@@ -2648,19 +2650,52 @@ body.rc-page-characters .rc-rich-content .rc-character-main .TableContent {
 body.rc-page-characters .rc-rich-content .rc-character-vitals,
 body.rc-page-characters .rc-rich-content .rc-character-experience,
 body.rc-page-characters .rc-rich-content .rc-character-skills {
-    margin-bottom: 8px !important;
+    margin-bottom: 6px !important;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-box .TableContent td,
 body.rc-page-characters .rc-rich-content .rc-character-box .TableContent th {
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-collapse,
 body.rc-page-characters .rc-rich-content .rc-character-list,
 body.rc-page-characters .rc-rich-content .rc-character-search {
-    margin-top: 8px !important;
+    margin-top: 6px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-outfit {
+    width: 150px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-inventory {
+    width: 218px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-vitals .progress,
+body.rc-page-characters .rc-rich-content .rc-character-experience .progress {
+    width: 84% !important;
+    max-width: 760px !important;
+    margin: 2px auto 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-vitals .TableContent td:first-child,
+body.rc-page-characters .rc-rich-content .rc-character-experience .TableContent td:first-child {
+    width: 116px !important;
+    white-space: nowrap !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-list {
+    margin-top: 4px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-search {
+    margin-top: 4px !important;
 }
 
 @media (max-width: 900px) {

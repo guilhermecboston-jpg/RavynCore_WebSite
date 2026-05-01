@@ -8,6 +8,8 @@
 {% set rows = 0 %}
 {% set group = player.getGroup() %}
 {% set characterCharmPoints = charmPoints is defined ? charmPoints : (charm_points is defined ? charm_points : 0) %}
+{% set characterFullAddons = fullAddons is defined ? fullAddons : (full_addons is defined ? full_addons : 0) %}
+{% set characterFullMounts = fullMounts is defined ? fullMounts : (full_mounts is defined ? full_mounts : 0) %}
 {% set characterLoyaltyTitle = loyaltyTitle is defined ? loyaltyTitle : (loyalty_title is defined ? loyalty_title : (loyalty_title_name is defined ? loyalty_title_name : '-')) %}
 
 {% if canEdit %}
@@ -102,6 +104,18 @@
                           <tr bgcolor="{{ getStyle(rows) }}">
                             <td class="LabelV175">Charm Points:</td>
                             <td>{{ characterCharmPoints }}</td>
+                          </tr>
+
+                          {% set rows = rows + 1 %}
+                          <tr bgcolor="{{ getStyle(rows) }}">
+                            <td class="LabelV175">Full Addons:</td>
+                            <td>{{ characterFullAddons }}</td>
+                          </tr>
+
+                          {% set rows = rows + 1 %}
+                          <tr bgcolor="{{ getStyle(rows) }}">
+                            <td class="LabelV175">Full Mounts:</td>
+                            <td>{{ characterFullMounts }}</td>
                           </tr>
 
                           {% set rows = rows + 1 %}
