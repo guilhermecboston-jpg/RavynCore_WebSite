@@ -2836,18 +2836,26 @@ body.rc-page-characters .rc-rich-content .rc-character-search {
     }
 }
 
-/* Character View structural grid alignment - no manual offsets */
-body.rc-page-characters .rc-rich-content {
-    --character-left-column: 220px;
-    --character-gap: 8px;
+/* Character View unified wrapper alignment */
+body.rc-page-characters .rc-rich-content .rc-character-inner {
+    width: min(100%, 1120px);
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
-body.rc-page-characters .rc-rich-content .rc-character-info,
-body.rc-page-characters .rc-rich-content .rc-character-details,
+body.rc-page-characters .rc-rich-content .rc-character-info-box,
 body.rc-page-characters .rc-rich-content .rc-character-list,
+body.rc-page-characters .rc-rich-content .rc-character-search,
 body.rc-page-characters .rc-rich-content .rc-character-search-panel {
     width: 100% !important;
     max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-details {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 12px 0 0 !important;
     box-sizing: border-box !important;
 }
 
@@ -2855,12 +2863,13 @@ body.rc-page-characters .rc-rich-content .rc-character-details-grid,
 body.rc-page-characters .rc-rich-content .rc-character-details-grid > tbody {
     display: block !important;
     width: 100% !important;
+    max-width: 100% !important;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-details-grid > tbody > tr {
     display: grid !important;
-    grid-template-columns: var(--character-left-column) minmax(0, 1fr);
-    gap: var(--character-gap);
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 14px;
     align-items: start;
     width: 100%;
 }
@@ -2875,32 +2884,20 @@ body.rc-page-characters .rc-rich-content .rc-character-details-grid > tbody > tr
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-left-column {
-    width: var(--character-left-column) !important;
+    width: 220px !important;
+    max-width: 220px !important;
     min-width: 0 !important;
-    max-width: var(--character-left-column) !important;
     display: flex !important;
     flex-direction: column;
     align-items: center;
-    gap: var(--character-gap);
-}
-
-body.rc-page-characters .rc-rich-content .rc-character-right-column {
-    display: flex !important;
-    flex-direction: column;
-    gap: var(--character-gap);
-    min-width: 0 !important;
-    overflow: hidden !important;
-    padding: 0 !important;
+    gap: 8px;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-current-outfit,
 body.rc-page-characters .rc-rich-content .character-current-outfit {
     width: 150px !important;
     max-width: 150px !important;
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box !important;
+    align-self: center;
     margin: 0 !important;
 }
 
@@ -2908,10 +2905,7 @@ body.rc-page-characters .rc-rich-content .rc-character-inventory,
 body.rc-page-characters .rc-rich-content .character-inventory {
     width: 218px !important;
     max-width: 218px !important;
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box !important;
+    align-self: center;
     margin: 0 !important;
 }
 
@@ -2942,6 +2936,16 @@ body.rc-page-characters .rc-rich-content .rc-character-inventory-grid td {
     position: static !important;
 }
 
+body.rc-page-characters .rc-rich-content .rc-character-right-column {
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-right-column > *,
 body.rc-page-characters .rc-rich-content .rc-character-bars,
 body.rc-page-characters .rc-rich-content .character-bars,
 body.rc-page-characters .rc-rich-content .rc-character-experience,
@@ -2950,12 +2954,19 @@ body.rc-page-characters .rc-rich-content .rc-character-skills,
 body.rc-page-characters .rc-rich-content .character-skills {
     width: 100% !important;
     max-width: 100% !important;
+    box-sizing: border-box !important;
     overflow: hidden !important;
     margin: 0 !important;
 }
 
+body.rc-page-characters .rc-rich-content .rc-character-list {
+    margin: 14px 0 0 !important;
+}
+
 body.rc-page-characters .rc-rich-content .rc-character-search {
-    display: block;
+    margin-top: 12px !important;
+    display: flex;
+    justify-content: center;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-search-panel .InnerTableContainer > table > tbody > tr {
@@ -2971,6 +2982,10 @@ body.rc-page-characters .rc-rich-content .rc-character-search-panel .InnerTableC
 }
 
 @media (max-width: 900px) {
+    body.rc-page-characters .rc-rich-content .rc-character-inner {
+        width: 100%;
+    }
+
     body.rc-page-characters .rc-rich-content .rc-character-details-grid > tbody > tr {
         grid-template-columns: 1fr;
     }

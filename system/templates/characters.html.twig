@@ -20,11 +20,12 @@
   <br>
 {% endif %}
 
+<div class="rc-character-inner">
 <!-- CHARACTER INFORMATION -->
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td>
-      <div class="TableContainer rc-character-info">
+      <div class="TableContainer rc-character-info rc-character-info-box">
         <div class="CaptionContainer">
           <div class="CaptionInnerContainer">
             <span class="CaptionEdgeLeftTop"
@@ -555,8 +556,6 @@
   </table>
 </div>
 
-<br>
-
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td>
@@ -676,7 +675,8 @@
     </td>
   </tr>
 </table>
-<br/>{{ search_form|raw }}
+{{ search_form|raw }}
+</div>
 
 <div class="TableContainer rc-character-collapse rc-character-quests">
   <div class="CaptionContainer">
