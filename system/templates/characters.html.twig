@@ -557,6 +557,127 @@
 
 <br>
 
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td>
+      {% if not hidden %}
+        {% set rows = 0 %}
+        <div class="TableContainer rc-character-list">
+          <div class="CaptionContainer">
+            <div class="CaptionInnerContainer">
+              <span class="CaptionEdgeLeftTop"
+                    style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+              <span class="CaptionEdgeRightTop"
+                    style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+              <span class="CaptionBorderTop"
+                    style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
+              <span class="CaptionVerticalLeft"
+                    style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
+              <div class="Text">Characters</div>
+              <span class="CaptionVerticalRight"
+                    style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
+              <span class="CaptionBorderBottom"
+                    style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
+              <span class="CaptionEdgeLeftBottom"
+                    style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+              <span class="CaptionEdgeRightBottom"
+                    style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+            </div>
+          </div>
+          <table class="Table3" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+              <td>
+                <div class="InnerTableContainer">
+                  <table style="width:100%;">
+                    <tbody>
+                    <tr>
+                      <td>
+                        <div class="TableContentContainer">
+                          <table class="TableContent" width="100%">
+                            <tbody>
+                            <tr bgcolor="{{ config.darkborder }}">
+                              <td width="40%"><B>Name</b></td>
+                              <td width="15%"><B>Level</b></td>
+                              <td width="20%"><B>Vocation</b></td>
+                              <td width="25%"><b>Status</b></td>
+                              <td><b>&#160;</b></td>
+                            </tr>
+                            {% set i = 0 %}
+                            {% for player in account_players %}
+                              {% if not player.isHidden() and (config('characters')['deleted'] or not player.isDeleted()) %}
+                                {% set i = i + 1 %}
+                                <tr bgcolor="{{ getStyle(i) }}">
+                                  <td>
+                                    <nobr>{{ i }}.&#160;{{ player.getName() }}{% if player.isDeleted() %}<span
+                                        style="color: red"> [DELETED]</span>{% endif %}</nobr>
+                                  </td>
+                                  <td>{{ player.getLevel() }}</td>
+                                  <td>{{ player.getVocationName() }}</td>
+                                  <td>{% if player.isOnline() %}<img src="{{ template_path }}/images/on.gif"
+                                                                     title="Online">{% else %}<img
+                                      src="{{ template_path }}/images/off.gif" title="Offline">{% endif %}</td>
+                                  <td>
+                                    <table border="0" cellspacing="0" cellpadding="0">
+                                      <form action="{{ characters_link }}" method=post>
+                                        <tr>
+                                          <td style="border: 0;">
+                                            <input type="hidden" name="name" value="{{ player.getName() }}"/>
+                                            {% set button_name = "View" %}
+                                            {% set button_title = player.getName() %}
+                                            {{ include('buttons.base.html.twig') }}
+
+                                            {% if canEdit %}
+                                              <a href="admin/?p=players&id={{ player.getId() }}"
+                                                 title="Edit in Admin Panel" target="_blank">
+                                                <div class="BigButton"
+                                                     style="background-image:url({{ template_path }}/images/global/buttons/sbutton.gif)">
+                                                  <div onmouseover="MouseOverBigButton(this);"
+                                                       onmouseout="MouseOutBigButton(this);">
+                                                    <div class="BigButtonOver"
+                                                         style="background-image: url({{ template_path }}/images/global/buttons/sbutton_over.gif); visibility: hidden;"></div>
+                                                    <input class="BigButtonText" type="text" name="Edit" alt="Edit"
+                                                           value="Edit"></div>
+                                                </div>
+                                              </a>
+                                            {% endif %}
+                                          </td>
+                                        </tr>
+                                      </form>
+                                    </table>
+                                  </td>
+                                </tr>
+                              {% endif %}
+                            {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+
+      {{ hook(constant('HOOK_CHARACTERS_AFTER_CHARACTERS')) }}
+
+      {% if canEdit %}
+        <br>
+        <a href="admin/?p=players&id={{ player.getId() }}" title="Edit in Admin Panel" target="_blank">
+          {% set button_name = 'Edit Character' %}
+          {% include('buttons.base.html.twig') %}
+        </a>
+      {% endif %}
+    </td>
+  </tr>
+</table>
+<br/>{{ search_form|raw }}
+
 <div class="TableContainer rc-character-collapse rc-character-quests">
   <div class="CaptionContainer">
     <div class="CaptionInnerContainer">
@@ -958,125 +1079,3 @@
   <!-- SIGNATURE_END -->
 {% endif %}
 {{ hook(constant('HOOK_CHARACTERS_AFTER_SIGNATURE')) }}
-
-
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-  <tr>
-    <td>
-      {% if not hidden %}
-        {% set rows = 0 %}
-        <div class="TableContainer rc-character-list">
-          <div class="CaptionContainer">
-            <div class="CaptionInnerContainer">
-              <span class="CaptionEdgeLeftTop"
-                    style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
-              <span class="CaptionEdgeRightTop"
-                    style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
-              <span class="CaptionBorderTop"
-                    style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
-              <span class="CaptionVerticalLeft"
-                    style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
-              <div class="Text">Characters</div>
-              <span class="CaptionVerticalRight"
-                    style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
-              <span class="CaptionBorderBottom"
-                    style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
-              <span class="CaptionEdgeLeftBottom"
-                    style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
-              <span class="CaptionEdgeRightBottom"
-                    style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
-            </div>
-          </div>
-          <table class="Table3" cellpadding="0" cellspacing="0">
-            <tbody>
-            <tr>
-              <td>
-                <div class="InnerTableContainer">
-                  <table style="width:100%;">
-                    <tbody>
-                    <tr>
-                      <td>
-                        <div class="TableContentContainer">
-                          <table class="TableContent" width="100%">
-                            <tbody>
-                            <tr bgcolor="{{ config.darkborder }}">
-                              <td width="40%"><B>Name</b></td>
-                              <td width="15%"><B>Level</b></td>
-                              <td width="20%"><B>Vocation</b></td>
-                              <td width="25%"><b>Status</b></td>
-                              <td><b>&#160;</b></td>
-                            </tr>
-                            {% set i = 0 %}
-                            {% for player in account_players %}
-                              {% if not player.isHidden() and (config('characters')['deleted'] or not player.isDeleted()) %}
-                                {% set i = i + 1 %}
-                                <tr bgcolor="{{ getStyle(i) }}">
-                                  <td>
-                                    <nobr>{{ i }}.&#160;{{ player.getName() }}{% if player.isDeleted() %}<span
-                                        style="color: red"> [DELETED]</span>{% endif %}</nobr>
-                                  </td>
-                                  <td>{{ player.getLevel() }}</td>
-                                  <td>{{ player.getVocationName() }}</td>
-                                  <td>{% if player.isOnline() %}<img src="{{ template_path }}/images/on.gif"
-                                                                     title="Online">{% else %}<img
-                                      src="{{ template_path }}/images/off.gif" title="Offline">{% endif %}</td>
-                                  <td>
-                                    <table border="0" cellspacing="0" cellpadding="0">
-                                      <form action="{{ characters_link }}" method=post>
-                                        <tr>
-                                          <td style="border: 0;">
-                                            <input type="hidden" name="name" value="{{ player.getName() }}"/>
-                                            {% set button_name = "View" %}
-                                            {% set button_title = player.getName() %}
-                                            {{ include('buttons.base.html.twig') }}
-
-                                            {% if canEdit %}
-                                              <a href="admin/?p=players&id={{ player.getId() }}"
-                                                 title="Edit in Admin Panel" target="_blank">
-                                                <div class="BigButton"
-                                                     style="background-image:url({{ template_path }}/images/global/buttons/sbutton.gif)">
-                                                  <div onmouseover="MouseOverBigButton(this);"
-                                                       onmouseout="MouseOutBigButton(this);">
-                                                    <div class="BigButtonOver"
-                                                         style="background-image: url({{ template_path }}/images/global/buttons/sbutton_over.gif); visibility: hidden;"></div>
-                                                    <input class="BigButtonText" type="text" name="Edit" alt="Edit"
-                                                           value="Edit"></div>
-                                                </div>
-                                              </a>
-                                            {% endif %}
-                                          </td>
-                                        </tr>
-                                      </form>
-                                    </table>
-                                  </td>
-                                </tr>
-                              {% endif %}
-                            {% endfor %}
-                            </tbody>
-                          </table>
-                        </div>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      {% endif %}
-
-      {{ hook(constant('HOOK_CHARACTERS_AFTER_CHARACTERS')) }}
-
-      {% if canEdit %}
-        <br>
-        <a href="admin/?p=players&id={{ player.getId() }}" title="Edit in Admin Panel" target="_blank">
-          {% set button_name = 'Edit Character' %}
-          {% include('buttons.base.html.twig') %}
-        </a>
-      {% endif %}
-    </td>
-  </tr>
-</table>
-<br/>{{ search_form|raw }}

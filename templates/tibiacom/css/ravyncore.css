@@ -2894,11 +2894,20 @@ body.rc-page-characters .rc-rich-content .rc-character-right-column {
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-current-outfit,
-body.rc-page-characters .rc-rich-content .character-current-outfit,
+body.rc-page-characters .rc-rich-content .character-current-outfit {
+    width: 150px !important;
+    max-width: 150px !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+}
+
 body.rc-page-characters .rc-rich-content .rc-character-inventory,
 body.rc-page-characters .rc-rich-content .character-inventory {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 218px !important;
+    max-width: 218px !important;
     display: flex !important;
     justify-content: center;
     align-items: center;
