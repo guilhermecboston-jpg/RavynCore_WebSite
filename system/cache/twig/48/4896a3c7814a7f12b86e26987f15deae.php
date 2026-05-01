@@ -476,7 +476,7 @@ class __TwigTemplate_7ec5f365af0fd8a4294cf799b50a61a2 extends \Twig\Template
 <br>
 
 <!-- ACCOUNT INFORMATION -->
-<div class=\"TableContainer\">
+<div class=\"TableContainer rc-character-summary\">
   <div class=\"CaptionContainer\">
     <div class=\"CaptionInnerContainer\">
       <span class=\"CaptionEdgeLeftTop\"
@@ -609,7 +609,7 @@ class __TwigTemplate_7ec5f365af0fd8a4294cf799b50a61a2 extends \Twig\Template
 <br>
 
 <!-- CHARACTER DETAILS -->
-<div class=\"TableContainer\">
+<div class=\"TableContainer rc-character-details\">
   <div class=\"CaptionContainer\">
     <div class=\"CaptionInnerContainer\">
       <span class=\"CaptionEdgeLeftTop\"
@@ -658,13 +658,13 @@ class __TwigTemplate_7ec5f365af0fd8a4294cf799b50a61a2 extends \Twig\Template
   <table class=\"Table3\" cellpadding=\"0\" cellspacing=\"0\">
     <tbody>
     <tr>
-      <td style=\"width: 10rem;\">
+      <td class=\"rc-character-side\" style=\"width: 10rem;\">
         <!-- OUTFIT -->
         ";
         // line 301
         if (twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, ($context["config"] ?? null), "characters", [], "any", false, false, false, 301), "outfit", [], "any", false, false, false, 301)) {
             // line 302
-            echo "          <div class=\"InnerTableContainer\">
+            echo "          <div class=\"InnerTableContainer rc-character-box rc-character-outfit\">
             <table style=\"width: 98%;\">
               <tbody>
               <tr>
@@ -720,7 +720,7 @@ class __TwigTemplate_7ec5f365af0fd8a4294cf799b50a61a2 extends \Twig\Template
         if (twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, ($context["config"] ?? null), "characters", [], "any", false, false, false, 335), "equipment", [], "any", false, false, false, 335)) {
             // line 336
             echo "          <!-- EQUIPMENT -->
-          <div class=\"InnerTableContainer\">
+          <div class=\"InnerTableContainer rc-character-box rc-character-inventory\">
             <table>
               <tbody>
               <tr>
@@ -851,8 +851,8 @@ class __TwigTemplate_7ec5f365af0fd8a4294cf799b50a61a2 extends \Twig\Template
       </td>
 
       <!-- LIFE MANA -->
-      <td>
-        <div class=\"InnerTableContainer\">
+      <td class=\"rc-character-main\">
+        <div class=\"InnerTableContainer rc-character-box rc-character-vitals\">
           <table style=\"width:100%;\">
             <tbody>
             <tr>
@@ -923,7 +923,7 @@ class __TwigTemplate_7ec5f365af0fd8a4294cf799b50a61a2 extends \Twig\Template
         <!-- LIFE MANA END -->
 
         <!-- EXPERIENCE -->
-        <div class=\"InnerTableContainer\">
+        <div class=\"InnerTableContainer rc-character-box rc-character-experience\">
           <table style=\"width:100%;\">
             <tbody>
             <tr>
@@ -995,7 +995,7 @@ class __TwigTemplate_7ec5f365af0fd8a4294cf799b50a61a2 extends \Twig\Template
         if (twig_get_attribute($this->env, $this->source, twig_get_attribute($this->env, $this->source, ($context["config"] ?? null), "characters", [], "any", false, false, false, 498), "skills", [], "any", false, false, false, 498)) {
             // line 499
             echo "          <!-- SKILLS -->
-          <div class=\"InnerTableContainer\">
+          <div class=\"InnerTableContainer rc-character-box rc-character-skills\">
             <table style=\"width:100%;\">
               <tbody>
               <tr>

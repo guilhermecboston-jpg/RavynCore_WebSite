@@ -754,73 +754,74 @@ a:hover {
     margin-top: 10px;
 }
 
+/* ===== TOP PLAYERS - ALIGN BY FEET (BASE) ===== */
+
 .rc-rank-row {
-    display: grid;
-    grid-template-columns: 34px 84px minmax(0, 1fr);
-    align-items: center;
-    gap: 8px;
-    padding: 8px 10px 8px 6px;
+    display: grid !important;
+    grid-template-columns: 40px 70px 1fr !important; /* menor e mais compacto */
+    align-items: end !important; /* IMPORTANTE: alinha pela base */
+    gap: 6px !important;
+    padding: 8px 10px !important;
+    min-height: 78px !important;
+
     border-radius: 10px;
     border: 1px solid rgba(152, 170, 215, 0.25);
     background: rgba(19, 27, 44, 0.58);
-    color: inherit;
     cursor: pointer;
-    transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    transition: all 0.18s ease;
 }
 
+/* HOVER */
 .rc-rank-row:hover {
-    color: inherit;
-    border-color: rgba(216, 154, 47, 0.42);
+    border-color: rgba(216, 154, 47, 0.45);
     background: linear-gradient(90deg, rgba(31, 44, 70, 0.82), rgba(38, 34, 67, 0.82));
-    box-shadow: 0 0 18px rgba(216, 154, 47, 0.1);
+    box-shadow: 0 0 14px rgba(216, 154, 47, 0.12);
     transform: translateY(-1px);
 }
 
+/* # posição */
 .rc-rank-position {
+    font-size: 1.45rem !important;
+    font-weight: 800;
     color: #efb65a;
-    font-weight: 700;
     text-align: center;
-    font-size: 1.38rem;
-    line-height: 1;
-    transform: translateY(8px);
+
+    align-self: end !important; /* alinha com o pé */
+    margin-bottom: 6px; /* ajuste fino */
 }
 
+/* OUTFIT (subir para alinhar o pé) */
 .rc-rank-outfit {
-    width: 84px;
-    height: 84px;
+    width: 70px !important;
+    height: 70px !important;
     object-fit: contain;
-    object-position: center center;
-    justify-self: center;
-    align-self: center;
-    transform: translateY(0);
-    transform-origin: center center;
-    image-rendering: auto;
-    border-radius: 0;
-    background: transparent;
-    border: 0;
+
+    justify-self: start !important; /* puxa pra esquerda */
+    align-self: end !important;
+
+    transform: translateY(-10px) scale(1.08) !important; /* SOBE */
 }
 
+/* TEXTO */
 .rc-rank-player {
-    min-width: 0;
-    transform: translateY(8px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* base */
+
+    align-self: end !important;
+    margin-bottom: 6px; /* alinha com o pé */
 }
 
 .rc-rank-player strong {
-    display: block;
     color: #f4f8ff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     font-weight: 700;
+    font-size: 1.02rem;
     line-height: 1.1;
 }
 
 .rc-rank-player small {
-    display: block;
     color: #adc0e6;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 0.88rem;
 }
 
 .rc-search-form {
