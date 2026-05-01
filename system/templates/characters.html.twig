@@ -6,6 +6,9 @@
   });
 </script>
 {% set rows = 0 %}
+{% set group = player.getGroup() %}
+{% set characterCharmPoints = charmPoints is defined ? charmPoints : (charm_points is defined ? charm_points : 0) %}
+{% set characterLoyaltyTitle = loyaltyTitle is defined ? loyaltyTitle : (loyalty_title is defined ? loyalty_title : (loyalty_title_name is defined ? loyalty_title_name : '-')) %}
 
 {% if canEdit %}
   <a href="admin/?p=players&id={{ player.getId() }}" title="Edit in Admin Panel" target="_blank">
@@ -93,6 +96,18 @@
                           <tr bgcolor="{{ getStyle(rows) }}">
                             <td class="LabelV175">Achievement Points:</td>
                             <td>{{ achievementPoints }}</td>
+                          </tr>
+
+                          {% set rows = rows + 1 %}
+                          <tr bgcolor="{{ getStyle(rows) }}">
+                            <td class="LabelV175">Charm Points:</td>
+                            <td>{{ characterCharmPoints }}</td>
+                          </tr>
+
+                          {% set rows = rows + 1 %}
+                          <tr bgcolor="{{ getStyle(rows) }}">
+                            <td class="LabelV175">Loyalty Title:</td>
+                            <td>{{ characterLoyaltyTitle }}</td>
                           </tr>
 
                           {% set rows = rows + 1 %}
@@ -199,6 +214,14 @@
                               {% endif %}</td>
                           </tr>
 
+                          {% if group.isLoaded() and group.getId() != 1 %}
+                            {% set rows = rows + 1 %}
+                            <tr bgcolor="{{ getStyle(rows) }}">
+                              <td class="LabelV175">Position:</td>
+                              <td>{{ group.getName()|capitalize }}</td>
+                            </tr>
+                          {% endif %}
+
                           </tbody>
                         </table>
                       </div>
@@ -215,66 +238,6 @@
     </td>
   </tr>
 </table>
-
-<br>
-
-<!-- ACCOUNT INFORMATION -->
-{% set group = player.getGroup() %}
-{% if group.isLoaded() and group.getId() != 1 %}
-<div class="TableContainer rc-character-summary">
-  <div class="CaptionContainer">
-    <div class="CaptionInnerContainer">
-      <span class="CaptionEdgeLeftTop"
-            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
-      <span class="CaptionEdgeRightTop"
-            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
-      <span class="CaptionBorderTop"
-            style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
-      <span class="CaptionVerticalLeft"
-            style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
-      <div class="Text">Account Information</div>
-      <span class="CaptionVerticalRight"
-            style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
-      <span class="CaptionBorderBottom"
-            style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
-      <span class="CaptionEdgeLeftBottom"
-            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
-      <span class="CaptionEdgeRightBottom"
-            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
-    </div>
-  </div>
-  <table class="Table3" cellpadding="0" cellspacing="0">
-    <tbody>
-    <tr>
-      <td>
-        <div class="InnerTableContainer">
-          <table style="width:100%;">
-            <tbody>
-            <tr>
-              <td>
-                <div class="TableContentContainer">
-                  <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
-                    <tbody>
-                      {% set rows = rows + 1 %}
-                      <tr bgcolor="{{ getStyle(rows) }}">
-                        <td class="LabelV175">Position:</td>
-                        <td>{{ group.getName()|capitalize }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
-{% endif %}
-
 <br>
 
 <!-- CHARACTER DETAILS -->

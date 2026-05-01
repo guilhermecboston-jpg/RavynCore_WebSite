@@ -2585,3 +2585,97 @@ body.rc-page-characters .rc-rich-content .rc-character-search-panel input[name="
         margin-top: 8px;
     }
 }
+
+/* Character View corrections: full-width info + stable two-column details */
+body.rc-page-characters .rc-rich-content .rc-character-info,
+body.rc-page-characters .rc-rich-content .rc-character-info > .Table3,
+body.rc-page-characters .rc-rich-content .rc-character-info table,
+body.rc-page-characters .rc-rich-content .rc-character-details,
+body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-info {
+    display: block !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-info .TableContent td {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 {
+    display: table !important;
+    table-layout: fixed !important;
+    border-collapse: separate !important;
+    border-spacing: 8px 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody {
+    display: table-row-group !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody > tr {
+    display: table-row !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody > tr > td {
+    display: table-cell !important;
+    vertical-align: top !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-side {
+    width: 168px !important;
+    min-width: 168px !important;
+    max-width: 168px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-main {
+    width: auto !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-main .rc-character-box,
+body.rc-page-characters .rc-rich-content .rc-character-main .TableContentContainer,
+body.rc-page-characters .rc-rich-content .rc-character-main .TableContent {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-vitals,
+body.rc-page-characters .rc-rich-content .rc-character-experience,
+body.rc-page-characters .rc-rich-content .rc-character-skills {
+    margin-bottom: 8px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-box .TableContent td,
+body.rc-page-characters .rc-rich-content .rc-character-box .TableContent th {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-collapse,
+body.rc-page-characters .rc-rich-content .rc-character-list,
+body.rc-page-characters .rc-rich-content .rc-character-search {
+    margin-top: 8px !important;
+}
+
+@media (max-width: 900px) {
+    body.rc-page-characters .rc-rich-content .rc-character-details > .Table3,
+    body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody,
+    body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody > tr,
+    body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody > tr > td {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    body.rc-page-characters .rc-rich-content .rc-character-side {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin-bottom: 8px !important;
+    }
+}
