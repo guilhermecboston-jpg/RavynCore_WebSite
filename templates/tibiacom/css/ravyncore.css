@@ -2670,15 +2670,11 @@ body.rc-page-characters .rc-rich-content .rc-character-search {
 
 body.rc-page-characters .rc-rich-content .rc-character-outfit {
     width: 150px !important;
-    margin-left: 34px !important;
-    margin-right: 0 !important;
     margin-bottom: 4px !important;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-inventory {
     width: 218px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-vitals .progress,
@@ -2703,10 +2699,8 @@ body.rc-page-characters .rc-rich-content .rc-character-search {
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-info {
-    width: calc(100% - 46px) !important;
-    max-width: calc(100% - 46px) !important;
-    margin-left: 23px !important;
-    margin-right: 23px !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-info .TableContent td {
@@ -2801,8 +2795,6 @@ body.rc-page-characters .rc-rich-content .rc-character-main {
 body.rc-page-characters .rc-rich-content .rc-character-outfit,
 body.rc-page-characters .rc-rich-content .rc-character-inventory {
     width: 218px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-outfit {
@@ -2841,5 +2833,145 @@ body.rc-page-characters .rc-rich-content .rc-character-search {
 
     body.rc-page-characters .rc-rich-content .rc-character-main {
         padding-left: 0 !important;
+    }
+}
+
+/* Character View structural grid alignment - no manual offsets */
+body.rc-page-characters .rc-rich-content {
+    --character-left-column: 220px;
+    --character-gap: 8px;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-info,
+body.rc-page-characters .rc-rich-content .rc-character-details,
+body.rc-page-characters .rc-rich-content .rc-character-list,
+body.rc-page-characters .rc-rich-content .rc-character-search-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-details-grid,
+body.rc-page-characters .rc-rich-content .rc-character-details-grid > tbody {
+    display: block !important;
+    width: 100% !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-details-grid > tbody > tr {
+    display: grid !important;
+    grid-template-columns: var(--character-left-column) minmax(0, 1fr);
+    gap: var(--character-gap);
+    align-items: start;
+    width: 100%;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-details-grid > tbody > tr > td {
+    display: block !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: 0 !important;
+    vertical-align: top !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-left-column {
+    width: var(--character-left-column) !important;
+    min-width: 0 !important;
+    max-width: var(--character-left-column) !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--character-gap);
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-right-column {
+    display: flex !important;
+    flex-direction: column;
+    gap: var(--character-gap);
+    min-width: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-current-outfit,
+body.rc-page-characters .rc-rich-content .character-current-outfit,
+body.rc-page-characters .rc-rich-content .rc-character-inventory,
+body.rc-page-characters .rc-rich-content .character-inventory {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-box {
+    margin: 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-inventory-grid > tbody > tr {
+    display: grid !important;
+    grid-template-columns: repeat(3, auto);
+    gap: 6px;
+    align-items: start;
+    justify-content: center;
+}
+
+body.rc-page-characters .rc-rich-content .rc-inventory-column,
+body.rc-page-characters .rc-rich-content .rc-inventory-column > table,
+body.rc-page-characters .rc-rich-content .rc-inventory-column > table > tbody {
+    vertical-align: top !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-inventory-column > table {
+    display: table !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-inventory-grid td {
+    transform: none !important;
+    position: static !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-bars,
+body.rc-page-characters .rc-rich-content .character-bars,
+body.rc-page-characters .rc-rich-content .rc-character-experience,
+body.rc-page-characters .rc-rich-content .character-experience,
+body.rc-page-characters .rc-rich-content .rc-character-skills,
+body.rc-page-characters .rc-rich-content .character-skills {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-search {
+    display: block;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-search-panel .InnerTableContainer > table > tbody > tr {
+    display: grid;
+    grid-template-columns: max-content minmax(280px, 545px) 130px;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-search-panel .InnerTableContainer > table > tbody > tr > td {
+    width: auto !important;
+}
+
+@media (max-width: 900px) {
+    body.rc-page-characters .rc-rich-content .rc-character-details-grid > tbody > tr {
+        grid-template-columns: 1fr;
+    }
+
+    body.rc-page-characters .rc-rich-content .rc-character-left-column {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    body.rc-page-characters .rc-rich-content .rc-character-search-panel .InnerTableContainer > table > tbody > tr {
+        grid-template-columns: 1fr;
     }
 }
