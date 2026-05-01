@@ -153,7 +153,7 @@
 														<span{% if errors.name is defined %} class="red"{% endif %}>Character Name: <span style="color: red;">*</span></span>
 													</td>
 													<td>
-														<input id="character_name" name="name" size="{{ config.character_name_max_length }}" maxlength="{{ config.character_name_max_length }}" value="{{ name }}" onkeyup="checkName();"/>
+														<input id="character_name" class="rc-charname-input" name="name" size="{{ config.character_name_max_length }}" maxlength="{{ config.character_name_max_length }}" value="{{ name }}" onkeyup="checkName();"/>
 														<img id="character_indicator" src="images/global/general/{% if not save or errors.name is defined %}n{% endif %}ok.gif" style="display: none;" />														<br>
 														<div id="SuggestCharacterName">[<a href="#">suggest name</a>]</div>
 													</td>
