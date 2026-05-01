@@ -19,7 +19,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td>
-      <div class="TableContainer">
+      <div class="TableContainer rc-character-info">
         <div class="CaptionContainer">
           <div class="CaptionInnerContainer">
             <span class="CaptionEdgeLeftTop"
@@ -93,6 +93,12 @@
                           <tr bgcolor="{{ getStyle(rows) }}">
                             <td class="LabelV175">Achievement Points:</td>
                             <td>{{ achievementPoints }}</td>
+                          </tr>
+
+                          {% set rows = rows + 1 %}
+                          <tr bgcolor="{{ getStyle(rows) }}">
+                            <td class="LabelV175">World:</td>
+                            <td>{{ config.lua.serverName }}</td>
                           </tr>
 
                           {% set rows = rows + 1 %}
@@ -181,6 +187,18 @@
                             </td>
                           </tr>
 
+                          {% set rows = rows + 1 %}
+                          <tr bgcolor="{{ getStyle(rows) }}">
+                            <td class="LabelV175">Created:</td>
+                            <td>{{ account.getCreated()|date("M d Y, g:i:s") }} CET
+                              {% if bannedUntil matches '/^\\d+$/' or bannedUntil == '-1' %}
+                                <span
+                                  style="color: red">[Banished {% if bannedUntil == '-1' %}forever{% else %}until {{ bannedUntil|date('d F Y, h:s') }}{% endif %}]</span>
+                              {% else %}
+                                {{ bannedUntil|raw }}
+                              {% endif %}</td>
+                          </tr>
+
                           </tbody>
                         </table>
                       </div>
@@ -201,6 +219,8 @@
 <br>
 
 <!-- ACCOUNT INFORMATION -->
+{% set group = player.getGroup() %}
+{% if group.isLoaded() and group.getId() != 1 %}
 <div class="TableContainer rc-character-summary">
   <div class="CaptionContainer">
     <div class="CaptionInnerContainer">
@@ -235,25 +255,11 @@
                 <div class="TableContentContainer">
                   <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
                     <tbody>
-                    {% set group = player.getGroup() %}
-                    {% if group.isLoaded() and group.getId() != 1 %}
                       {% set rows = rows + 1 %}
                       <tr bgcolor="{{ getStyle(rows) }}">
                         <td class="LabelV175">Position:</td>
                         <td>{{ group.getName()|capitalize }}</td>
                       </tr>
-                    {% endif %}
-                    {% set rows = rows + 1 %}
-                    <tr bgcolor="{{ getStyle(rows) }}">
-                      <td class="LabelV175">Created:</td>
-                      <td>{{ account.getCreated()|date("M d Y, g:i:s") }} CET
-                        {% if bannedUntil matches '/^\\d+$/' or bannedUntil == '-1' %}
-                          <span
-                            style="color: red">[Banished {% if bannedUntil == '-1' %}forever{% else %}until {{ bannedUntil|date('d F Y, h:s') }}{% endif %}]</span>
-                        {% else %}
-                          {{ bannedUntil|raw }}
-                        {% endif %}</td>
-                    </tr>
                     </tbody>
                   </table>
                 </div>
@@ -267,6 +273,7 @@
     </tbody>
   </table>
 </div>
+{% endif %}
 
 <br>
 
@@ -573,7 +580,7 @@
 
 <br>
 
-<div class="TableContainer">
+<div class="TableContainer rc-character-collapse rc-character-quests">
   <div class="CaptionContainer">
     <div class="CaptionInnerContainer">
       <span class="CaptionEdgeLeftTop"
@@ -639,7 +646,7 @@
   </table>
 </div>
 <br>
-<div class="TableContainer">
+<div class="TableContainer rc-character-collapse rc-character-achievements">
   <div class="CaptionContainer">
     <div class="CaptionInnerContainer">
       <span class="CaptionEdgeLeftTop"
@@ -726,7 +733,7 @@
 
 {% if deaths|length > 0 %}
   <!-- DEATHS -->
-  <div class="TableContainer">
+  <div class="TableContainer rc-character-collapse rc-character-deaths">
     <div class="CaptionContainer">
       <div class="CaptionInnerContainer">
         <span class="CaptionEdgeLeftTop"
@@ -797,7 +804,7 @@
 
 {% if frags|length > 0 %}
   <!-- FRAGS -->
-  <div class="TableContainer">
+  <div class="TableContainer rc-character-collapse rc-character-frags">
     <div class="CaptionContainer">
       <div class="CaptionInnerContainer">
         <span class="CaptionEdgeLeftTop"
@@ -870,7 +877,7 @@
 {{ hook(constant('HOOK_CHARACTERS_BEFORE_SIGNATURE')) }}
 {% if config.signature_enabled %}
   <!-- SIGNATURE -->
-  <div class="TableContainer">
+  <div class="TableContainer rc-character-collapse rc-character-signature">
     <div class="CaptionContainer">
       <div class="CaptionInnerContainer">
         <span class="CaptionEdgeLeftTop"
@@ -981,7 +988,7 @@
     <td>
       {% if not hidden %}
         {% set rows = 0 %}
-        <div class="TableContainer">
+        <div class="TableContainer rc-character-list">
           <div class="CaptionContainer">
             <div class="CaptionInnerContainer">
               <span class="CaptionEdgeLeftTop"

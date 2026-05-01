@@ -2416,3 +2416,172 @@ body[class*="account"] .rc-rich-content #character_indicator {
         min-width: 0;
     }
 }
+
+/* Character View - compact RavynCore layout */
+body.rc-page-characters .rc-rich-content > br {
+    display: none !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-info,
+body.rc-page-characters .rc-rich-content .rc-character-summary,
+body.rc-page-characters .rc-rich-content .rc-character-details,
+body.rc-page-characters .rc-rich-content .rc-character-collapse,
+body.rc-page-characters .rc-rich-content .rc-character-list,
+body.rc-page-characters .rc-rich-content .rc-character-search-panel {
+    margin: 0 0 10px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-info .InnerTableContainer,
+body.rc-page-characters .rc-rich-content .rc-character-summary .InnerTableContainer,
+body.rc-page-characters .rc-rich-content .rc-character-details .InnerTableContainer,
+body.rc-page-characters .rc-rich-content .rc-character-collapse .InnerTableContainer,
+body.rc-page-characters .rc-rich-content .rc-character-list .InnerTableContainer,
+body.rc-page-characters .rc-rich-content .rc-character-search-panel .InnerTableContainer {
+    padding: 8px 10px !important;
+    margin: 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-info .TableContentContainer,
+body.rc-page-characters .rc-rich-content .rc-character-summary .TableContentContainer,
+body.rc-page-characters .rc-rich-content .rc-character-details .TableContentContainer,
+body.rc-page-characters .rc-rich-content .rc-character-collapse .TableContentContainer,
+body.rc-page-characters .rc-rich-content .rc-character-list .TableContentContainer,
+body.rc-page-characters .rc-rich-content .rc-character-search-panel .TableContentContainer {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-info .TableContent,
+body.rc-page-characters .rc-rich-content .rc-character-summary .TableContent,
+body.rc-page-characters .rc-rich-content .rc-character-details .TableContent,
+body.rc-page-characters .rc-rich-content .rc-character-collapse .TableContent,
+body.rc-page-characters .rc-rich-content .rc-character-list .TableContent,
+body.rc-page-characters .rc-rich-content .rc-character-search-panel .TableContent {
+    border: 0 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-info .TableContent td,
+body.rc-page-characters .rc-rich-content .rc-character-summary .TableContent td,
+body.rc-page-characters .rc-rich-content .rc-character-collapse .TableContent td,
+body.rc-page-characters .rc-rich-content .rc-character-list .TableContent td {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody > tr {
+    display: grid;
+    grid-template-columns: 156px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody > tr > td {
+    display: block;
+    min-width: 0;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-main {
+    display: grid !important;
+    gap: 8px;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-side {
+    display: grid !important;
+    gap: 8px;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-box {
+    margin: 0 !important;
+    overflow: hidden;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-outfit .TableContent td,
+body.rc-page-characters .rc-rich-content .rc-character-inventory .TableContent td,
+body.rc-page-characters .rc-rich-content .rc-character-vitals .TableContent td,
+body.rc-page-characters .rc-rich-content .rc-character-experience .TableContent td,
+body.rc-page-characters .rc-rich-content .rc-character-skills .TableContent td {
+    padding: 5px 7px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-vitals .progress,
+body.rc-page-characters .rc-rich-content .rc-character-experience .progress {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 10px !important;
+    border-radius: 999px;
+    overflow: hidden !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-inventory .TableContentContainer {
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-inventory table[style*="background: #292929"] {
+    background: rgba(7, 12, 24, 0.72) !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-inventory table[style*="background: #292929"] td {
+    border-color: rgba(145, 166, 216, 0.28) !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-skills .TableContent td {
+    text-align: center !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-skills img {
+    max-width: 22px !important;
+    max-height: 22px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-list {
+    margin-top: 10px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-list .TableContent td {
+    vertical-align: middle !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-search {
+    margin-top: 10px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-search-panel input[name="name"] {
+    width: 100% !important;
+    height: 38px !important;
+    border-radius: 8px !important;
+    padding: 0 12px !important;
+    background: rgba(18, 30, 52, 0.76) !important;
+    border: 1px solid rgba(138, 160, 202, 0.48) !important;
+    color: #e8edf8 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-search-panel input[name="name"]:focus {
+    outline: none !important;
+    border-color: rgba(215, 168, 92, 0.78) !important;
+    box-shadow: 0 0 0 2px rgba(215, 168, 92, 0.16) !important;
+}
+
+@media (max-width: 900px) {
+    body.rc-page-characters .rc-rich-content .rc-character-details > .Table3 > tbody > tr {
+        grid-template-columns: 1fr;
+    }
+
+    body.rc-page-characters .rc-rich-content .rc-character-side,
+    body.rc-page-characters .rc-rich-content .rc-character-main {
+        width: 100% !important;
+    }
+
+    body.rc-page-characters .rc-rich-content .rc-character-search-panel table,
+    body.rc-page-characters .rc-rich-content .rc-character-search-panel tbody,
+    body.rc-page-characters .rc-rich-content .rc-character-search-panel tr,
+    body.rc-page-characters .rc-rich-content .rc-character-search-panel td {
+        display: block;
+        width: 100% !important;
+    }
+
+    body.rc-page-characters .rc-rich-content .rc-character-search-panel td + td {
+        margin-top: 8px;
+    }
+}
