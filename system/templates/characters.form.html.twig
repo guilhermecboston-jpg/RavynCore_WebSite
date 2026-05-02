@@ -23,7 +23,7 @@
 							<tr>
 								<td style="vertical-align:middle;" class="LabelV150">Character Name:</td>
 								<td class="GreedyCell">
-									<input style="width: 100%;" name="name" value="" size="29" maxlength="29"{% if autofocus %} autofocus{% endif %}>
+									<input style="width: 100%;" name="name" value="" size="29" maxlength="29" pattern="[A-Za-z\s]+" title="Use only letters and spaces" data-rc-letters-only{% if autofocus %} autofocus{% endif %}>
 								</td>
 								<td>
 									<div style="margin-left: 15px;">

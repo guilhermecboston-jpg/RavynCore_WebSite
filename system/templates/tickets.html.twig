@@ -1,0 +1,35 @@
+<section class="rc-ticket-page">
+  <h2 class="rc-title-ornate">TICKETS</h2>
+
+  <div class="rc-ticket-card">
+    <div class="rc-character-table-wrap">
+      <table class="rc-character-table rc-ticket-table">
+        <thead>
+        <tr>
+          <th style="width: 90px;">Ticket</th>
+          <th>Descricao do ticket</th>
+          <th style="width: 180px;">Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if tickets|length > 0 %}
+          {% for ticket in tickets %}
+            <tr>
+              <td>#{{ ticket.id }}</td>
+              <td>
+                <strong>{{ ticket.title }}</strong><br>
+                <small>{{ ticket.summary }}</small>
+              </td>
+              <td>{{ ticket.status_label }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="3">No tickets found.</td>
+          </tr>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

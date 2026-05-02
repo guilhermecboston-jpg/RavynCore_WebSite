@@ -132,7 +132,7 @@ unset($player);
 $quickLinks = [
     ['name' => 'Latest News', 'url' => $templateLinks['link_news'] ?? getLink('news')],
     ['name' => 'Create Account', 'url' => $templateLinks['link_account_create'] ?? getLink('account/create')],
-    ['name' => 'Downloads', 'url' => $templateLinks['link_downloads'] ?? getLink('downloads')],
+    ['name' => 'Tickets', 'url' => getLink('tickets')],
     ['name' => 'Highscores', 'url' => $templateLinks['link_highscores'] ?? getLink('highscores')],
     ['name' => 'Guilds', 'url' => $templateLinks['link_guilds'] ?? getLink('guilds')],
     ['name' => 'Server Info', 'url' => $templateLinks['link_serverInfo'] ?? getLink('serverInfo')],
@@ -142,7 +142,11 @@ $accountManageUrl = $templateLinks['link_account_manage'] ?? getLink('account/ma
 $accountCreateUrl = $templateLinks['link_account_create'] ?? getLink('account/create');
 $accountLogoutUrl = $templateLinks['link_account_logout'] ?? getLink('account/logout');
 $downloadUrl = $templateLinks['link_downloads'] ?? getLink('downloads');
-$ticketsUrl = $templateLinks['link_team'] ?? getLink('team');
+$ticketsUrl = getLink('tickets');
+$accountTicketsUrl = getLink('account/tickets');
+$openTicketLoginRedirect = $accountManageUrl
+    . (strpos($accountManageUrl, '?') !== false ? '&' : '?')
+    . 'redirect=' . urlencode($accountTicketsUrl);
 $recordOnline = (int)($status['playersPeak'] ?? $status['playersRecord'] ?? $status['record'] ?? 0);
 $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
 $tiktokUrl = 'https://www.tiktok.com/@ravyncore_';
@@ -200,7 +204,7 @@ $socialLinks = [
                     <a class="rc-btn rc-btn-danger" href="<?= $accountLogoutUrl; ?>">Logout</a>
                 <?php else: ?>
                     <a class="rc-btn rc-btn-subtle" href="<?= $accountManageUrl; ?>">Login</a>
-                    <a class="rc-btn rc-btn-primary" href="<?= $accountCreateUrl; ?>">Create Account</a>
+                    <a class="rc-btn rc-btn-primary" href="<?= $openTicketLoginRedirect; ?>">OPEN TICKET</a>
                 <?php endif; ?>
                 <div class="rc-social-icons" aria-label="RavynCore social links">
                     <?php foreach ($socialLinks as $social): ?>

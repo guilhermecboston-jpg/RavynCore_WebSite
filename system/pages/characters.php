@@ -120,6 +120,12 @@ if (empty($name)) {
 }
 
 $name = str_replace('/', '', $name);
+if (!empty($name) && !preg_match('/^[\p{L}\s]+$/u', $name)) {
+    $search_errors[] = 'Character name may contain only letters and spaces.';
+    $twig->display('error_box.html.twig', array('errors' => $search_errors));
+    echo generate_search_form(true);
+    return;
+}
 
 $oldName = '';
 

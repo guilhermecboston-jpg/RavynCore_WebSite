@@ -168,7 +168,7 @@
             style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
       <span class="CaptionVerticalLeft"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
-      <div class="Text">Download Client</div>
+      <div class="Text">Tickets</div>
       <span class="CaptionVerticalRight"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
       <span class="CaptionBorderBottom"
@@ -194,14 +194,14 @@
                     <tr>
                       <td>
                         <div style="height: 55px;">
-                          <div id="DowloadBox" style="position: relative; float:right;">
-                            <a href="?downloadclient"><img
+                          <div id="TicketBox" style="position: relative; float:right;">
+                            <a href="{{ getLink('account/tickets') }}"><img
                                 style="width: 45px; height: 45px; border: 0px; margin-right: 10px;"
-                                src="{{ template_path }}/images/account/download_windows.gif"></a>
+                                src="{{ template_path }}/images/premiumfeatures/PremiumIcon-TrackQuests.png"></a>
                             <br>
-                            <a style="position: absolute; bottom: -5px; right: 0px;" href="?downloadclient">Download</a>
+                            <a style="position: absolute; bottom: -5px; right: 0px;" href="{{ getLink('account/tickets') }}">Open</a>
                           </div>
-                          <span style="position: relative; top: 18px;">Click <a href="?downloadclient">here</a> to download the latest {{ config['lua']['serverName'] }} client!</span>
+                          <span style="position: relative; top: 18px;">Open your support ticket area <a href="{{ getLink('account/tickets') }}">here</a> and track your reports.</span>
                         </div>
                       </td>
                     </tr>

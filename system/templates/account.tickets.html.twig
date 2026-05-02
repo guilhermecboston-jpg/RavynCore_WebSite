@@ -1,0 +1,92 @@
+<section class="rc-ticket-page">
+  <h2 class="rc-title-ornate">OPEN TICKET</h2>
+
+  {% if errors is not empty %}
+    {{ include('error_box.html.twig', { errors: errors }) }}
+  {% endif %}
+
+  {% if success is not empty %}
+    <div class="rc-ticket-success">{{ success }}</div>
+  {% endif %}
+
+  <div class="rc-ticket-card">
+    <form method="post" action="{{ getLink('account/tickets') }}" class="rc-ticket-form">
+      <div class="rc-ticket-grid">
+        <label>
+          <span>Character</span>
+          <select name="character_id" required>
+            {% for character in characters %}
+              <option value="{{ character.id }}" {% if selectedCharacterId == character.id %}selected{% endif %}>{{ character.name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+
+        <label>
+          <span>Type</span>
+          <select name="ticket_type" required>
+            {% for key, label in typeOptions %}
+              <option value="{{ key }}" {% if ticketType == key %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+
+        <label class="rc-ticket-grid-full">
+          <span>Ticket Title</span>
+          <input type="text" name="ticket_title" maxlength="120" value="{{ ticketTitle|e }}" placeholder="Ex.: Character stuck / payment not credited" required>
+        </label>
+
+        <label class="rc-ticket-grid-full">
+          <span>Descricao do problema (resumido)</span>
+          <input type="text" name="ticket_summary" maxlength="255" value="{{ ticketSummary|e }}" placeholder="Resumo para filtro de assunto" required>
+        </label>
+
+        <label class="rc-ticket-grid-full">
+          <span>Descricao completa</span>
+          <textarea name="ticket_description" rows="8" placeholder="Descreva o problema completo. Links permitidos: YouTube e Imgur." required>{{ ticketDescription|e }}</textarea>
+          <small>Links aceitos apenas: YouTube e Imgur.</small>
+        </label>
+      </div>
+
+      <div class="rc-ticket-actions">
+        <button type="submit" name="create_ticket" value="1" class="rc-btn rc-btn-primary">Create Ticket</button>
+      </div>
+    </form>
+  </div>
+
+  <h3 class="rc-title-ornate">MY TICKETS</h3>
+  <div class="rc-ticket-card">
+    <div class="rc-character-table-wrap">
+      <table class="rc-character-table rc-ticket-table">
+        <thead>
+        <tr>
+          <th style="width: 90px;">Ticket</th>
+          <th>Descricao do ticket</th>
+          <th style="width: 170px;">Status</th>
+          <th style="width: 170px;">Character</th>
+          <th style="width: 180px;">Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if myTickets|length > 0 %}
+          {% for ticket in myTickets %}
+            <tr>
+              <td>#{{ ticket.id }}</td>
+              <td>
+                <strong>{{ ticket.title }}</strong><br>
+                <small>{{ ticket.summary }}</small>
+              </td>
+              <td>{{ ticket.status_label }}</td>
+              <td>{{ ticket.character_name }}</td>
+              <td>{{ ticket.created_at|date("d M Y, H:i") }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="5">No tickets created yet.</td>
+          </tr>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

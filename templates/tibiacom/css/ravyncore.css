@@ -3312,6 +3312,90 @@ body.rc-page-characters .rc-rich-content .rc-character-search-host input[name="n
     min-width: min(70vw, 540px);
 }
 
+body.rc-page-tickets .rc-rich-content .rc-ticket-page,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-page {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+body.rc-page-tickets .rc-rich-content .rc-ticket-card,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-card {
+    background: rgba(18, 27, 42, 0.82);
+    border: 1px solid rgba(130, 154, 201, 0.28);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+body.rc-page-tickets .rc-rich-content .rc-ticket-form label,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+body.rc-page-tickets .rc-rich-content .rc-ticket-form label > span,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-form label > span {
+    color: #c9daf7;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+body.rc-page-tickets .rc-rich-content .rc-ticket-grid,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+body.rc-page-tickets .rc-rich-content .rc-ticket-grid-full,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-grid-full {
+    grid-column: 1 / -1;
+}
+
+body.rc-page-tickets .rc-rich-content .rc-ticket-form input,
+body.rc-page-tickets .rc-rich-content .rc-ticket-form select,
+body.rc-page-tickets .rc-rich-content .rc-ticket-form textarea,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-form input,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-form select,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-form textarea {
+    width: 100%;
+    border: 1px solid rgba(138, 160, 202, 0.45);
+    border-radius: 8px;
+    background: rgba(18, 30, 52, 0.72);
+    color: #e8edf8;
+    padding: 9px 10px;
+    box-sizing: border-box;
+}
+
+body.rc-page-tickets .rc-rich-content .rc-ticket-form textarea,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-form textarea {
+    resize: vertical;
+    min-height: 130px;
+}
+
+body.rc-page-tickets .rc-rich-content .rc-ticket-form small,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-form small {
+    color: #a9bddf;
+    font-size: 11px;
+}
+
+body.rc-page-tickets .rc-rich-content .rc-ticket-actions,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-actions {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+body.rc-page-tickets .rc-rich-content .rc-ticket-success,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-success {
+    border: 1px solid rgba(105, 193, 128, 0.55);
+    background: rgba(25, 55, 34, 0.82);
+    color: #c8f4d6;
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
 @media (max-width: 900px) {
     body.rc-page-characters .rc-rich-content .rc-character-info-grid {
         grid-template-columns: 1fr;

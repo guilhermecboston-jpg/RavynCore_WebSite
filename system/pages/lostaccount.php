@@ -12,6 +12,14 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Lost Account Interface';
 $baseUrl = BASE_URL;
 
+if (!function_exists('rc_letters_only_name')) {
+    function rc_letters_only_name($name)
+    {
+        $name = trim((string)$name);
+        return $name !== '' && preg_match('/^[\p{L}\s]+$/u', $name);
+    }
+}
+
 if (!$config['mail_enabled']) {
     echo '<b>Account maker is not configured to send e-mails, you can\'t use Lost Account Interface. Contact with admin to get help.</b>';
     return;
@@ -84,7 +92,7 @@ if ($action == 'step1' && $action_type == 'no_char') {
     if ($action == 'sendcode') {
         $email = $_REQUEST['email'];
         $nick = stripslashes($_REQUEST['nick']);
-        if (Validator::characterName($nick)) {
+        if (Validator::characterName($nick) && rc_letters_only_name($nick)) {
             $player = new OTS_Player();
             $account = new OTS_Account();
             $player->find($nick);
@@ -126,7 +134,7 @@ if ($action == 'step1' && $action_type == 'no_char') {
             } else
                 echo 'Player or account of player <b>' . $nick . '</b> doesn\'t exist.';
         } else
-            echo 'Invalid player name format. If you have other characters on account try with other name.';
+            echo 'Invalid player name format. Use only letters and spaces.';
 
         echo '<BR /><TABLE CELLSPACING=0 CELLPADDING=0 BORDER=0 WIDTH=100%><TR><TD><div style="text-align:center">
 				<a href="?subtopic=lostaccount&action=step1&action_type=email&nick=' . urlencode($nick) . '" class="rc-lost-back">Back</a></div>
@@ -141,7 +149,7 @@ if ($action == 'step1' && $action_type == 'no_char') {
 				<TR><TD BGCOLOR="' . $config['vdarkborder'] . '" class="white"><B>Code & character name</B></TD></TR>
 				<TR><TD BGCOLOR="' . $config['darkborder'] . '">
 				Your code:&nbsp;<INPUT TYPE=text NAME="code" VALUE="" SIZE="40"><BR />
-				Character:&nbsp;<INPUT TYPE=text NAME="character" VALUE="" SIZE="40"><BR />
+				Character:&nbsp;<INPUT TYPE=text NAME="character" VALUE="" SIZE="40" pattern="[A-Za-z\s]+" title="Use only letters and spaces"><BR />
 				</TD></TR>
 				</TABLE>
 				<BR>
@@ -150,7 +158,9 @@ if ($action == 'step1' && $action_type == 'no_char') {
 				</TD></TR></FORM></TABLE></TABLE>';
         else {
             $account = new OTS_Account();
-            if (empty($email_rcv)) {
+            if (!empty($character) && !rc_letters_only_name($character)) {
+                $error = 'Invalid character name format. Use only letters and spaces.';
+            } else if (empty($email_rcv)) {
                 $player = new OTS_Player();
                 $player->find($character);
                 if ($player->isLoaded())
@@ -158,7 +168,7 @@ if ($action == 'step1' && $action_type == 'no_char') {
             } else {
                 $account->findByEMail($email_rcv);
             }
-            if ($account->isLoaded()) {
+            if (empty($error) && $account->isLoaded()) {
                 if ($account->getCustomField('email_code') == $code) {
                     echo '<script type="text/javascript">
                     function validate_required(field,alerttxt) {
@@ -193,7 +203,7 @@ if ($action == 'step1' && $action_type == 'no_char') {
 				</TD></TR></FORM></TABLE></TABLE>';
                 } else
                     $error = 'Wrong code to change password.';
-            } else
+            } else if (empty($error))
                 $error = 'Account of this character or this character doesn\'t exist.';
         }
         if (!empty($error))
@@ -203,7 +213,7 @@ if ($action == 'step1' && $action_type == 'no_char') {
 				<TR><TD BGCOLOR="' . $config['vdarkborder'] . '" class="white"><B>Code & character name</B></TD></TR>
 				<TR><TD BGCOLOR="' . $config['darkborder'] . '">
 				Your code:&nbsp;<INPUT TYPE=text NAME="code" VALUE="" SIZE="40"><BR />
-				Character:&nbsp;<INPUT TYPE=text NAME="character" VALUE="" SIZE="40"><BR />
+				Character:&nbsp;<INPUT TYPE=text NAME="character" VALUE="" SIZE="40" pattern="[A-Za-z\s]+" title="Use only letters and spaces"><BR />
 				</TD></TR>
 				</TABLE>
 				<BR>
@@ -223,7 +233,9 @@ if ($action == 'step1' && $action_type == 'no_char') {
 				</TD></TR></FORM></TABLE></TABLE>';
         else {
             $account = new OTS_Account();
-            if (empty($email_rcv)) {
+            if (!empty($character) && !rc_letters_only_name($character)) {
+                $error = 'Invalid character name format. Use only letters and spaces.';
+            } else if (empty($email_rcv)) {
                 $player = new OTS_Player();
                 $player->find($character);
                 if ($player->isLoaded())
@@ -232,7 +244,7 @@ if ($action == 'step1' && $action_type == 'no_char') {
                 $account->findByEMail($email_rcv);
             }
 
-            if ($account->isLoaded()) {
+            if (empty($error) && $account->isLoaded()) {
                 if ($account->getCustomField('email_code') == $code) {
                     if (Validator::password($newpassword)) {
                         $tmp_new_pass = $newpassword;
@@ -278,7 +290,7 @@ if ($action == 'step1' && $action_type == 'no_char') {
                         $error = Validator::getLastError();
                 } else
                     $error = 'Wrong code to change password.';
-            } else
+            } else if (empty($error))
                 $error = 'Account of this character or this character doesn\'t exist.';
         }
         if (!empty($error))
@@ -288,7 +300,7 @@ if ($action == 'step1' && $action_type == 'no_char') {
 				<TR><TD BGCOLOR="' . $config['vdarkborder'] . '" class="white"><B>Code & character name</B></TD></TR>
 				<TR><TD BGCOLOR="' . $config['darkborder'] . '">
 				Your code:&nbsp;<INPUT TYPE=text NAME="code" VALUE="" SIZE="40"><BR />
-				Character:&nbsp;<INPUT TYPE=text NAME="character" VALUE="" SIZE="40"><BR />
+				Character:&nbsp;<INPUT TYPE=text NAME="character" VALUE="" SIZE="40" pattern="[A-Za-z\s]+" title="Use only letters and spaces"><BR />
 				</TD></TR>
 				</TABLE>
 				<BR>
