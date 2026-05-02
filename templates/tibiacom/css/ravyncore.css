@@ -3126,6 +3126,18 @@ body.rc-page-characters .rc-rich-content .rc-character-table tbody td {
     vertical-align: middle;
 }
 
+body.rc-page-characters .rc-rich-content .rc-character-meta-table .rc-character-label-cell {
+    width: 220px;
+    color: #9fb3d9;
+    font-weight: 600;
+    background: rgba(23, 35, 55, 0.72);
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-meta-table .rc-character-value-cell {
+    color: #f4f8ff;
+    font-weight: 500;
+}
+
 body.rc-page-characters .rc-rich-content .rc-character-table tbody tr:hover td {
     background: rgba(41, 62, 95, 0.48);
 }
@@ -3149,6 +3161,24 @@ body.rc-page-characters .rc-rich-content .rc-status-offline {
     font-weight: 700;
 }
 
+body.rc-page-characters .rc-rich-content .rc-character-search-host {
+    display: flex;
+    justify-content: center;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-search-host table {
+    width: auto;
+    min-width: min(100%, 760px);
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-search-host td {
+    padding: 6px 8px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-search-host input[name="name"] {
+    min-width: min(70vw, 540px);
+}
+
 @media (max-width: 900px) {
     body.rc-page-characters .rc-rich-content .rc-character-info-grid {
         grid-template-columns: 1fr;
@@ -3162,5 +3192,22 @@ body.rc-page-characters .rc-rich-content .rc-status-offline {
     body.rc-page-characters .rc-rich-content .rc-character-table thead th,
     body.rc-page-characters .rc-rich-content .rc-character-table tbody td {
         padding: 7px 8px;
+    }
+
+    body.rc-page-characters .rc-rich-content .rc-character-meta-table .rc-character-label-cell {
+        width: 44%;
+    }
+
+    body.rc-page-characters .rc-rich-content .rc-character-search-host table,
+    body.rc-page-characters .rc-rich-content .rc-character-search-host tbody,
+    body.rc-page-characters .rc-rich-content .rc-character-search-host tr,
+    body.rc-page-characters .rc-rich-content .rc-character-search-host td {
+        display: block;
+        width: 100% !important;
+    }
+
+    body.rc-page-characters .rc-rich-content .rc-character-search-host input[name="name"] {
+        min-width: 0;
+        width: 100% !important;
     }
 }

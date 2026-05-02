@@ -15,64 +15,80 @@
   {% endif %}
 
   <section class="rc-character-card rc-character-card-info">
-    <h4 class="rc-character-card-title">INFORMACOES DO PERSONAGEM</h4>
-    <div class="rc-character-info-grid">
-      <div class="rc-character-label">Nome:</div>
-      <div class="rc-character-value">
-        {% if skull is not null %}<img src="images/{{ skull }}.gif" alt="Skull"> {% endif %}
-        {{ player.getName() }} {{ oldName }}
-      </div>
-
-      <div class="rc-character-label">Sex:</div>
-      <div class="rc-character-value">{{ sex }}</div>
-
-      <div class="rc-character-label">Vocation:</div>
-      <div class="rc-character-value">{{ vocation }}</div>
-
-      <div class="rc-character-label">Level:</div>
-      <div class="rc-character-value">{{ player.getLevel() }}</div>
-
-      <div class="rc-character-label">World:</div>
-      <div class="rc-character-value">{{ config.lua.serverName }}</div>
-
-      <div class="rc-character-label">Residence:</div>
-      <div class="rc-character-value">{{ town }}</div>
-
-      <div class="rc-character-label">Guild:</div>
-      <div class="rc-character-value">
-        {% if guild.rank is not null %}
-          {{ guild.rank }} of the {{ guild.link|raw }}
-        {% else %}
-          -
-        {% endif %}
-      </div>
-
-      <div class="rc-character-label">Last Login:</div>
-      <div class="rc-character-value">{% if player.getLastLogin() == 0 %}Never logged in.{% else %}{{ player.getLastLogin()|date("j M Y, H:i") }}{% endif %}</div>
-
-      <div class="rc-character-label">Created:</div>
-      <div class="rc-character-value">{{ account.getCreated()|date("j M Y, H:i") }}</div>
-
-      <div class="rc-character-label">Position:</div>
-      <div class="rc-character-value">{% if group.isLoaded() and group.getId() != 1 %}{{ group.getName()|capitalize }}{% else %}-{% endif %}</div>
-
-      <div class="rc-character-label">Account Status:</div>
-      <div class="rc-character-value">
-        {% if vip_enabled %}
-          VIP
-          {% if account.isPremium() %}
-            <strong class="rc-status-online">actived</strong> until {{ account.getExpirePremiumTime()|date("j M Y, H:i") }}
-          {% else %}
-            <strong class="rc-status-offline">desactivated</strong>
-          {% endif %}
-        {% else %}
-          {% if account.isPremium() %}
-            <strong class="rc-status-online">Premium Account</strong>
-          {% else %}
-            <strong class="rc-status-offline">Free Account</strong>
-          {% endif %}
-        {% endif %}
-      </div>
+    <h4 class="rc-character-card-title">CHARACTER INFORMATION</h4>
+    <div class="rc-character-table-wrap">
+      <table class="rc-character-table rc-character-meta-table">
+        <tbody>
+        <tr>
+          <td class="rc-character-label-cell">Name:</td>
+          <td class="rc-character-value-cell">
+            {% if skull is not null %}<img src="images/{{ skull }}.gif" alt="Skull"> {% endif %}
+            {{ player.getName() }} {{ oldName }}
+          </td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Sex:</td>
+          <td class="rc-character-value-cell">{{ sex }}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Vocation:</td>
+          <td class="rc-character-value-cell">{{ vocation }}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Level:</td>
+          <td class="rc-character-value-cell">{{ player.getLevel() }}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">World:</td>
+          <td class="rc-character-value-cell">{{ config.lua.serverName }}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Residence:</td>
+          <td class="rc-character-value-cell">{{ town }}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Guild:</td>
+          <td class="rc-character-value-cell">
+            {% if guild.rank is not null %}
+              {{ guild.rank }} of the {{ guild.link|raw }}
+            {% else %}
+              -
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Last Login:</td>
+          <td class="rc-character-value-cell">{% if player.getLastLogin() == 0 %}Never logged in.{% else %}{{ player.getLastLogin()|date("j M Y, H:i") }}{% endif %}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Created:</td>
+          <td class="rc-character-value-cell">{{ account.getCreated()|date("j M Y, H:i") }}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Position:</td>
+          <td class="rc-character-value-cell">{% if group.isLoaded() and group.getId() != 1 %}{{ group.getName()|capitalize }}{% else %}-{% endif %}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Account Status:</td>
+          <td class="rc-character-value-cell">
+            {% if vip_enabled %}
+              VIP
+              {% if account.isPremium() %}
+                <strong class="rc-status-online">actived</strong> until {{ account.getExpirePremiumTime()|date("j M Y, H:i") }}
+              {% else %}
+                <strong class="rc-status-offline">desactivated</strong>
+              {% endif %}
+            {% else %}
+              {% if account.isPremium() %}
+                <strong class="rc-status-online">Premium Account</strong>
+              {% else %}
+                <strong class="rc-status-offline">Free Account</strong>
+              {% endif %}
+            {% endif %}
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -84,7 +100,7 @@
       <table class="rc-character-table">
         <thead>
         <tr>
-          <th style="width: 220px;">Data</th>
+          <th style="width: 220px;">Date</th>
           <th>Description</th>
         </tr>
         </thead>
@@ -107,22 +123,32 @@
   </section>
 
   <section class="rc-character-card rc-character-card-account">
-    <h4 class="rc-character-card-title">INFORMACOES DA CONTA</h4>
-    <div class="rc-character-info-grid">
-      <div class="rc-character-label">Loyalty Title:</div>
-      <div class="rc-character-value">{{ characterLoyaltyTitle }}</div>
-
-      <div class="rc-character-label">Points:</div>
-      <div class="rc-character-value">{{ achievementPoints }}</div>
-
-      <div class="rc-character-label">Charm Points:</div>
-      <div class="rc-character-value">{{ characterCharmPoints }}</div>
-
-      <div class="rc-character-label">Full Addons:</div>
-      <div class="rc-character-value">{{ characterFullAddons }}</div>
-
-      <div class="rc-character-label">Full Mounts:</div>
-      <div class="rc-character-value">{{ characterFullMounts }}</div>
+    <h4 class="rc-character-card-title">ACCOUNT INFORMATION</h4>
+    <div class="rc-character-table-wrap">
+      <table class="rc-character-table rc-character-meta-table">
+        <tbody>
+        <tr>
+          <td class="rc-character-label-cell">Loyalty Title:</td>
+          <td class="rc-character-value-cell">{{ characterLoyaltyTitle }}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Points:</td>
+          <td class="rc-character-value-cell">{{ achievementPoints }}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Charm Points:</td>
+          <td class="rc-character-value-cell">{{ characterCharmPoints }}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Full Addons:</td>
+          <td class="rc-character-value-cell">{{ characterFullAddons }}</td>
+        </tr>
+        <tr>
+          <td class="rc-character-label-cell">Full Mounts:</td>
+          <td class="rc-character-value-cell">{{ characterFullMounts }}</td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -174,6 +200,15 @@
           {% endif %}
           </tbody>
         </table>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if search_form is defined and search_form %}
+    <section class="rc-character-card rc-character-card-search">
+      <h4 class="rc-character-card-title">SEARCH CHARACTER</h4>
+      <div class="rc-character-search-host">
+        {{ search_form|raw }}
       </div>
     </section>
   {% endif %}
