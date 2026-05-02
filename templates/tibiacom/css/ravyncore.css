@@ -2846,6 +2846,7 @@ body.rc-page-characters .rc-rich-content .rc-character-search-wrap {
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-info-wrap {
+    width: calc(100% - 20px);
     margin: 0 auto 8px auto;
 }
 
