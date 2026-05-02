@@ -48,6 +48,44 @@ if (!$logged) {
 
 $errors = array();
 
+if (!function_exists('rc_ensure_tickets_table')) {
+    function rc_ensure_tickets_table($db)
+    {
+        $db->query("
+            CREATE TABLE IF NOT EXISTS `myaac_tickets` (
+                `id` INT NOT NULL AUTO_INCREMENT,
+                `account_id` INT NOT NULL,
+                `player_id` INT NULL,
+                `character_name` VARCHAR(120) NOT NULL DEFAULT '',
+                `title` VARCHAR(120) NOT NULL,
+                `summary` VARCHAR(255) NOT NULL,
+                `ticket_type` VARCHAR(20) NOT NULL DEFAULT 'bug',
+                `description` TEXT NOT NULL,
+                `status` VARCHAR(20) NOT NULL DEFAULT 'open',
+                `staff_reply` TEXT NULL,
+                `staff_account_id` INT NULL,
+                `staff_updated_at` INT NULL,
+                `created_at` INT NOT NULL,
+                `updated_at` INT NOT NULL,
+                PRIMARY KEY (`id`),
+                KEY `idx_ticket_account` (`account_id`),
+                KEY `idx_ticket_status` (`status`),
+                KEY `idx_ticket_created` (`created_at`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+        ");
+
+        if (!$db->hasColumn('myaac_tickets', 'staff_reply')) {
+            $db->query("ALTER TABLE `myaac_tickets` ADD `staff_reply` TEXT NULL AFTER `status`");
+        }
+        if (!$db->hasColumn('myaac_tickets', 'staff_account_id')) {
+            $db->query("ALTER TABLE `myaac_tickets` ADD `staff_account_id` INT NULL AFTER `staff_reply`");
+        }
+        if (!$db->hasColumn('myaac_tickets', 'staff_updated_at')) {
+            $db->query("ALTER TABLE `myaac_tickets` ADD `staff_updated_at` INT NULL AFTER `staff_account_id`");
+        }
+    }
+}
+
 if (isset($_REQUEST['redirect'])) {
     $redirect = urldecode($_REQUEST['redirect']);
 
@@ -58,6 +96,30 @@ if (isset($_REQUEST['redirect'])) {
 }
 
 if ($action == '') {
+    rc_ensure_tickets_table($db);
+
+    $ticketStatusMap = [
+        'open' => 'Aberto',
+        'analysis' => 'Em analise',
+        'in_progress' => 'Em andamento',
+        'resolved' => 'Resolvido',
+        'closed' => 'Finalizado',
+    ];
+
+    $myTicketsPreview = [];
+    $ticketsQuery = $db->query(
+        'SELECT `id`, `title`, `status`, `created_at` FROM `myaac_tickets` WHERE `account_id` = ' . (int)$account_logged->getId() . ' ORDER BY `id` DESC LIMIT 5'
+    );
+    foreach ($ticketsQuery as $ticketRow) {
+        $ticketRow['status_label'] = $ticketStatusMap[$ticketRow['status']] ?? ucfirst(str_replace('_', ' ', (string)$ticketRow['status']));
+        $myTicketsPreview[] = $ticketRow;
+    }
+
+    $openTicketsCount = 0;
+    if (admin()) {
+        $openTicketsCount = (int)$db->query("SELECT COUNT(*) FROM `myaac_tickets` WHERE `status` = 'open'")->fetchColumn();
+    }
+
     $freePremium = getBoolean(configLua('freePremium')) || $account_logged->getPremDays() == OTS_Account::GRATIS_PREMIUM_DAYS;
     $account_premdays = $account_logged->getPremDays();
     $daysLeft = "$account_premdays " . ($account_premdays > 1 ? ' days' : ' day');
@@ -158,6 +220,8 @@ if ($action == '') {
         'actions' => $actions,
         'players' => $account_players,
         'account_update_info_on_register' => $config['account_update_info_on_register'],
+        'my_tickets_preview' => $myTicketsPreview,
+        'open_tickets_count' => $openTicketsCount,
     ));
 } else {
     if (!ctype_alnum(str_replace(array('-', '_'), '', $action))) {

@@ -146,6 +146,36 @@ $ticketsUrl = getLink('tickets');
 $accountTicketsUrl = BASE_URL . '?subtopic=accountmanagement&action=tickets';
 $openTicketLoginRedirect = BASE_URL . '?subtopic=accountmanagement&redirect=' . urlencode($accountTicketsUrl);
 $recordOnline = (int)($status['playersPeak'] ?? $status['playersRecord'] ?? $status['record'] ?? 0);
+$isStaffAccount = $logged && function_exists('admin') && admin();
+$openTicketsCount = 0;
+if ($isStaffAccount) {
+    if (!$db->hasTable('myaac_tickets')) {
+        $db->query("
+            CREATE TABLE IF NOT EXISTS `myaac_tickets` (
+                `id` INT NOT NULL AUTO_INCREMENT,
+                `account_id` INT NOT NULL,
+                `player_id` INT NULL,
+                `character_name` VARCHAR(120) NOT NULL DEFAULT '',
+                `title` VARCHAR(120) NOT NULL,
+                `summary` VARCHAR(255) NOT NULL,
+                `ticket_type` VARCHAR(20) NOT NULL DEFAULT 'bug',
+                `description` TEXT NOT NULL,
+                `status` VARCHAR(20) NOT NULL DEFAULT 'open',
+                `staff_reply` TEXT NULL,
+                `staff_account_id` INT NULL,
+                `staff_updated_at` INT NULL,
+                `created_at` INT NOT NULL,
+                `updated_at` INT NOT NULL,
+                PRIMARY KEY (`id`),
+                KEY `idx_ticket_account` (`account_id`),
+                KEY `idx_ticket_status` (`status`),
+                KEY `idx_ticket_created` (`created_at`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+        ");
+    }
+    $openTicketsCount = (int)$db->query("SELECT COUNT(*) FROM `myaac_tickets` WHERE `status` = 'open'")->fetchColumn();
+}
+$ticketsNavLabel = 'Tickets' . ($isStaffAccount && $openTicketsCount > 0 ? ' <span class="rc-nav-badge">' . (int)$openTicketsCount . '</span>' : '');
 $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
 $tiktokUrl = 'https://www.tiktok.com/@ravyncore_';
 $whatsappUrl = 'https://chat.whatsapp.com/D1D7BPj6I7l5tN2QzSSPmQ';
@@ -231,7 +261,7 @@ $socialLinks = [
                             $firstItem = $items[0] ?? null;
                             if ($categoryKey === 'community') {
                                 $ticketsRendered = true;
-                                echo '<li class="rc-nav-item"><a href="' . escapeHtml($ticketsUrl) . '">Tickets</a></li>';
+                                echo '<li class="rc-nav-item"><a href="' . escapeHtml($ticketsUrl) . '">' . $ticketsNavLabel . '</a></li>';
                                 continue;
                             }
                             if ($categoryKey === 'forum') {
@@ -252,12 +282,11 @@ $socialLinks = [
                             </li>
                         <?php endforeach; ?>
                         <?php if (!$ticketsRendered): ?>
-                            <li class="rc-nav-item"><a href="<?= $ticketsUrl; ?>">Tickets</a></li>
+                            <li class="rc-nav-item"><a href="<?= $ticketsUrl; ?>"><?= $ticketsNavLabel; ?></a></li>
                         <?php endif; ?>
                     <?php else: ?>
                         <li class="rc-nav-item"><a href="<?= getLink('news'); ?>">News</a></li>
-                        <li class="rc-nav-item"><a href="<?= getLink('downloads'); ?>">Downloads</a></li>
-                        <li class="rc-nav-item"><a href="<?= $ticketsUrl; ?>">Tickets</a></li>
+                        <li class="rc-nav-item"><a href="<?= $ticketsUrl; ?>"><?= $ticketsNavLabel; ?></a></li>
                         <li class="rc-nav-item"><a href="<?= getLink('highscores'); ?>">Ranking</a></li>
                         <li class="rc-nav-item"><a href="<?= getLink('guilds'); ?>">Guilds</a></li>
                         <li class="rc-nav-item"><a href="<?= getLink('serverInfo'); ?>">Info</a></li>

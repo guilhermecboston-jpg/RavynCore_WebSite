@@ -101,51 +101,6 @@
                 </div>
               </td>
             </tr>
-            <tr>
-              <td>
-                <div class="TableContentContainer">
-                  <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
-                    <tbody>
-                    <tr>
-                      <style>
-                        .premiumbenefits {
-                          display: flex;
-                          margin: 0px auto;
-                        }
-
-                        .premiumbenefits > div {
-                          display: flex;
-                          align-items: center;
-                          flex: 1;
-                          margin: auto 5x;
-                        }
-                      </style>
-                      <td class="premiumbenefits">
-                        <div style="justify-content: flex-start">
-                          <img class="PremiumFeatureImage1"
-                               src="{{ template_path }}/images/premiumfeatures/PremiumIcon-Travel.png"
-                               alt="premium feature 1" style="margin:0px 5px">
-                          <div>use instant travel system</div>
-                        </div>
-                        <div style="justify-content: center">
-                          <img class="PremiumFeatureImage1"
-                               src="{{ template_path }}/images/premiumfeatures/PremiumIcon-VIPGroups.png"
-                               alt="premium feature 1" style="margin:0px 5px">
-                          <div>add groups to organise your VIP list</div>
-                        </div>
-                        <div style="justify-content: flex-end">
-                          <img class="PremiumFeatureImage1"
-                               src="{{ template_path }}/images/premiumfeatures/PremiumIcon-Promotion.png"
-                               alt="premium feature 1" style="margin:0px 5px">
-                          <div>get stronger with a promotion</div>
-                        </div>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
             </tbody>
           </table>
         </div>
@@ -193,15 +148,31 @@
                     <tbody>
                     <tr>
                       <td>
-                        <div style="height: 55px;">
+                        <div style="height: auto; min-height: 72px;">
                           <div id="TicketBox" style="position: relative; float:right;">
                             <a href="?subtopic=accountmanagement&action=tickets"><img
                                 style="width: 45px; height: 45px; border: 0px; margin-right: 10px;"
                                 src="{{ template_path }}/images/premiumfeatures/PremiumIcon-TrackQuests.png"></a>
                             <br>
-                            <a style="position: absolute; bottom: -5px; right: 0px;" href="?subtopic=accountmanagement&action=tickets">Open</a>
+                            <a style="position: absolute; bottom: -5px; right: 0px;" href="?subtopic=accountmanagement&action=tickets">My Tickets</a>
+                            {% if open_tickets_count is defined and open_tickets_count > 0 %}
+                              <span class="rc-ticket-admin-reminder">{{ open_tickets_count }}</span>
+                            {% endif %}
                           </div>
-                          <span style="position: relative; top: 18px;">Open your support ticket area <a href="?subtopic=accountmanagement&action=tickets">here</a> and track your reports.</span>
+                          <div class="rc-ticket-manage-summary">
+                            <span>Open your support ticket area <a href="?subtopic=accountmanagement&action=tickets">here</a> and track your reports.</span>
+                            {% if my_tickets_preview is defined and my_tickets_preview|length > 0 %}
+                              <ul class="rc-ticket-preview-list">
+                                {% for ticket in my_tickets_preview %}
+                                  <li>
+                                    <strong>#{{ ticket.id }}</strong>
+                                    <span>{{ ticket.title }}</span>
+                                    <em>{{ ticket.status_label }}</em>
+                                  </li>
+                                {% endfor %}
+                              </ul>
+                            {% endif %}
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -306,7 +277,9 @@
                   <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
                     <tbody>
                     <tr>
-                      <td style="text-align: center; font-weight: bold;">Regular Characters</td>
+                      <td style="padding: 6px 0;">
+                        <h3 class="rc-title-ornate rc-title-ornate-inline">Regular Characters</h3>
+                      </td>
                     </tr>
                     </tbody>
                   </table>

@@ -1,14 +1,30 @@
 <section class="rc-ticket-page">
   <h2 class="rc-title-ornate">TICKETS</h2>
 
+  {% if errors is not empty %}
+    {{ include('error_box.html.twig', { errors: errors }) }}
+  {% endif %}
+
+  {% if success is not empty %}
+    <div class="rc-ticket-success">{{ success }}</div>
+  {% endif %}
+
+  {% if isStaff %}
+    <h3 class="rc-title-ornate">OPEN TICKETS <span class="rc-ticket-open-badge">{{ openTicketsCount }}</span></h3>
+  {% endif %}
+
   <div class="rc-ticket-card">
     <div class="rc-character-table-wrap">
       <table class="rc-character-table rc-ticket-table">
         <thead>
         <tr>
           <th style="width: 90px;">Ticket</th>
-          <th>Descricao do ticket</th>
+          <th style="width: 130px;">Character</th>
+          <th>Description</th>
           <th style="width: 180px;">Status</th>
+          {% if isStaff %}
+            <th style="width: 290px;">Staff Action</th>
+          {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -16,16 +32,41 @@
           {% for ticket in tickets %}
             <tr>
               <td>#{{ ticket.id }}</td>
-              <td>
-                <strong>{{ ticket.title }}</strong><br>
+              <td>{{ ticket.character_name }}</td>
+              <td class="rc-ticket-description-cell">
+                <strong>{{ ticket.title }}</strong>
                 <small>{{ ticket.summary }}</small>
+                <div class="rc-ticket-description-full">{{ ticket.description }}</div>
+                {% if ticket.staff_reply is not empty %}
+                  <div class="rc-ticket-staff-reply">
+                    <span>Staff reply:</span>
+                    <p>{{ ticket.staff_reply }}</p>
+                    {% if ticket.staff_updated_at %}
+                      <small>{{ ticket.staff_updated_at|date("d M Y, H:i") }}</small>
+                    {% endif %}
+                  </div>
+                {% endif %}
               </td>
-              <td>{{ ticket.status_label }}</td>
+              <td class="rc-ticket-status-cell"><span class="rc-ticket-status rc-ticket-status-{{ ticket.status|e('html_attr') }}">{{ ticket.status_label }}</span></td>
+              {% if isStaff %}
+                <td>
+                  <form method="post" action="{{ getLink('tickets') }}" class="rc-ticket-admin-form">
+                    <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                    <select name="staff_status" required>
+                      {% for statusKey, statusLabel in statusMap %}
+                        <option value="{{ statusKey }}" {% if ticket.status == statusKey %}selected{% endif %}>{{ statusLabel }}</option>
+                      {% endfor %}
+                    </select>
+                    <textarea name="staff_reply" rows="3" placeholder="Staff reply (YouTube/Imgur links only)">{{ ticket.staff_reply|e }}</textarea>
+                    <button type="submit" name="staff_update_ticket" value="1" class="rc-btn rc-btn-subtle">Save</button>
+                  </form>
+                </td>
+              {% endif %}
             </tr>
           {% endfor %}
         {% else %}
           <tr>
-            <td colspan="3">No tickets found.</td>
+            <td colspan="{% if isStaff %}5{% else %}4{% endif %}">No tickets found.</td>
           </tr>
         {% endif %}
         </tbody>
