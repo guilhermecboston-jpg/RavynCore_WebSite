@@ -3,6 +3,7 @@
 {% set characterFullAddons = fullAddons is defined ? fullAddons : (full_addons is defined ? full_addons : 0) %}
 {% set characterFullMounts = fullMounts is defined ? fullMounts : (full_mounts is defined ? full_mounts : 0) %}
 {% set characterLoyaltyTitle = loyaltyTitle is defined ? loyaltyTitle : (loyalty_title is defined ? loyalty_title : (loyalty_title_name is defined ? loyalty_title_name : '-')) %}
+{% set characterLoyaltyPoints = loyaltyPoints is defined ? loyaltyPoints : (loyalty_points is defined ? loyalty_points : (loyaltyPointsCount is defined ? loyaltyPointsCount : 0)) %}
 
 <div class="rc-character-page">
   {% if canEdit %}
@@ -66,7 +67,7 @@
         </tr>
         <tr>
           <td class="rc-character-label-cell">Position:</td>
-          <td class="rc-character-value-cell">{% if group.isLoaded() and group.getId() != 1 %}{{ group.getName()|capitalize }}{% else %}-{% endif %}</td>
+          <td class="rc-character-value-cell">{% if group.isLoaded() and group.getId() != 1 %}{{ group.getName()|capitalize }}{% else %}Player{% endif %}</td>
         </tr>
         <tr>
           <td class="rc-character-label-cell">Account Status:</td>
@@ -132,20 +133,20 @@
           <td class="rc-character-value-cell">{{ characterLoyaltyTitle }}</td>
         </tr>
         <tr>
-          <td class="rc-character-label-cell">Points:</td>
-          <td class="rc-character-value-cell">{{ achievementPoints }}</td>
+          <td class="rc-character-label-cell">Loyalty Points:</td>
+          <td class="rc-character-value-cell">{{ characterLoyaltyPoints in [0, '0', null, ''] ? '-' : characterLoyaltyPoints }}</td>
         </tr>
         <tr>
           <td class="rc-character-label-cell">Charm Points:</td>
-          <td class="rc-character-value-cell">{{ characterCharmPoints }}</td>
+          <td class="rc-character-value-cell">{{ characterCharmPoints in [0, '0', null, ''] ? '-' : characterCharmPoints }}</td>
         </tr>
         <tr>
           <td class="rc-character-label-cell">Full Addons:</td>
-          <td class="rc-character-value-cell">{{ characterFullAddons }}</td>
+          <td class="rc-character-value-cell">{{ characterFullAddons in [0, '0', null, ''] ? '-' : characterFullAddons }}</td>
         </tr>
         <tr>
           <td class="rc-character-label-cell">Full Mounts:</td>
-          <td class="rc-character-value-cell">{{ characterFullMounts }}</td>
+          <td class="rc-character-value-cell">{{ characterFullMounts in [0, '0', null, ''] ? '-' : characterFullMounts }}</td>
         </tr>
         </tbody>
       </table>
