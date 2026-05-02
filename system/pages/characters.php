@@ -460,6 +460,155 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
     $expLeftPercent = max(0, min(100, ($player->getExperience() - $expCurrent) / ($expNext - $expCurrent) * 100));
     $expLeftPercent = number_format($expLeftPercent, '2', '.', '');
 
+    $findFirstExistingColumn = static function (string $table, array $candidates) use ($db) {
+        foreach ($candidates as $column) {
+            if ($db->hasColumn($table, $column)) {
+                return $column;
+            }
+        }
+
+        return null;
+    };
+
+    $loyaltyPoints = 0;
+    $loyaltyTitle = '-';
+    if ($db->hasTable('accounts')) {
+        $loyaltyPointsColumn = $findFirstExistingColumn('accounts', ['loyalty_points', 'loyaltyPoints', 'loyaltypoints']);
+        $loyaltyTitleColumn = $findFirstExistingColumn('accounts', ['loyalty_title', 'loyaltyTitle', 'loyaltytitle']);
+
+        if ($loyaltyPointsColumn || $loyaltyTitleColumn) {
+            $selectFields = [];
+            if ($loyaltyPointsColumn) {
+                $selectFields[] = '`' . $loyaltyPointsColumn . '` AS `loyalty_points`';
+            }
+            if ($loyaltyTitleColumn) {
+                $selectFields[] = '`' . $loyaltyTitleColumn . '` AS `loyalty_title`';
+            }
+
+            if (!empty($selectFields)) {
+                $loyaltyRow = $db->query(
+                    'SELECT ' . implode(', ', $selectFields) .
+                    ' FROM `accounts` WHERE `id` = ' . (int)$account->getId() . ' LIMIT 1'
+                )->fetch();
+
+                if ($loyaltyRow) {
+                    if (isset($loyaltyRow['loyalty_points']) && $loyaltyRow['loyalty_points'] !== null && $loyaltyRow['loyalty_points'] !== '') {
+                        $loyaltyPoints = (int)$loyaltyRow['loyalty_points'];
+                    }
+
+                    if (isset($loyaltyRow['loyalty_title']) && $loyaltyRow['loyalty_title'] !== null && $loyaltyRow['loyalty_title'] !== '') {
+                        $loyaltyTitle = (string)$loyaltyRow['loyalty_title'];
+                    }
+                }
+            }
+        }
+    }
+
+    if (($loyaltyTitle === '-' || $loyaltyTitle === '0' || $loyaltyTitle === 0) && $loyaltyPoints > 0) {
+        $loyaltyRanks = [
+            3600 => 'Eternal Hero',
+            2700 => 'Sage of Tibia',
+            1800 => 'Keeper of Tibia',
+            900 => 'Sentinel of Tibia',
+            360 => 'Steward of Tibia',
+            180 => 'Scout of Tibia',
+            90 => 'Huntsman',
+            30 => 'Squire',
+        ];
+
+        foreach ($loyaltyRanks as $requiredPoints => $rankName) {
+            if ($loyaltyPoints >= $requiredPoints) {
+                $loyaltyTitle = $rankName;
+                break;
+            }
+        }
+    }
+
+    $charmPoints = 0;
+    if ($db->hasTable('player_charms') && $db->hasColumn('player_charms', 'player_id') && $db->hasColumn('player_charms', 'charm_points')) {
+        $charmRow = $db->query(
+            'SELECT `charm_points` FROM `player_charms` WHERE `player_id` = ' . (int)$player->getId() . ' LIMIT 1'
+        )->fetch();
+        if ($charmRow && isset($charmRow['charm_points'])) {
+            $charmPoints = (int)$charmRow['charm_points'];
+        }
+    }
+
+    $outfitCatalog = [];
+    if ($db->hasTable('outfits')) {
+        $outfitIdCol = $findFirstExistingColumn('outfits', ['id', 'outfit_id', 'looktype']);
+        $outfitNameCol = $findFirstExistingColumn('outfits', ['name', 'outfit_name']);
+        if ($outfitIdCol && $outfitNameCol) {
+            foreach ($db->query('SELECT `' . $outfitIdCol . '` AS `id`, `' . $outfitNameCol . '` AS `name` FROM `outfits`') as $row) {
+                $outfitCatalog[(int)$row['id']] = (string)$row['name'];
+            }
+        }
+    }
+
+    $fullAddons = 0;
+    $fullAddonsList = [];
+    if ($db->hasTable('player_outfits')) {
+        $outfitPlayerIdCol = $findFirstExistingColumn('player_outfits', ['player_id', 'playerid']);
+        $outfitIdCol = $findFirstExistingColumn('player_outfits', ['outfit_id', 'outfitid', 'looktype']);
+        $outfitAddonsCol = $findFirstExistingColumn('player_outfits', ['addons', 'addon']);
+
+        if ($outfitPlayerIdCol && $outfitIdCol && $outfitAddonsCol) {
+            $query = $db->query(
+                'SELECT `' . $outfitIdCol . '` AS `outfit_id`, `' . $outfitAddonsCol . '` AS `addons` ' .
+                'FROM `player_outfits` WHERE `' . $outfitPlayerIdCol . '` = ' . (int)$player->getId() . ' ' .
+                'AND `' . $outfitAddonsCol . '` >= 3 ORDER BY `' . $outfitIdCol . '` ASC'
+            );
+
+            foreach ($query as $row) {
+                $outfitId = (int)$row['outfit_id'];
+                $fullAddonsList[] = [
+                    'id' => $outfitId,
+                    'name' => $outfitCatalog[$outfitId] ?? ('Outfit #' . $outfitId),
+                    'image' => $config['outfit_images_url'] . '?id=' . $outfitId . '&addons=3&head=' . $player->getLookHead() . '&body=' . $player->getLookBody() . '&legs=' . $player->getLookLegs() . '&feet=' . $player->getLookFeet()
+                ];
+            }
+
+            $fullAddons = count($fullAddonsList);
+        }
+    }
+
+    $mountCatalog = [];
+    if ($db->hasTable('mounts')) {
+        $mountCatalogIdCol = $findFirstExistingColumn('mounts', ['id', 'mount_id']);
+        $mountCatalogNameCol = $findFirstExistingColumn('mounts', ['name', 'mount_name']);
+        if ($mountCatalogIdCol && $mountCatalogNameCol) {
+            foreach ($db->query('SELECT `' . $mountCatalogIdCol . '` AS `id`, `' . $mountCatalogNameCol . '` AS `name` FROM `mounts`') as $row) {
+                $mountCatalog[(int)$row['id']] = (string)$row['name'];
+            }
+        }
+    }
+
+    $fullMounts = 0;
+    $fullMountsList = [];
+    if ($db->hasTable('player_mounts')) {
+        $mountPlayerIdCol = $findFirstExistingColumn('player_mounts', ['player_id', 'playerid']);
+        $mountIdCol = $findFirstExistingColumn('player_mounts', ['mount_id', 'mountid', 'mount']);
+
+        if ($mountPlayerIdCol && $mountIdCol) {
+            $query = $db->query(
+                'SELECT DISTINCT `' . $mountIdCol . '` AS `mount_id` FROM `player_mounts` ' .
+                'WHERE `' . $mountPlayerIdCol . '` = ' . (int)$player->getId() . ' ORDER BY `' . $mountIdCol . '` ASC'
+            );
+
+            foreach ($query as $row) {
+                $mountId = (int)$row['mount_id'];
+                $fullMountsList[] = [
+                    'id' => $mountId,
+                    'name' => $mountCatalog[$mountId] ?? ('Mount #' . $mountId),
+                    // Uses outfit renderer with mount parameter when available on server endpoint.
+                    'image' => $config['outfit_images_url'] . '?id=' . $player->getLookType() . '&addons=' . max(3, (int)$player->getLookAddons()) . '&mount=' . $mountId . '&head=' . $player->getLookHead() . '&body=' . $player->getLookBody() . '&legs=' . $player->getLookLegs() . '&feet=' . $player->getLookFeet()
+                ];
+            }
+
+            $fullMounts = count($fullMountsList);
+        }
+    }
+
     $achievementPoints = 0;
     $listAchievement = [];
     require_once BASE . '/tools/achievements.php';
@@ -535,7 +684,14 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
         'account_players' => isset($account_players) ? $account_players : null,
         'search_form' => generate_search_form(),
         'canEdit' => hasFlag(FLAG_CONTENT_PLAYERS) || superAdmin(),
-        'vip_enabled' => isVipSystemEnabled()
+        'vip_enabled' => isVipSystemEnabled(),
+        'charmPoints' => $charmPoints,
+        'loyaltyPoints' => $loyaltyPoints,
+        'loyaltyTitle' => $loyaltyTitle,
+        'fullAddons' => $fullAddons,
+        'fullMounts' => $fullMounts,
+        'fullAddonsList' => $fullAddonsList,
+        'fullMountsList' => $fullMountsList
     ));
 } else {
     $search_errors[] = 'Character <b>' . $name . '</b> does not exist or has been deleted.';

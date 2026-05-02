@@ -3211,6 +3211,89 @@ body.rc-page-characters .rc-rich-content .rc-status-offline {
     font-weight: 700;
 }
 
+body.rc-page-characters .rc-rich-content .rc-character-inline-tools {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-mini-btn {
+    min-height: 28px;
+    padding: 4px 10px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-collection-panel {
+    margin-top: 10px;
+    border: 1px solid rgba(120, 145, 190, 0.3);
+    border-radius: 8px;
+    background: rgba(12, 20, 35, 0.82);
+    overflow: hidden;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-collection-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    color: #f0d59b;
+    background: rgba(28, 44, 70, 0.8);
+    border-bottom: 1px solid rgba(120, 145, 190, 0.3);
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-collection-head small {
+    color: #9fb3d9;
+    font-size: 11px;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-collection-scroll {
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+    gap: 8px;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-collection-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 120px;
+    gap: 8px;
+    padding: 10px 8px;
+    border: 1px solid rgba(130, 154, 201, 0.25);
+    border-radius: 8px;
+    background: rgba(23, 36, 57, 0.7);
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-collection-item img {
+    width: 74px;
+    height: 74px;
+    object-fit: contain;
+    image-rendering: auto;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.55));
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-collection-name {
+    color: #eaf2ff;
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.25;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-collection-empty {
+    color: #a9bddf;
+    padding: 8px 0;
+    text-align: center;
+}
+
 body.rc-page-characters .rc-rich-content .rc-character-search-host {
     display: flex;
     justify-content: center;

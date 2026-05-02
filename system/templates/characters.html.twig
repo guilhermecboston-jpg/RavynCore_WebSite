@@ -142,14 +142,70 @@
         </tr>
         <tr>
           <td class="rc-character-label-cell">Full Addons:</td>
-          <td class="rc-character-value-cell">{{ characterFullAddons in [0, '0', null, ''] ? '-' : characterFullAddons }}</td>
+          <td class="rc-character-value-cell">
+            <div class="rc-character-inline-tools">
+              <span>{{ characterFullAddons in [0, '0', null, ''] ? '-' : characterFullAddons }}</span>
+              <button type="button" class="rc-btn rc-btn-subtle rc-character-mini-btn" data-rc-toggle-target="rcAddonsPanel">
+                View
+              </button>
+            </div>
+          </td>
         </tr>
         <tr>
           <td class="rc-character-label-cell">Full Mounts:</td>
-          <td class="rc-character-value-cell">{{ characterFullMounts in [0, '0', null, ''] ? '-' : characterFullMounts }}</td>
+          <td class="rc-character-value-cell">
+            <div class="rc-character-inline-tools">
+              <span>{{ characterFullMounts in [0, '0', null, ''] ? '-' : characterFullMounts }}</span>
+              <button type="button" class="rc-btn rc-btn-subtle rc-character-mini-btn" data-rc-toggle-target="rcMountsPanel">
+                View
+              </button>
+            </div>
+          </td>
         </tr>
         </tbody>
       </table>
+    </div>
+
+    <div id="rcAddonsPanel" class="rc-character-collection-panel" hidden>
+      <div class="rc-character-collection-head">
+        <strong>Full Addons</strong>
+        <small>{{ fullAddonsList is defined ? fullAddonsList|length : 0 }}</small>
+      </div>
+      <div class="rc-character-collection-scroll">
+        {% if fullAddonsList is defined and fullAddonsList|length > 0 %}
+          <div class="rc-character-collection-grid">
+            {% for addon in fullAddonsList %}
+              <article class="rc-character-collection-item">
+                <img src="{{ addon.image }}" alt="{{ addon.name }}">
+                <div class="rc-character-collection-name">{{ addon.name }}</div>
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="rc-character-collection-empty">No full addons found.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div id="rcMountsPanel" class="rc-character-collection-panel" hidden>
+      <div class="rc-character-collection-head">
+        <strong>Full Mounts</strong>
+        <small>{{ fullMountsList is defined ? fullMountsList|length : 0 }}</small>
+      </div>
+      <div class="rc-character-collection-scroll">
+        {% if fullMountsList is defined and fullMountsList|length > 0 %}
+          <div class="rc-character-collection-grid">
+            {% for mount in fullMountsList %}
+              <article class="rc-character-collection-item">
+                <img src="{{ mount.image }}" alt="{{ mount.name }}">
+                <div class="rc-character-collection-name">{{ mount.name }}</div>
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="rc-character-collection-empty">No full mounts found.</div>
+        {% endif %}
+      </div>
     </div>
   </section>
 
@@ -216,3 +272,27 @@
 
   {{ hook(constant('HOOK_CHARACTERS_AFTER_CHARACTERS')) }}
 </div>
+
+<script>
+  (function () {
+    var root = document.querySelector('.rc-character-page');
+    if (!root) return;
+
+    root.querySelectorAll('[data-rc-toggle-target]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var targetId = button.getAttribute('data-rc-toggle-target');
+        if (!targetId) return;
+        var panel = document.getElementById(targetId);
+        if (!panel) return;
+
+        var willOpen = panel.hasAttribute('hidden');
+        root.querySelectorAll('.rc-character-collection-panel').forEach(function (openPanel) {
+          openPanel.setAttribute('hidden', '');
+        });
+        if (willOpen) {
+          panel.removeAttribute('hidden');
+        }
+      });
+    });
+  })();
+</script>
