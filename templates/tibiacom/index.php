@@ -143,10 +143,8 @@ $accountCreateUrl = $templateLinks['link_account_create'] ?? getLink('account/cr
 $accountLogoutUrl = $templateLinks['link_account_logout'] ?? getLink('account/logout');
 $downloadUrl = $templateLinks['link_downloads'] ?? getLink('downloads');
 $ticketsUrl = getLink('tickets');
-$accountTicketsUrl = getLink('account/tickets');
-$openTicketLoginRedirect = $accountManageUrl
-    . (strpos($accountManageUrl, '?') !== false ? '&' : '?')
-    . 'redirect=' . urlencode($accountTicketsUrl);
+$accountTicketsUrl = BASE_URL . '?subtopic=accountmanagement&action=tickets';
+$openTicketLoginRedirect = BASE_URL . '?subtopic=accountmanagement&redirect=' . urlencode($accountTicketsUrl);
 $recordOnline = (int)($status['playersPeak'] ?? $status['playersRecord'] ?? $status['record'] ?? 0);
 $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
 $tiktokUrl = 'https://www.tiktok.com/@ravyncore_';
