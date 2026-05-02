@@ -15,7 +15,7 @@
   {% endif %}
 
   <section class="rc-character-card rc-character-card-info">
-    <h4 class="rc-character-card-title">CHARACTER INFORMATION</h4>
+    <h4 class="rc-character-card-title rc-title-ornate">CHARACTER INFORMATION</h4>
     <div class="rc-character-table-wrap">
       <table class="rc-character-table rc-character-meta-table">
         <tbody>
@@ -95,7 +95,7 @@
   {{ hook(constant('HOOK_CHARACTERS_BEFORE_DEATHS')) }}
 
   <section class="rc-character-card rc-character-card-deaths">
-    <h4 class="rc-character-card-title">DEATH LIST</h4>
+    <h4 class="rc-character-card-title rc-title-ornate">DEATH LIST</h4>
     <div class="rc-character-table-wrap">
       <table class="rc-character-table">
         <thead>
@@ -123,7 +123,7 @@
   </section>
 
   <section class="rc-character-card rc-character-card-account">
-    <h4 class="rc-character-card-title">ACCOUNT INFORMATION</h4>
+    <h4 class="rc-character-card-title rc-title-ornate">ACCOUNT INFORMATION</h4>
     <div class="rc-character-table-wrap">
       <table class="rc-character-table rc-character-meta-table">
         <tbody>
@@ -154,7 +154,7 @@
 
   {% if not hidden %}
     <section class="rc-character-card rc-character-card-list">
-      <h4 class="rc-character-card-title">CHARACTER LIST</h4>
+      <h4 class="rc-character-card-title rc-title-ornate">CHARACTER LIST</h4>
       <div class="rc-character-table-wrap">
         <table class="rc-character-table">
           <thead>
@@ -206,7 +206,7 @@
 
   {% if search_form is defined and search_form %}
     <section class="rc-character-card rc-character-card-search">
-      <h4 class="rc-character-card-title">SEARCH CHARACTER</h4>
+      <h4 class="rc-character-card-title rc-title-ornate">SEARCH CHARACTER</h4>
       <div class="rc-character-search-host">
         {{ search_form|raw }}
       </div>
