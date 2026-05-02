@@ -835,7 +835,6 @@
 
 {{ hook(constant('HOOK_CHARACTERS_BEFORE_DEATHS')) }}
 
-{% if deaths|length > 0 %}
   <!-- DEATHS -->
   <div class="TableContainer rc-character-collapse rc-character-deaths">
     <div class="CaptionContainer">
@@ -870,7 +869,7 @@
       <tbody>
       <tr>
         <td>
-          <div class="InnerTableContainer" id="DeathsCollapseContainer" style="display: none">
+          <div class="InnerTableContainer" id="DeathsCollapseContainer" style="display: block">
             <table style="width:100%;">
               <tbody>
               <tr>
@@ -878,15 +877,22 @@
                   <div class="TableContentContainer">
                     <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
                       <tbody>
-                      {% set i = 0 %}
-                      {% for death in deaths %}
-                        {% set i = i + 1 %}
+                      {% if deaths|length > 0 %}
+                        {% set i = 0 %}
+                        {% for death in deaths %}
+                          {% set i = i + 1 %}
+                          {% set rows = rows + 1 %}
+                          <tr bgcolor="{{ getStyle(rows) }}">
+                            <td>{{ death.time|date("j M Y, H:i") }}</td>
+                            <td>{{ death.description|raw }}</td>
+                          </tr>
+                        {% endfor %}
+                      {% else %}
                         {% set rows = rows + 1 %}
                         <tr bgcolor="{{ getStyle(rows) }}">
-                          <td>{{ death.time|date("j M Y, H:i") }}</td>
-                          <td>{{ death.description|raw }}</td>
+                          <td colspan="2">No deaths recorded for this character.</td>
                         </tr>
-                      {% endfor %}
+                      {% endif %}
                       </tbody>
                     </table>
                   </div>
@@ -902,7 +908,6 @@
   </div>
   <br>
   <!-- DEATHS_END -->
-{% endif %}
 
 
 
