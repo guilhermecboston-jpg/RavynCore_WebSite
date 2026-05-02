@@ -47,44 +47,7 @@ if (!$logged) {
 }
 
 $errors = array();
-
-if (!function_exists('rc_ensure_tickets_table')) {
-    function rc_ensure_tickets_table($db)
-    {
-        $db->query("
-            CREATE TABLE IF NOT EXISTS `myaac_tickets` (
-                `id` INT NOT NULL AUTO_INCREMENT,
-                `account_id` INT NOT NULL,
-                `player_id` INT NULL,
-                `character_name` VARCHAR(120) NOT NULL DEFAULT '',
-                `title` VARCHAR(120) NOT NULL,
-                `summary` VARCHAR(255) NOT NULL,
-                `ticket_type` VARCHAR(20) NOT NULL DEFAULT 'bug',
-                `description` TEXT NOT NULL,
-                `status` VARCHAR(20) NOT NULL DEFAULT 'open',
-                `staff_reply` TEXT NULL,
-                `staff_account_id` INT NULL,
-                `staff_updated_at` INT NULL,
-                `created_at` INT NOT NULL,
-                `updated_at` INT NOT NULL,
-                PRIMARY KEY (`id`),
-                KEY `idx_ticket_account` (`account_id`),
-                KEY `idx_ticket_status` (`status`),
-                KEY `idx_ticket_created` (`created_at`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
-        ");
-
-        if (!$db->hasColumn('myaac_tickets', 'staff_reply')) {
-            $db->query("ALTER TABLE `myaac_tickets` ADD `staff_reply` TEXT NULL AFTER `status`");
-        }
-        if (!$db->hasColumn('myaac_tickets', 'staff_account_id')) {
-            $db->query("ALTER TABLE `myaac_tickets` ADD `staff_account_id` INT NULL AFTER `staff_reply`");
-        }
-        if (!$db->hasColumn('myaac_tickets', 'staff_updated_at')) {
-            $db->query("ALTER TABLE `myaac_tickets` ADD `staff_updated_at` INT NULL AFTER `staff_account_id`");
-        }
-    }
-}
+require_once SYSTEM . 'libs/rc_tickets.php';
 
 if (isset($_REQUEST['redirect'])) {
     $redirect = urldecode($_REQUEST['redirect']);
@@ -96,15 +59,10 @@ if (isset($_REQUEST['redirect'])) {
 }
 
 if ($action == '') {
-    rc_ensure_tickets_table($db);
+    rc_ensure_tickets_schema($db);
 
-    $ticketStatusMap = [
-        'open' => 'Aberto',
-        'analysis' => 'Em analise',
-        'in_progress' => 'Em andamento',
-        'resolved' => 'Resolvido',
-        'closed' => 'Finalizado',
-    ];
+    $ticketStatusMap = rc_ticket_status_map();
+    $isStaffWebFlag3 = rc_is_staff_web_flag3();
 
     $myTicketsPreview = [];
     $ticketsQuery = $db->query(
@@ -116,7 +74,7 @@ if ($action == '') {
     }
 
     $openTicketsCount = 0;
-    if (admin()) {
+    if ($isStaffWebFlag3) {
         $openTicketsCount = (int)$db->query("SELECT COUNT(*) FROM `myaac_tickets` WHERE `status` = 'open'")->fetchColumn();
     }
 
@@ -180,8 +138,10 @@ if ($action == '') {
     }
 
     $actions = array();
-    foreach ($account_logged->getActionsLog(0, 1000) as $action) {
-        $actions[] = array('action' => $action['action'], 'date' => $action['date'], 'ip' => $action['ip'] != 0 ? long2ip($action['ip']) : inet_ntop($action['ipv6']));
+    if ($isStaffWebFlag3) {
+        foreach ($account_logged->getActionsLog(0, 1000) as $action) {
+            $actions[] = array('action' => $action['action'], 'date' => $action['date'], 'ip' => $action['ip'] != 0 ? long2ip($action['ip']) : inet_ntop($action['ipv6']));
+        }
     }
 
     $players = array();
@@ -222,6 +182,7 @@ if ($action == '') {
         'account_update_info_on_register' => $config['account_update_info_on_register'],
         'my_tickets_preview' => $myTicketsPreview,
         'open_tickets_count' => $openTicketsCount,
+        'is_staff_webflag3' => $isStaffWebFlag3,
     ));
 } else {
     if (!ctype_alnum(str_replace(array('-', '_'), '', $action))) {

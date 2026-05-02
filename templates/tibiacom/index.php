@@ -1,7 +1,11 @@
 <?php
-global $config, $db, $template_path, $logged, $status, $content, $hooks, $title, $template;
+global $config, $db, $template_path, $logged, $status, $content, $hooks, $title, $template, $account_logged;
 
 defined('MYAAC') or die('Direct access not allowed!');
+
+if (!function_exists('rc_is_staff_web_flag3')) {
+    require_once SYSTEM . 'libs/rc_tickets.php';
+}
 
 if (!function_exists('rc_vocation_icon')) {
     function rc_vocation_icon($vocationName)
@@ -146,7 +150,7 @@ $ticketsUrl = getLink('tickets');
 $accountTicketsUrl = BASE_URL . '?subtopic=accountmanagement&action=tickets';
 $openTicketLoginRedirect = BASE_URL . '?subtopic=accountmanagement&redirect=' . urlencode($accountTicketsUrl);
 $recordOnline = (int)($status['playersPeak'] ?? $status['playersRecord'] ?? $status['record'] ?? 0);
-$isStaffAccount = $logged && function_exists('admin') && admin();
+$isStaffAccount = rc_is_staff_web_flag3();
 $openTicketsCount = 0;
 if ($isStaffAccount) {
     if (!$db->hasTable('myaac_tickets')) {
@@ -176,6 +180,10 @@ if ($isStaffAccount) {
     $openTicketsCount = (int)$db->query("SELECT COUNT(*) FROM `myaac_tickets` WHERE `status` = 'open'")->fetchColumn();
 }
 $ticketsNavLabel = 'Tickets' . ($isStaffAccount && $openTicketsCount > 0 ? ' <span class="rc-nav-badge">' . (int)$openTicketsCount . '</span>' : '');
+$staffActionsUrl = BASE_URL . '?subtopic=accountmanagement&action=staff_actions';
+if ($isStaffAccount) {
+    $quickLinks[] = ['name' => 'Staff Actions (' . (int)$openTicketsCount . ')', 'url' => $staffActionsUrl];
+}
 $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
 $tiktokUrl = 'https://www.tiktok.com/@ravyncore_';
 $whatsappUrl = 'https://chat.whatsapp.com/D1D7BPj6I7l5tN2QzSSPmQ';

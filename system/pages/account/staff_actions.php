@@ -2,13 +2,16 @@
 global $db, $twig, $account_logged;
 
 defined('MYAAC') or die('Direct access not allowed!');
-$title = 'Tickets';
 
 require_once SYSTEM . 'libs/rc_tickets.php';
 
+if (!rc_is_staff_web_flag3()) {
+    error('Access denied.');
+    return;
+}
+
 rc_ensure_tickets_schema($db);
 
-$isStaff = rc_is_staff_web_flag3();
 $statusMap = rc_ticket_status_map();
 $filterOptions = rc_ticket_filter_options();
 $allowedStatuses = array_keys($statusMap);
@@ -21,7 +24,7 @@ if (!isset($filterOptions[$filterStatus])) {
     $filterStatus = 'all';
 }
 
-if ($isStaff && isset($_POST['staff_update_ticket'])) {
+if (isset($_POST['staff_update_ticket'])) {
     $ticketId = (int)($_POST['ticket_id'] ?? 0);
     $staffStatus = trim((string)($_POST['staff_status'] ?? 'open'));
     $staffReply = trim((string)($_POST['staff_reply'] ?? ''));
@@ -43,7 +46,7 @@ if ($isStaff && isset($_POST['staff_update_ticket'])) {
                 $errors[] = 'Update at least the status or add a staff reply.';
             } else {
                 $now = time();
-                $staffAccountId = ($account_logged && $account_logged->isLoaded()) ? (int)$account_logged->getId() : 0;
+                $staffAccountId = (int)$account_logged->getId();
                 $latestReply = $hasReply ? $staffReply : (string)($current['staff_reply'] ?? '');
                 $db->query(
                     'UPDATE `myaac_tickets` SET ' .
@@ -63,39 +66,82 @@ if ($isStaff && isset($_POST['staff_update_ticket'])) {
     }
 }
 
-$tickets = [];
 $whereSql = '';
 if ($filterStatus !== 'all') {
     $whereSql = ' WHERE `status` = ' . $db->quote($filterStatus) . ' ';
 }
 
-$query = $db->query(
-    'SELECT `id`, `character_name`, `title`, `summary`, `description`, `status`, `staff_reply`, `staff_updated_at`, `created_at` FROM `myaac_tickets`' .
+$tickets = [];
+$ticketsQuery = $db->query(
+    'SELECT `id`, `account_id`, `character_name`, `title`, `summary`, `description`, `status`, `staff_reply`, `staff_updated_at`, `created_at` FROM `myaac_tickets` ' .
     $whereSql .
-    'ORDER BY `id` DESC LIMIT 300'
+    ' ORDER BY `id` DESC LIMIT 300'
 );
-foreach ($query as $row) {
+foreach ($ticketsQuery as $row) {
     $row['status_label'] = $statusMap[$row['status']] ?? ucfirst(str_replace('_', ' ', (string)$row['status']));
     $tickets[] = $row;
 }
-
 $historyMap = rc_ticket_history_map($db, array_map(static function ($row) {
     return (int)$row['id'];
 }, $tickets));
-foreach ($tickets as &$row) {
-    $row['history'] = $historyMap[(int)$row['id']] ?? [];
+foreach ($tickets as &$ticketRow) {
+    $ticketRow['history'] = $historyMap[(int)$ticketRow['id']] ?? [];
 }
-unset($row);
+unset($ticketRow);
 
 $openTicketsCount = (int)$db->query("SELECT COUNT(*) FROM `myaac_tickets` WHERE `status` = 'open'")->fetchColumn();
 
-$twig->display('tickets.html.twig', [
+$characterSearch = trim((string)($_REQUEST['character_name'] ?? ''));
+$searchedCharacter = null;
+$characterActions = [];
+
+if ($characterSearch !== '') {
+    if (!preg_match('/^[A-Za-z ]+$/', $characterSearch)) {
+        $errors[] = 'Character search accepts only letters and spaces.';
+    } else {
+        $characterData = $db->query(
+            'SELECT `p`.`name`, `p`.`account_id`, `a`.`name` as `account_name` ' .
+            'FROM `players` `p` LEFT JOIN `accounts` `a` ON `a`.`id` = `p`.`account_id` ' .
+            'WHERE `p`.`name` = ' . $db->quote($characterSearch) . ' LIMIT 1'
+        )->fetch();
+
+        if ($characterData) {
+            $searchedCharacter = $characterData;
+            $actionsQuery = $db->query(
+                'SELECT `action`, `date`, `ip`, `ipv6` FROM `' . TABLE_PREFIX . 'account_actions` ' .
+                'WHERE `account_id` = ' . (int)$characterData['account_id'] . ' ORDER BY `date` DESC LIMIT 150'
+            );
+            foreach ($actionsQuery as $actionRow) {
+                $ipValue = '-';
+                if (!empty($actionRow['ip']) && (int)$actionRow['ip'] !== 0) {
+                    $ipValue = long2ip((int)$actionRow['ip']);
+                } elseif (!empty($actionRow['ipv6'])) {
+                    $rawIpv6 = $actionRow['ipv6'];
+                    $decoded = @inet_ntop($rawIpv6);
+                    $ipValue = $decoded ?: '-';
+                }
+
+                $characterActions[] = [
+                    'action' => $actionRow['action'],
+                    'date' => $actionRow['date'],
+                    'ip' => $ipValue,
+                ];
+            }
+        } else {
+            $errors[] = 'Character not found.';
+        }
+    }
+}
+
+$twig->display('account.staff_actions.html.twig', [
     'errors' => $errors,
     'success' => $success,
     'tickets' => $tickets,
-    'isStaff' => $isStaff,
     'statusMap' => $statusMap,
-    'openTicketsCount' => $openTicketsCount,
     'filterStatus' => $filterStatus,
     'filterOptions' => $filterOptions,
+    'openTicketsCount' => $openTicketsCount,
+    'characterSearch' => $characterSearch,
+    'searchedCharacter' => $searchedCharacter,
+    'characterActions' => $characterActions,
 ]);

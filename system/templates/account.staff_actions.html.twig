@@ -1,0 +1,136 @@
+<section class="rc-ticket-page rc-staff-actions-page">
+  <h2 class="rc-title-ornate">STAFF ACTIONS <span class="rc-ticket-open-badge">{{ openTicketsCount }}</span></h2>
+
+  {% if errors is not empty %}
+    {{ include('error_box.html.twig', { errors: errors }) }}
+  {% endif %}
+
+  {% if success is not empty %}
+    <div class="rc-ticket-success">{{ success }}</div>
+  {% endif %}
+
+  <div class="rc-ticket-card">
+    <div class="rc-ticket-toolbar">
+      <h3 class="rc-title-ornate rc-title-ornate-inline">TICKETS</h3>
+      <form method="get" action="?subtopic=accountmanagement&action=staff_actions" class="rc-ticket-filter">
+        <input type="hidden" name="subtopic" value="accountmanagement">
+        <input type="hidden" name="action" value="staff_actions">
+        <label for="staffTicketFilter">Filter</label>
+        <select id="staffTicketFilter" name="status" onchange="this.form.submit()">
+          {% for statusKey, statusLabel in filterOptions %}
+            <option value="{{ statusKey }}" {% if filterStatus == statusKey %}selected{% endif %}>{{ statusLabel }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+
+    <div class="rc-character-table-wrap">
+      <table class="rc-character-table rc-ticket-table">
+        <thead>
+        <tr>
+          <th style="width: 84px;">Ticket</th>
+          <th style="width: 120px;">Character</th>
+          <th>Description</th>
+          <th style="width: 160px;">Status</th>
+          <th style="width: 300px;">Staff Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if tickets|length > 0 %}
+          {% for ticket in tickets %}
+            <tr>
+              <td>#{{ ticket.id }}</td>
+              <td>{{ ticket.character_name }}</td>
+              <td class="rc-ticket-description-cell">
+                <strong>{{ ticket.title }}</strong>
+                <small>{{ ticket.summary }}</small>
+                <div class="rc-ticket-description-full">{{ ticket.description }}</div>
+
+                {% if ticket.history is defined and ticket.history|length > 0 %}
+                  <div class="rc-ticket-history">
+                    <span>History:</span>
+                    <ul>
+                      {% for item in ticket.history %}
+                        <li>
+                          <em>{{ item.created_at|date("d M Y, H:i") }}</em>
+                          <strong>{{ statusMap[item.status] ?? item.status }}</strong>
+                          {% if item.message %}
+                            <p>{{ item.message }}</p>
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+              </td>
+              <td class="rc-ticket-status-cell">
+                <span class="rc-ticket-status rc-ticket-status-{{ ticket.status|e('html_attr') }}">{{ ticket.status_label }}</span>
+              </td>
+              <td>
+                <form method="post" action="?subtopic=accountmanagement&action=staff_actions&status={{ filterStatus|url_encode }}" class="rc-ticket-admin-form">
+                  <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                  <select name="staff_status" required>
+                    {% for statusKey, statusLabel in statusMap %}
+                      <option value="{{ statusKey }}" {% if ticket.status == statusKey %}selected{% endif %}>{{ statusLabel }}</option>
+                    {% endfor %}
+                  </select>
+                  <textarea name="staff_reply" rows="3" placeholder="Reply and/or status update (YouTube/Imgur links only)">{{ ticket.staff_reply|e }}</textarea>
+                  <button type="submit" name="staff_update_ticket" value="1" class="rc-btn rc-btn-subtle">Save</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="5">No tickets found.</td>
+          </tr>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="rc-ticket-card">
+    <h3 class="rc-title-ornate rc-title-ornate-inline">SEARCH CHARACTER ACTIONS</h3>
+    <form method="get" action="?subtopic=accountmanagement&action=staff_actions" class="rc-search-form rc-staff-search-form">
+      <input type="hidden" name="subtopic" value="accountmanagement">
+      <input type="hidden" name="action" value="staff_actions">
+      <input type="text" name="character_name" maxlength="29" placeholder="Character name" value="{{ characterSearch|e }}" pattern="[A-Za-z ]+" title="Use only letters and spaces">
+      <button type="submit" class="rc-btn rc-btn-subtle">Search</button>
+    </form>
+
+    {% if searchedCharacter %}
+      <div class="rc-staff-actions-meta">
+        <strong>Character:</strong> {{ searchedCharacter.name }}
+        <span><strong>Account:</strong> {{ searchedCharacter.account_name is not empty ? searchedCharacter.account_name : searchedCharacter.account_id }}</span>
+      </div>
+    {% endif %}
+
+    <div class="rc-character-table-wrap">
+      <table class="rc-character-table rc-ticket-table">
+        <thead>
+        <tr>
+          <th>Action</th>
+          <th style="width: 190px;">Date</th>
+          <th style="width: 180px;">IP</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if characterActions|length > 0 %}
+          {% for row in characterActions %}
+            <tr>
+              <td>{{ row.action }}</td>
+              <td>{{ row.date|date("d M Y, H:i:s") }}</td>
+              <td>{{ row.ip }}</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="3">No action logs found for this character.</td>
+          </tr>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

@@ -74,13 +74,20 @@
               <td class="rc-ticket-description-cell">
                 <strong>{{ ticket.title }}</strong>
                 <small>{{ ticket.summary }}</small>
-                {% if ticket.staff_reply is not empty %}
-                  <div class="rc-ticket-staff-reply">
-                    <span>Staff reply:</span>
-                    <p>{{ ticket.staff_reply }}</p>
-                    {% if ticket.staff_updated_at %}
-                      <small>{{ ticket.staff_updated_at|date("d M Y, H:i") }}</small>
-                    {% endif %}
+                {% if ticket.history is defined and ticket.history|length > 0 %}
+                  <div class="rc-ticket-history">
+                    <span>History:</span>
+                    <ul>
+                      {% for item in ticket.history %}
+                        <li>
+                          <em>{{ item.created_at|date("d M Y, H:i") }}</em>
+                          <strong>{{ statusMap[item.status] ?? item.status }}</strong>
+                          {% if item.message %}
+                            <p>{{ item.message }}</p>
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
                   </div>
                 {% endif %}
               </td>
@@ -100,7 +107,7 @@
   </div>
 
   {% if isStaff %}
-    <h3 class="rc-title-ornate">STAFF TICKET QUEUE{% if openTicketsCount > 0 %} <span class="rc-ticket-open-badge">{{ openTicketsCount }}</span>{% endif %}</h3>
+    <h3 class="rc-title-ornate">STAFF ACTION{% if openTicketsCount > 0 %} <span class="rc-ticket-open-badge">{{ openTicketsCount }}</span>{% endif %}</h3>
     <div class="rc-ticket-card">
       <div class="rc-character-table-wrap">
         <table class="rc-character-table rc-ticket-table rc-ticket-table-admin">
@@ -123,6 +130,22 @@
                   <strong>{{ ticket.title }}</strong>
                   <small>{{ ticket.summary }}</small>
                   <div class="rc-ticket-description-full">{{ ticket.description }}</div>
+                  {% if ticket.history is defined and ticket.history|length > 0 %}
+                    <div class="rc-ticket-history">
+                      <span>History:</span>
+                      <ul>
+                        {% for item in ticket.history %}
+                          <li>
+                            <em>{{ item.created_at|date("d M Y, H:i") }}</em>
+                            <strong>{{ statusMap[item.status] ?? item.status }}</strong>
+                            {% if item.message %}
+                              <p>{{ item.message }}</p>
+                            {% endif %}
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
                 </td>
                 <td class="rc-ticket-status-cell">
                   <span class="rc-ticket-status rc-ticket-status-{{ ticket.status|e('html_attr') }}">{{ ticket.status_label }}</span>

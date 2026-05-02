@@ -9,11 +9,19 @@
     <div class="rc-ticket-success">{{ success }}</div>
   {% endif %}
 
-  {% if isStaff %}
-    <h3 class="rc-title-ornate">OPEN TICKETS <span class="rc-ticket-open-badge">{{ openTicketsCount }}</span></h3>
-  {% endif %}
-
   <div class="rc-ticket-card">
+    <div class="rc-ticket-toolbar">
+      <h3 class="rc-title-ornate rc-title-ornate-inline">TICKETS{% if isStaff and openTicketsCount > 0 %} <span class="rc-ticket-open-badge">{{ openTicketsCount }}</span>{% endif %}</h3>
+      <form method="get" action="{{ getLink('tickets') }}" class="rc-ticket-filter">
+        <input type="hidden" name="subtopic" value="tickets">
+        <label for="ticketStatusFilter">Filter</label>
+        <select id="ticketStatusFilter" name="status" onchange="this.form.submit()">
+          {% for statusKey, statusLabel in filterOptions %}
+            <option value="{{ statusKey }}" {% if filterStatus == statusKey %}selected{% endif %}>{{ statusLabel }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
     <div class="rc-character-table-wrap">
       <table class="rc-character-table rc-ticket-table">
         <thead>
@@ -46,11 +54,27 @@
                     {% endif %}
                   </div>
                 {% endif %}
+                {% if ticket.history is defined and ticket.history|length > 0 %}
+                  <div class="rc-ticket-history">
+                    <span>History:</span>
+                    <ul>
+                      {% for item in ticket.history %}
+                        <li>
+                          <em>{{ item.created_at|date("d M Y, H:i") }}</em>
+                          <strong>{{ statusMap[item.status] ?? item.status }}</strong>
+                          {% if item.message %}
+                            <p>{{ item.message }}</p>
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
               </td>
               <td class="rc-ticket-status-cell"><span class="rc-ticket-status rc-ticket-status-{{ ticket.status|e('html_attr') }}">{{ ticket.status_label }}</span></td>
               {% if isStaff %}
                 <td>
-                  <form method="post" action="{{ getLink('tickets') }}" class="rc-ticket-admin-form">
+                  <form method="post" action="{{ getLink('tickets') }}&status={{ filterStatus|url_encode }}" class="rc-ticket-admin-form">
                     <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
                     <select name="staff_status" required>
                       {% for statusKey, statusLabel in statusMap %}

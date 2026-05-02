@@ -123,7 +123,7 @@
             style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
       <span class="CaptionVerticalLeft"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
-      <div class="Text">Tickets</div>
+      <div class="Text">Support Ticket Area</div>
       <span class="CaptionVerticalRight"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
       <span class="CaptionBorderBottom"
@@ -150,17 +150,23 @@
                       <td>
                         <div style="height: auto; min-height: 72px;">
                           <div id="TicketBox" style="position: relative; float:right;">
-                            <a href="?subtopic=accountmanagement&action=tickets"><img
+                            <a href="{% if is_staff_webflag3 %}?subtopic=accountmanagement&action=staff_actions{% else %}?subtopic=accountmanagement&action=tickets{% endif %}"><img
                                 style="width: 45px; height: 45px; border: 0px; margin-right: 10px;"
                                 src="{{ template_path }}/images/premiumfeatures/PremiumIcon-TrackQuests.png"></a>
                             <br>
-                            <a style="position: absolute; bottom: -5px; right: 0px;" href="?subtopic=accountmanagement&action=tickets">My Tickets</a>
-                            {% if open_tickets_count is defined and open_tickets_count > 0 %}
+                            <a style="position: absolute; bottom: -5px; right: 0px;" href="{% if is_staff_webflag3 %}?subtopic=accountmanagement&action=staff_actions{% else %}?subtopic=accountmanagement&action=tickets{% endif %}">{% if is_staff_webflag3 %}Staff Action{% else %}My Tickets{% endif %}</a>
+                            {% if is_staff_webflag3 and open_tickets_count is defined and open_tickets_count > 0 %}
                               <span class="rc-ticket-admin-reminder">{{ open_tickets_count }}</span>
                             {% endif %}
                           </div>
                           <div class="rc-ticket-manage-summary">
-                            <span>Open your support ticket area <a href="?subtopic=accountmanagement&action=tickets">here</a> and track your reports.</span>
+                            <span>
+                              {% if is_staff_webflag3 %}
+                                Open the <a href="?subtopic=accountmanagement&action=staff_actions">Staff Actions</a> area to review queue, update status and reply.
+                              {% else %}
+                                Open your support ticket area <a href="?subtopic=accountmanagement&action=tickets">here</a> and track your reports.
+                              {% endif %}
+                            </span>
                             {% if my_tickets_preview is defined and my_tickets_preview|length > 0 %}
                               <ul class="rc-ticket-preview-list">
                                 {% for ticket in my_tickets_preview %}
@@ -253,7 +259,7 @@
             style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
       <span class="CaptionVerticalLeft"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
-      <div class="Text">Characters</div>
+      <div class="Text">Regular Characters</div>
       <span class="CaptionVerticalRight"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
       <span class="CaptionBorderBottom"
@@ -479,7 +485,7 @@
               style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
         <span class="CaptionVerticalLeft"
               style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
-        <div class="Text">General Information</div>
+        <div class="Text">Account Information</div>
         <span class="CaptionVerticalRight"
               style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
         <span class="CaptionBorderBottom"
@@ -623,7 +629,7 @@
               style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
         <span class="CaptionVerticalLeft"
               style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
-        <div class="Text">Public Information</div>
+        <div class="Text">Real Name</div>
         <span class="CaptionVerticalRight"
               style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
         <span class="CaptionBorderBottom"
@@ -693,6 +699,7 @@
 </div>
 <br />
 
+{% if is_staff_webflag3 %}
 <a name="Account+Logs"></a>
 <div class="TopButtonContainer">
   <div class="TopButton">
@@ -760,3 +767,4 @@
     </tr>
   </table>
 </div>
+{% endif %}
