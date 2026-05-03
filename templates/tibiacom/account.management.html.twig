@@ -112,7 +112,6 @@
 
 <br>
 
-{% if is_staff_webflag3 %}
 <div class="TableContainer">
   <div class="CaptionContainer">
     <div class="CaptionInnerContainer">
@@ -124,7 +123,7 @@
             style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
       <span class="CaptionVerticalLeft"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
-      <div class="Text">Support Tickets</div>
+      <div class="Text">Support Ticket</div>
       <span class="CaptionVerticalRight"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
       <span class="CaptionBorderBottom"
@@ -161,12 +160,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% if staff_tickets_preview is defined and staff_tickets_preview|length > 0 %}
-                              {% for ticket in staff_tickets_preview %}
+                            {% if my_tickets_preview is defined and my_tickets_preview|length > 0 %}
+                              {% for ticket in my_tickets_preview %}
                                 <tr>
                                   <td>#{{ ticket.id }}</td>
                                   <td>{{ ticket.ticket_type_label }}</td>
-                                  <td>{{ ticket.title }}</td>
+                                  <td>
+                                    <a href="?subtopic=accountmanagement&action=tickets&view_ticket={{ ticket.id }}">{{ ticket.title }}</a>
+                                  </td>
                                   <td><span class="rc-ticket-status rc-ticket-status-{{ ticket.status|e('html_attr') }}">{{ ticket.status_label }}</span></td>
                                   <td>{{ ticket.updated_at|date("d/m/Y H:i") }}</td>
                                 </tr>
@@ -182,7 +183,7 @@
 
                         <div class="rc-ticket-manage-toolbar">
                           <a href="?subtopic=accountmanagement&action=tickets" class="rc-btn rc-btn-primary">Add Ticket</a>
-                          <a href="?subtopic=accountmanagement&action=staff_actions" class="rc-btn rc-btn-subtle">Show All</a>
+                          <a href="?subtopic=accountmanagement&action=tickets" class="rc-btn rc-btn-subtle">Show All</a>
                           {% if open_tickets_count is defined and open_tickets_count > 0 %}
                             <span class="rc-ticket-admin-reminder rc-ticket-admin-reminder-inline">{{ open_tickets_count }}</span>
                           {% endif %}
@@ -202,7 +203,6 @@
     </tbody>
   </table>
 </div>
-{% endif %}
 
 <br>
 

@@ -3181,6 +3181,41 @@ body.rc-page-characters .rc-rich-content .rc-character-table {
     overflow: hidden;
 }
 
+body.rc-page-accountmanagement .rc-rich-content .CaptionContainer {
+    margin: 0 !important;
+    border-bottom: 1px solid rgba(188, 150, 84, 0.38);
+}
+
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer {
+    min-height: 40px;
+    border: 1px solid rgba(188, 150, 84, 0.62);
+    border-radius: 9px 9px 0 0;
+    background: linear-gradient(180deg, rgba(38, 74, 119, 0.92) 0%, rgba(28, 57, 96, 0.92) 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.42);
+}
+
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .Text {
+    color: #f1d39a !important;
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 38px;
+    padding-left: 24px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionEdgeLeftTop,
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionEdgeRightTop,
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionEdgeLeftBottom,
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionEdgeRightBottom,
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionVerticalLeft,
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionVerticalRight,
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionBorderTop,
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionBorderBottom {
+    opacity: 0 !important;
+}
+
 body.rc-page-characters .rc-rich-content .rc-character-table thead th {
     text-align: left;
     padding: 8px 10px;
@@ -3778,6 +3813,97 @@ body.rc-page-accountmanagement .rc-rich-content .rc-ticket-manage-toolbar {
 
 body.rc-page-accountmanagement .rc-rich-content .rc-ticket-toolbar-actions {
     justify-content: flex-start;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-list-compact .rc-btn {
+    min-width: 102px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-card-sub {
+    border: 1px solid rgba(130, 154, 201, 0.28);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: rgba(15, 23, 39, 0.72);
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-item-title {
+    color: #f0c77f;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-detail-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 6px 10px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-detail-grid > span {
+    color: #9fb3d9;
+    font-weight: 700;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-detail-grid > strong {
+    color: #edf4ff;
+    font-weight: 600;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-messages {
+    display: grid;
+    gap: 10px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-message {
+    border: 1px solid rgba(130, 154, 201, 0.26);
+    border-left: 4px solid rgba(130, 154, 201, 0.4);
+    border-radius: 9px;
+    background: rgba(20, 31, 49, 0.75);
+    padding: 10px 12px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-message.is-player {
+    border-left-color: rgba(215, 168, 92, 0.86);
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-message.is-staff {
+    border-left-color: rgba(116, 190, 141, 0.9);
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-message header {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-message header strong {
+    color: #f1d39a;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-message header time {
+    color: #9cb0d4;
+    font-size: 12px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-message p {
+    margin: 0 0 6px;
+    color: #e8f0ff;
+    white-space: pre-wrap;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-message small {
+    color: #98acd0;
+    font-size: 11px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-reply-form {
+    display: grid;
+    gap: 8px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-actions-center {
+    justify-content: center;
 }
 
 body.rc-page-accountmanagement .rc-rich-content .rc-account-character-actions {

@@ -64,20 +64,20 @@ if ($action == '') {
     $ticketStatusMap = rc_ticket_status_map();
     $isStaffWebFlag3 = rc_is_staff_web_flag3();
 
-    $staffTicketsPreview = [];
+    $myTicketsPreview = [];
     $openTicketsCount = 0;
     if ($isStaffWebFlag3) {
         $openTicketsCount = (int)$db->query("SELECT COUNT(*) FROM `myaac_tickets` WHERE `status` = 'open'")->fetchColumn();
-        $ticketsQuery = $db->query(
-            'SELECT `id`, `ticket_type`, `title`, `status`, `updated_at` FROM `myaac_tickets` ORDER BY `id` DESC LIMIT 6'
-        );
-        $typeOptions = rc_ticket_type_options();
-        foreach ($ticketsQuery as $ticketRow) {
-            $ticketTypeKey = (string)($ticketRow['ticket_type'] ?? 'bug');
-            $ticketRow['ticket_type_label'] = $typeOptions[$ticketTypeKey] ?? ucfirst($ticketTypeKey);
-            $ticketRow['status_label'] = $ticketStatusMap[$ticketRow['status']] ?? ucfirst(str_replace('_', ' ', (string)$ticketRow['status']));
-            $staffTicketsPreview[] = $ticketRow;
-        }
+    }
+    $ticketsQuery = $db->query(
+        'SELECT `id`, `ticket_type`, `title`, `status`, `updated_at` FROM `myaac_tickets` WHERE `account_id` = ' . (int)$account_logged->getId() . ' ORDER BY `id` DESC LIMIT 8'
+    );
+    $typeOptions = rc_ticket_type_options();
+    foreach ($ticketsQuery as $ticketRow) {
+        $ticketTypeKey = (string)($ticketRow['ticket_type'] ?? 'bug');
+        $ticketRow['ticket_type_label'] = $typeOptions[$ticketTypeKey] ?? ucfirst($ticketTypeKey);
+        $ticketRow['status_label'] = $ticketStatusMap[$ticketRow['status']] ?? ucfirst(str_replace('_', ' ', (string)$ticketRow['status']));
+        $myTicketsPreview[] = $ticketRow;
     }
 
     $freePremium = getBoolean(configLua('freePremium')) || $account_logged->getPremDays() == OTS_Account::GRATIS_PREMIUM_DAYS;
@@ -182,7 +182,7 @@ if ($action == '') {
         'actions' => $actions,
         'players' => $account_players,
         'account_update_info_on_register' => $config['account_update_info_on_register'],
-        'staff_tickets_preview' => $staffTicketsPreview,
+        'my_tickets_preview' => $myTicketsPreview,
         'open_tickets_count' => $openTicketsCount,
         'is_staff_webflag3' => $isStaffWebFlag3,
     ));

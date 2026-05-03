@@ -10,11 +10,7 @@ rc_ensure_tickets_schema($db);
 $isStaff = rc_is_staff_web_flag3();
 $statusMap = rc_ticket_status_map();
 $typeOptions = rc_ticket_type_options();
-
-if (!$isStaff) {
-    error('Access denied.');
-    return;
-}
+$allowedStatuses = array_keys($statusMap);
 
 $errors = [];
 $success = '';
@@ -34,48 +30,20 @@ $ticketTitle = trim((string)($_POST['ticket_title'] ?? ''));
 $ticketSummary = trim((string)($_POST['ticket_summary'] ?? ''));
 $ticketType = trim((string)($_POST['ticket_type'] ?? 'bug'));
 $ticketDescription = trim((string)($_POST['ticket_description'] ?? ''));
+$viewTicketId = (int)($_REQUEST['view_ticket'] ?? 0);
+$accountId = (int)$account_logged->getId();
 
-if ($isStaff && isset($_POST['staff_update_ticket'])) {
-    $ticketId = (int)($_POST['ticket_id'] ?? 0);
-    $staffStatus = trim((string)($_POST['staff_status'] ?? 'open'));
-    $staffReply = trim((string)($_POST['staff_reply'] ?? ''));
-    $allowedStatuses = array_keys($statusMap);
-
-    if ($ticketId <= 0) {
-        $errors[] = 'Invalid ticket selected.';
-    } elseif (!in_array($staffStatus, $allowedStatuses, true)) {
-        $errors[] = 'Invalid status selected.';
-    } elseif ($staffReply !== '' && !rc_ticket_description_has_only_allowed_links($staffReply)) {
-        $errors[] = 'Only YouTube and Imgur links are allowed in staff reply.';
-    } else {
-        $current = $db->query('SELECT `id`, `status`, `staff_reply` FROM `myaac_tickets` WHERE `id` = ' . $ticketId . ' LIMIT 1')->fetch();
-        if (!$current) {
-            $errors[] = 'Ticket not found.';
-        } else {
-            $changedStatus = ((string)$current['status'] !== $staffStatus);
-            $hasReply = ($staffReply !== '');
-            if (!$changedStatus && !$hasReply) {
-                $errors[] = 'Update at least the status or add a staff reply.';
-            } else {
-                $now = time();
-                $latestReply = $hasReply ? $staffReply : (string)($current['staff_reply'] ?? '');
-                $db->query(
-                    'UPDATE `myaac_tickets` SET ' .
-                    '`status` = ' . $db->quote($staffStatus) . ', ' .
-                    '`staff_reply` = ' . ($latestReply === '' ? 'NULL' : $db->quote($latestReply)) . ', ' .
-                    '`staff_account_id` = ' . (int)$account_logged->getId() . ', ' .
-                    '`staff_updated_at` = ' . (int)$now . ', ' .
-                    '`updated_at` = ' . (int)$now . ' ' .
-                    'WHERE `id` = ' . (int)$ticketId . ' LIMIT 1'
-                );
-
-                $historyMessage = $hasReply ? $staffReply : ('Status changed to "' . ($statusMap[$staffStatus] ?? $staffStatus) . '".');
-                rc_ticket_add_history($db, $ticketId, (int)$account_logged->getId(), 'staff', $staffStatus, $historyMessage);
-                $success = 'Ticket #' . $ticketId . ' updated successfully.';
-            }
-        }
+$loadTicketQuery = static function ($ticketId) use ($db, $isStaff, $accountId) {
+    $whereSql = ' WHERE `id` = ' . (int)$ticketId;
+    if (!$isStaff) {
+        $whereSql .= ' AND `account_id` = ' . (int)$accountId;
     }
-}
+
+    return $db->query(
+        'SELECT `id`, `account_id`, `player_id`, `character_name`, `title`, `summary`, `ticket_type`, `description`, `status`, `staff_reply`, `staff_account_id`, `staff_updated_at`, `created_at`, `updated_at` ' .
+        'FROM `myaac_tickets`' . $whereSql . ' LIMIT 1'
+    )->fetch();
+};
 
 if (isset($_POST['create_ticket'])) {
     if (empty($characters)) {
@@ -120,7 +88,7 @@ if (isset($_POST['create_ticket'])) {
         $now = time();
         $db->query(
             'INSERT INTO `myaac_tickets` (`account_id`, `player_id`, `character_name`, `title`, `summary`, `ticket_type`, `description`, `status`, `created_at`, `updated_at`) VALUES (' .
-            (int)$account_logged->getId() . ', ' .
+            $accountId . ', ' .
             (int)$selectedCharacter['id'] . ', ' .
             $db->quote($selectedCharacter['name']) . ', ' .
             $db->quote($ticketTitle) . ', ' .
@@ -132,9 +100,10 @@ if (isset($_POST['create_ticket'])) {
         );
 
         $ticketId = (int)$db->lastInsertId();
-        rc_ticket_add_history($db, $ticketId, (int)$account_logged->getId(), 'player', 'open', $ticketDescription);
-
+        rc_ticket_add_history($db, $ticketId, $accountId, 'player', 'open', $ticketDescription);
+        $viewTicketId = $ticketId;
         $success = 'Ticket created successfully.';
+
         $ticketTitle = '';
         $ticketSummary = '';
         $ticketType = 'bug';
@@ -142,10 +111,66 @@ if (isset($_POST['create_ticket'])) {
     }
 }
 
+if (isset($_POST['ticket_add_reply'])) {
+    $ticketId = (int)($_POST['ticket_id'] ?? 0);
+    $replyMessage = trim((string)($_POST['reply_message'] ?? ''));
+    $staffStatus = trim((string)($_POST['staff_status'] ?? ''));
+    $viewTicketId = $ticketId;
+
+    if ($ticketId <= 0) {
+        $errors[] = 'Invalid ticket selected.';
+    } elseif ($replyMessage === '' || mb_strlen($replyMessage) < 3) {
+        $errors[] = 'Reply must contain at least 3 characters.';
+    } elseif (!rc_ticket_description_has_only_allowed_links($replyMessage)) {
+        $errors[] = 'Only YouTube and Imgur links are allowed in replies.';
+    } else {
+        $currentTicket = $loadTicketQuery($ticketId);
+        if (!$currentTicket) {
+            $errors[] = 'Ticket not found.';
+        } else {
+            $now = time();
+            $nextStatus = (string)$currentTicket['status'];
+            if ($isStaff && $staffStatus !== '' && in_array($staffStatus, $allowedStatuses, true)) {
+                $nextStatus = $staffStatus;
+            }
+
+            $updateSql = 'UPDATE `myaac_tickets` SET ' .
+                '`updated_at` = ' . (int)$now . ', ' .
+                '`status` = ' . $db->quote($nextStatus) . ', ';
+
+            if ($isStaff) {
+                $updateSql .=
+                    '`staff_reply` = ' . $db->quote($replyMessage) . ', ' .
+                    '`staff_account_id` = ' . $accountId . ', ' .
+                    '`staff_updated_at` = ' . (int)$now . ' ';
+            } else {
+                $updateSql .=
+                    '`staff_reply` = `staff_reply`, ' .
+                    '`staff_account_id` = `staff_account_id`, ' .
+                    '`staff_updated_at` = `staff_updated_at` ';
+            }
+
+            $updateSql .= 'WHERE `id` = ' . (int)$ticketId . ' LIMIT 1';
+            $db->query($updateSql);
+
+            rc_ticket_add_history(
+                $db,
+                $ticketId,
+                $accountId,
+                $isStaff ? 'staff' : 'player',
+                $nextStatus,
+                $replyMessage
+            );
+
+            $success = 'Reply sent successfully.';
+        }
+    }
+}
+
 $myTickets = [];
 $myQuery = $db->query(
-    'SELECT `id`, `character_name`, `title`, `summary`, `ticket_type`, `description`, `status`, `staff_reply`, `staff_updated_at`, `created_at` ' .
-    'FROM `myaac_tickets` WHERE `account_id` = ' . (int)$account_logged->getId() . ' ORDER BY `id` DESC LIMIT 100'
+    'SELECT `id`, `character_name`, `title`, `summary`, `ticket_type`, `description`, `status`, `staff_reply`, `staff_updated_at`, `created_at`, `updated_at` ' .
+    'FROM `myaac_tickets` WHERE `account_id` = ' . $accountId . ' ORDER BY `id` DESC LIMIT 100'
 );
 foreach ($myQuery as $row) {
     $row['status_label'] = $statusMap[$row['status']] ?? ucfirst(str_replace('_', ' ', (string)$row['status']));
@@ -159,26 +184,19 @@ foreach ($myTickets as &$row) {
 }
 unset($row);
 
-$staffTickets = [];
-$openTicketsCount = 0;
-if ($isStaff) {
-    $openTicketsCount = (int)$db->query("SELECT COUNT(*) FROM `myaac_tickets` WHERE `status` = 'open'")->fetchColumn();
-    $staffQuery = $db->query(
-        'SELECT `id`, `account_id`, `character_name`, `title`, `summary`, `description`, `ticket_type`, `status`, `staff_reply`, `staff_updated_at`, `created_at` ' .
-        'FROM `myaac_tickets` ORDER BY `id` DESC LIMIT 300'
-    );
-    foreach ($staffQuery as $row) {
-        $row['status_label'] = $statusMap[$row['status']] ?? ucfirst(str_replace('_', ' ', (string)$row['status']));
-        $staffTickets[] = $row;
+$selectedTicket = null;
+if ($viewTicketId > 0) {
+    $selectedTicket = $loadTicketQuery($viewTicketId);
+    if ($selectedTicket) {
+        $selectedTicket['status_label'] = $statusMap[$selectedTicket['status']] ?? ucfirst(str_replace('_', ' ', (string)$selectedTicket['status']));
+        $selectedHistoryMap = rc_ticket_history_map($db, [(int)$selectedTicket['id']]);
+        $selectedTicket['history'] = $selectedHistoryMap[(int)$selectedTicket['id']] ?? [];
+    } else {
+        $errors[] = 'Ticket not found or you do not have permission to view it.';
     }
-    $staffHistoryMap = rc_ticket_history_map($db, array_map(static function ($row) {
-        return (int)$row['id'];
-    }, $staffTickets));
-    foreach ($staffTickets as &$row) {
-        $row['history'] = $staffHistoryMap[(int)$row['id']] ?? [];
-    }
-    unset($row);
 }
+
+$openTicketsCount = $isStaff ? (int)$db->query("SELECT COUNT(*) FROM `myaac_tickets` WHERE `status` = 'open'")->fetchColumn() : 0;
 
 $twig->display('account.tickets.html.twig', [
     'errors' => $errors,
@@ -193,6 +211,7 @@ $twig->display('account.tickets.html.twig', [
     'myTickets' => $myTickets,
     'statusMap' => $statusMap,
     'isStaff' => $isStaff,
-    'staffTickets' => $staffTickets,
     'openTicketsCount' => $openTicketsCount,
+    'selectedTicket' => $selectedTicket,
+    'allowedStatuses' => $allowedStatuses,
 ]);

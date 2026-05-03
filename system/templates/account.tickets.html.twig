@@ -1,5 +1,5 @@
 <section class="rc-ticket-page">
-  <h2 class="rc-title-ornate">SUPPORT TICKETS</h2>
+  <h2 class="rc-title-ornate">Support Ticket</h2>
 
   {% if errors is not empty %}
     {{ include('error_box.html.twig', { errors: errors }) }}
@@ -12,23 +12,27 @@
   <div class="rc-ticket-card">
     <div class="rc-ticket-toolbar rc-ticket-toolbar-actions">
       <a href="#rcTicketAddForm" class="rc-btn rc-btn-primary">Add Ticket</a>
-      <a href="?subtopic=accountmanagement&action=staff_actions" class="rc-btn rc-btn-subtle">Show All</a>
+      <a href="?subtopic=accountmanagement&action=tickets" class="rc-btn rc-btn-subtle">Show all</a>
+      {% if isStaff and openTicketsCount > 0 %}
+        <span class="rc-ticket-admin-reminder rc-ticket-admin-reminder-inline">{{ openTicketsCount }}</span>
+      {% endif %}
     </div>
 
     <div class="rc-character-table-wrap">
       <table class="rc-character-table rc-ticket-table rc-ticket-list-compact">
         <thead>
         <tr>
-          <th style="width: 84px;">ID</th>
-          <th style="width: 150px;">Category</th>
+          <th style="width: 80px;">ID</th>
+          <th style="width: 140px;">Category</th>
           <th>Subject</th>
           <th style="width: 170px;">Status</th>
-          <th style="width: 190px;">Updated</th>
+          <th style="width: 170px;">Updated</th>
+          <th style="width: 130px;">Action</th>
         </tr>
         </thead>
         <tbody>
-        {% if staffTickets|length > 0 %}
-          {% for ticket in staffTickets %}
+        {% if myTickets|length > 0 %}
+          {% for ticket in myTickets %}
             <tr>
               <td>#{{ ticket.id }}</td>
               <td>{{ typeOptions[ticket.ticket_type] ?? ticket.ticket_type|capitalize }}</td>
@@ -36,15 +40,16 @@
                 <strong>{{ ticket.title }}</strong>
                 <small>{{ ticket.summary }}</small>
               </td>
+              <td class="rc-ticket-status-cell"><span class="rc-ticket-status rc-ticket-status-{{ ticket.status|e('html_attr') }}">{{ ticket.status_label }}</span></td>
+              <td>{{ ticket.updated_at|date("d/m/Y H:i") }}</td>
               <td class="rc-ticket-status-cell">
-                <span class="rc-ticket-status rc-ticket-status-{{ ticket.status|e('html_attr') }}">{{ ticket.status_label }}</span>
+                <a href="?subtopic=accountmanagement&action=tickets&view_ticket={{ ticket.id }}" class="rc-btn rc-btn-subtle rc-character-mini-btn">View Ticket</a>
               </td>
-              <td>{{ ticket.staff_updated_at ? ticket.staff_updated_at|date("d/m/Y H:i") : ticket.created_at|date("d/m/Y H:i") }}</td>
             </tr>
           {% endfor %}
         {% else %}
           <tr>
-            <td colspan="5">No tickets found.</td>
+            <td colspan="6">No tickets found.</td>
           </tr>
         {% endif %}
         </tbody>
@@ -66,7 +71,7 @@
         </label>
 
         <label>
-          <span>Type</span>
+          <span>Category</span>
           <select name="ticket_type" required>
             {% for key, label in typeOptions %}
               <option value="{{ key }}" {% if ticketType == key %}selected{% endif %}>{{ label }}</option>
@@ -87,7 +92,7 @@
         <label class="rc-ticket-grid-full">
           <span>Description</span>
           <textarea name="ticket_description" rows="6" required>{{ ticketDescription|e }}</textarea>
-          <small>Links allowed only from YouTube and Imgur.</small>
+          <small>Use only text and YouTube/Imgur links.</small>
         </label>
       </div>
       <div class="rc-ticket-actions">
@@ -96,77 +101,71 @@
     </form>
   </div>
 
-  <div class="rc-ticket-card">
-    <h3 class="rc-title-ornate rc-title-ornate-inline">Staff Action{% if openTicketsCount > 0 %} <span class="rc-ticket-open-badge">{{ openTicketsCount }}</span>{% endif %}</h3>
-    <div class="rc-character-table-wrap">
-      <table class="rc-character-table rc-ticket-table rc-ticket-table-admin">
-        <thead>
-        <tr>
-          <th style="width: 84px;">Ticket</th>
-          <th style="width: 130px;">Character</th>
-          <th>Description</th>
-          <th style="width: 160px;">Status</th>
-          <th style="width: 300px;">Staff Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if staffTickets|length > 0 %}
-          {% for ticket in staffTickets %}
-            <tr>
-              <td>#{{ ticket.id }}</td>
-              <td>{{ ticket.character_name }}</td>
-              <td class="rc-ticket-description-cell">
-                <strong>{{ ticket.title }}</strong>
-                <small>{{ ticket.summary }}</small>
-                <div class="rc-ticket-description-full">{{ ticket.description }}</div>
-                {% if ticket.history is defined and ticket.history|length > 0 %}
-                  <div class="rc-ticket-history">
-                    <span>History:</span>
-                    <ul>
-                      {% for item in ticket.history %}
-                        <li>
-                          <em>{{ item.created_at|date("d M Y, H:i") }}</em>
-                          <strong>{{ statusMap[item.status] ?? item.status }}</strong>
-                          <span class="rc-ticket-history-actor">
-                            {% if item.actor_role == 'staff' %}
-                              by Staff {{ item.actor_name is not empty ? item.actor_name : ('#' ~ item.actor_account_id) }}
-                            {% else %}
-                              by Player {{ item.actor_name is not empty ? item.actor_name : ('#' ~ item.actor_account_id) }}
-                            {% endif %}
-                          </span>
-                          {% if item.message %}
-                            <p>{{ item.message }}</p>
-                          {% endif %}
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  </div>
-                {% endif %}
-              </td>
-              <td class="rc-ticket-status-cell">
-                <span class="rc-ticket-status rc-ticket-status-{{ ticket.status|e('html_attr') }}">{{ ticket.status_label }}</span>
-              </td>
-              <td>
-                <form method="post" action="?subtopic=accountmanagement&action=tickets" class="rc-ticket-admin-form">
-                  <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
-                  <select name="staff_status" required>
-                    {% for statusKey, statusLabel in statusMap %}
-                      <option value="{{ statusKey }}" {% if ticket.status == statusKey %}selected{% endif %}>{{ statusLabel }}</option>
-                    {% endfor %}
-                  </select>
-                  <textarea name="staff_reply" rows="3" placeholder="Reply and/or status update (YouTube/Imgur links only)">{{ ticket.staff_reply|e }}</textarea>
-                  <button type="submit" name="staff_update_ticket" value="1" class="rc-btn rc-btn-subtle">Save</button>
-                </form>
-              </td>
-            </tr>
+  {% if selectedTicket %}
+    <div class="rc-ticket-card">
+      <h3 class="rc-title-ornate rc-title-ornate-inline">View Ticket</h3>
+      <div class="rc-ticket-card-sub">
+        <div class="rc-ticket-item-title">Ticket #{{ selectedTicket.id }}</div>
+        <div class="rc-ticket-detail-grid">
+          <span>Character:</span><strong>{{ selectedTicket.character_name }}</strong>
+          <span>Subject:</span><strong>{{ selectedTicket.title }}</strong>
+          <span>Category:</span><strong>{{ typeOptions[selectedTicket.ticket_type] ?? selectedTicket.ticket_type|capitalize }}</strong>
+          <span>Status:</span><strong><span class="rc-ticket-status rc-ticket-status-{{ selectedTicket.status|e('html_attr') }}">{{ selectedTicket.status_label }}</span></strong>
+          <span>Created:</span><strong>{{ selectedTicket.created_at|date("d/m/Y H:i") }}</strong>
+          <span>Last Update:</span><strong>{{ selectedTicket.updated_at|date("d/m/Y H:i") }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="rc-ticket-card">
+      <h3 class="rc-title-ornate rc-title-ornate-inline">Messages</h3>
+      <div class="rc-ticket-messages">
+        {% if selectedTicket.history is defined and selectedTicket.history|length > 0 %}
+          {% for item in selectedTicket.history %}
+            <article class="rc-ticket-message {{ item.actor_role == 'staff' ? 'is-staff' : 'is-player' }}">
+              <header>
+                <strong>
+                  {% if item.actor_role == 'staff' %}
+                    Staff {{ item.actor_name is not empty ? item.actor_name : ('#' ~ item.actor_account_id) }}
+                  {% else %}
+                    {{ item.actor_name is not empty ? item.actor_name : 'Player' }}
+                  {% endif %}
+                </strong>
+                <time>{{ item.created_at|date("d/m/Y H:i") }}</time>
+              </header>
+              <p>{{ item.message is not empty ? item.message : '-' }}</p>
+              <small>Status: {{ statusMap[item.status] ?? item.status }}</small>
+            </article>
           {% endfor %}
         {% else %}
-          <tr>
-            <td colspan="5">No tickets found.</td>
-          </tr>
+          <div class="rc-ticket-description-full">No messages yet.</div>
         {% endif %}
-        </tbody>
-      </table>
+      </div>
     </div>
-  </div>
+
+    <div class="rc-ticket-card">
+      <h3 class="rc-title-ornate rc-title-ornate-inline">Add Reply</h3>
+      <form method="post" action="?subtopic=accountmanagement&action=tickets&view_ticket={{ selectedTicket.id }}" class="rc-ticket-form rc-ticket-reply-form">
+        <input type="hidden" name="ticket_id" value="{{ selectedTicket.id }}">
+        {% if isStaff %}
+          <label>
+            <span>Status</span>
+            <select name="staff_status">
+              {% for statusKey, statusLabel in statusMap %}
+                <option value="{{ statusKey }}" {% if selectedTicket.status == statusKey %}selected{% endif %}>{{ statusLabel }}</option>
+              {% endfor %}
+            </select>
+          </label>
+        {% endif %}
+        <label class="rc-ticket-grid-full">
+          <span>Message</span>
+          <textarea name="reply_message" rows="7" maxlength="5000" placeholder="Type your message..."></textarea>
+          <small>Up to 5000 characters. Only text and YouTube/Imgur links are allowed.</small>
+        </label>
+        <div class="rc-ticket-actions rc-ticket-actions-center">
+          <button type="submit" name="ticket_add_reply" value="1" class="rc-btn rc-btn-primary">Send Reply</button>
+        </div>
+      </form>
+    </div>
+  {% endif %}
 </section>
