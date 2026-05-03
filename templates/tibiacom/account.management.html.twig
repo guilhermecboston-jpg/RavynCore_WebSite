@@ -112,6 +112,7 @@
 
 <br>
 
+{% if is_staff_webflag3 %}
 <div class="TableContainer">
   <div class="CaptionContainer">
     <div class="CaptionInnerContainer">
@@ -123,7 +124,7 @@
             style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
       <span class="CaptionVerticalLeft"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
-      <div class="Text">Support Ticket Area</div>
+      <div class="Text">Support Tickets</div>
       <span class="CaptionVerticalRight"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
       <span class="CaptionBorderBottom"
@@ -148,37 +149,43 @@
                     <tbody>
                     <tr>
                       <td>
-                        <div style="height: auto; min-height: 72px;">
-                          <div id="TicketBox" style="position: relative; float:right;">
-                            <a href="{% if is_staff_webflag3 %}?subtopic=accountmanagement&action=staff_actions{% else %}?subtopic=accountmanagement&action=tickets{% endif %}"><img
-                                style="width: 45px; height: 45px; border: 0px; margin-right: 10px;"
-                                src="{{ template_path }}/images/premiumfeatures/PremiumIcon-TrackQuests.png"></a>
-                            <br>
-                            <a style="position: absolute; bottom: -5px; right: 0px;" href="{% if is_staff_webflag3 %}?subtopic=accountmanagement&action=staff_actions{% else %}?subtopic=accountmanagement&action=tickets{% endif %}">{% if is_staff_webflag3 %}Staff Action{% else %}My Tickets{% endif %}</a>
-                            {% if is_staff_webflag3 and open_tickets_count is defined and open_tickets_count > 0 %}
-                              <span class="rc-ticket-admin-reminder">{{ open_tickets_count }}</span>
+                        <div class="rc-ticket-manage-table-wrap">
+                          <table class="rc-ticket-manage-table">
+                            <thead>
+                            <tr>
+                              <th style="width: 70px;">ID</th>
+                              <th style="width: 140px;">Category</th>
+                              <th>Subject</th>
+                              <th style="width: 170px;">Status</th>
+                              <th style="width: 170px;">Updated</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if staff_tickets_preview is defined and staff_tickets_preview|length > 0 %}
+                              {% for ticket in staff_tickets_preview %}
+                                <tr>
+                                  <td>#{{ ticket.id }}</td>
+                                  <td>{{ ticket.ticket_type_label }}</td>
+                                  <td>{{ ticket.title }}</td>
+                                  <td><span class="rc-ticket-status rc-ticket-status-{{ ticket.status|e('html_attr') }}">{{ ticket.status_label }}</span></td>
+                                  <td>{{ ticket.updated_at|date("d/m/Y H:i") }}</td>
+                                </tr>
+                              {% endfor %}
+                            {% else %}
+                              <tr>
+                                <td colspan="5">No tickets found.</td>
+                              </tr>
                             {% endif %}
-                          </div>
-                          <div class="rc-ticket-manage-summary">
-                            <span>
-                              {% if is_staff_webflag3 %}
-                                Open the <a href="?subtopic=accountmanagement&action=staff_actions">Staff Actions</a> area to review queue, update status and reply.
-                              {% else %}
-                                Open your support ticket area <a href="?subtopic=accountmanagement&action=tickets">here</a> and track your reports.
-                              {% endif %}
-                            </span>
-                            {% if my_tickets_preview is defined and my_tickets_preview|length > 0 %}
-                              <ul class="rc-ticket-preview-list">
-                                {% for ticket in my_tickets_preview %}
-                                  <li>
-                                    <strong>#{{ ticket.id }}</strong>
-                                    <span>{{ ticket.title }}</span>
-                                    <em>{{ ticket.status_label }}</em>
-                                  </li>
-                                {% endfor %}
-                              </ul>
-                            {% endif %}
-                          </div>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="rc-ticket-manage-toolbar">
+                          <a href="?subtopic=accountmanagement&action=tickets" class="rc-btn rc-btn-primary">Add Ticket</a>
+                          <a href="?subtopic=accountmanagement&action=staff_actions" class="rc-btn rc-btn-subtle">Show All</a>
+                          {% if open_tickets_count is defined and open_tickets_count > 0 %}
+                            <span class="rc-ticket-admin-reminder rc-ticket-admin-reminder-inline">{{ open_tickets_count }}</span>
+                          {% endif %}
                         </div>
                       </td>
                     </tr>
@@ -195,48 +202,60 @@
     </tbody>
   </table>
 </div>
+{% endif %}
 
 <br>
 
 {% if recovery_key is empty %}
-  <div class="SmallBox">
-    <div class="MessageContainer">
-      <div class="BoxFrameHorizontal"
-           style="background-image:url({{ template_path }}/images/content/box-frame-horizontal.gif);"></div>
-      <div class="BoxFrameEdgeLeftTop"
-           style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></div>
-      <div class="BoxFrameEdgeRightTop"
-           style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></div>
-      <div class="Message">
-        <div class="BoxFrameVerticalLeft"
-             style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></div>
-        <div class="BoxFrameVerticalRight"
-             style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></div>
-        <table>
-          <tr>
-            <td class="LabelV">Your account is not registered!</td>
-            <td>
-              <form action="{{ getLink('account/register') }}" method="post" style="border:0;">
-                <td style="border:0;">
-                  {{ include('buttons.register_account.html.twig') }}
-                </td>
-              </form>
-            </td>
-          </tr>
-          <tr>
-            <td style="width:100%;">You can register your account for increased protection. Click on "Register Account"
-              and get your free recovery key today!
-            </td>
-          </tr>
-        </table>
+  <div class="TableContainer">
+    <div class="CaptionContainer">
+      <div class="CaptionInnerContainer">
+        <span class="CaptionEdgeLeftTop" style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionEdgeRightTop" style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionBorderTop" style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
+        <span class="CaptionVerticalLeft" style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
+        <div class="Text">Account Registration</div>
+        <span class="CaptionVerticalRight" style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
+        <span class="CaptionBorderBottom" style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
+        <span class="CaptionEdgeLeftBottom" style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionEdgeRightBottom" style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
       </div>
-      <div class="BoxFrameHorizontal"
-           style="background-image:url({{ template_path }}/images/content/box-frame-horizontal.gif);"></div>
-      <div class="BoxFrameEdgeRightBottom"
-           style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></div>
-      <div class="BoxFrameEdgeLeftBottom"
-           style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></div>
     </div>
+    <table class="Table5" cellpadding="0" cellspacing="0">
+      <tbody>
+      <tr>
+        <td>
+          <div class="InnerTableContainer">
+            <table style="width:100%;">
+              <tbody>
+              <tr>
+                <td>
+                  <div class="TableContentContainer">
+                    <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
+                      <tbody>
+                      <tr>
+                        <td class="LabelV">Your account is not registered!</td>
+                        <td style="text-align:right;">
+                          <form action="{{ getLink('account/register') }}" method="post" class="rc-inline-form">
+                            <button type="submit" class="rc-btn rc-btn-primary">Register Account</button>
+                          </form>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">You can register your account for increased protection. Click on "Register Account" and get your free recovery key today!</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
   <br />
 {% endif %}
@@ -259,7 +278,7 @@
             style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
       <span class="CaptionVerticalLeft"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
-      <div class="Text">Regular Characters</div>
+      <div class="Text">Character List</div>
       <span class="CaptionVerticalRight"
             style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
       <span class="CaptionBorderBottom"
@@ -274,28 +293,6 @@
     <tbody>
     <tr>
       <td>
-        <div class="InnerTableContainer">
-          <table style="width:100%;">
-            <tbody>
-            <tr>
-              <td>
-                <div class="TableContentContainer">
-                  <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
-                    <tbody>
-                    <tr>
-                      <td style="padding: 6px 0;">
-                        <h3 class="rc-title-ornate rc-title-ornate-inline">Regular Characters</h3>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-
         <div class="InnerTableContainer">
           <table style="width:100%;">
             <tbody>
@@ -385,22 +382,22 @@
           <tbody>
           <tr>
             <td>
-              <div style="display: inline-flex; justify-content: center; margin: 2px 0 0 7px;">
-                <form action="{{ getLink('account/character/create') }}" method="post">
-                  {{ include('buttons.create_character.html.twig') }}
+              <div class="rc-account-character-actions">
+                <form action="{{ getLink('account/character/create') }}" method="post" class="rc-inline-form">
+                  <button type="submit" class="rc-btn rc-btn-primary">Create New Character</button>
                 </form>
                 {% if config.account_change_character_main and players | length >= 1 %}
-                  <form action="{{ getLink('account/character/main') }}" method="post" style="margin-left: 6px">
-                    {{ include('buttons.change_main.html.twig') }}
+                  <form action="{{ getLink('account/character/main') }}" method="post" class="rc-inline-form">
+                    <button type="submit" class="rc-btn rc-btn-subtle">Change Main</button>
                   </form>
                 {% endif %}
                 {% if config.account_change_character_name %}
-                  <form action="{{ getLink('account/character/name') }}" method="post" style="margin-left: 6px">
+                  <form action="{{ getLink('account/character/name') }}" method="post" class="rc-inline-form">
                     {{ include('buttons.change_name.html.twig') }}
                   </form>
                 {% endif %}
                 {% if config.account_change_character_sex %}
-                  <form action="{{ getLink('account/character/sex') }}" method="post" style="margin-left: 6px">
+                  <form action="{{ getLink('account/character/sex') }}" method="post" class="rc-inline-form">
                     {{ include('buttons.change_sex.html.twig') }}
                   </form>
                 {% endif %}
@@ -558,28 +555,16 @@
                 <table class="InnerTableButtonRow" cellpadding="0" cellspacing="0">
                   <tr>
                     <td>
-                      <table border="0" cellspacing="0" cellpadding="0">
-                        <form action="{{ getLink('account/password') }}" method="post">
-                          <tr>
-                            <td style="border:0px;">
-                              {{ include('buttons.change_password.html.twig') }}
-                            </td>
-                          </tr>
-                        </form>
-                      </table>
+                      <form action="{{ getLink('account/password') }}" method="post" class="rc-inline-form">
+                        <button type="submit" class="rc-btn rc-btn-primary">Change Password</button>
+                      </form>
                     </td>
                     <td>
-                      <table border="0" cellspacing="0" cellpadding="0">
-                        <form action="{{ getLink('account/email') }}" method="post">
-                          <tr>
-                            <td style="border:0px;">
-                              <input type="hidden" name="newemail" value="" />
-                              <input type="hidden" name="newemaildate" value="0">
-                              {{ include('buttons.change_email.html.twig') }}
-                            </td>
-                          </tr>
-                        </form>
-                      </table>
+                      <form action="{{ getLink('account/email') }}" method="post" class="rc-inline-form">
+                        <input type="hidden" name="newemail" value="" />
+                        <input type="hidden" name="newemaildate" value="0">
+                        <button type="submit" class="rc-btn rc-btn-subtle">Change Email</button>
+                      </form>
                     </td>
                     <td width="100%"></td>
                     {# show button "register account" #}
@@ -629,7 +614,7 @@
               style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
         <span class="CaptionVerticalLeft"
               style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
-        <div class="Text">Real Name</div>
+        <div class="Text">Contact Information</div>
         <span class="CaptionVerticalRight"
               style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
         <span class="CaptionBorderBottom"

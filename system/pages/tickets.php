@@ -13,6 +13,11 @@ $statusMap = rc_ticket_status_map();
 $filterOptions = rc_ticket_filter_options();
 $allowedStatuses = array_keys($statusMap);
 
+if (!$isStaff) {
+    error('Access denied.');
+    return;
+}
+
 $errors = [];
 $success = '';
 

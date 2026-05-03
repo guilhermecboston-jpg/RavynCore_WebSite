@@ -62,6 +62,13 @@
                         <li>
                           <em>{{ item.created_at|date("d M Y, H:i") }}</em>
                           <strong>{{ statusMap[item.status] ?? item.status }}</strong>
+                          <span class="rc-ticket-history-actor">
+                            {% if item.actor_role == 'staff' %}
+                              by Staff {{ item.actor_name is not empty ? item.actor_name : ('#' ~ item.actor_account_id) }}
+                            {% else %}
+                              by Player {{ item.actor_name is not empty ? item.actor_name : ('#' ~ item.actor_account_id) }}
+                            {% endif %}
+                          </span>
                           {% if item.message %}
                             <p>{{ item.message }}</p>
                           {% endif %}

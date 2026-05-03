@@ -3623,6 +3623,17 @@ body.rc-page-accountmanagement .rc-rich-content .rc-ticket-history li strong {
     font-size: 12px;
 }
 
+body.rc-page-tickets .rc-rich-content .rc-ticket-history-actor,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-history-actor {
+    display: inline-block;
+    margin-left: 8px;
+    color: #9db4d9;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
 body.rc-page-tickets .rc-rich-content .rc-ticket-history li p,
 body.rc-page-accountmanagement .rc-rich-content .rc-ticket-history li p {
     margin: 5px 0 0;
@@ -3716,6 +3727,70 @@ body.rc-page-accountmanagement .rc-rich-content .rc-ticket-admin-reminder {
     font-size: 11px;
     font-weight: 800;
     box-shadow: 0 0 0 2px rgba(7, 16, 30, 0.8), 0 0 8px rgba(31, 198, 255, 0.42);
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-admin-reminder-inline {
+    position: static;
+    margin-left: auto;
+    box-shadow: 0 0 0 2px rgba(7, 16, 30, 0.8), 0 0 8px rgba(31, 198, 255, 0.42);
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-manage-table-wrap {
+    overflow-x: auto;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-manage-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid rgba(132, 156, 200, 0.26);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-manage-table th,
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-manage-table td {
+    padding: 8px 10px;
+    border-top: 1px solid rgba(132, 156, 200, 0.2);
+    text-align: left;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-manage-table thead th {
+    border-top: 0;
+    color: #d6e2fb;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    background: rgba(29, 45, 72, 0.9);
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-manage-table tbody td {
+    color: #ebf2ff;
+    background: rgba(18, 30, 48, 0.72);
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-manage-toolbar {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-ticket-toolbar-actions {
+    justify-content: flex-start;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-account-character-actions {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 2px 0 0 7px;
+    flex-wrap: wrap;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-inline-form {
+    margin: 0;
 }
 
 body.rc-page-accountmanagement .rc-rich-content .rc-staff-search-form {

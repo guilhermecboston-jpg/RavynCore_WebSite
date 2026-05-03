@@ -159,10 +159,11 @@ if (!function_exists('rc_ticket_history_map')) {
             return $result;
         }
 
+        $accountNameColumn = $db->hasColumn('accounts', 'name') ? '`a`.`name`' : "''";
         $query = $db->query(
-            'SELECT `id`, `ticket_id`, `actor_account_id`, `actor_role`, `status`, `message`, `created_at` FROM `myaac_ticket_history` WHERE `ticket_id` IN (' .
-            implode(',', $ticketIds) .
-            ') ORDER BY `id` ASC'
+            'SELECT `h`.`id`, `h`.`ticket_id`, `h`.`actor_account_id`, `h`.`actor_role`, `h`.`status`, `h`.`message`, `h`.`created_at`, ' . $accountNameColumn . ' AS `actor_name` ' .
+            'FROM `myaac_ticket_history` `h` LEFT JOIN `accounts` `a` ON `a`.`id` = `h`.`actor_account_id` ' .
+            'WHERE `h`.`ticket_id` IN (' . implode(',', $ticketIds) . ') ORDER BY `h`.`id` ASC'
         );
 
         foreach ($query as $row) {

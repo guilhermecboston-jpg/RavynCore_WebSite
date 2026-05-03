@@ -136,7 +136,6 @@ unset($player);
 $quickLinks = [
     ['name' => 'Latest News', 'url' => $templateLinks['link_news'] ?? getLink('news')],
     ['name' => 'Create Account', 'url' => $templateLinks['link_account_create'] ?? getLink('account/create')],
-    ['name' => 'Tickets', 'url' => getLink('tickets')],
     ['name' => 'Highscores', 'url' => $templateLinks['link_highscores'] ?? getLink('highscores')],
     ['name' => 'Guilds', 'url' => $templateLinks['link_guilds'] ?? getLink('guilds')],
     ['name' => 'Server Info', 'url' => $templateLinks['link_serverInfo'] ?? getLink('serverInfo')],
@@ -146,9 +145,6 @@ $accountManageUrl = $templateLinks['link_account_manage'] ?? getLink('account/ma
 $accountCreateUrl = $templateLinks['link_account_create'] ?? getLink('account/create');
 $accountLogoutUrl = $templateLinks['link_account_logout'] ?? getLink('account/logout');
 $downloadUrl = $templateLinks['link_downloads'] ?? getLink('downloads');
-$ticketsUrl = getLink('tickets');
-$accountTicketsUrl = BASE_URL . '?subtopic=accountmanagement&action=tickets';
-$openTicketLoginRedirect = BASE_URL . '?subtopic=accountmanagement&redirect=' . urlencode($accountTicketsUrl);
 $recordOnline = (int)($status['playersPeak'] ?? $status['playersRecord'] ?? $status['record'] ?? 0);
 $isStaffAccount = rc_is_staff_web_flag3();
 $openTicketsCount = 0;
@@ -179,7 +175,6 @@ if ($isStaffAccount) {
     }
     $openTicketsCount = (int)$db->query("SELECT COUNT(*) FROM `myaac_tickets` WHERE `status` = 'open'")->fetchColumn();
 }
-$ticketsNavLabel = 'Tickets' . ($isStaffAccount && $openTicketsCount > 0 ? ' <span class="rc-nav-badge">' . (int)$openTicketsCount . '</span>' : '');
 $staffActionsUrl = BASE_URL . '?subtopic=accountmanagement&action=staff_actions';
 if ($isStaffAccount) {
     $quickLinks[] = ['name' => 'Staff Actions (' . (int)$openTicketsCount . ')', 'url' => $staffActionsUrl];
@@ -240,7 +235,7 @@ $socialLinks = [
                     <a class="rc-btn rc-btn-danger" href="<?= $accountLogoutUrl; ?>">Logout</a>
                 <?php else: ?>
                     <a class="rc-btn rc-btn-subtle" href="<?= $accountManageUrl; ?>">Login</a>
-                    <a class="rc-btn rc-btn-primary" href="<?= $openTicketLoginRedirect; ?>">OPEN TICKET</a>
+                    <a class="rc-btn rc-btn-primary" href="<?= $accountCreateUrl; ?>">CREATE ACCOUNT</a>
                 <?php endif; ?>
                 <div class="rc-social-icons" aria-label="RavynCore social links">
                     <?php foreach ($socialLinks as $social): ?>
@@ -261,17 +256,11 @@ $socialLinks = [
             <nav id="rcNav" class="rc-nav">
                 <ul>
                     <?php if (!empty($menus)): ?>
-                        <?php $ticketsRendered = false; ?>
                         <?php foreach ($menus as $categoryId => $items): ?>
                             <?php
                             $categoryName = $menuCategories[$categoryId]['name'] ?? 'Menu';
                             $categoryKey = strtolower((string)($menuCategories[$categoryId]['id'] ?? $categoryName));
                             $firstItem = $items[0] ?? null;
-                            if ($categoryKey === 'community') {
-                                $ticketsRendered = true;
-                                echo '<li class="rc-nav-item"><a href="' . escapeHtml($ticketsUrl) . '">' . $ticketsNavLabel . '</a></li>';
-                                continue;
-                            }
                             if ($categoryKey === 'forum') {
                                 continue;
                             }
@@ -289,12 +278,8 @@ $socialLinks = [
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
-                        <?php if (!$ticketsRendered): ?>
-                            <li class="rc-nav-item"><a href="<?= $ticketsUrl; ?>"><?= $ticketsNavLabel; ?></a></li>
-                        <?php endif; ?>
                     <?php else: ?>
                         <li class="rc-nav-item"><a href="<?= getLink('news'); ?>">News</a></li>
-                        <li class="rc-nav-item"><a href="<?= $ticketsUrl; ?>"><?= $ticketsNavLabel; ?></a></li>
                         <li class="rc-nav-item"><a href="<?= getLink('highscores'); ?>">Ranking</a></li>
                         <li class="rc-nav-item"><a href="<?= getLink('guilds'); ?>">Guilds</a></li>
                         <li class="rc-nav-item"><a href="<?= getLink('serverInfo'); ?>">Info</a></li>

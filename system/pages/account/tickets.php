@@ -11,6 +11,11 @@ $isStaff = rc_is_staff_web_flag3();
 $statusMap = rc_ticket_status_map();
 $typeOptions = rc_ticket_type_options();
 
+if (!$isStaff) {
+    error('Access denied.');
+    return;
+}
+
 $errors = [];
 $success = '';
 
