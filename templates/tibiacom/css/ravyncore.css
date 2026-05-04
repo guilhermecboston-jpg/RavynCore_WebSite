@@ -1593,7 +1593,9 @@ body.rc-page option {
     }
 
     /* Drawer — fullscreen below the header so the page content can't show
-       through. JS sets --rc-nav-top to the live header height on open. */
+       through. JS sets --rc-nav-top to the live header height on open.
+       The whole drawer scrolls as a single block to avoid nested-scroll
+       quirks on mobile browsers. */
     .rc-nav {
         position: fixed;
         top: var(--rc-nav-top, 120px);
@@ -1603,7 +1605,10 @@ body.rc-page option {
         width: 100%;
         padding: 0;
         background: rgba(5, 8, 14, 0.98);
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
         transform: translateY(-12px);
         opacity: 0;
         pointer-events: none;
@@ -1618,10 +1623,7 @@ body.rc-page option {
     }
 
     .rc-nav ul {
-        flex: 1 1 auto;
-        min-height: 0;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        flex: 0 0 auto;
         flex-direction: column;
         align-items: stretch;
         height: auto;
@@ -1702,13 +1704,13 @@ body.rc-page option {
         color: #f5f1e8;
     }
 
-    /* CTAs anchored to the bottom of the drawer */
+    /* CTAs sit at the end of the scrollable drawer content. */
     .rc-nav-mobile-actions {
         flex: 0 0 auto;
         display: flex;
         flex-direction: column;
         gap: 10px;
-        padding: 14px 18px 18px;
+        padding: 14px 18px calc(18px + env(safe-area-inset-bottom, 0px));
         border-top: 1px solid rgba(255, 255, 255, 0.06);
     }
     .rc-nav-mobile-actions .rc-btn {
