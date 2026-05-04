@@ -337,24 +337,6 @@ $socialLinks = [
 
             <p class="rc-hero-support">Join thousands of players in an epic adventure!</p>
         </div>
-
-        <div class="rc-hero-stats">
-            <div class="rc-stat">
-                <span>Online</span>
-                <strong><?= $playersOnline; ?></strong>
-                <small>players</small>
-            </div>
-            <div class="rc-stat">
-                <span>Uptime</span>
-                <strong><?= escapeHtml((string)($status['uptimeReadable'] ?? 'Unknown')); ?></strong>
-                <small><?= !empty($status['online']) ? 'Server Online' : 'Server Offline'; ?></small>
-            </div>
-            <div class="rc-stat">
-                <span>Server Save</span>
-                <strong id="rcServerSaveCountdown" data-target="<?= $serverSaveDate->format('c'); ?>">--:--:--</strong>
-                <small>Daily reset</small>
-            </div>
-        </div>
     </section>
 
     <section class="rc-features" aria-label="Server highlights">
