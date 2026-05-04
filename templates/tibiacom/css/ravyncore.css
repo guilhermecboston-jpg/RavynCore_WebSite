@@ -2415,6 +2415,51 @@ body[class*="account"] .rc-rich-content input#character_name.rc-charname-input:f
     box-shadow: 0 0 0 2px rgba(215, 168, 92, 0.16) !important;
 }
 
+body.rc-page .rc-rich-content .rc-suggest-link,
+body[class*="account"] .rc-rich-content .rc-suggest-link {
+    color: #d8c79a !important;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+}
+
+body.rc-page .rc-rich-content .rc-suggest-link:hover,
+body[class*="account"] .rc-rich-content .rc-suggest-link:hover {
+    color: #f0d59d !important;
+    text-decoration: underline;
+}
+
+body.rc-page .rc-rich-content .rc-createchar-title td,
+body[class*="account"] .rc-rich-content .rc-createchar-title td {
+    background: linear-gradient(180deg, rgba(38, 74, 119, 0.92) 0%, rgba(28, 57, 96, 0.92) 100%) !important;
+    color: #f1d39a !important;
+    font-family: 'Cinzel', 'Georgia', serif !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-top: 1px solid rgba(188, 150, 84, 0.62) !important;
+    border-bottom: 1px solid rgba(188, 150, 84, 0.45) !important;
+}
+
+body.rc-page .rc-rich-content .rc-createchar-title-no-icon td,
+body[class*="account"] .rc-rich-content .rc-createchar-title-no-icon td {
+    text-align: center !important;
+}
+
+body.rc-page .rc-rich-content .rc-createchar-vocations td,
+body[class*="account"] .rc-rich-content .rc-createchar-vocations td {
+    text-align: center;
+    vertical-align: top;
+    padding: 12px 10px !important;
+}
+
+body.rc-page .rc-rich-content .rc-createchar-vocation-option label,
+body[class*="account"] .rc-rich-content .rc-createchar-vocation-option label {
+    display: inline-block;
+    margin-left: 4px;
+}
+
 body.rc-page .rc-rich-content #SuggestCharacterName,
 body[class*="createaccount"] .rc-rich-content #SuggestCharacterName,
 body[class*="account"] .rc-rich-content #SuggestCharacterName {

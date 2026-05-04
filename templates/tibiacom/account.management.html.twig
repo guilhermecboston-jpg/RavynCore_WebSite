@@ -276,14 +276,6 @@
                             <small>
                               <span
                                 id="CharacterNameOf_0">{{ config.vocations[player.getVocation()] }} - Level {{ player.getLevel() }} - On {{ config['lua']['serverName'] }}
-                              <span style="position: relative; top: 3px; margin-left: 5px;">
-                                <span class="HelperDivIndicator"
-                                      onmouseover="ActivateHelperDiv($(this), 'BattlEye Protected Game World', '<p>This character lives on a game world which has been protected by BattleEye since April 19, 2018.</p>', '');"
-                                      onmouseout="$('#HelperDivContainer').hide();">
-                                  <img style="border:0px;"
-                                       src="{{ template_path }}/images/global/content/icon_battleye.gif">
-                                </span>
-                              </span>
                               {% if guild.rank is not null %}
                                 <br>
                                 <span>Guild Membership: {{ guild.rank }} of the <a
