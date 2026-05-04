@@ -357,7 +357,7 @@ $socialLinks = [
                 <p>Friendly players, events, tournaments and constant updates.</p>
             </article>
             <article class="rc-feature">
-                <div class="rc-feature-icon"><i class="fas fa-shield-halved"></i></div>
+                <div class="rc-feature-icon"><i class="fas fa-shield-alt"></i></div>
                 <h3>Secure &amp; Stable</h3>
                 <p>Protected server, daily backups and 24/7 monitoring for the best performance.</p>
             </article>
