@@ -2460,6 +2460,20 @@ body[class*="account"] .rc-rich-content .rc-createchar-vocation-option label {
     margin-left: 4px;
 }
 
+body.rc-page .rc-rich-content .rc-createchar-world-head td,
+body[class*="account"] .rc-rich-content .rc-createchar-world-head td {
+    text-align: center !important;
+    font-size: 0.9rem;
+}
+
+body.rc-page .rc-rich-content .rc-world-type,
+body[class*="account"] .rc-rich-content .rc-world-type {
+    color: #d8c79a;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
 body.rc-page .rc-rich-content #SuggestCharacterName,
 body[class*="createaccount"] .rc-rich-content #SuggestCharacterName,
 body[class*="account"] .rc-rich-content #SuggestCharacterName {

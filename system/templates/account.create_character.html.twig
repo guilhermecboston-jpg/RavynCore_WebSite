@@ -48,8 +48,9 @@ In any case the name must not violate the naming conventions stated in the <a hr
                   <div class="TableContentContainer">
                     <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
                       <tbody>
-                      <tr class="LabelH rc-createchar-title rc-createchar-title-no-icon">
-                        <td colspan="2"><span>Name / Sex <span style="color: red;">*</span></span></td>
+                      <tr class="LabelH rc-createchar-title">
+                        <td style="width:50%; text-align:center;"><span>Name <span style="color: red;">*</span></span></td>
+                        <td style="text-align:center;"><span>Sex <span style="color: red;">*</span></span></td>
                       </tr>
                       <tr class="Even">
                         <td><input name="name" id="character_name" value="{{ name }}" class="rc-charname-input"
@@ -95,6 +96,10 @@ In any case the name must not violate the naming conventions stated in the <a hr
                         <td colspan="2">
                           <table id="js_world_box" width="100%">
                             <tbody>
+                            <tr class="LabelH rc-createchar-world-head">
+                              <td style="border-style:none; text-align:center; width:70%;">World</td>
+                              <td style="border-style:none; text-align:center;">Type</td>
+                            </tr>
                             <tr id="world_list_tr">
                               <td style="border-style: none" align="center">
                                 <div style="width: 15em; position: relative; text-align: left;">
@@ -102,7 +107,14 @@ In any case the name must not violate the naming conventions stated in the <a hr
                                          value="server_{{ config.lua.serverName }}" checked>
                                   <label for="server_{{ config.lua.serverName }}">{{ config.lua.serverName }}</label>
                                 </div>
-                                &nbsp;<br></td>
+                              </td>
+                              <td style="border-style: none; text-align: center;">
+                                {% set worldType = config.lua.worldType|default(config.lua.world_type|default(config.lua.pvpType|default(config.lua.pvp_type|default('Open PvP')))) %}
+                                <span class="rc-world-type">{{ worldType }}</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="2" style="border-style:none;">&nbsp;</td>
                             </tr>
                             </tbody>
                           </table>
@@ -120,7 +132,7 @@ In any case the name must not violate the naming conventions stated in the <a hr
                       <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
                         <tbody>
                         <tr class="LabelH rc-createchar-title rc-createchar-title-no-icon">
-                          <td colspan="2">Select your vocation <span style="color: red;">*</span></td>
+                          <td colspan="{{ config.character_samples|length }}">Select your vocation <span style="color: red;">*</span></td>
                         </tr>
                         <tr class="Even rc-createchar-vocations">
                           {% for key, sample_char in config.character_samples %}
