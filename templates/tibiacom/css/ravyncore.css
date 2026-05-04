@@ -251,6 +251,14 @@ a:hover {
 /* Body scroll lock while the mobile drawer is open */
 body.rc-nav-locked { overflow: hidden; }
 
+/* Solid header backdrop while the mobile drawer is open so the hero
+   image does not bleed through behind the logo + close button. */
+body.rc-nav-locked .rc-header,
+body.rc-nav-locked .header,
+body.rc-nav-locked .site-header {
+    background: rgba(5, 8, 14, 0.98);
+}
+
 .rc-nav {
     display: flex;
     align-items: center;
