@@ -273,6 +273,16 @@ body.rc-nav-locked { overflow: hidden; }
     min-width: 0;
 }
 
+.rc-nav-item:has(.rc-nav-dropdown)::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 8px;
+    z-index: 8;
+}
+
 .rc-nav-item > a {
     display: inline-block;
     padding: 10px 16px;
