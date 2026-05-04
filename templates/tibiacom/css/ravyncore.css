@@ -2540,6 +2540,8 @@ body[class*="account"] .rc-rich-content .rc-createchar-name-cell {
 body.rc-page .rc-rich-content .rc-createchar-name-wrap,
 body[class*="account"] .rc-rich-content .rc-createchar-name-wrap {
     width: min(100%, 460px);
+    margin: 0 auto;
+    text-align: center;
 }
 
 body.rc-page .rc-rich-content .rc-createchar-name-wrap small,
@@ -2563,7 +2565,8 @@ body[class*="account"] .rc-rich-content .rc-createchar-sex-cell {
 
 body.rc-page .rc-rich-content .rc-createchar-sex-wrap,
 body[class*="account"] .rc-rich-content .rc-createchar-sex-wrap {
-    width: min(100%, 260px);
+    width: fit-content;
+    max-width: 100%;
     margin: 2px auto 0;
 }
 
