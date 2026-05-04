@@ -27,7 +27,6 @@ foreach ($account_logged->getPlayersList() as $player) {
 
 $selectedCharacterId = isset($_POST['character_id']) ? (int)$_POST['character_id'] : ($characters[0]['id'] ?? 0);
 $ticketTitle = trim((string)($_POST['ticket_title'] ?? ''));
-$ticketSummary = trim((string)($_POST['ticket_summary'] ?? ''));
 $ticketType = trim((string)($_POST['ticket_type'] ?? 'bug'));
 $ticketDescription = trim((string)($_POST['ticket_description'] ?? ''));
 $viewTicketId = (int)($_REQUEST['view_ticket'] ?? 0);
@@ -68,12 +67,6 @@ if (isset($_POST['create_ticket'])) {
         $errors[] = 'Ticket title cannot exceed 120 characters.';
     }
 
-    if ($ticketSummary === '' || mb_strlen($ticketSummary) < 6) {
-        $errors[] = 'Short problem description must contain at least 6 characters.';
-    } elseif (mb_strlen($ticketSummary) > 255) {
-        $errors[] = 'Short problem description cannot exceed 255 characters.';
-    }
-
     if (!isset($typeOptions[$ticketType])) {
         $errors[] = 'Invalid ticket type selected.';
     }
@@ -86,6 +79,7 @@ if (isset($_POST['create_ticket'])) {
 
     if (empty($errors) && $selectedCharacter) {
         $now = time();
+        $ticketSummary = mb_substr($ticketDescription !== '' ? $ticketDescription : $ticketTitle, 0, 255);
         $db->query(
             'INSERT INTO `myaac_tickets` (`account_id`, `player_id`, `character_name`, `title`, `summary`, `ticket_type`, `description`, `status`, `created_at`, `updated_at`) VALUES (' .
             $accountId . ', ' .
@@ -105,7 +99,6 @@ if (isset($_POST['create_ticket'])) {
         $success = 'Ticket created successfully.';
 
         $ticketTitle = '';
-        $ticketSummary = '';
         $ticketType = 'bug';
         $ticketDescription = '';
     }
@@ -204,7 +197,6 @@ $twig->display('account.tickets.html.twig', [
     'characters' => $characters,
     'selectedCharacterId' => $selectedCharacterId,
     'ticketTitle' => $ticketTitle,
-    'ticketSummary' => $ticketSummary,
     'ticketType' => $ticketType,
     'ticketDescription' => $ticketDescription,
     'typeOptions' => $typeOptions,

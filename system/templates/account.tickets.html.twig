@@ -85,17 +85,13 @@
         </label>
 
         <label class="rc-ticket-grid-full">
-          <span>Short Description</span>
-          <input type="text" name="ticket_summary" maxlength="255" value="{{ ticketSummary|e }}" required>
-        </label>
-
-        <label class="rc-ticket-grid-full">
           <span>Description</span>
           <textarea name="ticket_description" rows="6" required>{{ ticketDescription|e }}</textarea>
           <small>Use only text and YouTube/Imgur links.</small>
         </label>
       </div>
       <div class="rc-ticket-actions">
+        <a href="?subtopic=accountmanagement" class="rc-btn rc-btn-subtle">Back</a>
         <button type="submit" name="create_ticket" value="1" class="rc-btn rc-btn-primary">Create Ticket</button>
       </div>
     </form>

@@ -1,4 +1,4 @@
-<div style="text-align:center">
+﻿<div style="text-align:center">
   <table style="margin-left: auto; margin-right: auto;">
     <tr>
       <td>
@@ -205,60 +205,6 @@
 </div>
 
 <br>
-
-{% if recovery_key is empty %}
-  <div class="TableContainer">
-    <div class="CaptionContainer">
-      <div class="CaptionInnerContainer">
-        <span class="CaptionEdgeLeftTop" style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
-        <span class="CaptionEdgeRightTop" style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
-        <span class="CaptionBorderTop" style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
-        <span class="CaptionVerticalLeft" style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
-        <div class="Text">Account Registration</div>
-        <span class="CaptionVerticalRight" style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
-        <span class="CaptionBorderBottom" style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
-        <span class="CaptionEdgeLeftBottom" style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
-        <span class="CaptionEdgeRightBottom" style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
-      </div>
-    </div>
-    <table class="Table5" cellpadding="0" cellspacing="0">
-      <tbody>
-      <tr>
-        <td>
-          <div class="InnerTableContainer">
-            <table style="width:100%;">
-              <tbody>
-              <tr>
-                <td>
-                  <div class="TableContentContainer">
-                    <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
-                      <tbody>
-                      <tr>
-                        <td class="LabelV">Your account is not registered!</td>
-                        <td style="text-align:right;">
-                          <form action="{{ getLink('account/register') }}" method="post" class="rc-inline-form">
-                            <button type="submit" class="rc-btn rc-btn-primary">Register Account</button>
-                          </form>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="2">You can register your account for increased protection. Click on "Register Account" and get your free recovery key today!</td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-  <br />
-{% endif %}
 
 <div class="TopButtonContainer">
   <div class="TopButton">
@@ -594,7 +540,7 @@
 
 <br />
 
-<a name="Public+Information"></a>
+<a name="Register+Account"></a>
 <div class="TopButtonContainer">
   <div class="TopButton">
     <a href="#top">
@@ -614,7 +560,7 @@
               style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
         <span class="CaptionVerticalLeft"
               style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
-        <div class="Text">Contact Information</div>
+        <div class="Text">Register Account</div>
         <span class="CaptionVerticalRight"
               style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
         <span class="CaptionBorderBottom"
@@ -634,48 +580,63 @@
                 <div class="TableContentAndRightShadow">
                   <div class="TableContentContainer">
                     <table class="TableContent" width="100%">
-                      <tr>
-                        <td>
-                          <table style="width:100%;">
-                            <tr>
-                              <td class="LabelV">Real Name:</td>
-                              <td style="width:90%;">{{ account_rlname }}</td>
-                            </tr>
-                            <tr>
-                              <td class="LabelV">Address:</td>
-                              <td style="width:90%;">{{ account_location }}</td>
-                            </tr>
-                            <tr>
-                              <td class="LabelV">Phone:</td>
-                              <td style="width:90%;">{{ account_phone }}</td>
-                            </tr>
-                            {% if account_show_rk and recovery_key is not empty %}
-                              <tr>
-                                <td class="LabelV">RK:</td>
-                                <td style="width:90%;">{{ recovery_key }}</td>
-                              </tr>
-                            {% endif %}
-                          </table>
-                        </td>
-                        {% if not account_update_info_on_register %}
-                          <td align=right>
-                            <table border="0" cellspacing="0" cellpadding="0">
-                              <form action="{{ getLink('account/info') }}" method="post">
-                                <tr>
-                                  <td style="border:0px;">
-                                    {{ include('buttons.edit.html.twig') }}
-                                  </td>
-                                </tr>
-                              </form>
-                            </table>
+                      {% if recovery_key is empty %}
+                        <tr>
+                          <td class="LabelV">Your account is not registered!</td>
+                          <td style="text-align:right;">
+                            <form action="{{ getLink('account/register') }}" method="post" class="rc-inline-form">
+                              <button type="submit" class="rc-btn rc-btn-primary">Register Account</button>
+                            </form>
                           </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">You can register your account for increased protection. Click on "Register Account" and get your free recovery key today!</td>
+                        </tr>
+                      {% else %}
+                        <tr>
+                          <td class="LabelV">Real Name:</td>
+                          <td style="width:90%;">{{ account_rlname is not empty ? account_rlname : '-' }}</td>
+                        </tr>
+                        <tr>
+                          <td class="LabelV">Address:</td>
+                          <td style="width:90%;">{{ account_location is not empty ? account_location : '-' }}</td>
+                        </tr>
+                        <tr>
+                          <td class="LabelV">Phone:</td>
+                          <td style="width:90%;">{{ account_phone is not empty ? account_phone : '-' }}</td>
+                        </tr>
+                        <tr>
+                          <td class="LabelV">Location:</td>
+                          <td style="width:90%;">{{ account_location is not empty ? account_location : '-' }}</td>
+                        </tr>
+                        {% if account_show_rk and recovery_key is not empty %}
+                          <tr>
+                            <td class="LabelV">RK:</td>
+                            <td style="width:90%;">{{ recovery_key }}</td>
+                          </tr>
                         {% endif %}
-                      </tr>
+                      {% endif %}
                     </table>
                   </div>
                 </div>
               </td>
             </tr>
+            {% if recovery_key is not empty and not account_update_info_on_register %}
+              <tr>
+                <td>
+                  <table class="InnerTableButtonRow" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="100%"></td>
+                      <td>
+                        <form action="{{ getLink('account/info') }}" method="post" class="rc-inline-form">
+                          <button type="submit" class="rc-btn rc-btn-subtle">Edit Contact Info</button>
+                        </form>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            {% endif %}
           </table>
         </div>
       </td>
@@ -753,3 +714,4 @@
   </table>
 </div>
 {% endif %}
+

@@ -3441,6 +3441,7 @@ body.rc-page-tickets .rc-rich-content .rc-ticket-actions,
 body.rc-page-accountmanagement .rc-rich-content .rc-ticket-actions {
     margin-top: 12px;
     display: flex;
+    gap: 10px;
     justify-content: flex-end;
 }
 
