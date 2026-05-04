@@ -1760,6 +1760,12 @@ body.rc-page option {
         min-height: 460px;
     }
 
+    .rc-hero-inner,
+    .rc-hero-content,
+    .hero-ravyncore-content {
+        padding-top: 12vh;
+    }
+
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
