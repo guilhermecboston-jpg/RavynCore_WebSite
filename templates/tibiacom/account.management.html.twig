@@ -112,7 +112,8 @@
 
 <br>
 
-<div class="TableContainer">
+<h2 class="rc-title-ornate">Support Ticket</h2>
+<div class="TableContainer rc-am-support-ticket">
   <div class="CaptionContainer">
     <div class="CaptionInnerContainer">
       <span class="CaptionEdgeLeftTop"
@@ -213,7 +214,8 @@
     </a>
   </div>
 </div>
-<div class="TableContainer">
+<h2 class="rc-title-ornate">Character List</h2>
+<div class="TableContainer rc-am-character-list">
   <div class="CaptionContainer">
     <div class="CaptionInnerContainer">
       <span class="CaptionEdgeLeftTop"
@@ -416,7 +418,8 @@
     </a>
   </div>
 </div>
-<div class="TableContainer">
+<h2 class="rc-title-ornate">Account Information</h2>
+<div class="TableContainer rc-am-account-information">
   <table class="Table3" cellpadding="0" cellspacing="0">
     <div class="CaptionContainer">
       <div class="CaptionInnerContainer">
@@ -513,20 +516,6 @@
                       </form>
                     </td>
                     <td width="100%"></td>
-                    {# show button "register account" #}
-                    {% if recovery_key is empty %}
-                      <td>
-                        <table border="0" cellspacing="0" cellpadding="0">
-                          <form action="{{ getLink('account/register') }}" method="post">
-                            <tr>
-                              <td style="border:0px;">
-                                {{ include('buttons.register_account.html.twig') }}
-                              </td>
-                            </tr>
-                          </form>
-                        </table>
-                      </td>
-                    {% endif %}
                   </tr>
                 </table>
               </td>
@@ -548,7 +537,8 @@
     </a>
   </div>
 </div>
-<div class="TableContainer">
+<h2 class="rc-title-ornate">Register Account</h2>
+<div class="TableContainer rc-am-register-account">
   <table class="Table5" cellpadding="0" cellspacing="0">
     <div class="CaptionContainer">
       <div class="CaptionInnerContainer">

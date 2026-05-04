@@ -34,7 +34,28 @@
 		$('#SuggestCharacterName a').click(function (event) {
       generateCharacterName(event);
     });
+
+		$('.rc-password-toggle').on('click', function () {
+			togglePasswordVisibility(this);
+		});
 	});
+
+	function togglePasswordVisibility(button)
+	{
+		var targetId = $(button).data('target');
+		if(!targetId) {
+			return;
+		}
+
+		var input = $('#' + targetId);
+		if(!input.length) {
+			return;
+		}
+
+		var isPassword = input.attr('type') === 'password';
+		input.attr('type', isPassword ? 'text' : 'password');
+		$(button).text(isPassword ? 'Hide' : 'Show');
+	}
 
 	 function initializeIndicators()
   {

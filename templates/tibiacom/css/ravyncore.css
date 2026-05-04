@@ -1244,6 +1244,7 @@ textarea {
     font-size: 1rem;
     line-height: 1.2;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    caret-color: #f0c77f;
 }
 
 textarea {
@@ -3246,6 +3247,20 @@ body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionB
     opacity: 0 !important;
 }
 
+body.rc-page-accountmanagement .rc-rich-content .rc-am-support-ticket > .CaptionContainer,
+body.rc-page-accountmanagement .rc-rich-content .rc-am-character-list > .CaptionContainer,
+body.rc-page-accountmanagement .rc-rich-content .rc-am-account-information > table > .CaptionContainer,
+body.rc-page-accountmanagement .rc-rich-content .rc-am-register-account > table > .CaptionContainer {
+    display: none !important;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .rc-am-support-ticket,
+body.rc-page-accountmanagement .rc-rich-content .rc-am-character-list,
+body.rc-page-accountmanagement .rc-rich-content .rc-am-account-information,
+body.rc-page-accountmanagement .rc-rich-content .rc-am-register-account {
+    margin-top: 4px !important;
+}
+
 body.rc-page .rc-rich-content .rc-register-form .rc-register-input,
 body.rc-page .rc-rich-content .rc-register-form input[name="info_rlname"],
 body.rc-page .rc-rich-content .rc-register-form input[name="info_location"],
@@ -3276,6 +3291,24 @@ body.rc-page .rc-rich-content .rc-register-form .rc-password-toggle {
     min-width: 80px;
     padding: 0 14px;
     font-size: 12px;
+}
+
+body.rc-page .rc-rich-content .rc-password-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: min(100%, 520px);
+}
+
+body.rc-page .rc-rich-content .rc-password-wrap .rc-password-toggle {
+    height: 38px;
+    min-width: 80px;
+    padding: 0 14px;
+    font-size: 12px;
+}
+
+body.rc-page .rc-rich-content .rc-password-wrap img {
+    margin-left: 2px;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-table thead th {

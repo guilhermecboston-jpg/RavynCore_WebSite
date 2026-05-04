@@ -91,8 +91,11 @@
 														<span{% if errors.password is defined %} class="red"{% endif %}>Password: <span style="color: red;">*</span></span>
 													</td>
 													<td>
-														<input type="password" name="password" id="password" value="" size="30" maxlength="29" />
-														<img id="password_indicator" src="images/global/general/{% if not save or errors.password is defined %}n{% endif %}ok.gif" style="display: none;" />
+														<div class="rc-password-wrap">
+															<input type="password" name="password" id="password" value="" size="30" maxlength="29" />
+															<button type="button" class="rc-btn rc-btn-subtle rc-password-toggle" data-target="password">Show</button>
+															<img id="password_indicator" src="images/global/general/{% if not save or errors.password is defined %}n{% endif %}ok.gif" style="display: none;" />
+														</div>
 													</td>
 												</tr>
 												<tr><td></td><td><span id="password_error" class="FormFieldError">{% if errors.password is defined %}{{ errors.password }}{% endif %}</span></td></tr>
@@ -101,8 +104,11 @@
 														<span{% if errors.password is defined %} class="red"{% endif %}>Repeat password: <span style="color: red;">*</span></span>
 													</td>
 													<td>
-														<input type="password" name="password2" id="password2" value="" size="30" maxlength="29" />
-														<img id="password2_indicator" src="images/global/general/{% if not save or errors.password is defined %}n{% endif %}ok.gif" style="display: none;" />
+														<div class="rc-password-wrap">
+															<input type="password" name="password2" id="password2" value="" size="30" maxlength="29" />
+															<button type="button" class="rc-btn rc-btn-subtle rc-password-toggle" data-target="password2">Show</button>
+															<img id="password2_indicator" src="images/global/general/{% if not save or errors.password is defined %}n{% endif %}ok.gif" style="display: none;" />
+														</div>
 													</td>
 												</tr>
 												<tr><td></td><td><span id="password2_error" class="FormFieldError">{% if errors.password is defined %}{{ errors.password }}{% endif %}</span></td></tr>
