@@ -46,11 +46,38 @@ if (cbz_has_table($db, 'player_mounts')) {
     }
 }
 
+$titlesCount = '-';
+if (cbz_has_table($db, 'player_titles')) {
+    $titlesCount = (int)($db->query('SELECT COUNT(*) FROM `player_titles` WHERE `player_id` = ' . (int)$sale['player_id'])->fetchColumn() ?? 0);
+}
+
 function cbz_row($label, $value)
 {
     echo '<tr><td class="LabelV" style="width:230px;">' . htmlspecialchars($label) . '</td><td>' . $value . '</td></tr>';
 }
 ?>
+<style>
+    .rc-bazaar-view-btn{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        min-width:64px;
+        height:32px;
+        padding:0 14px;
+        border-radius:10px;
+        border:1px solid rgba(136,159,214,.65);
+        background:linear-gradient(180deg,#2b3858,#1c2743);
+        color:#e6ecff;
+        text-decoration:none;
+        font-weight:700;
+        font-size:12px;
+        letter-spacing:.5px;
+    }
+    .rc-bazaar-view-btn:hover{
+        border-color:rgba(236,188,92,.8);
+        color:#fff1c8;
+    }
+</style>
 
 <div class="TableContainer">
     <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Character Sale Details</div></div></div>
@@ -76,6 +103,30 @@ function cbz_row($label, $value)
                 </div>
             </td></tr></tbody></table>
         </div>
+    </td></tr></tbody></table>
+</div>
+<br>
+
+<div class="TableContainer">
+    <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Character Snapshot</div></div></div>
+    <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
+        <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
+            <?php cbz_row('Health', (int)$player['health'] . ' / ' . (int)$player['healthmax']); ?>
+            <?php cbz_row('Mana', (int)$player['mana'] . ' / ' . (int)$player['manamax']); ?>
+            <?php cbz_row('Capacity', (int)$player['cap']); ?>
+            <?php cbz_row('Soul', isset($player['soul']) ? (int)$player['soul'] : 0); ?>
+            <?php cbz_row('Blessings', (int)$character['blessings_count']); ?>
+            <?php cbz_row('Mounts', (int)$character['mounts_count']); ?>
+            <?php cbz_row('Outfits', (int)$character['addons_count']); ?>
+            <?php cbz_row('Titles', htmlspecialchars((string)$titlesCount)); ?>
+            <?php cbz_row('Creation Date', htmlspecialchars((string)$character['creation_date'])); ?>
+            <?php cbz_row('Experience', number_format((int)$player['experience'], 0, ',', '.')); ?>
+            <?php cbz_row('Gold', number_format((int)$player['balance'], 0, ',', '.')); ?>
+            <?php cbz_row('Achievement Points', isset($player['achievement_points']) ? (int)$player['achievement_points'] : 0); ?>
+            <?php cbz_row('Charm Expansion', htmlspecialchars((string)$character['charm_expansion'])); ?>
+            <?php cbz_row('Available Charm Points', htmlspecialchars((string)$character['charm_points'])); ?>
+            <?php cbz_row('Spent Charm Points', htmlspecialchars((string)$character['spent_charm_points'])); ?>
+        </tbody></table></div>
     </td></tr></tbody></table>
 </div>
 <br>
@@ -165,8 +216,8 @@ function cbz_row($label, $value)
             <?php cbz_row('Status', htmlspecialchars($statusLabel)); ?>
             <?php cbz_row('Created At', htmlspecialchars($createdAt)); ?>
             <?php cbz_row('Sold At', htmlspecialchars($soldAt)); ?>
-            <?php cbz_row('Addons count', (int)$character['addons_count'] . ' <a href="#addons-list">View</a>'); ?>
-            <?php cbz_row('Mounts count', (int)$character['mounts_count'] . ' <a href="#mounts-list">View</a>'); ?>
+            <?php cbz_row('Full Addons', (int)$character['full_addons_count'] . ' <a class="rc-bazaar-view-btn" href="#addons-list">VIEW</a>'); ?>
+            <?php cbz_row('Full Mounts', (int)$character['mounts_count'] . ' <a class="rc-bazaar-view-btn" href="#mounts-list">VIEW</a>'); ?>
         </tbody></table></div>
     </td></tr></tbody></table>
 </div>

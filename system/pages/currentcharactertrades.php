@@ -7,7 +7,9 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Char Bazaar';
 
 require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
-require_once SYSTEM . 'pages/char_bazaar/coins_balance.php';
+if ($logged) {
+    require_once SYSTEM . 'pages/char_bazaar/coins_balance.php';
+}
 
 $charbazaar_tax = (int)($config['bazaar_tax'] ?? 0);
 $getPageDetails = isset($_GET['details']) ? (int)$_GET['details'] : 0;

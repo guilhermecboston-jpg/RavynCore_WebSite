@@ -106,8 +106,10 @@ if (!function_exists('cbz_get_character_sale_data')) {
         $genderName = $config['genders'][$player['sex']] ?? ($player['sex'] == 0 ? 'Female' : 'Male');
 
         $lookAddonsCount = 0;
+        $fullAddonsCount = 0;
         if (cbz_has_table($db, 'player_outfits')) {
             $lookAddonsCount = (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `player_outfits` WHERE `player_id` = {$playerId} AND `addons` > 0") ?? 0);
+            $fullAddonsCount = (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `player_outfits` WHERE `player_id` = {$playerId} AND `addons` >= 3") ?? 0);
         }
 
         $mountCount = 0;
@@ -116,12 +118,16 @@ if (!function_exists('cbz_get_character_sale_data')) {
         }
 
         $charmPoints = '-';
+        $spentCharmPoints = '-';
         $majorCharms = '-';
         $minorCharms = '-';
         if (cbz_has_table($db, 'player_charms')) {
             $charms = $db->query("SELECT * FROM `player_charms` WHERE `player_id` = {$playerId} LIMIT 1")->fetch();
             if ($charms) {
                 $charmPoints = $charms['charm_points'] ?? '-';
+                if (isset($charms['spent_charm_points'])) {
+                    $spentCharmPoints = $charms['spent_charm_points'];
+                }
                 $usedRunes = $charms['UsedRunesBit'] ?? null;
                 if ($usedRunes !== null) {
                     $unlocked = cbz_count_bits($usedRunes);
@@ -171,6 +177,27 @@ if (!function_exists('cbz_get_character_sale_data')) {
 
         $outfitUrl = "{$config['outfit_images_url']}?id={$player['looktype']}" . (!empty($player['lookaddons']) ? "&addons={$player['lookaddons']}" : '') . "&head={$player['lookhead']}&body={$player['lookbody']}&legs={$player['looklegs']}&feet={$player['lookfeet']}";
 
+        $creationDate = '-';
+        if (!empty($player['created']) && is_numeric($player['created'])) {
+            $creationDate = date('M d Y, H:i:s', (int)$player['created']);
+        } elseif (!empty($player['creation']) && is_numeric($player['creation'])) {
+            $creationDate = date('M d Y, H:i:s', (int)$player['creation']);
+        } elseif (!empty($player['created'])) {
+            $creationDate = date('M d Y, H:i:s', strtotime($player['created']));
+        } elseif (!empty($player['creation'])) {
+            $creationDate = date('M d Y, H:i:s', strtotime($player['creation']));
+        }
+
+        $blessingsCount = 0;
+        if (isset($player['blessings'])) {
+            $blessingsCount = cbz_count_bits((int)$player['blessings']);
+        }
+
+        $charmExpansion = 'no';
+        if (isset($player['charm_expansion']) && (int)$player['charm_expansion'] > 0) {
+            $charmExpansion = 'yes';
+        }
+
         return [
             'player' => $player,
             'name' => $player['name'],
@@ -180,9 +207,11 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'world' => $config['lua']['serverName'] ?? '-',
             'outfit_url' => $outfitUrl,
             'addons_count' => $lookAddonsCount,
+            'full_addons_count' => $fullAddonsCount,
             'mounts_count' => $mountCount,
             'bestiary_points' => $bestiaryPoints,
             'charm_points' => $charmPoints,
+            'spent_charm_points' => $spentCharmPoints,
             'major_charms' => $majorCharms,
             'minor_charms' => $minorCharms,
             'defence_stats' => $defenceStats,
@@ -194,6 +223,9 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'prey_wildcards' => $preyWildcards,
             'bosstiary' => $bosstiary,
             'boss_points' => $bossPoints,
+            'creation_date' => $creationDate,
+            'blessings_count' => $blessingsCount,
+            'charm_expansion' => $charmExpansion,
         ];
     }
 }

@@ -24,7 +24,34 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     }
 
     $account = $db->query('SELECT `coins`, `coins_transferable` FROM `accounts` WHERE `id` = ' . $accountId)->fetch();
+    $titlesCount = '-';
+    if (cbz_has_table($db, 'player_titles')) {
+        $titlesCount = (int)($db->query('SELECT COUNT(*) FROM `player_titles` WHERE `player_id` = ' . $selectCharacter)->fetchColumn() ?? 0);
+    }
     ?>
+
+    <style>
+        .rc-bazaar-view-btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            min-width:64px;
+            height:32px;
+            padding:0 14px;
+            border-radius:10px;
+            border:1px solid rgba(136,159,214,.65);
+            background:linear-gradient(180deg,#2b3858,#1c2743);
+            color:#e6ecff;
+            text-decoration:none;
+            font-weight:700;
+            font-size:12px;
+            letter-spacing:.5px;
+        }
+        .rc-bazaar-view-btn:hover{
+            border-color:rgba(236,188,92,.8);
+            color:#fff1c8;
+        }
+    </style>
 
     <div class="TableContainer">
         <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Setup Sale (3/4)</div></div></div>
@@ -51,11 +78,47 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     <br>
 
     <div class="TableContainer">
+        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Character Snapshot</div></div></div>
+        <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
+            <div class="InnerTableContainer">
+                <table class="TableContent" style="border:1px solid #faf0d7;" width="100%">
+                    <tbody>
+                    <tr><td class="LabelV">Health</td><td><?= (int)$character['player']['health'] ?> / <?= (int)$character['player']['healthmax'] ?></td></tr>
+                    <tr><td class="LabelV">Mana</td><td><?= (int)$character['player']['mana'] ?> / <?= (int)$character['player']['manamax'] ?></td></tr>
+                    <tr><td class="LabelV">Capacity</td><td><?= (int)$character['player']['cap'] ?></td></tr>
+                    <tr><td class="LabelV">Soul</td><td><?= isset($character['player']['soul']) ? (int)$character['player']['soul'] : 0 ?></td></tr>
+                    <tr><td class="LabelV">Blessings</td><td><?= (int)$character['blessings_count'] ?></td></tr>
+                    <tr><td class="LabelV">Mounts</td><td><?= (int)$character['mounts_count'] ?></td></tr>
+                    <tr><td class="LabelV">Outfits</td><td><?= (int)$character['addons_count'] ?></td></tr>
+                    <tr><td class="LabelV">Titles</td><td><?= htmlspecialchars((string)$titlesCount) ?></td></tr>
+                    <tr><td class="LabelV">Axe Fighting</td><td><?= (int)$character['player']['skill_axe'] ?> (0%)</td></tr>
+                    <tr><td class="LabelV">Club Fighting</td><td><?= (int)$character['player']['skill_club'] ?> (0%)</td></tr>
+                    <tr><td class="LabelV">Distance Fighting</td><td><?= (int)$character['player']['skill_dist'] ?> (0%)</td></tr>
+                    <tr><td class="LabelV">Fishing</td><td><?= (int)$character['player']['skill_fishing'] ?> (0%)</td></tr>
+                    <tr><td class="LabelV">Fist Fighting</td><td><?= (int)$character['player']['skill_fist'] ?> (0%)</td></tr>
+                    <tr><td class="LabelV">Magic Level</td><td><?= (int)$character['player']['maglevel'] ?> (0%)</td></tr>
+                    <tr><td class="LabelV">Shielding</td><td><?= (int)$character['player']['skill_shielding'] ?> (0%)</td></tr>
+                    <tr><td class="LabelV">Sword Fighting</td><td><?= (int)$character['player']['skill_sword'] ?> (0%)</td></tr>
+                    <tr><td class="LabelV">Creation Date</td><td><?= htmlspecialchars((string)$character['creation_date']) ?></td></tr>
+                    <tr><td class="LabelV">Experience</td><td><?= number_format((int)$character['player']['experience'], 0, ',', '.') ?></td></tr>
+                    <tr><td class="LabelV">Gold</td><td><?= number_format((int)$character['player']['balance'], 0, ',', '.') ?></td></tr>
+                    <tr><td class="LabelV">Achievement Points</td><td><?= isset($character['player']['achievement_points']) ? (int)$character['player']['achievement_points'] : 0 ?></td></tr>
+                    <tr><td class="LabelV">Charm Expansion</td><td><?= htmlspecialchars((string)$character['charm_expansion']) ?></td></tr>
+                    <tr><td class="LabelV">Available Charm Points</td><td><?= htmlspecialchars((string)$character['charm_points']) ?></td></tr>
+                    <tr><td class="LabelV">Spent Charm Points</td><td><?= htmlspecialchars((string)$character['spent_charm_points']) ?></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </td></tr></tbody></table>
+    </div>
+    <br>
+
+    <div class="TableContainer">
         <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Character Overview</div></div></div>
         <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
             <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <tr><td class="LabelV">Addons count</td><td><?= (int)$character['addons_count'] ?></td><td><a href="#addons-preview">View</a></td></tr>
-                <tr><td class="LabelV">Mounts count</td><td><?= (int)$character['mounts_count'] ?></td><td><a href="#mounts-preview">View</a></td></tr>
+                <tr><td class="LabelV">Full Addons</td><td><?= (int)$character['full_addons_count'] ?></td><td><a class="rc-bazaar-view-btn" href="#addons-preview">VIEW</a></td></tr>
+                <tr><td class="LabelV">Full Mounts</td><td><?= (int)$character['mounts_count'] ?></td><td><a class="rc-bazaar-view-btn" href="#mounts-preview">VIEW</a></td></tr>
                 <tr><td class="LabelV">Loyalty Title</td><td colspan="2"><?= htmlspecialchars((string)$character['loyalty_title']) ?></td></tr>
             </tbody></table></div>
         </td></tr></tbody></table>
