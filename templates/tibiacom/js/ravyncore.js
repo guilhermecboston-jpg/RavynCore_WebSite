@@ -1,10 +1,78 @@
 (function () {
     var navToggle = document.getElementById('rcNavToggle');
     var nav = document.getElementById('rcNav');
+    var header = document.querySelector('.rc-header');
+    var mobileQuery = window.matchMedia('(max-width: 1140px)');
+
+    function syncNavTop() {
+        if (!nav || !header) return;
+        if (mobileQuery.matches) {
+            nav.style.setProperty('--rc-nav-top', header.offsetHeight + 'px');
+        } else {
+            nav.style.removeProperty('--rc-nav-top');
+        }
+    }
+
+    function setToggleIcon(isOpen) {
+        if (!navToggle) return;
+        var icon = navToggle.querySelector('i');
+        if (!icon) return;
+        icon.classList.toggle('fa-bars', !isOpen);
+        icon.classList.toggle('fa-xmark', isOpen);
+    }
+
+    function closeNav() {
+        if (!nav) return;
+        nav.classList.remove('is-open');
+        document.body.classList.remove('rc-nav-locked');
+        if (navToggle) {
+            navToggle.classList.remove('is-active');
+            navToggle.setAttribute('aria-expanded', 'false');
+        }
+        setToggleIcon(false);
+    }
+
+    function openNav() {
+        if (!nav) return;
+        syncNavTop();
+        nav.classList.add('is-open');
+        document.body.classList.add('rc-nav-locked');
+        if (navToggle) {
+            navToggle.classList.add('is-active');
+            navToggle.setAttribute('aria-expanded', 'true');
+        }
+        setToggleIcon(true);
+    }
 
     if (navToggle && nav) {
+        navToggle.setAttribute('aria-controls', 'rcNav');
+        navToggle.setAttribute('aria-expanded', 'false');
+
         navToggle.addEventListener('click', function () {
-            nav.classList.toggle('is-open');
+            if (nav.classList.contains('is-open')) {
+                closeNav();
+            } else {
+                openNav();
+            }
+        });
+
+        nav.addEventListener('click', function (event) {
+            var target = event.target;
+            while (target && target !== nav) {
+                if (target.tagName === 'A') {
+                    closeNav();
+                    return;
+                }
+                target = target.parentNode;
+            }
+        });
+
+        window.addEventListener('resize', function () {
+            if (!mobileQuery.matches) {
+                closeNav();
+            } else if (nav.classList.contains('is-open')) {
+                syncNavTop();
+            }
         });
     }
 

@@ -250,7 +250,7 @@ $socialLinks = [
         </div>
 
         <div class="rc-nav-wrap">
-            <button id="rcNavToggle" class="rc-nav-toggle" type="button" aria-label="Toggle menu">
+            <button id="rcNavToggle" class="rc-nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="rcNav">
                 <i class="fas fa-bars"></i>
             </button>
             <nav id="rcNav" class="rc-nav">
@@ -285,6 +285,24 @@ $socialLinks = [
                         <li class="rc-nav-item"><a href="<?= getLink('serverInfo'); ?>">Info</a></li>
                     <?php endif; ?>
                 </ul>
+
+                <div class="rc-nav-mobile-actions">
+                    <?php if ($logged): ?>
+                        <a class="rc-btn rc-btn-play" href="<?= $accountManageUrl; ?>">
+                            <i class="fas fa-user"></i><span>My Account</span>
+                        </a>
+                        <a class="rc-btn rc-btn-danger" href="<?= $accountLogoutUrl; ?>">
+                            <i class="fas fa-right-from-bracket"></i><span>Logout</span>
+                        </a>
+                    <?php else: ?>
+                        <a class="rc-btn rc-btn-play" href="<?= $accountManageUrl; ?>">
+                            <i class="fas fa-right-to-bracket"></i><span>Login</span>
+                        </a>
+                        <a class="rc-btn rc-btn-violet" href="<?= $accountCreateUrl; ?>">
+                            <i class="fas fa-user-plus"></i><span>Create Account</span>
+                        </a>
+                    <?php endif; ?>
+                </div>
             </nav>
         </div>
     </header>

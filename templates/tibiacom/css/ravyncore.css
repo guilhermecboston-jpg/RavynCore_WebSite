@@ -270,7 +270,20 @@ a:hover {
     height: 38px;
     margin: 10px 0;
     cursor: pointer;
+    transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
+
+.rc-nav-toggle.is-active {
+    color: #f0c77f;
+    border-color: rgba(216, 154, 47, 0.55);
+    background: rgba(216, 154, 47, 0.14);
+}
+
+/* Mobile-only block inside the drawer (hidden on desktop) */
+.rc-nav-mobile-actions { display: none; }
+
+/* Body scroll lock while the mobile drawer is open */
+body.rc-nav-locked { overflow: hidden; }
 
 .rc-nav {
     width: 100%;
@@ -1489,42 +1502,144 @@ body.rc-page option {
         justify-content: center;
     }
 
-    .rc-nav {
+    /* Hide the desktop top-bar buttons + social on mobile; they live inside
+       the burger drawer instead (.rc-nav-mobile-actions). */
+    .rc-header-actions .rc-btn,
+    .rc-social-icons {
         display: none;
+    }
+
+    /* Drawer — fullscreen below the header so the page content can't show
+       through. JS sets --rc-nav-top to the live header height on open. */
+    .rc-nav {
+        position: fixed;
+        top: var(--rc-nav-top, 120px);
+        left: 0; right: 0; bottom: 0;
+        display: flex;
+        flex-direction: column;
         width: 100%;
-        padding-bottom: 10px;
+        padding: 0;
+        background: rgba(5, 8, 14, 0.98);
+        overflow: hidden;
+        transform: translateY(-12px);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        z-index: 25;
     }
 
     .rc-nav.is-open {
-        display: block;
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
     }
 
     .rc-nav ul {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         flex-direction: column;
         align-items: stretch;
         height: auto;
-    }
-
-    .rc-nav-item > a {
-        width: 100%;
-        justify-content: flex-start;
-        padding: 11px 16px;
-        height: auto;
+        padding: 14px 18px 6px;
+        gap: 18px;
     }
 
     .rc-nav-item {
-        flex: 1 1 100%;
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
     }
 
+    /* Category top-level link becomes a group label (gold + small caps).
+       Items that are just a single link (no dropdown) keep tap behaviour. */
+    .rc-nav-item > a {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 0 4px 6px;
+        height: auto;
+        font-family: 'Cinzel', 'Georgia', serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: var(--rc-gold, #f2b84b);
+        opacity: 0.85;
+        border: none;
+        background: none;
+        box-shadow: none;
+    }
+    .rc-nav-item > a:hover {
+        background: none;
+        border-color: transparent;
+        box-shadow: none;
+        color: var(--rc-gold, #f2b84b);
+    }
+    .rc-nav-item:has(.rc-nav-dropdown) > a {
+        pointer-events: none;
+        cursor: default;
+    }
+
+    /* Sub-items (dropdown contents) become full-width nav links */
     .rc-nav-dropdown {
         position: static;
         opacity: 1;
         visibility: visible;
         transform: none;
         pointer-events: auto;
-        margin: 6px 0 0;
+        margin: 0;
+        padding: 0;
         width: 100%;
         min-width: auto;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .rc-nav-dropdown a {
+        display: block;
+        padding: 11px 14px;
+        border-bottom: none;
+        border-radius: 8px;
+        font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+        font-weight: 600;
+        font-size: 13.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #b9b2a4;
+        transition: background 0.15s ease, color 0.15s ease;
+    }
+    .rc-nav-dropdown a:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: #f5f1e8;
+    }
+
+    /* CTAs anchored to the bottom of the drawer */
+    .rc-nav-mobile-actions {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px 18px 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .rc-nav-mobile-actions .rc-btn {
+        width: 100%;
+        height: 48px;
+        justify-content: center;
+        font-size: 13px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+    /* Compensate for trailing letter-spacing so icon + label appear visually
+       centred (not just mathematically) inside the full-width button. */
+    .rc-nav-mobile-actions .rc-btn > span:last-child {
+        margin-right: -0.18em;
     }
 }
 
