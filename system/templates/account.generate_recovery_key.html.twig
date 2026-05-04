@@ -1,7 +1,7 @@
 To generate recovery key for your account please enter your password.
 {% if can_update_public_info %}<br/>Fill fields with your information{% endif %}
 <br/><br/>
-<form action="{{ getLink('account/register') }}" method="post">
+<form action="{{ getLink('account/register') }}" method="post" class="rc-register-form">
   <input type="hidden" name="registeraccountsave" value="1"/>
   <div class="TableContainer">
     <table class="Table1" cellpadding="0" cellspacing="0">
@@ -36,26 +36,29 @@ To generate recovery key for your account please enter your password.
                   <span>Password:</span>
                 </td>
                 <td>
-                  <input style="width:70%;" type="password" name="reg_password" size="30" maxlength="29" autofocus/>
+                  <div class="rc-password-wrap">
+                    <input class="rc-register-input rc-register-input-password" style="width:70%;" type="password" name="reg_password" id="reg_password" size="30" maxlength="29" autofocus/>
+                    <button type="button" class="rc-btn rc-btn-subtle rc-password-toggle" data-target="reg_password">Show</button>
+                  </div>
                 </td>
               </tr>
               {% if can_update_public_info %}
                 <tr>
                   <td class="LabelV">Real Name:</td>
                   <td>
-                    <input name="info_rlname" value="{{ account_rlname }}" size="30" maxlength="50">
+                    <input class="rc-register-input" name="info_rlname" value="{{ account_rlname }}" size="30" maxlength="50">
                   </td>
                 </tr>
                 <tr>
                   <td class="LabelV">Address:</td>
                   <td>
-                    <input name="info_location" value="{{ account_location }}" size="30" maxlength="50">
+                    <input class="rc-register-input" name="info_location" value="{{ account_location }}" size="30" maxlength="50">
                   </td>
                 </tr>
                 <tr>
                   <td class="LabelV">Phone:</td>
                   <td>
-                    <input name="info_phone" value="{{ account_phone }}" size="15" maxlength="11">
+                    <input class="rc-register-input" name="info_phone" id="info_phone" value="{{ account_phone }}" size="15" maxlength="11" inputmode="numeric" pattern="[0-9]+" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                   </td>
                 </tr>
                 {% if config.account_country %}
@@ -124,3 +127,32 @@ To generate recovery key for your account please enter your password.
 </td>
 </tr>
 </table>
+
+<script>
+  (function () {
+    var form = document.querySelector('.rc-register-form');
+    if (!form) return;
+
+    form.querySelectorAll('.rc-password-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var targetId = btn.getAttribute('data-target');
+        var input = document.getElementById(targetId);
+        if (!input) return;
+        if (input.type === 'password') {
+          input.type = 'text';
+          btn.textContent = 'Hide';
+        } else {
+          input.type = 'password';
+          btn.textContent = 'Show';
+        }
+      });
+    });
+
+    var phone = form.querySelector('#info_phone');
+    if (phone) {
+      phone.addEventListener('input', function () {
+        phone.value = (phone.value || '').replace(/[^0-9]/g, '');
+      });
+    }
+  })();
+</script>

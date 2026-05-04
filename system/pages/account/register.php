@@ -22,6 +22,9 @@ if ($save == "1") {
             $new_rlname = isset($_POST['info_rlname']) ? htmlspecialchars(stripslashes($_POST['info_rlname'])) : NULL;
             $new_location = isset($_POST['info_location']) ? htmlspecialchars(stripslashes($_POST['info_location'])) : NULL;
             $new_phone = isset($_POST['info_phone']) ? htmlspecialchars(stripslashes($_POST['info_phone'])) : NULL;
+            if ($new_phone !== null) {
+                $new_phone = preg_replace('/\D+/', '', $new_phone);
+            }
             $new_country = isset($_POST['info_country']) ? htmlspecialchars(stripslashes($_POST['info_country'])) : NULL;
             if (!$new_rlname || !$new_location || !$new_phone || !$new_country) {
                 $errors[] = 'All fields are required, please try again!';

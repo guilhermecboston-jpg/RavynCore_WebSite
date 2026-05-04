@@ -3205,6 +3205,36 @@ body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .Text {
     padding-left: 24px;
 }
 
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .Text.rc-caption-title-force {
+    position: relative;
+    padding-left: 40px !important;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .Text.rc-caption-title-force::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    transform: translateY(-50%);
+    border: 2px solid #d8ad63;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .Text.rc-caption-title-force::after {
+    content: "";
+    position: absolute;
+    left: 27px;
+    top: calc(50% + 3px);
+    width: 6px;
+    height: 2px;
+    background: #d8ad63;
+    transform: rotate(35deg);
+    border-radius: 1px;
+}
+
 body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionEdgeLeftTop,
 body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionEdgeRightTop,
 body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionEdgeLeftBottom,
@@ -3214,6 +3244,38 @@ body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionV
 body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionBorderTop,
 body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .CaptionBorderBottom {
     opacity: 0 !important;
+}
+
+body.rc-page .rc-rich-content .rc-register-form .rc-register-input,
+body.rc-page .rc-rich-content .rc-register-form input[name="info_rlname"],
+body.rc-page .rc-rich-content .rc-register-form input[name="info_location"],
+body.rc-page .rc-rich-content .rc-register-form input[name="info_phone"],
+body.rc-page .rc-rich-content .rc-register-form input[name="reg_password"] {
+    border: 1px solid rgba(138, 160, 202, 0.45) !important;
+    border-radius: 10px !important;
+    background: rgba(18, 30, 52, 0.72) !important;
+    color: #e8edf8 !important;
+    height: 38px;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+body.rc-page .rc-rich-content .rc-register-form .rc-password-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: min(100%, 520px);
+}
+
+body.rc-page .rc-rich-content .rc-register-form .rc-register-input-password {
+    flex: 1 1 auto;
+}
+
+body.rc-page .rc-rich-content .rc-register-form .rc-password-toggle {
+    height: 38px;
+    min-width: 80px;
+    padding: 0 14px;
+    font-size: 12px;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-table thead th {
