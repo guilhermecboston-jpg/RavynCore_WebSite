@@ -82,7 +82,7 @@
         communityLinks.forEach(function (link) {
             link.addEventListener('click', function (event) {
                 event.preventDefault();
-                socialContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                socialContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 socialContainer.classList.add('is-highlight');
                 setTimeout(function () {
                     socialContainer.classList.remove('is-highlight');
