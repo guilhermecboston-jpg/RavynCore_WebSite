@@ -1,161 +1,75 @@
-<?php
+﻿<?php
 /**
- *
- * Char Bazaar
- *
+ * Character Sales History
  */
 defined('MYAAC') or die('Direct access not allowed!');
-$title = 'Auction History';
+$title = 'Sales History';
+
+require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 if ($logged) {
     require SYSTEM . 'pages/char_bazaar/coins_balance.php';
-} else {
-    $account_logged = null;
 }
 
-// // =====================================================
-// // EXECUTA O PROCESSAMENTO SEMIAUTOMÁTICO DO BAZAAR
-require SYSTEM . 'pages/char_bazaar/semifinishauction.php';
-// // =====================================================
-
-$subtopic = $_GET['subtopic'] ?? null;
-$getPageDetails = $_GET['details'] ?? null;
-$getPageAction = $_GET['action'] ?? null;
-
-if (empty($getPageDetails) && empty($getPageAction)) {
-    if (!$logged) { 
-        ?>
-        <div class="SmallBox">
-            <div class="MessageContainer">
-                <div class="BoxFrameHorizontal"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-horizontal.gif);"></div>
-                <div class="BoxFrameEdgeLeftTop"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
-                <div class="BoxFrameEdgeRightTop"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
-                <div class="Message">
-                    <div class="BoxFrameVerticalLeft"
-                         style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-vertical.gif);"></div>
-                    <div class="BoxFrameVerticalRight"
-                         style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-vertical.gif);"></div>
-                    <table style="width: 100%;">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <div style="float: right;">
-                                    <a href="?account/manage" target="_self" rel="noreferrer">
-                                        <div class="BigButton"
-                                             style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton.gif)">
-                                            <div onmouseover="MouseOverBigButton(this);"
-                                                 onmouseout="MouseOutBigButton(this);">
-                                                <div class="BigButtonOver"
-                                                     style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_over.gif); visibility: hidden;"></div>
-                                                <input name="auction_confirm" class="BigButtonText" type="button"
-                                                       value="Login"></div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <p>Below you find all characters which have been <b>auctioned in the last 30 days.</b>
-                                </p>
-                                <p><b>Log in</b> to your account for more options in this section.</p>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="BoxFrameHorizontal"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-horizontal.gif);"></div>
-                <div class="BoxFrameEdgeRightBottom"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
-                <div class="BoxFrameEdgeLeftBottom"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
-            </div>
-        </div>
-        <br>
-        <?php } else {
-                    ?>
-        <div class="SmallBox">
-            <div class="MessageContainer">
-                <div class="BoxFrameHorizontal"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-horizontal.gif);"></div>
-                <div class="BoxFrameEdgeLeftTop"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
-                <div class="BoxFrameEdgeRightTop"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
-                <div class="Message">
-                    <div class="BoxFrameVerticalLeft"
-                         style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-vertical.gif);"></div>
-                    <div class="BoxFrameVerticalRight"
-                         style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-vertical.gif);"></div>
-                    <table style="width: 100%;">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <p>Below you find all characters which have been <b>auctioned in the last 30 days.</b></p>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="BoxFrameHorizontal"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-horizontal.gif);"></div>
-                <div class="BoxFrameEdgeRightBottom"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
-                <div class="BoxFrameEdgeLeftBottom"
-                     style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></div>
-            </div>
-        </div>
-        <br>
-        <?php
-    } 
-    ?>
-    <div class="TableContainer">
-        <div class="CaptionContainer">
-            <div class="CaptionInnerContainer">
-                <span class="CaptionEdgeLeftTop"
-                      style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></span>
-                <span class="CaptionEdgeRightTop"
-                      style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></span>
-                <span class="CaptionBorderTop"
-                      style="background-image:url(<?= $template_path; ?>/images/global/content/table-headline-border.gif);"></span>
-                <span class="CaptionVerticalLeft"
-                      style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-vertical.gif);"></span>
-                <div class="Text">Auction History</div>
-                <span class="CaptionVerticalRight"
-                      style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-vertical.gif);"></span>
-                <span class="CaptionBorderBottom"
-                      style="background-image:url(<?= $template_path; ?>/images/global/content/table-headline-border.gif);"></span>
-                <span class="CaptionEdgeLeftBottom"
-                      style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></span>
-                <span class="CaptionEdgeRightBottom"
-                      style="background-image:url(<?= $template_path; ?>/images/global/content/box-frame-edge.gif);"></span>
-            </div>
-        </div>
-        <table class="Table3" cellspacing="0" cellpadding="0">
-            <tbody>
-            <tr>
-                <td>
-                    <div class="InnerTableContainer">
-                        <table style="width:100%;">
-                            <tbody>
-                            <?php
-                            $subtopic = 'pastcharactertrades';
-                            $dateLimit = date('Y-m-d H:i:s');
-                            $auctions = $db->query("SELECT `id`, `account_old`, `account_new`, `player_id`, `price`, `date_end`, `date_start`, `bid_account`, `bid_price`, `status` FROM `myaac_charbazaar` WHERE `date_end` <= '{$dateLimit}' ORDER BY `date_start` DESC");
-                            require SYSTEM . 'pages/char_bazaar/list_auctions.php';
-                            ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <?php
-}
-
-//<!-- AUCTION DETAILS -->
-if ($getPageDetails) {
+$getPageDetails = isset($_GET['details']) ? (int)$_GET['details'] : 0;
+if ($getPageDetails > 0) {
     require SYSTEM . 'pages/char_bazaar/details.php';
-} ?>
-<!-- AUCTION DETAILS END -->
+    return;
+}
+
+$sales = $db->query("SELECT * FROM `myaac_charbazaar` WHERE `status` IN (1,2) ORDER BY `id` DESC LIMIT 100");
+?>
+
+<div class="SmallBox">
+    <div class="MessageContainer">
+        <div class="Message">
+            <p>Below you find character sales that were <b>sold</b> or <b>cancelled</b>.</p>
+        </div>
+    </div>
+</div>
+<br>
+
+<div class="TableContainer">
+    <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Sales History</div></div></div>
+    <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
+        <div class="InnerTableContainer">
+            <table class="TableContent" style="width:100%;border:1px solid #faf0d7;">
+                <tbody>
+                <tr class="Odd">
+                    <td class="LabelV">Character</td>
+                    <td class="LabelV">Price</td>
+                    <td class="LabelV">Status</td>
+                    <td class="LabelV">Updated</td>
+                    <td class="LabelV">Details</td>
+                </tr>
+                <?php
+                $rows = $sales->fetchAll();
+                if (!$rows) {
+                    echo '<tr><td colspan="5" style="text-align:center;padding:14px;">No historical sales found.</td></tr>';
+                }
+                $i = 0;
+                foreach ($rows as $sale) {
+                    $i++;
+                    $char = $db->query("SELECT `name`,`level` FROM `players` WHERE `id` = " . (int)$sale['player_id'])->fetch();
+                    ?>
+                    <tr bgcolor="<?= getStyle($i) ?>">
+                        <td><?= htmlspecialchars(($char['name'] ?? 'Unknown') . ' (Lv ' . (int)($char['level'] ?? 0) . ')') ?></td>
+                        <td><?= number_format((int)$sale['price'], 0, ',', ',') ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></td>
+                        <td><?= htmlspecialchars(cbz_sale_status_label($sale['status'])) ?></td>
+                        <td><?= date('d M Y, H:i', strtotime($sale['date_end'] ?: $sale['date_start'])) ?></td>
+                        <td>
+                            <a href="?subtopic=pastcharactertrades&details=<?= (int)$sale['id'] ?>">
+                                <div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton.gif);display:inline-block;">
+                                    <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
+                                        <div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_over.gif); visibility: hidden;"></div>
+                                        <input class="BigButtonText" type="button" value="View">
+                                    </div>
+                                </div>
+                            </a>
+                        </td>
+                    </tr>
+                <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </td></tr></tbody></table>
+</div>

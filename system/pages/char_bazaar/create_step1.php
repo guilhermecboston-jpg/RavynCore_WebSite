@@ -50,7 +50,7 @@ $account_players = $account_logged->getPlayersList();
                     <div class="SingleStepContainer">
                         <img class="StepIcon"
                              src="<?= $template_path; ?>/images/global/content/progressbar/progress-bar-icon-3-blue.gif">
-                        <div class="StepText" style="font-weight:normal;">Set up auction</div>
+                        <div class="StepText" style="font-weight:normal;">Set character price</div>
                     </div>
                 </div>
                 <div class="Steps" style="width:33%">
@@ -61,7 +61,7 @@ $account_players = $account_logged->getPlayersList();
                     <div class="SingleStepContainer">
                         <img class="StepIcon"
                              src="<?= $template_path; ?>/images/global/content/progressbar/progress-bar-icon-4-blue.gif">
-                        <div class="StepText" style="font-weight:normal;">Confirm auction</div>
+                        <div class="StepText" style="font-weight:normal;">Confirm sale</div>
                     </div>
                 </div>
             </div>
