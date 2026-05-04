@@ -118,11 +118,8 @@ a:hover {
     margin-bottom: -76px;
     z-index: 100;
     border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 0;
-    background: rgba(5, 8, 14, 0.18);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: transparent;
     box-shadow: none;
     overflow: visible;
     min-height: 0;
