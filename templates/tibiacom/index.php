@@ -476,8 +476,10 @@ $socialLinks = [
     <div id="HelperDivText"></div>
 </div>
 
-<script src="<?= $template_path; ?>/js/generic.js"></script>
-<script src="<?= $template_path; ?>/js/ravyncore.js"></script>
+<?php $rcGenericJsVer = @filemtime(BASE . $template_path . '/js/generic.js') ?: time(); ?>
+<script src="<?= $template_path; ?>/js/generic.js?v=<?= $rcGenericJsVer; ?>"></script>
+<?php $rcJsVer = @filemtime(BASE . $template_path . '/js/ravyncore.js') ?: time(); ?>
+<script src="<?= $template_path; ?>/js/ravyncore.js?v=<?= $rcJsVer; ?>"></script>
 <?= template_place_holder('body_end'); ?>
 </body>
 </html>
