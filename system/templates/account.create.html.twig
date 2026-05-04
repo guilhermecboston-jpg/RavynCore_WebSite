@@ -31,20 +31,15 @@
 												{{ hook('HOOK_ACCOUNT_CREATE_BEFORE_ACCOUNT') }}
 
 												{% if config.account_login_by_email %}
-												<tr>
-													<td class="LabelV" style="width: 150px">
-														<span{% if errors.account is defined %} class="red"{% endif %}>Account {% if constant('USE_ACCOUNT_NAME') %}Name{% else %}Number{% endif %}: <span style="color: red;">*</span></span>
-													</td>
-													<td>
-														<input type="text" name="account" id="account_input" size="30" maxlength="{% if constant('USE_ACCOUNT_NAME') %}30{% else %}10{% endif %}" />
+												<tr class="rc-hidden-account-row">
+													<td colspan="2" style="display:none !important; border:0 !important; padding:0 !important;">
+														<input type="hidden" name="account" id="account_input" value="{{ account|default('') }}" maxlength="{% if constant('USE_ACCOUNT_NAME') %}30{% else %}10{% endif %}" />
 														<img id="account_indicator" src="images/global/general/{% if not save or errors.account is defined %}n{% endif %}ok.gif" style="display: none;" />
-														{% if constant('USE_ACCOUNT_NAME') %}
-															<div id="SuggestAccountNumber">[<a href="#">suggest number</a>]</div>
-														{% endif %}
+														<div id="SuggestAccountNumber" style="display:none !important;">[<a href="#">suggest number</a>]</div>
 													</td>
 												</tr>
 												{% endif %}
-												<tr><td></td><td><span id="account_error" class="FormFieldError">{% if errors.account is defined %}{{ errors.account }}{% endif %}</span></td></tr>
+												<tr class="rc-hidden-account-row"><td colspan="2" style="display:none !important;"><span id="account_error" class="FormFieldError">{% if errors.account is defined %}{{ errors.account }}{% endif %}</span></td></tr>
 												{{ hook('HOOK_ACCOUNT_CREATE_AFTER_ACCOUNT') }}
 												<tr>
 													<td class="LabelV" style="width: 150px">

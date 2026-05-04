@@ -2468,10 +2468,203 @@ body[class*="account"] .rc-rich-content .rc-createchar-world-head td {
 
 body.rc-page .rc-rich-content .rc-world-type,
 body[class*="account"] .rc-rich-content .rc-world-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     color: #d8c79a;
     font-weight: 700;
     letter-spacing: 0.02em;
     text-transform: uppercase;
+}
+
+body.rc-page .rc-rich-content .rc-world-type-icon,
+body[class*="account"] .rc-rich-content .rc-world-type-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+body.rc-page .rc-rich-content .rc-world-type-filter,
+body[class*="account"] .rc-rich-content .rc-world-type-filter {
+    margin: 6px 0 8px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+body.rc-page .rc-rich-content .rc-world-type-filter td,
+body[class*="account"] .rc-rich-content .rc-world-type-filter td {
+    border: 0 !important;
+    padding: 4px 0 8px !important;
+    text-align: center;
+}
+
+body.rc-page .rc-rich-content .rc-world-type-option,
+body[class*="account"] .rc-rich-content .rc-world-type-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 3px 8px;
+    padding: 5px 8px;
+    border: 1px solid rgba(134, 154, 197, 0.35);
+    border-radius: 8px;
+    background: rgba(18, 31, 52, 0.56);
+    color: #c9d7ef;
+    font-size: 0.85rem;
+}
+
+body.rc-page .rc-rich-content .rc-world-type-option.is-active,
+body[class*="account"] .rc-rich-content .rc-world-type-option.is-active {
+    border-color: rgba(215, 168, 92, 0.58);
+    color: #f1d39a;
+    box-shadow: 0 0 14px rgba(215, 168, 92, 0.14);
+}
+
+body.rc-page .rc-rich-content .rc-world-type-option input,
+body[class*="account"] .rc-rich-content .rc-world-type-option input {
+    margin: 0;
+}
+
+body.rc-page .rc-rich-content .rc-world-type-option img,
+body[class*="account"] .rc-rich-content .rc-world-type-option img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+body.rc-page .rc-rich-content table.rc-form-actions,
+body[class*="account"] .rc-rich-content table.rc-form-actions {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+body.rc-page .rc-rich-content table.rc-form-actions > tbody > tr,
+body[class*="account"] .rc-rich-content table.rc-form-actions > tbody > tr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+body.rc-page .rc-rich-content table.rc-form-actions td,
+body[class*="account"] .rc-rich-content table.rc-form-actions td {
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+body[class*="account"] .rc-rich-content table[style*="width:100%"] > tbody > tr[align="center"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+body[class*="account"] .rc-rich-content table[style*="width:100%"] > tbody > tr[align="center"] > td {
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+body.rc-page .rc-rich-content .rc-account-input,
+body[class*="account"] .rc-rich-content .rc-account-input {
+    width: min(100%, 360px);
+    height: 40px;
+    border-radius: 9px;
+    padding: 0 12px;
+    background: rgba(18, 30, 52, 0.76);
+    border: 1px solid rgba(138, 160, 202, 0.48);
+    color: #e8edf8;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+body.rc-page .rc-rich-content .rc-account-input:focus,
+body[class*="account"] .rc-rich-content .rc-account-input:focus {
+    outline: none;
+    border-color: rgba(215, 168, 92, 0.78);
+    box-shadow: 0 0 0 2px rgba(215, 168, 92, 0.16);
+}
+
+body.rc-page .rc-rich-content .rc-account-input-compact,
+body[class*="account"] .rc-rich-content .rc-account-input-compact {
+    width: min(100%, 320px);
+}
+
+body.rc-page .rc-rich-content .rc-password-wrap-compact,
+body[class*="account"] .rc-rich-content .rc-password-wrap-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.rc-page .rc-rich-content .rc-hidden-account-row,
+body[class*="account"] .rc-rich-content .rc-hidden-account-row {
+    display: none !important;
+}
+
+body.rc-page-guilds .rc-rich-content .LabelH td,
+body.rc-page-guilds .rc-rich-content .LabelH th {
+    text-align: center;
+}
+
+body.rc-page-guilds .rc-rich-content .TableContent .LabelH td {
+    background: linear-gradient(180deg, rgba(38, 74, 119, 0.92) 0%, rgba(28, 57, 96, 0.92) 100%) !important;
+    color: #f1d39a !important;
+    text-transform: uppercase;
+}
+
+body.rc-page-guilds .rc-rich-content #NavigationContainer {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 4px 0;
+}
+
+body.rc-page-guilds .rc-rich-content input.BigButtonText {
+    min-width: 170px;
+    height: 38px;
+    border-radius: 9px;
+    border: 1px solid rgba(145, 166, 216, 0.55);
+    background: linear-gradient(90deg, rgba(28, 43, 72, 0.9), rgba(34, 30, 68, 0.9));
+    color: #f4f7ff !important;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+}
+
+body.rc-page-guilds .rc-rich-content input.BigButtonText:hover {
+    border-color: rgba(215, 168, 92, 0.72);
+    box-shadow: 0 0 20px rgba(215, 168, 92, 0.16);
+}
+
+body.rc-page-guilds .rc-rich-content .TableContainer + .TableContainer {
+    margin-top: 10px;
+}
+
+body.rc-page-guilds .rc-rich-content a.rc-guild-delete-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 7px;
+    border: 1px solid rgba(215, 132, 132, 0.58);
+    background: linear-gradient(90deg, rgba(98, 33, 33, 0.92), rgba(139, 48, 48, 0.92));
+    color: #ffe5e5 !important;
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-decoration: none !important;
+}
+
+body.rc-page-guilds .rc-rich-content a.rc-guild-delete-rank:hover {
+    border-color: rgba(255, 180, 180, 0.78);
+    box-shadow: 0 0 14px rgba(173, 60, 60, 0.24);
+}
+
+body.rc-page-guilds .rc-rich-content a[href*="action=change_rank"],
+body.rc-page-guilds .rc-rich-content a[href*="action=invite"],
+body.rc-page-guilds .rc-rich-content a[href*="action=accept_invite"],
+body.rc-page-guilds .rc-rich-content a[href*="action=leave_guild"],
+body.rc-page-guilds .rc-rich-content a[href*="action=kick_player"] {
+    color: #dce6ff !important;
 }
 
 body.rc-page .rc-rich-content #SuggestCharacterName,

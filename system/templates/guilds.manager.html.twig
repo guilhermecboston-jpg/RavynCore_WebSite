@@ -53,7 +53,7 @@
 				<span style="color: white"><b>Leader (3)</b></span>
 			</td>
 			<td align="center" bgcolor="yellow">
-				<span style="color: black"><b>Vice (2)</b></span>
+				<span style="color: white"><b>Vice (2)</b></span>
 			</td>
 			<td align="center" bgcolor="green">
 				<span style="color: white"><b>Member (1)</b></span>
@@ -62,7 +62,7 @@
 		{% set i = 0 %}
 		{% for rank in rank_list %}
 		<tr bgcolor="{{ getStyle(i) }}">
-			<td align="center">{{ rank.getId() }} // <a href="?subtopic=guilds&guild={{ guild.getName() }}&action=delete_rank&rankid={{ rank.getId() }}" border="0"><img src="/images/news/delete.png" border="0" alt="Delete Rank"></a>
+			<td align="center">{{ rank.getId() }} // <a class="rc-guild-delete-rank" href="?subtopic=guilds&guild={{ guild.getName() }}&action=delete_rank&rankid={{ rank.getId() }}" border="0">Delete</a>
 			</td>
 			<td>
 				<input type="text" name="{{ rank.getId() }}_name" value="{{ rank.getName() }}" size="35"/>

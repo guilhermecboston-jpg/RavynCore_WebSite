@@ -5,6 +5,7 @@
 	$(function() {
 		updateFlag();
 		initializeIndicators();
+		ensureAccountValue();
 
 		$('#account_country').change(function() {
 			updateFlag();
@@ -34,6 +35,10 @@
 		$('#SuggestCharacterName a').click(function (event) {
       generateCharacterName(event);
     });
+
+		$('#createaccount').on('submit', function () {
+			ensureAccountValue();
+		});
 
 		$('.rc-password-toggle').on('click', function () {
 			togglePasswordVisibility(this);
@@ -83,6 +88,10 @@
 
 	function checkAccount()
 	{
+		if(!$('#account_input').length) {
+			return;
+		}
+
 		// Clear any pending interval timers
 		if(eventId != 0)
 		{
@@ -130,6 +139,35 @@
 		);
 
 		lastSend = timeNow;
+	}
+
+	function ensureAccountValue()
+	{
+		var $account = $('#account_input');
+		if(!$account.length) {
+			return;
+		}
+
+		var currentValue = ($account.val() || '').trim();
+		if(currentValue.length) {
+			return;
+		}
+
+		var maxLength = parseInt($account.attr('maxlength') || '30', 10);
+		var emailValue = ($('#email').val() || '').trim().toLowerCase();
+		var baseName = '';
+		if(emailValue.indexOf('@') > 0) {
+			baseName = emailValue.split('@')[0].replace(/[^a-z0-9]/g, '');
+		}
+
+		if({{ constant('USE_ACCOUNT_NAME') ? 'true' : 'false' }}) {
+			var fallbackName = ('rc' + Date.now().toString()).substring(0, maxLength);
+			$account.val((baseName || fallbackName).substring(0, maxLength));
+		}
+		else {
+			var digits = Date.now().toString().replace(/\D/g, '');
+			$account.val(digits.substring(Math.max(0, digits.length - Math.min(maxLength, 10))));
+		}
 	}
 
 	function checkEmail()

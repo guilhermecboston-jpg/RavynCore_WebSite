@@ -94,13 +94,58 @@ In any case the name must not violate the naming conventions stated in the <a hr
                       </tr>
                       <tr class="Even">
                         <td colspan="2">
+                          {% set rawWorldType = config.lua.worldType|default(config.lua.world_type|default(config.lua.pvpType|default(config.lua.pvp_type|default('Open PvP'))))|lower %}
+                          {% set worldTypeKey = 'open' %}
+                          {% if 'optional' in rawWorldType or 'no pvp' in rawWorldType %}
+                            {% set worldTypeKey = 'optional' %}
+                          {% elseif 'retro hardcore' in rawWorldType %}
+                            {% set worldTypeKey = 'retrohardcore' %}
+                          {% elseif 'retro' in rawWorldType %}
+                            {% set worldTypeKey = 'retro' %}
+                          {% elseif 'hardcore' in rawWorldType or 'enforced' in rawWorldType %}
+                            {% set worldTypeKey = 'hardcore' %}
+                          {% endif %}
+                          {% set worldTypeLabel = config.lua.worldType|default(config.lua.world_type|default(config.lua.pvpType|default(config.lua.pvp_type|default('Open PvP')))) %}
+                          <table class="rc-world-type-filter" width="100%">
+                            <tbody>
+                            <tr>
+                              <td>
+                                <label class="rc-world-type-option{% if worldTypeKey == 'optional' %} is-active{% endif %}">
+                                  <input type="radio" name="world_type_filter" value="optional"{% if worldTypeKey == 'optional' %} checked{% endif %}>
+                                  <img src="{{ template_path }}/images/global/content/option_server_pvp_type_optional.gif" alt="Optional PvP">
+                                  <span>Optional PvP</span>
+                                </label>
+                                <label class="rc-world-type-option{% if worldTypeKey == 'open' %} is-active{% endif %}">
+                                  <input type="radio" name="world_type_filter" value="open"{% if worldTypeKey == 'open' %} checked{% endif %}>
+                                  <img src="{{ template_path }}/images/global/content/option_server_pvp_type_open.gif" alt="Open PvP">
+                                  <span>Open PvP</span>
+                                </label>
+                                <label class="rc-world-type-option{% if worldTypeKey == 'hardcore' %} is-active{% endif %}">
+                                  <input type="radio" name="world_type_filter" value="hardcore"{% if worldTypeKey == 'hardcore' %} checked{% endif %}>
+                                  <img src="{{ template_path }}/images/global/content/option_server_pvp_type_hardcore.gif" alt="Hardcore PvP">
+                                  <span>Hardcore PvP</span>
+                                </label>
+                                <label class="rc-world-type-option{% if worldTypeKey == 'retro' %} is-active{% endif %}">
+                                  <input type="radio" name="world_type_filter" value="retro"{% if worldTypeKey == 'retro' %} checked{% endif %}>
+                                  <img src="{{ template_path }}/images/global/content/option_server_pvp_type_retro.gif" alt="Retro Open PvP">
+                                  <span>Retro Open PvP</span>
+                                </label>
+                                <label class="rc-world-type-option{% if worldTypeKey == 'retrohardcore' %} is-active{% endif %}">
+                                  <input type="radio" name="world_type_filter" value="retrohardcore"{% if worldTypeKey == 'retrohardcore' %} checked{% endif %}>
+                                  <img src="{{ template_path }}/images/global/content/option_server_pvp_type_retrohardcore.png" alt="Retro Hardcore PvP">
+                                  <span>Retro Hardcore PvP</span>
+                                </label>
+                              </td>
+                            </tr>
+                            </tbody>
+                          </table>
                           <table id="js_world_box" width="100%">
                             <tbody>
                             <tr class="LabelH rc-createchar-world-head">
                               <td style="border-style:none; text-align:center; width:70%;">World</td>
                               <td style="border-style:none; text-align:center;">Type</td>
                             </tr>
-                            <tr id="world_list_tr">
+                            <tr id="world_list_tr" data-pvp-type="{{ worldTypeKey }}">
                               <td style="border-style: none" align="center">
                                 <div style="width: 15em; position: relative; text-align: left;">
                                   <input type="radio" name="world" id="server_{{ config.lua.serverName }}"
@@ -109,8 +154,10 @@ In any case the name must not violate the naming conventions stated in the <a hr
                                 </div>
                               </td>
                               <td style="border-style: none; text-align: center;">
-                                {% set worldType = config.lua.worldType|default(config.lua.world_type|default(config.lua.pvpType|default(config.lua.pvp_type|default('Open PvP')))) %}
-                                <span class="rc-world-type">{{ worldType }}</span>
+                                <span class="rc-world-type">
+                                  <img class="rc-world-type-icon" src="{{ template_path }}/images/global/content/option_server_pvp_type_{{ worldTypeKey == 'retrohardcore' ? 'retrohardcore.png' : worldTypeKey ~ '.gif' }}" alt="{{ worldTypeLabel }}">
+                                  {{ worldTypeLabel }}
+                                </span>
                               </td>
                             </tr>
                             <tr>
@@ -186,7 +233,7 @@ In any case the name must not violate the naming conventions stated in the <a hr
 
 
   <br/>
-  <table style="width:100%;">
+  <table class="rc-form-actions" style="width:100%;">
     <tr align="center">
       <td>
         <table border="0" cellspacing="0" cellpadding="0">
@@ -195,22 +242,22 @@ In any case the name must not violate the naming conventions stated in the <a hr
               {{ include('buttons.submit.html.twig') }}
             </td>
           </tr>
-</form>
-</table>
-</td>
-<td>
-  <table border="0" cellspacing="0" cellpadding="0">
-    <form action="{{ getLink('account/manage') }}" method="post">
-      <tr>
-        <td style="border:0px;">
-          {{ include('buttons.back.html.twig') }}
-        </td>
-      </tr>
+        </table>
+      </td>
     </form>
+      <td>
+        <table border="0" cellspacing="0" cellpadding="0">
+          <form action="{{ getLink('account/manage') }}" method="post">
+            <tr>
+              <td style="border:0px;">
+                {{ include('buttons.back.html.twig') }}
+              </td>
+            </tr>
+          </form>
+        </table>
+      </td>
+    </tr>
   </table>
-</td>
-</tr>
-</table>
 <script type="text/javascript" src="tools/check_name.js"></script>
 
 <script type="text/javascript">
@@ -222,6 +269,11 @@ $(function () {
   $('#character_name').blur(function () {
     checkName();
   });
+
+  $('input[name="world_type_filter"]').on('change', function () {
+    filterWorldRowsByType($(this).val());
+  });
+  filterWorldRowsByType($('input[name="world_type_filter"]:checked').val());
 });
 
 var eventId = 0;
@@ -276,6 +328,22 @@ function checkName() {
   }
 
   performValidation();
+}
+
+function filterWorldRowsByType(type) {
+  if(!type) {
+    $('#js_world_box tbody tr').show();
+    return;
+  }
+
+  $('#js_world_box tbody tr').each(function() {
+    var $row = $(this);
+    var rowType = ($row.data('pvp-type') || '').toString();
+    if(!rowType) {
+      return;
+    }
+    $row.toggle(rowType === type);
+  });
 }
 
 function generateNewName() {
