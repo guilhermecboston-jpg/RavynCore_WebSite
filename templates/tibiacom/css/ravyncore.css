@@ -225,6 +225,10 @@ a:hover {
     margin-top: -2px;
 }
 
+.rc-social-icons .HelperDivIndicator {
+    display: inline-flex;
+}
+
 .rc-social-icons a {
     width: 28px;
     height: 28px;
@@ -236,6 +240,12 @@ a:hover {
     color: #d7e5ff;
     background: rgba(11, 18, 31, 0.34);
     transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.rc-social-icons a img {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
 }
 
 .rc-social-icons a:hover {
@@ -2569,6 +2579,51 @@ body[class*="account"] .rc-rich-content .rc-createchar-vocations td {
     padding: 12px 10px !important;
 }
 
+body.rc-page .rc-rich-content .rc-createchar-name-cell,
+body[class*="account"] .rc-rich-content .rc-createchar-name-cell {
+    width: 50%;
+    vertical-align: top !important;
+    padding: 10px 14px !important;
+}
+
+body.rc-page .rc-rich-content .rc-createchar-name-wrap,
+body[class*="account"] .rc-rich-content .rc-createchar-name-wrap {
+    width: min(100%, 460px);
+}
+
+body.rc-page .rc-rich-content .rc-createchar-name-wrap small,
+body[class*="account"] .rc-rich-content .rc-createchar-name-wrap small {
+    display: block;
+    margin-top: 4px;
+}
+
+body.rc-page .rc-rich-content .rc-createchar-name-wrap .rc-suggest-link,
+body[class*="account"] .rc-rich-content .rc-createchar-name-wrap .rc-suggest-link {
+    display: inline-block;
+    margin-top: 8px;
+}
+
+body.rc-page .rc-rich-content .rc-createchar-sex-cell,
+body[class*="account"] .rc-rich-content .rc-createchar-sex-cell {
+    width: 50%;
+    vertical-align: top !important;
+    padding: 10px 14px !important;
+}
+
+body.rc-page .rc-rich-content .rc-createchar-sex-wrap,
+body[class*="account"] .rc-rich-content .rc-createchar-sex-wrap {
+    width: min(100%, 260px);
+    margin: 2px auto 0;
+}
+
+body.rc-page .rc-rich-content .rc-createchar-sex-option,
+body[class*="account"] .rc-rich-content .rc-createchar-sex-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
 body.rc-page .rc-rich-content .rc-createchar-vocation-option label,
 body[class*="account"] .rc-rich-content .rc-createchar-vocation-option label {
     display: inline-block;
@@ -2699,7 +2754,7 @@ body[class*="account"] .rc-rich-content .rc-account-input:focus {
 
 body.rc-page .rc-rich-content .rc-account-input-compact,
 body[class*="account"] .rc-rich-content .rc-account-input-compact {
-    width: min(100%, 320px);
+    width: min(100%, 280px);
 }
 
 body.rc-page .rc-rich-content .rc-password-wrap-compact,
@@ -2753,6 +2808,16 @@ body.rc-page-guilds .rc-rich-content .TableContainer + .TableContainer {
     margin-top: 10px;
 }
 
+body.rc-page-guilds .rc-rich-content .rc-title-ornate-no-icon::before,
+body.rc-page-guilds .rc-rich-content .rc-title-ornate-no-icon::after {
+    display: none !important;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-title-ornate-no-icon {
+    justify-content: center;
+    padding-left: 16px;
+}
+
 body.rc-page-guilds .rc-rich-content a.rc-guild-delete-rank {
     display: inline-flex;
     align-items: center;
@@ -2780,6 +2845,93 @@ body.rc-page-guilds .rc-rich-content a[href*="action=accept_invite"],
 body.rc-page-guilds .rc-rich-content a[href*="action=leave_guild"],
 body.rc-page-guilds .rc-rich-content a[href*="action=kick_player"] {
     color: #dce6ff !important;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-manager-title {
+    margin: 10px 0 8px;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-rank-info {
+    border: 1px solid rgba(131, 156, 201, 0.3);
+    border-radius: 10px;
+    background: rgba(15, 25, 42, 0.78);
+    padding: 12px 14px;
+    color: #d8e3f8;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-rank-info p {
+    margin: 0 0 8px;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-rank-info ul {
+    margin: 0 0 10px 18px;
+    padding: 0;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-nick-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-change-btn {
+    min-width: 66px;
+    height: 28px;
+    border-radius: 7px;
+    border: 1px solid rgba(145, 166, 216, 0.55);
+    background: linear-gradient(90deg, rgba(28, 43, 72, 0.9), rgba(34, 30, 68, 0.9));
+    color: #eaf1ff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-nick-text {
+    margin-left: 4px;
+    color: #d9e6fd;
+    font-size: 12px;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-form-table {
+    border: 1px solid rgba(131, 156, 201, 0.28) !important;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(15, 25, 42, 0.78) !important;
+}
+
+body.rc-page-guilds .rc-rich-content .Table5,
+body.rc-page-guilds .rc-rich-content .Table5 > tbody > tr > td,
+body.rc-page-guilds .rc-rich-content .Table5 .InnerTableContainer,
+body.rc-page-guilds .rc-rich-content .Table5 .TableContentContainer {
+    background: rgba(12, 21, 36, 0.82) !important;
+    border-color: rgba(131, 156, 201, 0.25) !important;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-form-row td {
+    background: rgba(18, 31, 52, 0.8) !important;
+    color: #d6e2fa !important;
+    border-color: rgba(128, 152, 196, 0.26) !important;
+    text-align: center;
+    padding: 10px 12px !important;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-form-row textarea,
+body.rc-page-guilds .rc-rich-content .rc-guild-form-row input[type="file"] {
+    margin: 0 auto;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-form-row textarea {
+    width: min(100%, 620px);
+    border-radius: 8px;
+    background: rgba(22, 35, 58, 0.8);
+    border: 1px solid rgba(131, 156, 201, 0.45);
+    color: #e5eefc;
+    padding: 10px 12px;
+}
+
+body.rc-page-guilds .rc-rich-content .rc-guild-form-actions small {
+    display: block;
+    margin-bottom: 8px;
+    color: #a7b9da;
 }
 
 body.rc-page .rc-rich-content #SuggestCharacterName,
@@ -3676,6 +3828,13 @@ body.rc-page .rc-rich-content .rc-password-wrap .rc-password-toggle {
 
 body.rc-page .rc-rich-content .rc-password-wrap img {
     margin-left: 2px;
+}
+
+body.rc-page input[type="text"],
+body.rc-page input[type="password"],
+body.rc-page input[type="email"],
+body.rc-page textarea {
+    caret-color: #f4f7ff;
 }
 
 body.rc-page-characters .rc-rich-content .rc-character-table thead th {

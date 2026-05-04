@@ -12,36 +12,32 @@
               <tbody>
                 <tr>
                   <td><div class="TableContentContainer">
-                      <table class="TableContent" width="100%">
+                      <table class="TableContent rc-guild-form-table" width="100%">
                         <tbody>
-                          <tr bgcolor="#D4C0A1" style="display: flex; justify-content: center;">
+                          <tr class="rc-guild-form-row">
                             <td><b>Here you can change logo of your guild.</b></td>
                           </tr>
-						  <tr bgcolor="#D4C0A1" style="display: flex; justify-content: center;">
+						  <tr class="rc-guild-form-row">
 						  	<td>
 								<img src="images/guilds/{{ guild_logo }}" height="64" width="64">
 							</td>
 						  </tr>
 						  <form enctype="multipart/form-data" action="?subtopic=guilds&guild={{ guild.getName() }}&action=change_logo" method="post" id="upload_form">
-						  <tr bgcolor="#D4C0A1" style="display: flex; justify-content: center;">
+						  <tr class="rc-guild-form-row">
                             <td>
 								<input type="hidden" name="todo" value="save" />
 								<input type="hidden" name="MAX_FILE_SIZE" value="{{ max_image_size_b }}" />
 								<b>Select new logo:</b> <input name="newlogo" id="newlogo" type="file" />
 							</td>
                           </tr>
-						  <tr>
-						  	<td style="height: 5px;">
-							</td>
-						  </tr>
-						  <tr bgcolor="#D4C0A1" style="display: flex; justify-content: center;">
-						  	<td>
+						  <tr class="rc-guild-form-row">
+						  	<td class="rc-guild-form-actions">
 								{% set button_name = 'Send Banner' %}
 								{% include('buttons.base_green.html.twig') %}
 							</td>
 						  </tr>
 						</form>
-						  <tr bgcolor="#D4C0A1" style="display: flex; justify-content: center;">
+						  <tr class="rc-guild-form-row">
 						  	<td>
 								Only <b>jpg, gif, png, bmp</b> pictures. Max. size: <b>{{ config.guild_image_size_kb }} KB</b>
 							</td>

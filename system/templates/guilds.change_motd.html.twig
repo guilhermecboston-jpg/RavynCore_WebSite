@@ -12,19 +12,19 @@
               <tbody>
                 <tr>
                   <td><div class="TableContentContainer">
-                      <table class="TableContent" width="100%">
+					  <table class="TableContent rc-guild-form-table" width="100%">
                         <tbody>
 						<form enctype="multipart/form-data" action="?subtopic=guilds&guild={{ guild.getName() }}&action=change_motd" method="post">
-                          <tr bgcolor="#D4C0A1" style="display: flex; justify-content: center;">
+                          <tr class="rc-guild-form-row">
                             <td><b>Here you can change MOTD (Message of the Day, showed in game!) of your guild.</b></td>
                           </tr>
-						  <tr bgcolor="#D4C0A1" style="display: flex; justify-content: center;">
+						  <tr class="rc-guild-form-row">
                             <td>
 							<input type="hidden" name="todo" value="save"/><textarea name="motd" cols="60" rows="5">{{ guild.getCustomField('motd')|raw }}</textarea>
 							</td>
                           </tr>
-						  <tr bgcolor="#D4C0A1">
-                            <td style="display: flex; justify-content: center;">
+						  <tr class="rc-guild-form-row">
+                            <td class="rc-guild-form-actions">
 							<small>(max. {{ config.guild_motd_chars_limit }} chars)</small>
 							{% set button_name = 'Save MOTD' %}
 							{% include('buttons.base_green.html.twig') %}

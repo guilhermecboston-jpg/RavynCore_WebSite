@@ -53,30 +53,34 @@ In any case the name must not violate the naming conventions stated in the <a hr
                         <td style="text-align:center;"><span>Sex <span style="color: red;">*</span></span></td>
                       </tr>
                       <tr class="Even">
-                        <td><input name="name" id="character_name" value="{{ name }}" class="rc-charname-input"
+                        <td class="rc-createchar-name-cell">
+                          <div class="rc-createchar-name-wrap">
+                            <input name="name" id="character_name" value="{{ name }}" class="rc-charname-input"
                                    size="{{ config.character_name_max_length }}"
                                    maxlength="{{ config.character_name_max_length }}"
                                    onkeyup="checkName();">
-                          <img id="character_indicator"
-                               src="images/global/general/{% if not save or errors.name is defined %}n{% endif %}ok.gif"/>
-                          <br>
-                          <small>
-                            <div
-                              id="character_error">{% if not save or errors.name is defined %}Please enter your character name.{% endif %}</div>
-                          </small>
-                          <br>
-                          <a href="#" onclick="generateNewName(); return false;" class="rc-suggest-link">
-                            [suggest name]
-                          </a>
-                          </td>
-                        <td>
-                          {% set i = 0 %}
-                          {% for id, gender in config.genders|reverse(true) %}
-                            {% set i = i + 1 %}
-                            <input type="radio" name="sex" id="sex{{ i }}"
-                                   value="{{ id }}"{% if sex is not null and sex == id %} checked="checked"{% endif %}
-                            ><label for="sex{{ i }}">{{ gender|lower }}</label><br/>
-                          {% endfor %}
+                            <img id="character_indicator"
+                                 src="images/global/general/{% if not save or errors.name is defined %}n{% endif %}ok.gif"/>
+                            <small>
+                              <div id="character_error">{% if not save or errors.name is defined %}Please enter your character name.{% endif %}</div>
+                            </small>
+                            <a href="#" onclick="generateNewName(); return false;" class="rc-suggest-link">
+                              [suggest name]
+                            </a>
+                          </div>
+                        </td>
+                        <td class="rc-createchar-sex-cell">
+                          <div class="rc-createchar-sex-wrap">
+                            {% set i = 0 %}
+                            {% for id, gender in config.genders|reverse(true) %}
+                              {% set i = i + 1 %}
+                              <div class="rc-createchar-sex-option">
+                                <input type="radio" name="sex" id="sex{{ i }}"
+                                       value="{{ id }}"{% if sex is not null and sex == id %} checked="checked"{% endif %}>
+                                <label for="sex{{ i }}">{{ gender|lower }}</label>
+                              </div>
+                            {% endfor %}
+                          </div>
                         </td>
                       </tr>
                       </tbody>

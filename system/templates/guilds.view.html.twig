@@ -294,10 +294,12 @@
 
                                 {% if logged %}
                                   {% if player.getId() in players_from_account_ids %}
-                                    (<input type="text" class="input_nick" name="nick" value="{{ guildNickRaw }}"><input
-                                    type="submit" class="btn_nick" value="Change">)
+                                    <span class="rc-guild-nick-wrap">
+                                      <input type="text" class="input_nick" name="nick" value="{{ guildNickRaw }}">
+                                      <input type="submit" class="btn_nick rc-guild-change-btn" value="Change">
+                                    </span>
                                   {% else %}
-                                    {% if showGuildNick %} ({{ guildNickRaw }}){% endif %}
+                                    {% if showGuildNick %}<span class="rc-guild-nick-text">{{ guildNickRaw }}</span>{% endif %}
                                   {% endif %}
 
                                   {% if level_in_guild > rank.rank_level or isLeader %}
@@ -309,7 +311,7 @@
                                     {% endif %}
                                   {% endif %}
                                 {% else %}
-                                  {% if showGuildNick %} ({{ guildNickRaw }}){% endif %}
+                                  {% if showGuildNick %}<span class="rc-guild-nick-text">{{ guildNickRaw }}</span>{% endif %}
                                 {% endif %}
                               </form>
                             </td>

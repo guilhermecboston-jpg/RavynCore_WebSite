@@ -146,6 +146,12 @@ $accountCreateUrl = $templateLinks['link_account_create'] ?? getLink('account/cr
 $accountLogoutUrl = $templateLinks['link_account_logout'] ?? getLink('account/logout');
 $downloadUrl = $templateLinks['link_downloads'] ?? getLink('downloads');
 $recordOnline = (int)($status['playersPeak'] ?? $status['playersRecord'] ?? $status['record'] ?? 0);
+if ($recordOnline <= 0 && $db->hasTable('server_config')) {
+    $recordOnlineDb = $db->query("SELECT `value` FROM `server_config` WHERE `config` = 'players_record' LIMIT 1")->fetchColumn();
+    if ($recordOnlineDb !== false) {
+        $recordOnline = (int)$recordOnlineDb;
+    }
+}
 $isStaffAccount = rc_is_staff_web_flag3();
 $openTicketsCount = 0;
 if ($isStaffAccount) {
@@ -184,12 +190,13 @@ $tiktokUrl = 'https://www.tiktok.com/@ravyncore_';
 $whatsappUrl = 'https://chat.whatsapp.com/D1D7BPj6I7l5tN2QzSSPmQ';
 $facebookUrl = 'https://www.facebook.com/profile.php?id=61560518895177';
 $instagramUrl = 'https://www.instagram.com/ravyncore_/';
+$socialIconBase = $template_path . '/images/social';
 $socialLinks = [
-    ['name' => 'Discord', 'url' => $discordUrl, 'icon' => 'fab fa-discord'],
-    ['name' => 'WhatsApp', 'url' => $whatsappUrl, 'icon' => 'fab fa-whatsapp'],
-    ['name' => 'Instagram', 'url' => $instagramUrl, 'icon' => 'fab fa-instagram'],
-    ['name' => 'TikTok', 'url' => $tiktokUrl, 'icon' => 'fab fa-tiktok'],
-    ['name' => 'Facebook', 'url' => $facebookUrl, 'icon' => 'fab fa-facebook-f'],
+    ['name' => 'Discord', 'url' => $discordUrl, 'icon' => 'fab fa-discord', 'icon_path' => $socialIconBase . '/discord.png', 'tooltip' => 'Join the RavynCore Discord community.'],
+    ['name' => 'WhatsApp', 'url' => $whatsappUrl, 'icon' => 'fab fa-whatsapp', 'icon_path' => $socialIconBase . '/whatsapp.png', 'tooltip' => 'Join the official RavynCore WhatsApp group.'],
+    ['name' => 'Instagram', 'url' => $instagramUrl, 'icon' => 'fab fa-instagram', 'icon_path' => $socialIconBase . '/instagram.png', 'tooltip' => 'Follow RavynCore on Instagram.'],
+    ['name' => 'TikTok', 'url' => $tiktokUrl, 'icon' => 'fab fa-tiktok', 'icon_path' => $socialIconBase . '/tiktok.png', 'tooltip' => 'Watch RavynCore videos on TikTok.'],
+    ['name' => 'Facebook', 'url' => $facebookUrl, 'icon' => 'fab fa-facebook-f', 'icon_path' => $socialIconBase . '/facebook.png', 'tooltip' => 'Follow RavynCore updates on Facebook.'],
 ];
 ?>
 <!doctype html>
@@ -237,12 +244,22 @@ $socialLinks = [
                     <a class="rc-btn rc-btn-subtle" href="<?= $accountManageUrl; ?>">Login</a>
                     <a class="rc-btn rc-btn-primary" href="<?= $accountCreateUrl; ?>">CREATE ACCOUNT</a>
                 <?php endif; ?>
-                <div class="rc-social-icons" aria-label="RavynCore social links">
+                <div id="rcSocialLinks" class="rc-social-icons" aria-label="RavynCore social links">
                     <?php foreach ($socialLinks as $social): ?>
                         <?php if (!empty($social['url'])): ?>
-                            <a href="<?= $social['url']; ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= escapeHtml($social['name']); ?>" title="<?= escapeHtml($social['name']); ?>">
-                                <i class="<?= escapeHtml($social['icon']); ?>"></i>
-                            </a>
+                            <?php $helperTitle = addslashes((string)$social['name']); ?>
+                            <?php $helperText = addslashes((string)$social['tooltip']); ?>
+                            <span class="HelperDivIndicator"
+                                  onmouseover="ActivateHelperDiv($(this), '<?= $helperTitle; ?>', '<?= $helperText; ?>', '');"
+                                  onmouseout="$('#HelperDivContainer').hide();">
+                                <a href="<?= $social['url']; ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= escapeHtml($social['name']); ?>" title="<?= escapeHtml($social['name']); ?>">
+                                    <?php if (!empty($social['icon_path']) && file_exists(BASE . $social['icon_path'])): ?>
+                                        <img src="<?= $social['icon_path']; ?>" alt="<?= escapeHtml($social['name']); ?>">
+                                    <?php else: ?>
+                                        <i class="<?= escapeHtml($social['icon']); ?>"></i>
+                                    <?php endif; ?>
+                                </a>
+                            </span>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
@@ -264,10 +281,16 @@ $socialLinks = [
                             if ($categoryKey === 'forum') {
                                 continue;
                             }
+                            $categoryLink = $firstItem ? $firstItem['link_full'] : '#';
+                            $showDropdown = count($items) > 1;
+                            if ($categoryKey === 'community') {
+                                $categoryLink = '#rcSocialLinks';
+                                $showDropdown = false;
+                            }
                             ?>
                             <li class="rc-nav-item">
-                                <a href="<?= $firstItem ? $firstItem['link_full'] : '#'; ?>"><?= escapeHtml($categoryName); ?></a>
-                                <?php if (count($items) > 1): ?>
+                                <a href="<?= $categoryLink; ?>"><?= escapeHtml($categoryName); ?></a>
+                                <?php if ($showDropdown): ?>
                                     <div class="rc-nav-dropdown">
                                         <?php foreach ($items as $item): ?>
                                             <a href="<?= $item['link_full']; ?>"<?= $item['blank'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>

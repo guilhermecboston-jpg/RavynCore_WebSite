@@ -193,14 +193,34 @@ if ($action == 'step1' && $action_type == 'no_char') {
 				<TABLE CELLSPACING=1 CELLPADDING=4 BORDER=0 WIDTH=100%>
 				<TR><TD BGCOLOR="' . $config['vdarkborder'] . '" class="white"><B>Changing Password</B></TD></TR>
 				<TR><TD BGCOLOR="' . $config['darkborder'] . '">
-				<span style="margin-right: 53px">New password:</span><INPUT TYPE="password" ID="passor" NAME="passor" VALUE="" SIZE="40"><BR />
-				<span style="margin-right: 3px">Repeat new password:</span><INPUT TYPE="password" ID="passor2" NAME="passor2" VALUE="" SIZE="40"><BR />
+				<span style="margin-right: 53px">New password:</span>
+				<span class="rc-password-wrap rc-password-wrap-compact">
+					<INPUT TYPE="password" class="rc-account-input rc-account-input-compact" ID="passor" NAME="passor" VALUE="" SIZE="32">
+					<button type="button" class="rc-btn rc-btn-subtle rc-password-toggle" data-target="passor">Show</button>
+				</span><BR />
+				<span style="margin-right: 3px">Repeat new password:</span>
+				<span class="rc-password-wrap rc-password-wrap-compact">
+					<INPUT TYPE="password" class="rc-account-input rc-account-input-compact" ID="passor2" NAME="passor2" VALUE="" SIZE="32">
+					<button type="button" class="rc-btn rc-btn-subtle rc-password-toggle" data-target="passor2">Show</button>
+				</span><BR />
 				</TD></TR>
 				</TABLE>
 				<BR>
 				<TABLE CELLSPACING="0" CELLPADDING="0" BORDER="0" WIDTH="100%"><TR><TD><div style="text-align:center">
 				' . $twig->render('buttons.submit.html.twig') . '</div>
-				</TD></TR></FORM></TABLE></TABLE>';
+				</TD></TR></FORM></TABLE></TABLE>
+				<script type="text/javascript">
+				$(function () {
+					$(".rc-password-toggle").off("click").on("click", function () {
+						var targetId = $(this).data("target");
+						var $input = $("#" + targetId);
+						if(!$input.length) { return; }
+						var isPassword = $input.attr("type") === "password";
+						$input.attr("type", isPassword ? "text" : "password");
+						$(this).text(isPassword ? "Hide" : "Show");
+					});
+				});
+				</script>';
                 } else
                     $error = 'Wrong code to change password.';
             } else if (empty($error))
