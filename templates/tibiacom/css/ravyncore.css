@@ -1744,6 +1744,10 @@ body.rc-page option {
         padding: 0 6px;
     }
 
+    .rc-header-brand {
+        align-items: center;
+    }
+
     .rc-header-wordmark {
         width: 120px;
         height: 44px;
@@ -1752,6 +1756,7 @@ body.rc-page option {
     .rc-header-subtitle {
         font-size: 10px;
         letter-spacing: 0.22em;
+        text-align: center;
     }
 
     .rc-hero,
