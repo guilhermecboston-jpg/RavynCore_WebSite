@@ -1656,12 +1656,15 @@ body.rc-page option {
         flex: 0 0 auto;
         display: flex;
         flex-direction: column;
+        align-items: stretch;
         gap: 2px;
+        text-align: left;
     }
 
     /* Category top-level link becomes a group label (gold + small caps).
        Items that are just a single link (no dropdown) keep tap behaviour. */
     .rc-nav-item > a {
+        display: block;
         width: 100%;
         justify-content: flex-start;
         padding: 0 4px 6px;
@@ -1671,6 +1674,7 @@ body.rc-page option {
         font-weight: 700;
         letter-spacing: 0.32em;
         text-transform: uppercase;
+        text-align: left;
         color: var(--rc-gold, #f2b84b);
         opacity: 0.85;
         border: none;
@@ -1705,10 +1709,13 @@ body.rc-page option {
         overflow: visible;
         display: flex;
         flex-direction: column;
+        align-items: stretch;
         gap: 2px;
+        text-align: left;
     }
     .rc-nav-dropdown a {
         display: block;
+        width: 100%;
         padding: 11px 14px;
         border-bottom: none;
         border-radius: 8px;
@@ -1717,6 +1724,7 @@ body.rc-page option {
         font-size: 13.5px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
+        text-align: left;
         color: #b9b2a4;
         transition: background 0.15s ease, color 0.15s ease;
     }
