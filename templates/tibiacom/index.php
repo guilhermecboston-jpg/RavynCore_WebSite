@@ -224,53 +224,17 @@ $socialLinks = [
 <div class="rc-atmosphere"></div>
 <div class="rc-site">
     <header class="rc-header">
-        <div class="rc-header-top">
-            <a class="rc-logo-link" href="<?= getLink('news'); ?>">
-                <div class="rc-logo-text">
-                    <?php if ($hasBrandSlogan): ?>
-                        <img class="rc-logo-wordmark header-slogan" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
-                    <?php else: ?>
-                        <strong class="header-title">RavynCore</strong>
-                    <?php endif; ?>
-                    <span class="header-subtitle"><?= escapeHtml($headerSubtitle); ?></span>
-                </div>
+        <div class="rc-header-inner">
+            <a class="rc-header-brand" href="<?= getLink('news'); ?>">
+                <?php if ($hasBrandSlogan): ?>
+                    <img class="rc-header-wordmark" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
+                <?php else: ?>
+                    <strong class="rc-header-title">RavynCore</strong>
+                <?php endif; ?>
+                <span class="rc-header-subtitle"><?= escapeHtml($headerSubtitle); ?></span>
             </a>
 
-            <div class="rc-header-actions">
-                <?php if ($logged): ?>
-                    <a class="rc-btn rc-btn-subtle" href="<?= $accountManageUrl; ?>">My Account</a>
-                    <a class="rc-btn rc-btn-danger" href="<?= $accountLogoutUrl; ?>">Logout</a>
-                <?php else: ?>
-                    <a class="rc-btn rc-btn-subtle" href="<?= $accountManageUrl; ?>">Login</a>
-                    <a class="rc-btn rc-btn-primary" href="<?= $accountCreateUrl; ?>">CREATE ACCOUNT</a>
-                <?php endif; ?>
-                <div id="rcSocialLinks" class="rc-social-icons" aria-label="RavynCore social links">
-                    <?php foreach ($socialLinks as $social): ?>
-                        <?php if (!empty($social['url'])): ?>
-                            <?php $helperTitle = addslashes((string)$social['name']); ?>
-                            <?php $helperText = addslashes((string)$social['tooltip']); ?>
-                            <span class="HelperDivIndicator"
-                                  onmouseover="ActivateHelperDiv($(this), '<?= $helperTitle; ?>', '<?= $helperText; ?>', '');"
-                                  onmouseout="$('#HelperDivContainer').hide();">
-                                <a href="<?= $social['url']; ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= escapeHtml($social['name']); ?>" title="<?= escapeHtml($social['name']); ?>">
-                                    <?php if (!empty($social['icon_path']) && file_exists(BASE . $social['icon_path'])): ?>
-                                        <img src="<?= $social['icon_path']; ?>" alt="<?= escapeHtml($social['name']); ?>">
-                                    <?php else: ?>
-                                        <i class="<?= escapeHtml($social['icon']); ?>"></i>
-                                    <?php endif; ?>
-                                </a>
-                            </span>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="rc-nav-wrap">
-            <button id="rcNavToggle" class="rc-nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="rcNav">
-                <i class="fas fa-bars"></i>
-            </button>
-            <nav id="rcNav" class="rc-nav">
+            <nav id="rcNav" class="rc-nav" aria-label="Primary">
                 <ul>
                     <?php if (!empty($menus)): ?>
                         <?php foreach ($menus as $categoryId => $items): ?>
@@ -327,25 +291,51 @@ $socialLinks = [
                     <?php endif; ?>
                 </div>
             </nav>
+
+            <div class="rc-header-actions">
+                <?php if ($logged): ?>
+                    <a class="rc-btn rc-btn-ghost rc-btn-sm" href="<?= $accountManageUrl; ?>">My Account</a>
+                    <a class="rc-btn rc-btn-violet rc-btn-sm" href="<?= $accountLogoutUrl; ?>">
+                        <i class="fas fa-right-from-bracket"></i><span>Logout</span>
+                    </a>
+                <?php else: ?>
+                    <a class="rc-btn rc-btn-ghost rc-btn-sm" href="<?= $accountManageUrl; ?>">Login</a>
+                    <a class="rc-btn rc-btn-violet rc-btn-sm" href="<?= $accountCreateUrl; ?>">
+                        <i class="fas fa-user-plus"></i><span>Create Account</span>
+                    </a>
+                <?php endif; ?>
+            </div>
+
+            <button id="rcNavToggle" class="rc-nav-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="rcNav">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </header>
 
     <section class="rc-hero hero-ravyncore">
-        <div class="rc-hero-fire"></div>
-        <div class="rc-hero-ice"></div>
-        <div class="rc-hero-content hero-ravyncore-content">
+        <div class="rc-hero-bg" aria-hidden="true"></div>
+        <div class="rc-hero-overlay" aria-hidden="true"></div>
+        <div class="rc-hero-vignette" aria-hidden="true"></div>
+
+        <div class="rc-hero-inner hero-ravyncore-content">
             <?php if ($hasBrandSlogan): ?>
                 <img class="rc-hero-wordmark hero-logo-text hero-main-slogan" src="<?= $brandSloganPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
-                <img class="rc-hero-emblem hero-logo-round hero-main-emblem" src="<?= $logoPath; ?>" alt="RavynCore Emblem">
             <?php else: ?>
                 <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
             <?php endif; ?>
 
+            <p class="rc-hero-eyebrow">Custom MMORPG Experience</p>
+
             <div class="rc-hero-ctas">
-                <a class="rc-btn rc-btn-play" href="<?= $downloadUrl; ?>">Play Now</a>
-                <a class="rc-btn rc-btn-violet" href="<?= $accountCreateUrl; ?>">Create Account</a>
-                <a class="rc-btn rc-btn-outline" href="<?= getLink('highscores'); ?>">View Ranking</a>
+                <a class="rc-btn rc-btn-play rc-btn-lg" href="<?= $downloadUrl; ?>">
+                    <i class="fas fa-gavel"></i><span>Play Now</span>
+                </a>
+                <a class="rc-btn rc-btn-violet rc-btn-lg" href="<?= $accountCreateUrl; ?>">
+                    <i class="fas fa-user-plus"></i><span>Create Account</span>
+                </a>
             </div>
+
+            <p class="rc-hero-support">Join thousands of players in an epic adventure!</p>
         </div>
 
         <div class="rc-hero-stats">
@@ -363,6 +353,56 @@ $socialLinks = [
                 <span>Server Save</span>
                 <strong id="rcServerSaveCountdown" data-target="<?= $serverSaveDate->format('c'); ?>">--:--:--</strong>
                 <small>Daily reset</small>
+            </div>
+        </div>
+    </section>
+
+    <section class="rc-features" aria-label="Server highlights">
+        <div class="rc-features-inner">
+            <article class="rc-feature">
+                <div class="rc-feature-icon"><i class="fas fa-scroll"></i></div>
+                <h3>Custom Content</h3>
+                <p>Exclusive maps, quests, and systems designed for a unique experience.</p>
+            </article>
+            <article class="rc-feature">
+                <div class="rc-feature-icon"><i class="fas fa-balance-scale"></i></div>
+                <h3>Fair Play</h3>
+                <p>Balanced gameplay, active staff and a dedicated anti-cheat system.</p>
+            </article>
+            <article class="rc-feature">
+                <div class="rc-feature-icon"><i class="fas fa-users"></i></div>
+                <h3>Active Community</h3>
+                <p>Friendly players, events, tournaments and constant updates.</p>
+            </article>
+            <article class="rc-feature">
+                <div class="rc-feature-icon"><i class="fas fa-shield-halved"></i></div>
+                <h3>Secure &amp; Stable</h3>
+                <p>Protected server, daily backups and 24/7 monitoring for the best performance.</p>
+            </article>
+        </div>
+    </section>
+
+    <section id="rcSocialLinks" class="rc-social-strip" aria-label="RavynCore social links">
+        <div class="rc-social-strip-inner">
+            <h6 class="rc-social-strip-label">Connect with the Community</h6>
+            <div class="rc-social-icons">
+                <?php foreach ($socialLinks as $social): ?>
+                    <?php if (!empty($social['url'])): ?>
+                        <?php $helperTitle = addslashes((string)$social['name']); ?>
+                        <?php $helperText = addslashes((string)$social['tooltip']); ?>
+                        <span class="HelperDivIndicator"
+                              onmouseover="ActivateHelperDiv($(this), '<?= $helperTitle; ?>', '<?= $helperText; ?>', '');"
+                              onmouseout="$('#HelperDivContainer').hide();">
+                            <a href="<?= $social['url']; ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= escapeHtml($social['name']); ?>" title="<?= escapeHtml($social['name']); ?>">
+                                <?php if (!empty($social['icon_path']) && file_exists(BASE . $social['icon_path'])): ?>
+                                    <img src="<?= $social['icon_path']; ?>" alt="<?= escapeHtml($social['name']); ?>">
+                                <?php else: ?>
+                                    <i class="<?= escapeHtml($social['icon']); ?>"></i>
+                                <?php endif; ?>
+                            </a>
+                        </span>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>

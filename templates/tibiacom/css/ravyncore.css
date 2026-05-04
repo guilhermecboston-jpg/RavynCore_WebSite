@@ -14,9 +14,15 @@
     --rc-blue: #2f63c4;
     --rc-blue-strong: #4e85f1;
     --rc-border: rgba(154, 176, 224, 0.3);
+    --rc-border-soft: rgba(255, 255, 255, 0.06);
     --rc-border-strong: rgba(194, 157, 99, 0.6);
+    --rc-gold: #f2b84b;
+    --rc-gold-glow: rgba(242, 184, 75, 0.45);
+    --rc-purple-glow: rgba(139, 61, 255, 0.45);
     --rc-shadow: 0 14px 35px rgba(0, 0, 0, 0.45);
     --rc-radius: 16px;
+    --rc-radius-card: 10px;
+    --rc-radius-cta: 8px;
 }
 
 *,
@@ -92,7 +98,6 @@ a:hover {
     z-index: 1;
 }
 
-.rc-header,
 .rc-panel,
 .rc-footer {
     border: 1px solid var(--rc-border);
@@ -104,125 +109,80 @@ a:hover {
 .rc-header,
 .header,
 .site-header {
-    margin-bottom: 0;
-    position: absolute;
+    position: sticky;
     top: 0;
-    left: 0;
-    width: 100%;
-    min-height: 140px;
-    z-index: 30;
-    overflow: hidden;
-    border: 1px solid rgba(138, 160, 206, 0.16);
-    border-radius: 16px;
-    background: transparent;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    margin-top: 0;
+    margin-bottom: -76px;
+    z-index: 100;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0;
+    background: rgba(5, 8, 14, 0.18);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: none;
+    overflow: visible;
+    min-height: 0;
 }
 
-.rc-header-top {
-    display: flex;
+.rc-header-inner {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 12px 28px;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    min-height: 98px;
-    padding: 10px 24px 8px;
-    border-bottom: 1px solid rgba(138, 160, 206, 0.16);
-    background: transparent;
+    gap: 32px;
 }
 
-.rc-logo-link {
-    display: flex;
+.rc-header-brand {
+    display: inline-flex;
+    flex-direction: column;
     align-items: center;
     gap: 0;
+    line-height: 1;
     color: var(--rc-text);
 }
 
-.rc-logo-image,
-.header-logo {
-    width: 72px;
-    height: 72px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 16px rgba(240, 174, 80, 0.32));
+.rc-header-wordmark {
+    width: 168px;
+    height: 56px;
+    object-fit: cover;
+    object-position: center center;
+    filter: drop-shadow(0 0 16px rgba(122, 85, 186, 0.32));
+    display: block;
 }
 
-.rc-logo-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-    min-width: 0;
-}
-
-.rc-logo-text strong {
+.rc-header-title {
     font-family: 'Cinzel', 'Georgia', serif;
     font-size: 22px;
     letter-spacing: 0.05em;
 }
 
-.header-title {
+.rc-header-subtitle {
+    margin-top: -8px;
     font-family: 'Cinzel', 'Georgia', serif;
-    font-size: 22px;
-}
-
-.rc-logo-text span,
-.header-subtitle {
+    font-size: 13px;
+    letter-spacing: 0.28em;
     color: #d8c79a;
-    font-size: 15px;
-    letter-spacing: 3px;
     text-transform: uppercase;
-    font-family: 'Cinzel', 'Georgia', serif;
-    line-height: 1;
-    width: 140px;
-    text-align: center;
-    margin-top: -10px;
     white-space: nowrap;
 }
 
-.rc-logo-wordmark {
-    width: 170px;
-    max-width: 100%;
-    height: 62px;
-    object-fit: cover;
-    object-position: center center;
-    display: block;
-    filter: drop-shadow(0 0 18px rgba(122, 85, 186, 0.34));
-}
-
 .rc-header-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: flex-end;
+    display: inline-flex;
+    align-items: center;
     gap: 10px;
-    margin-left: auto;
-    max-width: 420px;
-}
-
-.rc-header-actions .rc-btn {
-    height: 44px;
-    padding: 0 22px;
-    border-radius: 8px;
-    font-size: 14px;
-    letter-spacing: 0.5px;
-}
-
-.rc-header-actions .rc-btn-subtle {
-    border-color: rgba(138, 160, 202, 0.62);
-    background: rgba(18, 30, 52, 0.68);
-}
-
-.rc-header-actions .rc-btn-primary {
-    border-color: rgba(229, 176, 90, 0.7);
-    background: linear-gradient(90deg, rgba(160, 66, 34, 0.92), rgba(114, 73, 176, 0.92));
+    justify-self: end;
 }
 
 .rc-social-icons {
-    flex: 0 0 100%;
-    display: flex;
-    justify-content: flex-end;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-top: -2px;
 }
 
 .rc-social-icons .HelperDivIndicator {
@@ -256,31 +216,25 @@ a:hover {
     transform: translateY(-1px);
 }
 
-.rc-nav-wrap,
-.navbar,
-.main-nav,
-.header-nav {
-    display: flex;
-    align-items: center;
-    height: 42px;
-    padding: 0 18px;
-    background: rgba(0, 0, 0, 0.15);
-    border-top: 1px solid rgba(176, 196, 232, 0.13);
-    border-bottom: 1px solid rgba(176, 196, 232, 0.14);
-}
-
 .rc-nav-toggle {
     display: none;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
     border: 1px solid var(--rc-border);
-    border-radius: 10px;
-    background: rgba(19, 28, 44, 0.85);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
     color: var(--rc-text);
     font-size: 1rem;
-    width: 44px;
-    height: 38px;
-    margin: 10px 0;
     cursor: pointer;
+    padding: 0;
     transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.rc-nav-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
 }
 
 .rc-nav-toggle.is-active {
@@ -296,7 +250,9 @@ a:hover {
 body.rc-nav-locked { overflow: hidden; }
 
 .rc-nav {
-    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .rc-nav ul {
@@ -304,41 +260,36 @@ body.rc-nav-locked { overflow: hidden; }
     padding: 0;
     list-style: none;
     display: flex;
-    height: 42px;
     align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
 }
 
 .rc-nav-item {
     position: relative;
-    flex: 1 1 0;
     min-width: 0;
 }
 
 .rc-nav-item > a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 0 clamp(10px, 1.4vw, 28px);
-    height: 42px;
-    color: #e4e9f7;
-    border-radius: 10px;
+    display: inline-block;
+    padding: 10px 16px;
+    color: var(--rc-text-soft, #b9b2a4);
+    border-radius: 6px;
     border: 1px solid transparent;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-weight: 600;
+    font-size: 13.5px;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    font-size: 14px;
-    transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
 .rc-nav-item > a:hover {
-    color: #f0c77f;
-    border-color: rgba(216, 154, 47, 0.34);
-    background: rgba(216, 154, 47, 0.12);
-    box-shadow: inset 0 0 0 1px rgba(255, 223, 170, 0.04), 0 0 14px rgba(216, 154, 47, 0.12);
+    color: var(--rc-text, #f5f1e8);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: transparent;
+    box-shadow: none;
 }
 
 .rc-nav-badge {
@@ -401,31 +352,33 @@ body.rc-nav-locked { overflow: hidden; }
 
 .rc-hero,
 .hero-ravyncore {
-    margin-bottom: 0;
-    margin-top: 0;
-    padding: 80px 0 0;
-    min-height: unset;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
     position: relative;
     overflow: hidden;
     width: 100vw;
+    margin: 0;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
+    padding: 96px 24px 32px;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 18px;
     border: none;
     border-radius: 0;
     box-shadow: none;
-    background-color: transparent !important;
     background:
-        var(--rc-bg-image, url('../images/brand/ravyncore-background.png')) center top / cover no-repeat !important;
+        radial-gradient(ellipse at 18% 50%, rgba(124, 36, 24, 0.55) 0%, transparent 55%),
+        radial-gradient(ellipse at 82% 50%, rgba(28, 56, 130, 0.55) 0%, transparent 55%),
+        linear-gradient(180deg, #060912 0%, #03050b 100%);
 }
 
 @media (min-width: 1141px) {
     .rc-hero,
     .hero-ravyncore {
         min-height: 100vh;
+        padding-top: 120px;
         padding-bottom: 24px;
     }
 
@@ -436,27 +389,33 @@ body.rc-nav-locked { overflow: hidden; }
     }
 }
 
-.hero-ravyncore::before {
-    content: "";
+.rc-hero-bg {
     position: absolute;
     inset: 0;
-    pointer-events: none;
+    background-image: url('../images/brand/ravyncore-background.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    z-index: 0;
 }
 
-.hero-ravyncore::before {
+.rc-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.75));
     z-index: 1;
-    background:
-        linear-gradient(90deg,
-            rgba(90, 25, 0, 0.16) 0%,
-            rgba(0, 0, 0, 0.08) 45%,
-            rgba(0, 55, 120, 0.18) 100%),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.18) 45%, rgba(0, 0, 0, 0.48) 100%);
 }
 
-.hero-ravyncore::after {
-    content: "";
-    display: block;
-    height: 0;
+.rc-hero-vignette {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at center,
+            rgba(0, 0, 0, 0) 40%,
+            rgba(0, 0, 0, 0.55) 92%,
+            rgba(0, 0, 0, 0.85) 100%);
+    z-index: 2;
+    pointer-events: none;
 }
 
 .rc-hero-fire,
@@ -464,64 +423,32 @@ body.rc-nav-locked { overflow: hidden; }
     display: none;
 }
 
+.rc-hero-inner,
 .rc-hero-content,
 .hero-ravyncore-content {
     position: relative;
     z-index: 3;
-    width: min(1600px, 100%);
+    max-width: 920px;
+    width: 100%;
     margin: 0 auto;
-    min-height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
     text-align: center;
-    gap: 4px;
+    gap: 14px;
     padding-top: 0;
 }
 
-.rc-hero-kicker {
-    font-family: 'Cinzel', 'Georgia', serif;
-    font-size: 14px;
-    letter-spacing: 2.8px;
-    color: #d8bd7a;
-    text-shadow: 0 2px 8px #000;
-    margin: 0 0 6px 0;
-    font-weight: 700;
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-}
-
-.rc-hero-kicker::before,
-.rc-hero-kicker::after {
-    color: #c59a4e;
-    text-shadow: 0 0 8px rgba(15, 11, 4, 0.8);
-}
-
-.rc-hero-kicker::before {
-    content: "\2192";
-    margin-right: 14px;
-}
-
-.rc-hero-kicker::after {
-    content: "\2190";
-    margin-left: 14px;
-}
-
-.hero-subtitle {
-    font-family: 'Cinzel', 'Georgia', serif;
-    font-size: 14px;
-    letter-spacing: 2.8px;
-    color: #d8bd7a;
-    text-shadow: 0 2px 8px #000;
-    margin: 0 0 6px 0;
+.rc-hero-kicker,
+.hero-subtitle,
+.hero-title {
+    display: none;
 }
 
 .rc-hero-logo {
     width: min(440px, 100%);
     object-fit: contain;
-    margin: 10px auto 8px;
+    margin: 0 auto;
     display: block;
     filter: drop-shadow(0 0 22px rgba(84, 110, 186, 0.25));
 }
@@ -529,28 +456,40 @@ body.rc-nav-locked { overflow: hidden; }
 .hero-main-slogan,
 .rc-hero-wordmark,
 .hero-logo-text {
-    width: 1120px;
-    max-width: 92vw;
-    max-height: 480px;
+    width: min(820px, 78vw);
+    max-height: 320px;
+    height: auto;
+    max-width: 100%;
     object-fit: contain;
-    margin-top: 122px;
-    margin-bottom: -42px;
+    margin: 0;
     transform: none;
     display: block;
-    filter: drop-shadow(0 0 28px rgba(0, 0, 0, 0.95));
+    filter: drop-shadow(0 0 36px rgba(139, 61, 255, 0.45))
+            drop-shadow(0 0 18px rgba(242, 184, 75, 0.18));
 }
 
 .hero-main-emblem,
 .rc-hero-emblem,
 .hero-logo-round {
-    width: 360px;
-    max-width: 46vw;
-    max-height: 430px;
-    object-fit: contain;
-    margin-top: -64px;
-    margin-bottom: 4px;
-    display: block;
-    filter: drop-shadow(0 0 32px rgba(0, 0, 0, 1));
+    display: none;
+}
+
+.rc-hero-eyebrow {
+    margin: 0;
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: clamp(14px, 1.6vw, 20px);
+    letter-spacing: 0.46em;
+    text-transform: uppercase;
+    color: var(--rc-gold, #f2b84b);
+    text-shadow: 0 0 22px rgba(242, 184, 75, 0.45);
+}
+
+.rc-hero-support {
+    margin: 2px 0 0;
+    color: var(--rc-text-soft, #b9b2a4);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.6);
 }
 
 .rc-hero h1 {
@@ -562,7 +501,6 @@ body.rc-nav-locked { overflow: hidden; }
     text-shadow: 0 2px 16px rgba(2, 5, 11, 0.95);
 }
 
-.hero-title,
 .rc-hero-tagline {
     margin-top: 8px;
     margin-bottom: 6px;
@@ -575,35 +513,15 @@ body.rc-nav-locked { overflow: hidden; }
     font-weight: 700;
 }
 
-.hero-title {
-    display: none;
-}
-
-.hero-title .orn {
-    color: #c59a4e;
-    font-size: 22px;
-    margin: 0 14px;
-}
-
-.hero-title .under {
-    border-bottom: 1px solid rgba(197, 154, 78, 0.55);
-    padding-bottom: 4px;
-}
-
 .rc-hero-ctas {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 14px;
-    margin-top: 80px;
-    margin-bottom: 10px;
+    margin: 2px 0 0;
 }
 
 .rc-hero-ctas .rc-btn {
-    height: 48px;
-    padding: 0 34px;
-    border-radius: 8px;
-    font-size: 15px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -912,18 +830,69 @@ body.rc-nav-locked { overflow: hidden; }
 }
 
 .rc-btn-play {
-    color: #fff3dd;
-    border-color: rgba(233, 149, 76, 0.78);
-    background: linear-gradient(90deg, rgba(164, 61, 25, 0.96), rgba(202, 109, 52, 0.94));
-    box-shadow: 0 0 16px rgba(207, 95, 37, 0.32), inset 0 0 0 1px rgba(255, 219, 176, 0.2);
+    background: linear-gradient(180deg, #3a2108, #120904);
+    border-color: var(--rc-gold, #f2b84b);
+    color: #ffd98a;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    box-shadow:
+        0 0 0 1px rgba(242, 184, 75, 0.18) inset,
+        0 8px 24px rgba(242, 184, 75, 0.18),
+        0 0 28px rgba(242, 184, 75, 0.45);
+}
+
+.rc-btn-play:hover {
+    box-shadow:
+        0 0 0 1px rgba(242, 184, 75, 0.32) inset,
+        0 12px 30px rgba(242, 184, 75, 0.28),
+        0 0 36px rgba(242, 184, 75, 0.45);
 }
 
 .rc-btn-violet {
-    color: #f2ebff;
-    border-color: rgba(160, 120, 232, 0.72);
-    background: linear-gradient(90deg, rgba(80, 53, 132, 0.95), rgba(131, 87, 206, 0.95));
-    box-shadow: 0 0 16px rgba(120, 86, 201, 0.28), inset 0 0 0 1px rgba(223, 207, 255, 0.14);
+    background: linear-gradient(180deg, #35105f, #160821);
+    border-color: var(--rc-purple, #8b3dff);
+    color: #eadcff;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    box-shadow:
+        0 0 0 1px rgba(139, 61, 255, 0.18) inset,
+        0 8px 24px rgba(139, 61, 255, 0.18),
+        0 0 28px rgba(139, 61, 255, 0.45);
 }
+
+.rc-btn-violet:hover {
+    box-shadow:
+        0 0 0 1px rgba(139, 61, 255, 0.34) inset,
+        0 12px 30px rgba(139, 61, 255, 0.30),
+        0 0 36px rgba(139, 61, 255, 0.45);
+}
+
+.rc-btn-ghost {
+    color: var(--rc-text-soft, #b9b2a4);
+    border-color: var(--rc-border, rgba(255, 255, 255, 0.10));
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.rc-btn-ghost:hover {
+    color: var(--rc-text, #f5f1e8);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.rc-btn-sm {
+    height: 38px;
+    padding: 0 18px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+}
+
+.rc-btn-lg {
+    height: 56px;
+    padding: 0 38px;
+    font-size: 15px;
+    letter-spacing: 0.26em;
+    border-radius: 10px;
+}
+
+.rc-btn-lg i { font-size: 17px; }
 
 .rc-btn-outline {
     color: #e2ecff;
@@ -938,6 +907,120 @@ body.rc-nav-locked { overflow: hidden; }
 
 .rc-panel > .rc-btn-block + .rc-btn-block {
     margin-top: 10px;
+}
+
+/* =================== FEATURE CARDS =================== */
+.rc-features {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 22px 24px 28px;
+    background: linear-gradient(180deg, #05070d 0%, #07090f 100%);
+}
+
+.rc-features-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.rc-feature {
+    position: relative;
+    padding: 18px 20px;
+    background: rgba(8, 10, 16, 0.78);
+    border: 1px solid var(--rc-border);
+    border-radius: var(--rc-radius-card);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.25s ease;
+}
+
+.rc-feature::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(180deg,
+        rgba(139, 61, 255, 0.05) 0%,
+        rgba(242, 184, 75, 0.03) 100%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.rc-feature:hover {
+    transform: translateY(-3px);
+    border-color: rgba(139, 61, 255, 0.45);
+    box-shadow:
+        0 14px 40px rgba(0, 0, 0, 0.45),
+        0 0 28px rgba(139, 61, 255, 0.18),
+        0 0 12px rgba(242, 184, 75, 0.10);
+}
+
+.rc-feature:hover::before { opacity: 1; }
+
+.rc-feature-icon {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 10px;
+    color: var(--rc-gold);
+    font-size: 17px;
+    background:
+        radial-gradient(circle at 30% 30%, rgba(242, 184, 75, 0.18), transparent 70%),
+        linear-gradient(180deg, rgba(35, 22, 8, 0.85), rgba(15, 9, 4, 0.85));
+    border: 1px solid rgba(242, 184, 75, 0.28);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    text-shadow: 0 0 14px var(--rc-gold-glow);
+}
+
+.rc-feature h3 {
+    margin: 0 0 6px;
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rc-text);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.rc-feature p {
+    margin: 0;
+    color: var(--rc-text-soft);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* =================== SOCIAL STRIP =================== */
+.rc-social-strip {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 18px 24px 22px;
+    background: linear-gradient(180deg, #07090f 0%, #05070d 100%);
+    border-top: 1px solid var(--rc-border-soft);
+}
+
+.rc-social-strip-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.rc-social-strip-label {
+    margin: 0;
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #d8c79a;
 }
 
 .rc-footer {
@@ -1437,37 +1520,19 @@ body.rc-page option {
 }
 
 @media (max-width: 1200px) {
-    .rc-hero,
-    .hero-ravyncore {
-        padding: 102px 0 0;
+    .rc-features-inner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .rc-hero-content,
-    .hero-ravyncore-content {
-        min-height: auto;
+    .rc-nav-item > a {
+        padding: 10px 12px;
+        font-size: 12.5px;
+        letter-spacing: 0.14em;
     }
 
-    .hero-main-slogan,
-    .rc-hero-wordmark,
-    .hero-logo-text {
-        width: 520px;
-        max-width: 74vw;
-        margin-top: 112px;
-        margin-bottom: -24px;
-        transform: none;
-    }
-
-    .hero-main-emblem,
-    .rc-hero-emblem,
-    .hero-logo-round {
-        width: 258px;
-        max-width: 44vw;
-        margin-top: -18px;
-    }
-
-    .hero-title,
-    .rc-hero-tagline {
-        font-size: 26px;
+    .rc-header-inner {
+        gap: 18px;
+        padding: 12px 18px;
     }
 }
 
@@ -1478,18 +1543,26 @@ body.rc-page option {
         padding: 0 8px;
     }
 
-    .rc-header {
-        position: relative;
-        min-height: auto;
+    .rc-header-inner {
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        padding: 10px 16px;
     }
 
-    .rc-header-top {
-        flex-wrap: wrap;
-        gap: 14px;
+    .rc-header-brand {
+        align-items: flex-start;
+        justify-self: start;
     }
 
-    .rc-header-actions {
-        max-width: none;
+    .rc-header-wordmark {
+        width: 132px;
+        height: 46px;
+    }
+
+    .rc-header-subtitle {
+        font-size: 11px;
+        letter-spacing: 0.24em;
+        margin-top: -6px;
     }
 
     .rc-main-grid {
@@ -1506,16 +1579,19 @@ body.rc-page option {
         width: 100%;
     }
 
+    .rc-features-inner {
+        grid-template-columns: 1fr;
+    }
+
     .rc-nav-toggle {
         display: inline-flex;
         align-items: center;
         justify-content: center;
     }
 
-    /* Hide the desktop top-bar buttons + social on mobile; they live inside
+    /* Hide the desktop login/create CTAs on mobile; they live inside
        the burger drawer instead (.rc-nav-mobile-actions). */
-    .rc-header-actions .rc-btn,
-    .rc-social-icons {
+    .rc-header-actions {
         display: none;
     }
 
@@ -1658,89 +1734,47 @@ body.rc-page option {
         padding: 0 6px;
     }
 
-    .rc-logo-image {
-        width: 62px;
-        height: 62px;
-    }
-
-    .rc-logo-wordmark {
+    .rc-header-wordmark {
         width: 120px;
         height: 44px;
-        object-fit: cover;
-        object-position: center center;
     }
 
-    .rc-logo-text strong {
-        font-size: 1.25rem;
-    }
-
-    .rc-logo-text span,
-    .header-subtitle {
-        font-size: 11px;
-        letter-spacing: 1.2px;
-        width: 120px;
-        color: #d8c79a;
-        text-align: center;
-        white-space: nowrap;
-        margin-top: 0;
-    }
-
-    .rc-header-actions {
-        width: 100%;
-    }
-
-    .rc-header-actions .rc-btn {
-        flex: 1;
-    }
-
-    .rc-social-icons {
-        justify-content: center;
+    .rc-header-subtitle {
+        font-size: 10px;
+        letter-spacing: 0.22em;
     }
 
     .rc-hero,
     .hero-ravyncore {
-        padding: 24px 10px 0;
-        background-position: center top !important;
-    }
-
-    .rc-hero-content,
-    .hero-ravyncore-content {
-        min-height: auto;
+        padding: 80px 14px 24px;
+        min-height: 460px;
     }
 
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
         width: 88vw;
-        max-height: 150px;
-        margin-top: 66px;
-        margin-bottom: -24px;
-        transform: translateY(0);
+        max-height: 220px;
     }
 
-    .hero-main-emblem,
-    .rc-hero-emblem,
-    .hero-logo-round {
-        width: 220px;
-        max-height: 225px;
-        margin-top: -10px;
-        margin-bottom: 4px;
+    .rc-hero-eyebrow {
+        font-size: 12px;
+        letter-spacing: 0.36em;
     }
 
-    .hero-title,
-    .rc-hero-tagline {
-        font-size: 22px;
+    .rc-hero-support {
+        font-size: 13px;
     }
 
-    .hero-subtitle,
-    .rc-hero-kicker {
-        font-size: 10px;
-        letter-spacing: 1.6px;
+    .rc-btn-lg {
+        height: 52px;
+        padding: 0 28px;
+        font-size: 14px;
+        letter-spacing: 0.22em;
     }
 
-    .hero-title .orn {
-        font-size: 17px;
-        margin: 0 8px;
+    .rc-features-inner {
+        grid-template-columns: 1fr;
     }
 
     .rc-footer-bottom {
@@ -1755,37 +1789,13 @@ body.rc-page option {
 @media (min-width: 1141px) and (max-height: 920px) {
     .rc-hero,
     .hero-ravyncore {
-        padding-top: 60px;
+        padding-top: 100px;
     }
 
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        width: 940px;
-        max-width: 90vw;
-        margin-top: 60px;
-        margin-bottom: -34px;
-        max-height: 360px;
-    }
-
-    .hero-main-emblem,
-    .rc-hero-emblem,
-    .hero-logo-round {
-        width: 280px;
-        max-height: 290px;
-        margin-top: -70px;
-    }
-
-    .rc-hero-ctas {
-        gap: 12px;
-        margin-top: 60px;
-        margin-bottom: 6px;
-    }
-
-    .rc-hero-ctas .rc-btn {
-        height: 42px;
-        padding: 0 26px;
-        font-size: 14px;
+        max-height: 280px;
     }
 
     .rc-hero-stats {
@@ -1804,44 +1814,19 @@ body.rc-page option {
 @media (min-width: 1141px) and (max-height: 780px) {
     .rc-hero,
     .hero-ravyncore {
-        padding-top: 50px;
+        padding-top: 90px;
     }
 
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        width: 800px;
-        max-width: 90vw;
-        margin-top: 36px;
-        margin-bottom: -26px;
-        max-height: 290px;
-    }
-
-    .hero-main-emblem,
-    .rc-hero-emblem,
-    .hero-logo-round {
-        width: 240px;
         max-height: 240px;
-        margin-top: -55px;
     }
 
-    .rc-hero-kicker,
-    .hero-subtitle {
-        font-size: 12px;
-        letter-spacing: 2.2px;
-        margin-bottom: 4px;
-    }
-
-    .rc-hero-ctas {
-        gap: 10px;
-        margin-top: 42px;
-        margin-bottom: 4px;
-    }
-
-    .rc-hero-ctas .rc-btn {
-        height: 38px;
-        padding: 0 22px;
-        font-size: 13px;
+    .rc-btn-lg {
+        height: 50px;
+        padding: 0 30px;
+        font-size: 14px;
     }
 
     .rc-hero-stats {
@@ -1877,26 +1862,12 @@ body.rc-page option {
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        width: 1340px;
-        max-height: 560px;
-        margin-top: 110px;
-    }
-
-    .hero-main-emblem,
-    .rc-hero-emblem,
-    .hero-logo-round {
-        width: 380px;
         max-height: 460px;
-        margin-top: -110px;
     }
 
-    .rc-hero-ctas {
-        margin-top: 100px;
-    }
-
-    .rc-hero-ctas .rc-btn {
-        height: 52px;
-        padding: 0 38px;
+    .rc-btn-lg {
+        height: 60px;
+        padding: 0 40px;
         font-size: 16px;
     }
 }
@@ -1905,26 +1876,12 @@ body.rc-page option {
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        width: 1540px;
-        max-height: 640px;
-        margin-top: 130px;
+        max-height: 540px;
     }
 
-    .hero-main-emblem,
-    .rc-hero-emblem,
-    .hero-logo-round {
-        width: 440px;
-        max-height: 520px;
-        margin-top: -130px;
-    }
-
-    .rc-hero-ctas {
-        margin-top: 120px;
-    }
-
-    .rc-hero-ctas .rc-btn {
-        height: 56px;
-        padding: 0 44px;
+    .rc-btn-lg {
+        height: 64px;
+        padding: 0 46px;
         font-size: 17px;
     }
 }
