@@ -216,6 +216,12 @@ a:hover {
     transform: translateY(-1px);
 }
 
+.rc-social-strip.is-highlight .rc-social-icons a,
+.rc-social-icons.is-highlight a {
+    border-color: rgba(242, 184, 75, 0.62);
+    box-shadow: 0 0 16px rgba(242, 184, 75, 0.28);
+}
+
 .rc-nav-toggle {
     display: none;
     width: 44px;
@@ -450,16 +456,15 @@ body.rc-nav-locked { overflow: hidden; }
 .hero-main-slogan,
 .rc-hero-wordmark,
 .hero-logo-text {
-    width: min(820px, 78vw);
-    max-height: 320px;
+    width: 1120px;
+    max-width: 92vw;
+    max-height: 480px;
     height: auto;
-    max-width: 100%;
     object-fit: contain;
-    margin: 0;
+    margin: 16px 0 -8px;
     transform: none;
     display: block;
-    filter: drop-shadow(0 0 36px rgba(139, 61, 255, 0.45))
-            drop-shadow(0 0 18px rgba(242, 184, 75, 0.18));
+    filter: drop-shadow(0 0 28px rgba(0, 0, 0, 0.95));
 }
 
 .hero-main-emblem,
@@ -1748,7 +1753,9 @@ body.rc-page option {
     .rc-hero-wordmark,
     .hero-logo-text {
         width: 88vw;
-        max-height: 220px;
+        max-width: 92vw;
+        max-height: 240px;
+        margin: 8px 0 -6px;
     }
 
     .rc-hero-eyebrow {
@@ -1783,28 +1790,30 @@ body.rc-page option {
 @media (min-width: 1141px) and (max-height: 920px) {
     .rc-hero,
     .hero-ravyncore {
-        min-height: 70vh;
+        min-height: 72vh;
         padding-top: 96px;
     }
 
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        max-height: 260px;
+        max-height: 360px;
+        margin-top: 8px;
     }
 }
 
 @media (min-width: 1141px) and (max-height: 780px) {
     .rc-hero,
     .hero-ravyncore {
-        min-height: 68vh;
+        min-height: 70vh;
         padding-top: 88px;
     }
 
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        max-height: 220px;
+        max-height: 280px;
+        margin-top: 4px;
     }
 
     .rc-btn-lg {
@@ -1830,7 +1839,8 @@ body.rc-page option {
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        max-height: 460px;
+        width: 1340px;
+        max-height: 540px;
     }
 
     .rc-btn-lg {
@@ -1844,7 +1854,8 @@ body.rc-page option {
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        max-height: 540px;
+        width: 1540px;
+        max-height: 640px;
     }
 
     .rc-btn-lg {

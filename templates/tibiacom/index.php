@@ -253,7 +253,7 @@ $socialLinks = [
                             }
                             ?>
                             <li class="rc-nav-item">
-                                <a href="<?= $categoryLink; ?>"><?= escapeHtml($categoryName); ?></a>
+                                <a href="<?= $categoryLink; ?>"<?= $categoryKey === 'community' ? ' data-rc-community-link' : ''; ?>><?= escapeHtml($categoryName); ?></a>
                                 <?php if ($showDropdown): ?>
                                     <div class="rc-nav-dropdown">
                                         <?php foreach ($items as $item): ?>

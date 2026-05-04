@@ -76,6 +76,21 @@
         });
     }
 
+    var communityLinks = document.querySelectorAll('[data-rc-community-link]');
+    var socialContainer = document.getElementById('rcSocialLinks');
+    if (communityLinks.length && socialContainer) {
+        communityLinks.forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                socialContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                socialContainer.classList.add('is-highlight');
+                setTimeout(function () {
+                    socialContainer.classList.remove('is-highlight');
+                }, 1200);
+            });
+        });
+    }
+
     document.querySelectorAll('[data-rc-letters-only]').forEach(function (input) {
         input.addEventListener('input', function () {
             input.value = input.value.replace(/[^A-Za-z\s]/g, '');
