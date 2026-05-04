@@ -390,7 +390,7 @@ body.rc-nav-locked { overflow: hidden; }
     inset: 0;
     background-image: url('../images/brand/ravyncore-background.png');
     background-size: cover;
-    background-position: center center;
+    background-position: center top;
     background-repeat: no-repeat;
     z-index: 0;
 }
