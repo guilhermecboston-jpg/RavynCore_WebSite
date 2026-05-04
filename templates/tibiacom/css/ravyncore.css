@@ -462,11 +462,11 @@ body.rc-nav-locked { overflow: hidden; }
 .hero-main-slogan,
 .rc-hero-wordmark,
 .hero-logo-text {
-    width: 70vw;
-    max-width: 70vw;
+    width: 58vw;
+    max-width: 58vw;
     aspect-ratio: 3 / 1;
     height: auto;
-    max-height: 380px;
+    max-height: 320px;
     object-fit: cover;
     object-position: center;
     margin: 0;
@@ -1810,7 +1810,7 @@ body.rc-page option {
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        max-height: 320px;
+        max-height: 270px;
         margin: 0;
     }
 }
@@ -1825,7 +1825,7 @@ body.rc-page option {
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        max-height: 280px;
+        max-height: 235px;
         margin: 0;
     }
 
@@ -1852,9 +1852,9 @@ body.rc-page option {
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        width: 70vw;
-        max-width: 70vw;
-        max-height: 460px;
+        width: 58vw;
+        max-width: 58vw;
+        max-height: 390px;
     }
 
     .rc-btn-lg {
@@ -1868,9 +1868,9 @@ body.rc-page option {
     .hero-main-slogan,
     .rc-hero-wordmark,
     .hero-logo-text {
-        width: 70vw;
-        max-width: 70vw;
-        max-height: 560px;
+        width: 58vw;
+        max-width: 58vw;
+        max-height: 470px;
     }
 
     .rc-btn-lg {
