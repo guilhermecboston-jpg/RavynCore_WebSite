@@ -1637,9 +1637,11 @@ body.rc-page option {
         flex: 0 0 auto;
         flex-direction: column;
         align-items: stretch;
+        justify-content: flex-start;
         height: auto;
         padding: 14px 18px 6px;
         gap: 18px;
+        text-align: left;
     }
 
     .rc-nav-item {
