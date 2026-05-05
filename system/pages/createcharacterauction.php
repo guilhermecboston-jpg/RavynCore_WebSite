@@ -21,9 +21,7 @@ $title = 'Create Sale';
 
 require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 
-if ($logged) {
-    require SYSTEM . 'pages/char_bazaar/coins_balance.php';
-} else {
+if (!$logged) {
     if (!empty($errors)) {
         $twig->display('error_box.html.twig', array('errors' => $errors));
     }
@@ -122,8 +120,6 @@ if ($getAuctionStep === 5) {
             . $db->quote($date_end) . ', '
             . $db->quote($date_start) . ', 0, 0, 0)');
 
-        $saleId = (int)$db->lastInsertId();
-
         $db->exec('UPDATE `players` SET `account_id` = ' . $db->quote($charbazaar_newacc) . ' WHERE `id` = ' . $db->quote($auction_character));
 
         $db->commit();
@@ -140,11 +136,11 @@ if ($getAuctionStep === 5) {
                                     <td style="font-weight:normal;"><img src="<?= $template_path; ?>/images/charactertrade/confirm.gif"></td>
                                     <td style="font-weight:bold; font-size: 24px;">Sale created</td>
                                     <td>
-                                        <a href="?subtopic=currentcharactertrades&details=<?= $saleId ?>">
+                                        <a href="?subtopic=currentcharactertrades">
                                             <div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton_green.gif)">
                                                 <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
                                                     <div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_green_over.gif); visibility: hidden;"></div>
-                                                    <input name="sale_confirm" class="BigButtonText" type="button" value="View sale">
+                                                    <input name="sale_confirm" class="BigButtonText" type="button" value="Go to Char Bazaar">
                                                 </div>
                                             </div>
                                         </a>

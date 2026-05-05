@@ -31,34 +31,30 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_character'])) {
 
     ?>
 
-    <div class="TableContainer">
+    <div class="TableContainer rc-cbz-host rc-cbz-confirm-top">
         <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Confirm Sale (4/4)</div></div></div>
         <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
             <div class="InnerTableContainer">
-                <table style="width:100%;"><tbody>
-                <tr>
-                    <td style="width:180px;text-align:center;"><img class="AuctionOutfitImage" src="<?= $character['outfit_url'] ?>"></td>
-                    <td>
-                        <div class="AuctionCharacterName"><?= htmlspecialchars($character['name']) ?></div>
-                        Level: <?= (int)$character['level'] ?> | Vocation: <?= htmlspecialchars($character['vocation']) ?> | <?= htmlspecialchars($character['sex']) ?>
-                    </td>
-                </tr>
-                </tbody></table>
+                <div class="rc-cbz-confirm-centered">
+                    <img class="AuctionOutfitImage" src="<?= $character['outfit_url'] ?>" alt="Character outfit">
+                    <div class="AuctionCharacterName"><?= htmlspecialchars($character['name']) ?></div>
+                    <p>Level: <?= (int)$character['level'] ?> | Vocation: <?= htmlspecialchars($character['vocation']) ?> | <?= htmlspecialchars($character['sex']) ?></p>
+                </div>
             </div>
         </td></tr></tbody></table>
     </div>
     <br>
 
-    <div class="TableContainer">
+    <div class="TableContainer rc-cbz-host rc-cbz-sale-compact">
         <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Sale Information</div></div></div>
         <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
             <div class="InnerTableContainer">
                 <table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <tr><td class="LabelV">Fixed Price</td><td><?= number_format($price, 0, ',', ',') ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></td></tr>
-                <tr><td class="LabelV">Tax (<?= $taxPercent ?>%)</td><td><?= number_format($taxValue, 0, ',', ',') ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></td></tr>
-                <tr><td class="LabelV">You receive on sale</td><td><?= number_format($sellerReceives, 0, ',', ',') ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></td></tr>
-                <tr><td class="LabelV">Create Fee</td><td><?= number_format($createFee, 0, ',', ',') ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></td></tr>
-                <tr><td class="LabelV">Your Balance</td><td><?= number_format((int)$account['coins_transferable'], 0, ',', ',') ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></td></tr>
+                <tr><td class="LabelV">Fixed Price</td><td><?= number_format($price, 0, ',', ',') ?> TC</td></tr>
+                <tr><td class="LabelV">Tax (<?= $taxPercent ?>%)</td><td><?= number_format($taxValue, 0, ',', ',') ?> TC</td></tr>
+                <tr><td class="LabelV">You receive on sale</td><td><?= number_format($sellerReceives, 0, ',', ',') ?> TC</td></tr>
+                <tr><td class="LabelV">Create Fee</td><td><?= number_format($createFee, 0, ',', ',') ?> TC</td></tr>
+                <tr><td class="LabelV">Your Balance</td><td><?= number_format((int)$account['coins_transferable'], 0, ',', ',') ?> TC</td></tr>
                 </tbody></table>
             </div>
         </td></tr></tbody></table>

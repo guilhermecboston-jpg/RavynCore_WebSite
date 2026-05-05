@@ -70,12 +70,11 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
                                 <div><span>Capacity</span><strong><?= (int)$character['player']['cap'] ?></strong></div>
                                 <div><span>Soul</span><strong><?= isset($character['player']['soul']) ? (int)$character['player']['soul'] : 0 ?></strong></div>
                                 <div><span>Blessings</span><strong><?= (int)$character['blessings_count'] ?></strong></div>
-                                <div><span>Loyalty Title</span><strong><?= htmlspecialchars((string)$character['loyalty_title']) ?></strong></div>
                                 <div><span>Creation Date</span><strong><?= htmlspecialchars((string)$character['creation_date']) ?></strong></div>
                                 <div><span>Achievement Points</span><strong><?= isset($character['player']['achievement_points']) ? (int)$character['player']['achievement_points'] : 0 ?></strong></div>
                                 <div><span>Full Addons</span><strong><?= (int)$character['full_addons_count'] ?></strong></div>
                                 <div><span><a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open" data-target="rc-cbz-modal-addons">View</a></span></div>
-                                <div><span>Full Mounts</span><strong><?= (int)$character['mounts_count'] ?></strong></div>
+                                <div><span>Mounts</span><strong><?= (int)$character['mounts_count'] ?></strong></div>
                                 <div><span><a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open" data-target="rc-cbz-modal-mounts">View</a></span></div>
                             </div>
                         </div>
@@ -173,7 +172,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
                     <table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
                         <tr>
                             <td style="vertical-align:middle; text-align:right;" class="LabelV150">Price:</td>
-                            <td class="GreedyCell"><input style="width:100%;" name="auction_price" type="number" placeholder="Fixed price in Tibia Coins" min="1" step="1" required></td>
+                            <td class="GreedyCell"><input class="rc-cbz-price-input" name="auction_price" type="number" placeholder="Fixed price in Tibia Coins" min="1" step="1" required></td>
                         </tr>
                         <tr>
                             <td class="LabelV150">Your Balance:</td>
