@@ -5155,6 +5155,10 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn {
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     border-color: rgba(148, 112, 255, 0.75);
     background: linear-gradient(180deg, rgba(43, 50, 92, 0.95) 0%, rgba(29, 26, 65, 0.98) 100%);
     box-shadow: 0 0 0 1px rgba(123, 96, 220, 0.25) inset, 0 8px 18px rgba(22, 20, 53, 0.45);

@@ -74,8 +74,12 @@ if ($getAuctionStep === 5) {
     $auction_price = (int)$_POST['auction_price'];
     $auction_character = (int)$_POST['auction_character'];
     $accountId = (int)$account_logged->getId();
+    $verifiedCharacter = (int)($_SESSION['cbz_verified_character'] ?? 0);
+    $verifiedAccount = (int)($_SESSION['cbz_verified_account'] ?? 0);
+    $verifiedAt = (int)($_SESSION['cbz_verified_recovery_at'] ?? 0);
+    $verificationExpired = ($verifiedAt < (time() - 1800)); // 30 minutes
 
-    if ($auction_price < 1 || $auction_character < 1) {
+    if ($auction_price < 1 || $auction_character < 1 || $verifiedCharacter !== $auction_character || $verifiedAccount !== $accountId || $verificationExpired) {
         echo '<div class="SmallBox"><div class="MessageContainer"><div class="Message"><p style="color:#b32d2d;font-weight:bold;">You must set a valid fixed sale price.</p></div></div></div><br>';
         return;
     }
@@ -123,6 +127,7 @@ if ($getAuctionStep === 5) {
         $db->exec('UPDATE `players` SET `account_id` = ' . $db->quote($charbazaar_newacc) . ' WHERE `id` = ' . $db->quote($auction_character));
 
         $db->commit();
+        unset($_SESSION['cbz_verified_character'], $_SESSION['cbz_verified_account'], $_SESSION['cbz_verified_recovery_at']);
 
         ?>
         <div class="TableContainer">

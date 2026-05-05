@@ -297,7 +297,7 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
 
 <br>
 <div class="rc-cbz-back-wrap">
-    <a href="?subtopic=<?= urlencode($cbzBackSubtopic) ?>" class="rc-bazaar-view-btn rc-cbz-back-btn">Back to Char Bazaar</a>
+    <a href="?subtopic=<?= urlencode($cbzBackSubtopic) ?>" class="rc-cbz-back-btn">Back to Char Bazaar</a>
 </div>
 
 

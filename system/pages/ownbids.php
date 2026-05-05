@@ -7,9 +7,6 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'My Purchases';
 
 require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
-if ($logged) {
-	require SYSTEM . 'pages/char_bazaar/coins_balance.php';
-}
 
 if (!$logged) {
 	echo '<div class="SmallBox"><div class="MessageContainer"><div class="Message"><p><b>Log in</b> to see characters you bought.</p></div></div></div><br>';
@@ -38,7 +35,7 @@ $rows = $db->query('SELECT * FROM `myaac_charbazaar` WHERE `status` = 1 AND `acc
 						<?php $char = $db->query('SELECT `name`, `level` FROM `players` WHERE `id` = ' . (int)$sale['player_id'])->fetch(); ?>
 						<tr bgcolor="<?= getStyle($i) ?>">
 							<td><?= htmlspecialchars(($char['name'] ?? 'Unknown') . ' (Lv ' . (int)($char['level'] ?? 0) . ')') ?></td>
-							<td><?= number_format((int)$sale['price'], 0, ',', ',') ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png" class="VSCCoinImages"></td>
+							<td><?= number_format((int)$sale['price'], 0, ',', ',') ?></td>
 							<td><?= !empty($sale['date_end']) ? date('d M Y, H:i', strtotime($sale['date_end'])) : '-' ?></td>
 							<td>
 								<a href="?subtopic=pastcharactertrades&details=<?= (int)$sale['id'] ?>">

@@ -1,9 +1,15 @@
 <?php
 
-if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
+$selectedCharacter = 0;
+if (isset($_POST['auction_character'])) {
+	$selectedCharacter = (int)$_POST['auction_character'];
+} elseif (isset($_GET['auction_character'])) {
+	$selectedCharacter = (int)$_GET['auction_character'];
+}
+
+if ($selectedCharacter > 0) {
 	require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 
-	$selectedCharacter = (int)$_POST['auction_character'];
 	$accountId = (int)$account_logged->getId();
 	$character = $db->query('SELECT `id`, `account_id`, `name`, `level` FROM `players` WHERE `id` = ' . $db->quote($selectedCharacter))->fetch();
 
@@ -26,6 +32,14 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
 	$checks[] = [
 		'valid' => (!empty($account['key'])),
 		'text' => 'Your account must be registered.'
+	];
+
+	$enteredRecoveryKey = trim((string)($_POST['account_recovery_key'] ?? ''));
+	$accountRecoveryKey = trim((string)($account['key'] ?? ''));
+	$recoveryValid = ($accountRecoveryKey !== '' && $enteredRecoveryKey !== '' && strcasecmp($accountRecoveryKey, $enteredRecoveryKey) === 0);
+	$checks[] = [
+		'valid' => $recoveryValid,
+		'text' => 'Recovery key check: enter the valid account recovery key to continue.'
 	];
 	$checks[] = [
 		'valid' => ((int)($account['coins_transferable'] ?? 0) >= (int)$charbazaar_create),
@@ -83,6 +97,20 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
 			break;
 		}
 	}
+
+	if ($allValid) {
+		$_SESSION['cbz_verified_character'] = $selectedCharacter;
+		$_SESSION['cbz_verified_account'] = $accountId;
+		$_SESSION['cbz_verified_recovery_at'] = time();
+	}
+
+	if (isset($_POST['auction_go_step3'])) {
+		if ($allValid) {
+			header('Location: ' . BASE_URL . '?subtopic=createcharacterauction&step=3&auction_character=' . $selectedCharacter);
+			return;
+		}
+		echo '<div class="SmallBox"><div class="MessageContainer"><div class="Message"><p style="color:#b32d2d;font-weight:bold;">Invalid recovery key. Please enter the correct recovery key to continue.</p></div></div></div><br>';
+	}
 	?>
 	<div id="ProgressBar">
 		<div id="MainContainer">
@@ -135,7 +163,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
 		</div>
 	</div>
 	<br>
-	<form method="post" action="?subtopic=createcharacterauction&step=3">
+	<form method="post" action="?subtopic=createcharacterauction&step=2">
 		<input type="hidden" name="auction_character" value="<?= $selectedCharacter ?>">
 		<div class="TableContainer">
 			<div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Check Character (2/4)</div></div></div>
@@ -150,6 +178,15 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
 									<td><?= htmlspecialchars($check['text']) ?></td>
 								</tr>
 							<?php endforeach; ?>
+							<tr>
+								<td style="vertical-align: middle; width: 36px;"><img src="<?= $template_path; ?>/images/premiumfeatures/icon_<?= $recoveryValid ? 'yes' : 'no' ?>.png"></td>
+								<td>
+									<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+										<label for="cbz_recovery_key" style="font-weight:700;">Recovery Key:</label>
+										<input id="cbz_recovery_key" name="account_recovery_key" type="text" value="<?= htmlspecialchars($enteredRecoveryKey) ?>" style="max-width:340px;width:100%;" autocomplete="off">
+									</div>
+								</td>
+							</tr>
 							</tbody>
 						</table>
 					</div>
@@ -177,14 +214,14 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
 							<div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton_green.gif)">
 								<div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
 									<div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_green_over.gif); visibility: hidden;"></div>
-									<input name="auction_submit" class="BigButtonText" type="submit" value="Next">
+									<input name="auction_go_step3" class="BigButtonText" type="submit" value="Next">
 								</div>
 							</div>
 						<?php else: ?>
 							<div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton_red.gif)">
 								<div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
 									<div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_red_over.gif); visibility: hidden;"></div>
-									<input class="BigButtonText" type="button" value="Fix requirements">
+									<input name="auction_go_step3" class="BigButtonText" type="submit" value="Check recovery key">
 								</div>
 							</div>
 						<?php endif; ?>
@@ -194,5 +231,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
 		</table>
 	</form>
 	<?php
+} else {
+	header('Location: ' . BASE_URL . '?subtopic=createcharacterauction&step=1');
 }
 

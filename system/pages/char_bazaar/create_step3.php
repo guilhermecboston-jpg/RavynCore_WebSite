@@ -11,6 +11,15 @@ if ($selectCharacter > 0) {
     require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 
     $accountId = (int)$account_logged->getId();
+    $verifiedCharacter = (int)($_SESSION['cbz_verified_character'] ?? 0);
+    $verifiedAccount = (int)($_SESSION['cbz_verified_account'] ?? 0);
+    $verifiedAt = (int)($_SESSION['cbz_verified_recovery_at'] ?? 0);
+    $verificationExpired = ($verifiedAt < (time() - 1800)); // 30 minutes
+    if ($verifiedCharacter !== $selectCharacter || $verifiedAccount !== $accountId || $verificationExpired) {
+        header('Location: ' . BASE_URL . '?subtopic=createcharacterauction&step=2&auction_character=' . $selectCharacter);
+        return;
+    }
+
     $character = cbz_get_character_sale_data($db, $config, $selectCharacter);
 
     if (!$character) {
