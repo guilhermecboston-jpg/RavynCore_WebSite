@@ -15,6 +15,41 @@ foreach ($auctions as $sale) {
     $statusText = cbz_sale_status_label($sale['status']);
     $isOwner = $logged && (int)$sale['account_old'] === (int)$account_logged->getId();
     $equipped = $character['equipped_inventory'] ?? [];
+    $playerData = $character['player'];
+    $vocationLower = strtolower((string)$character['vocation']);
+
+    $prevalentLabel = 'Skill';
+    $prevalentValue = 0;
+    if (strpos($vocationLower, 'sorcerer') !== false || strpos($vocationLower, 'druid') !== false) {
+        $prevalentLabel = 'Magic Level';
+        $prevalentValue = (int)$playerData['maglevel'];
+    } elseif (strpos($vocationLower, 'knight') !== false) {
+        $pool = [
+            'Axe' => (int)$playerData['skill_axe'],
+            'Sword' => (int)$playerData['skill_sword'],
+            'Club' => (int)$playerData['skill_club'],
+            'Shielding' => (int)$playerData['skill_shielding'],
+        ];
+        arsort($pool);
+        $prevalentLabel = (string)key($pool);
+        $prevalentValue = (int)current($pool);
+    } elseif (strpos($vocationLower, 'paladin') !== false) {
+        $pool = [
+            'Distance' => (int)$playerData['skill_dist'],
+            'Shielding' => (int)$playerData['skill_shielding'],
+        ];
+        arsort($pool);
+        $prevalentLabel = (string)key($pool);
+        $prevalentValue = (int)current($pool);
+    } elseif (strpos($vocationLower, 'monk') !== false) {
+        $pool = [
+            'Fist' => (int)$playerData['skill_fist'],
+            'Magic Level' => (int)$playerData['maglevel'],
+        ];
+        arsort($pool);
+        $prevalentLabel = (string)key($pool);
+        $prevalentValue = (int)current($pool);
+    }
     ?>
     <tr>
         <td>
@@ -42,9 +77,11 @@ foreach ($auctions as $sale) {
 
                             <div class="rc-cbz-list-body">
                                 <div class="rc-cbz-list-left">
+                                    <div class="rc-cbz-mini-title">Outfit</div>
                                     <div class="AuctionOutfit">
                                         <img class="AuctionOutfitImage" src="<?= $character['outfit_url'] ?>" alt="outfit">
                                     </div>
+                                    <div class="rc-cbz-mini-title">Set</div>
                                     <div class="rc-cbz-mini-equip">
                                         <div><?= $equipped[2] ?? '' ?></div>
                                         <div><?= $equipped[1] ?? '' ?></div>
@@ -61,11 +98,12 @@ foreach ($auctions as $sale) {
 
                                 <div class="rc-cbz-list-middle">
                                     <div class="rc-cbz-list-row"><span>Sale created:</span><strong><?= date('M d Y, H:i:s', strtotime($sale['date_start'])) ?></strong></div>
-                                    <div class="rc-cbz-list-row"><span>Status:</span><strong><?= htmlspecialchars($statusText) ?></strong></div>
-                                    <div class="rc-cbz-list-row"><span>Magic Level:</span><strong><?= (int)$character['player']['maglevel'] ?></strong></div>
-                                    <div class="rc-cbz-list-row"><span>Sword:</span><strong><?= (int)$character['player']['skill_sword'] ?></strong></div>
-                                    <div class="rc-cbz-list-row"><span>Distance:</span><strong><?= (int)$character['player']['skill_dist'] ?></strong></div>
-                                    <div class="rc-cbz-list-row"><span>Shielding:</span><strong><?= (int)$character['player']['skill_shielding'] ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Level:</span><strong><?= (int)$character['level'] ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span><?= htmlspecialchars($prevalentLabel) ?>:</span><strong><?= (int)$prevalentValue ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Gold total in bank:</span><strong><?= number_format((int)$playerData['balance'], 0, ',', ',') ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Total Boss Points:</span><strong><?= htmlspecialchars((string)$character['boss_points']) ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Total Charm Points:</span><strong><?= htmlspecialchars((string)$character['spent_charm_points']) ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Unused Charm Points:</span><strong><?= htmlspecialchars((string)$character['charm_points']) ?></strong></div>
                                 </div>
 
                                 <div class="rc-cbz-list-right">

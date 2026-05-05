@@ -4857,23 +4857,32 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-body {
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-left {
     display: grid;
-    gap: 8px;
+    gap: 6px;
+    justify-items: center;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
+    gap: 5px;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip > div {
-    min-height: 42px;
+    min-height: 36px;
     border: 1px solid rgba(132, 156, 200, 0.22);
     border-radius: 7px;
     background: rgba(10, 17, 30, 0.58);
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-title {
+    color: #f0c77f;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-middle {
@@ -4887,7 +4896,7 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-row {
     gap: 10px;
     border: 1px solid rgba(132, 156, 200, 0.17);
     border-radius: 7px;
-    padding: 5px 8px;
+    padding: 4px 8px;
     background: rgba(9, 16, 28, 0.52);
 }
 
@@ -4910,7 +4919,7 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-price-box {
     border: 1px solid rgba(132, 156, 200, 0.24);
     border-radius: 10px;
     background: rgba(14, 24, 40, 0.78);
-    padding: 10px;
+    padding: 8px;
     text-align: center;
 }
 
@@ -4927,12 +4936,24 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-price-box strong {
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn,
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
-    min-width: 140px;
-    height: 36px;
-    padding: 0 16px;
-    font-size: 13px;
-    border-radius: 9px;
-    letter-spacing: 0.02em;
+    min-width: 180px;
+    height: 42px;
+    padding: 0 18px;
+    font-size: 14px;
+    border-radius: 10px;
+    letter-spacing: 0.03em;
+    font-weight: 800;
+}
+
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn {
+    border-color: rgba(148, 112, 255, 0.75);
+    background: linear-gradient(180deg, rgba(43, 50, 92, 0.95) 0%, rgba(29, 26, 65, 0.98) 100%);
+    box-shadow: 0 0 0 1px rgba(123, 96, 220, 0.25) inset, 0 8px 18px rgba(22, 20, 53, 0.45);
+}
+
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
+    border-color: rgba(138, 160, 202, 0.75);
+    background: linear-gradient(180deg, rgba(39, 56, 88, 0.95) 0%, rgba(26, 38, 62, 0.98) 100%);
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-wrap {

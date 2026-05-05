@@ -9,6 +9,22 @@ $title = 'Char Bazaar';
 require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 // Intentionally not showing coins balance block here to keep bazaar pages clean.
 
+$errors = [];
+$redirectRequest = isset($_REQUEST['redirect']) ? $_REQUEST['redirect'] : null;
+if (!$logged) {
+    if (!empty($errors)) {
+        $twig->display('error_box.html.twig', array('errors' => $errors));
+    }
+
+    $twig->display('account.login.html.twig', array(
+        'redirect' => $redirectRequest,
+        'account' => USE_ACCOUNT_NAME ? 'Name' : 'Number',
+        'account_login_by' => getAccountLoginByLabel(),
+        'error' => isset($errors[0]) ? $errors[0] : null
+    ));
+    return;
+}
+
 $charbazaar_tax = (int)($config['bazaar_tax'] ?? 0);
 $getPageDetails = isset($_GET['details']) ? (int)$_GET['details'] : 0;
 $getPageAction = isset($_GET['action']) ? $_GET['action'] : null;
@@ -19,24 +35,13 @@ if (isset($_POST['sale_id'])) {
     $saleIdFromRequest = (int)$_GET['sale_id'];
 }
 
-if (!$logged && ($getPageAction === 'buy' || $getPageAction === 'buyfinish') && $saleIdFromRequest > 0) {
-    $redirectTo = BASE_URL . '?subtopic=currentcharactertrades';
-    header('Location: ?account/manage&redirect=' . urlencode($redirectTo));
-    exit;
-}
-
 if ($getPageDetails > 0) {
     $cbzBackSubtopic = 'currentcharactertrades';
     require SYSTEM . 'pages/char_bazaar/details.php';
     return;
 }
 
-if (!$logged) {
-    echo '<div class="SmallBox"><div class="MessageContainer"><div class="Message"><p><b>Log in</b> to purchase characters from Char Bazaar.</p></div></div></div><br>';
-}
-
 $messages = [];
-$errors = [];
 
 if ($logged && $_SERVER['REQUEST_METHOD'] === 'POST' && $getPageAction === 'buyfinish') {
     $saleId = (int)($_POST['sale_id'] ?? 0);

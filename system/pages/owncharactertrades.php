@@ -6,12 +6,22 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'My Sales';
 
 require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
+$errors = [];
 if ($logged) {
     require SYSTEM . 'pages/char_bazaar/coins_balance.php';
 }
 
 if (!$logged) {
-    echo '<div class="SmallBox"><div class="MessageContainer"><div class="Message"><p style="color:#b32d2d;font-weight:bold;">You must be logged in to view your sales.</p></div></div></div><br>';
+    if (!empty($errors)) {
+        $twig->display('error_box.html.twig', array('errors' => $errors));
+    }
+
+    $twig->display('account.login.html.twig', array(
+        'redirect' => isset($_REQUEST['redirect']) ? $_REQUEST['redirect'] : null,
+        'account' => USE_ACCOUNT_NAME ? 'Name' : 'Number',
+        'account_login_by' => getAccountLoginByLabel(),
+        'error' => isset($errors[0]) ? $errors[0] : null
+    ));
     return;
 }
 

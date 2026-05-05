@@ -6,8 +6,19 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Sales History';
 
 require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
-if ($logged) {
-    require SYSTEM . 'pages/char_bazaar/coins_balance.php';
+$errors = [];
+if (!$logged) {
+    if (!empty($errors)) {
+        $twig->display('error_box.html.twig', array('errors' => $errors));
+    }
+
+    $twig->display('account.login.html.twig', array(
+        'redirect' => isset($_REQUEST['redirect']) ? $_REQUEST['redirect'] : null,
+        'account' => USE_ACCOUNT_NAME ? 'Name' : 'Number',
+        'account_login_by' => getAccountLoginByLabel(),
+        'error' => isset($errors[0]) ? $errors[0] : null
+    ));
+    return;
 }
 
 $getPageDetails = isset($_GET['details']) ? (int)$_GET['details'] : 0;
