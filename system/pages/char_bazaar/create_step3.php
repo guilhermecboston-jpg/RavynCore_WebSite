@@ -30,7 +30,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     $itemSummaryRows = $character['item_summary_rows'] ?? [];
     ?>
 
-    <div class="TableContainer rc-cbz-host">
+    <div class="TableContainer rc-cbz-host rc-cbz-step3-main">
         <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Setup Sale (3/4)</div></div></div>
         <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
             <div class="InnerTableContainer">
@@ -39,11 +39,11 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
                         <div class="rc-cbz-outfit">
                             <img class="AuctionOutfitImage" src="<?= $character['outfit_url'] ?>" alt="Character outfit">
                             <h4><?= htmlspecialchars($character['name']) ?></h4>
-                            <p>Level <?= (int)$character['level'] ?> • <?= htmlspecialchars($character['vocation']) ?></p>
-                            <p><?= htmlspecialchars($character['sex']) ?> • <?= htmlspecialchars($character['world']) ?></p>
+                            <p>Level <?= (int)$character['level'] ?> | <?= htmlspecialchars($character['vocation']) ?></p>
+                            <p><?= htmlspecialchars($character['sex']) ?> | <?= htmlspecialchars($character['world']) ?></p>
                         </div>
                         <div class="rc-cbz-equip">
-                            <h5>Inventory (equipped)</h5>
+                            <h5>Inventory</h5>
                             <div class="rc-cbz-equip-grid">
                                 <div><?= $equipped[2] ?? '' ?></div>
                                 <div><?= $equipped[1] ?? '' ?></div>
@@ -163,7 +163,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     <form method="post" action="?subtopic=createcharacterauction&step=4">
         <input type="hidden" name="auction_character" value="<?= $selectCharacter; ?>">
 
-        <div class="TableContainer rc-cbz-host">
+        <div class="TableContainer rc-cbz-host rc-cbz-price-host">
             <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Sale Information</div></div></div>
             <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
                 <div class="InnerTableContainer">
@@ -280,4 +280,5 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     <?php
 }
 ?>
+
 

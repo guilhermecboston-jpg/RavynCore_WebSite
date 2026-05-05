@@ -4593,8 +4593,8 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-wrap {
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-layout,
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-layout {
     display: grid;
-    grid-template-columns: 230px minmax(0, 1fr);
-    gap: 12px;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 10px;
     align-items: start;
 }
 
@@ -4631,6 +4631,143 @@ body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-sale-compact .Inner
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-price-input {
     width: 240px !important;
     max-width: 100%;
+}
+
+/* Create sale step progression (1/4 and 2/4) */
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar {
+    margin: 8px auto 14px;
+    max-width: 980px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar #BackgroundContainer,
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar #TubeLeftEnd,
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar #TubeRightEnd,
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar .TubeContainer,
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar .Tube {
+    display: none !important;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar #MainContainer {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar #FirstStep,
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar #StepsContainer2 .Steps {
+    width: auto !important;
+    flex: 1 1 0;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar #StepsContainer1,
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar #StepsContainer2 {
+    width: auto;
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar #StepsContainer1 {
+    flex: 3 1 0;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar #StepsContainer2 {
+    flex: 1 1 0;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar .SingleStepContainer {
+    height: 100%;
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 8px;
+    border: 1px solid rgba(132, 156, 200, 0.28);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(22, 34, 54, 0.86) 0%, rgba(14, 23, 39, 0.88) 100%);
+}
+
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar .StepIcon {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content #ProgressBar .StepText {
+    font-size: 18px;
+    line-height: 1.2;
+    text-align: center;
+    color: #d8e6ff;
+}
+
+/* Step 3 readability and compact fit */
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-layout {
+    grid-template-columns: 206px minmax(0, 1fr);
+    gap: 10px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-outfit .AuctionOutfitImage {
+    width: 82px;
+    height: 82px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-outfit h4 {
+    font-size: 24px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-outfit p {
+    font-size: 14px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-equip h5 {
+    font-size: 12px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-equip-grid > div {
+    min-height: 38px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-section h3 {
+    font-size: 24px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-grid-two span {
+    font-size: 14px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-grid-two strong {
+    font-size: 16px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-skills-grid span {
+    font-size: 13px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-step3-main .rc-cbz-skills-grid strong {
+    font-size: 16px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-price-host .InnerTableContainer {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-price-host .TableContent {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-price-host td {
+    font-size: 16px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-price-host .rc-cbz-price-input {
+    width: 170px !important;
+    height: 40px !important;
+    text-align: center;
 }
 
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-outfit,
@@ -4832,9 +4969,14 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-head {
     margin-bottom: 10px;
 }
 
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-head .AuctionCharacterName {
+    font-size: 30px;
+    line-height: 1.1;
+}
+
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-meta {
     color: #b7caea;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-details-link {
@@ -4850,15 +4992,16 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-details-link {
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-body {
     display: grid;
-    grid-template-columns: 160px minmax(0, 1fr) 220px;
-    gap: 10px;
-    align-items: start;
+    grid-template-columns: 170px minmax(0, 1fr) 250px;
+    gap: 12px;
+    align-items: center;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-left {
     display: grid;
-    gap: 6px;
+    gap: 5px;
     justify-items: center;
+    margin-top: -6px;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip {
@@ -4868,7 +5011,7 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip {
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip > div {
-    min-height: 32px;
+    min-height: 30px;
     border: 1px solid rgba(132, 156, 200, 0.22);
     border-radius: 7px;
     background: rgba(10, 17, 30, 0.58);
@@ -4879,7 +5022,7 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip > div {
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-title {
     color: #f0c77f;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -4891,8 +5034,8 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip > div:la
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-middle {
     display: grid;
-    gap: 5px;
-    margin-left: 8px;
+    gap: 6px;
+    margin-left: 0;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-row {
@@ -4901,24 +5044,27 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-row {
     gap: 10px;
     border: 1px solid rgba(132, 156, 200, 0.17);
     border-radius: 7px;
-    padding: 3px 8px;
+    padding: 5px 9px;
     background: rgba(9, 16, 28, 0.52);
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-row span {
     color: #a8bedf;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-row strong {
     color: #eff5ff;
-    font-size: 11px;
+    font-size: 14px;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-right {
-    display: grid;
-    gap: 10px;
-    justify-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-price-box {
@@ -4926,29 +5072,34 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-price-box {
     border: 1px solid rgba(132, 156, 200, 0.24);
     border-radius: 10px;
     background: rgba(14, 24, 40, 0.78);
-    padding: 8px;
+    padding: 10px 12px;
     text-align: center;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-price-box small {
     display: block;
     color: #a7bfdf;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-price-box strong {
     color: #f6e2b7;
-    font-size: 18px;
+    font-size: 30px;
+    line-height: 1;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn,
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
-    min-width: 180px;
-    height: 42px;
-    padding: 0 18px;
-    font-size: 14px;
+    min-width: 236px;
+    height: 52px;
+    padding: 0 24px;
+    font-size: 18px;
     border-radius: 10px;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
     font-weight: 800;
     color: #ffffff !important;
     text-transform: uppercase;
@@ -4961,16 +5112,17 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn {
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
-    border-color: rgba(138, 160, 202, 0.75);
-    background: linear-gradient(180deg, rgba(39, 56, 88, 0.95) 0%, rgba(26, 38, 62, 0.98) 100%);
+    border-color: rgba(148, 112, 255, 0.75);
+    background: linear-gradient(180deg, rgba(43, 50, 92, 0.95) 0%, rgba(29, 26, 65, 0.98) 100%);
+    box-shadow: 0 0 0 1px rgba(123, 96, 220, 0.25) inset, 0 8px 18px rgba(22, 20, 53, 0.45);
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-wrap {
     border: 1px solid rgba(132, 156, 200, 0.28);
     border-radius: 10px;
     background: linear-gradient(180deg, rgba(17, 28, 46, 0.82) 0%, rgba(12, 20, 35, 0.88) 100%);
-    padding: 10px;
-    max-width: 320px;
+    padding: 12px;
+    max-width: 380px;
     margin-left: auto;
     margin-right: auto;
 }

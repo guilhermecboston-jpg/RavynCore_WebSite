@@ -10,20 +10,6 @@ require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 // Intentionally not showing coins balance block here to keep bazaar pages clean.
 
 $errors = [];
-$redirectRequest = isset($_REQUEST['redirect']) ? $_REQUEST['redirect'] : null;
-if (!$logged) {
-    if (!empty($errors)) {
-        $twig->display('error_box.html.twig', array('errors' => $errors));
-    }
-
-    $twig->display('account.login.html.twig', array(
-        'redirect' => $redirectRequest,
-        'account' => USE_ACCOUNT_NAME ? 'Name' : 'Number',
-        'account_login_by' => getAccountLoginByLabel(),
-        'error' => isset($errors[0]) ? $errors[0] : null
-    ));
-    return;
-}
 
 $charbazaar_tax = (int)($config['bazaar_tax'] ?? 0);
 $getPageDetails = isset($_GET['details']) ? (int)$_GET['details'] : 0;
@@ -38,6 +24,25 @@ if (isset($_POST['sale_id'])) {
 if ($getPageDetails > 0) {
     $cbzBackSubtopic = 'currentcharactertrades';
     require SYSTEM . 'pages/char_bazaar/details.php';
+    return;
+}
+
+if (!$logged && ($getPageAction === 'buy' || $getPageAction === 'buyfinish')) {
+    $redirectTarget = '?subtopic=currentcharactertrades';
+    if ($saleIdFromRequest > 0) {
+        $redirectTarget .= '&action=buy&sale_id=' . $saleIdFromRequest;
+    }
+
+    if (!empty($errors)) {
+        $twig->display('error_box.html.twig', array('errors' => $errors));
+    }
+
+    $twig->display('account.login.html.twig', array(
+        'redirect' => $redirectTarget,
+        'account' => USE_ACCOUNT_NAME ? 'Name' : 'Number',
+        'account_login_by' => getAccountLoginByLabel(),
+        'error' => isset($errors[0]) ? $errors[0] : null
+    ));
     return;
 }
 

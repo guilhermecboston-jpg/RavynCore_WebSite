@@ -69,13 +69,13 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_character'])) {
                 <div style="float: right;">
                     <a href="?subtopic=createcharacterauction&step=3">
                         <div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton_red.gif)">
-                            <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
-                                <div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_red_over.gif); visibility: hidden;"></div>
-                                <input class="BigButtonText" type="button" value="Cancel">
+                                <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
+                                    <div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_red_over.gif); visibility: hidden;"></div>
+                                <input class="BigButtonText" type="button" value="Back">
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
             </td>
             <td>
                 <div style="float: left;">

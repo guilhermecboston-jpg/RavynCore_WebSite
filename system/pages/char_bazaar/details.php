@@ -57,12 +57,12 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                     <div class="rc-cbz-outfit">
                         <img class="AuctionOutfitImage" src="<?= $character['outfit_url'] ?>" alt="Character outfit">
                         <h4><?= htmlspecialchars($character['name']) ?></h4>
-                        <p>Level <?= (int)$character['level'] ?> • <?= htmlspecialchars($character['vocation']) ?></p>
-                        <p><?= htmlspecialchars($character['sex']) ?> • <?= htmlspecialchars($character['world']) ?></p>
+                        <p>Level <?= (int)$character['level'] ?> | <?= htmlspecialchars($character['vocation']) ?></p>
+                        <p><?= htmlspecialchars($character['sex']) ?> | <?= htmlspecialchars($character['world']) ?></p>
                         <p class="rc-cbz-price">Price: <?= number_format((int)$sale['price'], 0, ',', ',') ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></p>
                     </div>
                     <div class="rc-cbz-equip">
-                        <h5>Inventory (equipped)</h5>
+                        <h5>Inventory</h5>
                         <div class="rc-cbz-equip-grid">
                             <div><?= $equipped[2] ?? '' ?></div>
                             <div><?= $equipped[1] ?? '' ?></div>
@@ -299,4 +299,5 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
 <div class="rc-cbz-back-wrap">
     <a href="?subtopic=<?= urlencode($cbzBackSubtopic) ?>" class="rc-bazaar-view-btn rc-cbz-back-btn">Back to Char Bazaar</a>
 </div>
+
 

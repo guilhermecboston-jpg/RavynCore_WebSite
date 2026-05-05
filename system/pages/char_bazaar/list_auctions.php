@@ -111,7 +111,7 @@ foreach ($auctions as $sale) {
                                     </div>
 
                                     <?php if (!$logged): ?>
-                                        <a class="rc-bazaar-view-btn rc-cbz-buy-btn" href="?account/manage&redirect=<?= urlencode(BASE_URL . '?subtopic=currentcharactertrades') ?>">Buy Character</a>
+                                        <a class="rc-bazaar-view-btn rc-cbz-buy-btn" href="?account/manage&redirect=<?= urlencode('?subtopic=currentcharactertrades&action=buy&sale_id=' . $saleId) ?>">Buy Character</a>
                                     <?php elseif ($isOwner): ?>
                                         <div class="MyMaxBidLabel" style="font-weight: normal;">My sale.</div>
                                     <?php else: ?>
