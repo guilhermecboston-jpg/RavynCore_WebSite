@@ -292,6 +292,49 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                 }
             });
         });
+
+        var escapeHtml = function(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        };
+
+        document.querySelectorAll('.rc-cbz-section').forEach(function(section) {
+            var titleNode = section.querySelector('h3');
+            if (!titleNode) {
+                return;
+            }
+
+            var sectionTitle = (titleNode.textContent || '').trim();
+            if (/items summary/i.test(sectionTitle)) {
+                return; // requested: no tooltip in items summary / inventory section
+            }
+
+            section.querySelectorAll('.rc-cbz-grid-two > div, .rc-cbz-skills-grid > div').forEach(function(row) {
+                row.classList.add('rc-cbz-helper-target');
+                row.addEventListener('mouseenter', function() {
+                    if (typeof ActivateHelperDiv !== 'function' || typeof window.jQuery !== 'function') {
+                        return;
+                    }
+
+                    var labelNode = row.querySelector('span');
+                    var valueNode = row.querySelector('strong');
+                    var label = (labelNode ? labelNode.textContent : sectionTitle) || sectionTitle;
+                    var value = (valueNode ? valueNode.textContent : '') || '-';
+                    var helperHtml = '<b>' + escapeHtml(label.trim()) + ':</b> ' + escapeHtml(value.trim());
+                    ActivateHelperDiv(window.jQuery(row), escapeHtml(sectionTitle), helperHtml, '');
+                });
+
+                row.addEventListener('mouseleave', function() {
+                    if (typeof window.jQuery === 'function') {
+                        window.jQuery('#HelperDivContainer').hide();
+                    }
+                });
+            });
+        });
     })();
 </script>
 

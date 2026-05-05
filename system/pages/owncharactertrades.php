@@ -7,9 +7,6 @@ $title = 'My Sales';
 
 require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 $errors = [];
-if ($logged) {
-    require SYSTEM . 'pages/char_bazaar/coins_balance.php';
-}
 
 if (!$logged) {
     if (!empty($errors)) {

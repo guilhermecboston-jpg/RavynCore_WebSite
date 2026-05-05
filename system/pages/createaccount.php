@@ -275,26 +275,16 @@ if ($save) {
                 header('Location: ' . getLink('account/manage'));
             }
 
-            echo 'Your account';
-            if (config('account_create_character_create')) {
-                echo ' and character have';
-            } else {
-                echo ' has';
-            }
-
-            echo ' been created.';
             if (!config('account_create_character_create')) {
-                echo ' Now you can login and create your first character.';
-            }
-
-            echo ' See you in Tibia!<br/><br/>';
-            $twig->display('success.html.twig', array(
-                'title' => 'Account Created',
-                'description' => 'Your account ' . $account_type . ' is <b>' . $tmp_account . '</b><br/>You will need the account ' . $account_type . ' and your password to play on ' . configLua('serverName') . '.
+                echo 'Your account has been created. Now you can login and create your first character. See you in Tibia!<br/><br/>';
+                $twig->display('success.html.twig', array(
+                    'title' => 'Account Created',
+                    'description' => 'Your account ' . $account_type . ' is <b>' . $tmp_account . '</b><br/>You will need the account ' . $account_type . ' and your password to play on ' . configLua('serverName') . '.
 						Please keep your account ' . $account_type . ' and password in a safe place and
 						never give your account ' . $account_type . ' or password to anybody.',
-                'custom_buttons' => config('account_create_character_create') ? '' : null
-            ));
+                    'custom_buttons' => null
+                ));
+            }
 
             if ($config['mail_enabled'] && $config['account_welcome_mail']) {
                 $mailBody = $twig->render('account.welcome_mail.html.twig', array(

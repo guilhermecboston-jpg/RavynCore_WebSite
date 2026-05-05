@@ -5165,13 +5165,17 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-wrap {
-    border: 1px solid rgba(132, 156, 200, 0.28);
-    border-radius: 10px;
-    background: linear-gradient(180deg, rgba(17, 28, 46, 0.82) 0%, rgba(12, 20, 35, 0.88) 100%);
-    padding: 12px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
     max-width: 380px;
     margin-left: auto;
     margin-right: auto;
+}
+
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-helper-target {
+    cursor: help;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-modal {
