@@ -4633,6 +4633,49 @@ body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-price-input {
     max-width: 100%;
 }
 
+/* Step cards (used in step 3 and 4) */
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-stepper {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin: 8px 0 14px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-stepper-item {
+    min-height: 96px;
+    border: 1px solid rgba(132, 156, 200, 0.28);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(22, 34, 54, 0.86) 0%, rgba(14, 23, 39, 0.88) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    padding: 10px 8px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-stepper-item img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-stepper-item span {
+    color: #d8e6ff;
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-stepper-item.is-active {
+    border-color: rgba(240, 199, 127, 0.62);
+    box-shadow: 0 0 0 1px rgba(240, 199, 127, 0.2) inset;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-stepper-item.is-done {
+    border-color: rgba(112, 182, 124, 0.52);
+}
+
 /* Create sale step progression (1/4 and 2/4) */
 body.rc-page-createcharacterauction .rc-rich-content #ProgressBar {
     margin: 8px auto 14px;
@@ -5360,6 +5403,10 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-collect-card small 
 
     body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-right {
         justify-items: stretch;
+    }
+
+    body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-stepper {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 

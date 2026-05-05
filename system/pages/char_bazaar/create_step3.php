@@ -1,9 +1,15 @@
 <?php
 
-if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
+$selectCharacter = 0;
+if (isset($_POST['auction_character'])) {
+    $selectCharacter = (int)$_POST['auction_character'];
+} elseif (isset($_GET['auction_character'])) {
+    $selectCharacter = (int)$_GET['auction_character'];
+}
+
+if ($selectCharacter > 0) {
     require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 
-    $selectCharacter = (int)$_POST['auction_character'];
     $accountId = (int)$account_logged->getId();
     $character = cbz_get_character_sale_data($db, $config, $selectCharacter);
 
@@ -29,6 +35,25 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     $mountsList = $character['full_mounts_list'] ?? [];
     $itemSummaryRows = $character['item_summary_rows'] ?? [];
     ?>
+
+    <div class="rc-cbz-stepper">
+        <div class="rc-cbz-stepper-item is-done">
+            <img src="<?= $template_path; ?>/images/global/content/progressbar/progress-bar-icon-1-green.gif" alt="step 1">
+            <span>Select character</span>
+        </div>
+        <div class="rc-cbz-stepper-item is-done">
+            <img src="<?= $template_path; ?>/images/global/content/progressbar/progress-bar-icon-2-green.gif" alt="step 2">
+            <span>Check character</span>
+        </div>
+        <div class="rc-cbz-stepper-item is-active">
+            <img src="<?= $template_path; ?>/images/global/content/progressbar/progress-bar-icon-3-blue.gif" alt="step 3">
+            <span>Set character price</span>
+        </div>
+        <div class="rc-cbz-stepper-item">
+            <img src="<?= $template_path; ?>/images/global/content/progressbar/progress-bar-icon-4-blue.gif" alt="step 4">
+            <span>Confirm sale</span>
+        </div>
+    </div>
 
     <div class="TableContainer rc-cbz-host rc-cbz-step3-main">
         <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Setup Sale (3/4)</div></div></div>
@@ -170,7 +195,19 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
                     <table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
                         <tr>
                             <td style="vertical-align:middle; text-align:right;" class="LabelV150">Price:</td>
-                            <td class="GreedyCell"><input class="rc-cbz-price-input" name="auction_price" type="number" placeholder="Fixed price in Tibia Coins" min="1" step="1" required></td>
+                            <td class="GreedyCell">
+                                <input
+                                    class="rc-cbz-price-input"
+                                    name="auction_price"
+                                    type="text"
+                                    inputmode="numeric"
+                                    pattern="[0-9]+"
+                                    maxlength="10"
+                                    autocomplete="off"
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                                    required
+                                >
+                            </td>
                         </tr>
                         <tr>
                             <td class="LabelV150">Your Balance:</td>
@@ -278,6 +315,9 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
         })();
     </script>
     <?php
+} else {
+    header('Location: ' . BASE_URL . '?subtopic=createcharacterauction&step=1');
+    exit;
 }
 ?>
 

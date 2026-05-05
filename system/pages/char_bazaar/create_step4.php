@@ -31,6 +31,25 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_character'])) {
 
     ?>
 
+    <div class="rc-cbz-stepper">
+        <div class="rc-cbz-stepper-item is-done">
+            <img src="<?= $template_path; ?>/images/global/content/progressbar/progress-bar-icon-1-green.gif" alt="step 1">
+            <span>Select character</span>
+        </div>
+        <div class="rc-cbz-stepper-item is-done">
+            <img src="<?= $template_path; ?>/images/global/content/progressbar/progress-bar-icon-2-green.gif" alt="step 2">
+            <span>Check character</span>
+        </div>
+        <div class="rc-cbz-stepper-item is-done">
+            <img src="<?= $template_path; ?>/images/global/content/progressbar/progress-bar-icon-3-green.gif" alt="step 3">
+            <span>Set character price</span>
+        </div>
+        <div class="rc-cbz-stepper-item is-active">
+            <img src="<?= $template_path; ?>/images/global/content/progressbar/progress-bar-icon-4-blue.gif" alt="step 4">
+            <span>Confirm sale</span>
+        </div>
+    </div>
+
     <div class="TableContainer rc-cbz-host rc-cbz-confirm-top">
         <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Confirm Sale (4/4)</div></div></div>
         <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
@@ -67,7 +86,7 @@ if (!empty($_POST['auction_price']) && !empty($_POST['auction_character'])) {
         <table class="InnerTableButtonRow" cellspacing="0" cellpadding="0"><tbody><tr>
             <td>
                 <div style="float: right;">
-                    <a href="?subtopic=createcharacterauction&step=3">
+                    <a href="?subtopic=createcharacterauction&step=3&auction_character=<?= $selectCharacter ?>">
                         <div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton_red.gif)">
                                 <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
                                     <div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_red_over.gif); visibility: hidden;"></div>
