@@ -5149,6 +5149,15 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
     text-transform: uppercase;
 }
 
+/* own sales list: keep cancel trigger compact inside table row */
+body.rc-page-owncharactertrades .rc-rich-content .TableContent .rc-cbz-buy-open {
+    min-width: 130px;
+    height: 38px;
+    padding: 0 14px;
+    font-size: 14px;
+    border-radius: 9px;
+}
+
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn,
 body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-buy-btn {
     border-color: rgba(148, 112, 255, 0.75);
