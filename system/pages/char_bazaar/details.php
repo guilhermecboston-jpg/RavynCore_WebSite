@@ -302,6 +302,46 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                 .replace(/'/g, '&#39;');
         };
 
+        var positionHelperAtMouse = function(ev) {
+            if (!ev || typeof window.jQuery !== 'function') {
+                return;
+            }
+            var $helper = window.jQuery('#HelperDivContainer');
+            if (!$helper.length || !$helper.is(':visible')) {
+                return;
+            }
+
+            var offsetX = 16;
+            var offsetY = 18;
+            var left = ev.pageX + offsetX;
+            var top = ev.pageY - offsetY;
+
+            var viewportLeft = window.pageXOffset || 0;
+            var viewportTop = window.pageYOffset || 0;
+            var viewportRight = viewportLeft + (window.innerWidth || 0);
+            var viewportBottom = viewportTop + (window.innerHeight || 0);
+            var helperWidth = $helper.outerWidth() || 220;
+            var helperHeight = $helper.outerHeight() || 80;
+
+            if (left + helperWidth + 8 > viewportRight) {
+                left = ev.pageX - helperWidth - 14;
+            }
+            if (left < viewportLeft + 8) {
+                left = viewportLeft + 8;
+            }
+            if (top + helperHeight + 8 > viewportBottom) {
+                top = viewportBottom - helperHeight - 8;
+            }
+            if (top < viewportTop + 8) {
+                top = viewportTop + 8;
+            }
+
+            $helper.css({
+                left: left + 'px',
+                top: top + 'px'
+            });
+        };
+
         document.querySelectorAll('.rc-cbz-section').forEach(function(section) {
             var titleNode = section.querySelector('h3');
             if (!titleNode) {
@@ -315,7 +355,7 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
 
             section.querySelectorAll('.rc-cbz-grid-two > div, .rc-cbz-skills-grid > div').forEach(function(row) {
                 row.classList.add('rc-cbz-helper-target');
-                row.addEventListener('mouseenter', function() {
+                row.addEventListener('mouseenter', function(ev) {
                     if (typeof ActivateHelperDiv !== 'function' || typeof window.jQuery !== 'function') {
                         return;
                     }
@@ -326,6 +366,11 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                     var value = (valueNode ? valueNode.textContent : '') || '-';
                     var helperHtml = '<b>' + escapeHtml(label.trim()) + ':</b> ' + escapeHtml(value.trim());
                     ActivateHelperDiv(window.jQuery(row), escapeHtml(sectionTitle), helperHtml, '');
+                    positionHelperAtMouse(ev);
+                });
+
+                row.addEventListener('mousemove', function(ev) {
+                    positionHelperAtMouse(ev);
                 });
 
                 row.addEventListener('mouseleave', function() {
