@@ -11,8 +11,13 @@ require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 
 $charbazaar_tax = (int)($config['bazaar_tax'] ?? 0);
 $getPageDetails = isset($_GET['details']) ? (int)$_GET['details'] : 0;
-$getPageAction = $_GET['action'] ?? null;
-$saleIdFromRequest = (int)($_POST['sale_id'] ?? $_GET['sale_id'] ?? 0);
+$getPageAction = isset($_GET['action']) ? $_GET['action'] : null;
+$saleIdFromRequest = 0;
+if (isset($_POST['sale_id'])) {
+    $saleIdFromRequest = (int)$_POST['sale_id'];
+} elseif (isset($_GET['sale_id'])) {
+    $saleIdFromRequest = (int)$_GET['sale_id'];
+}
 
 if (!$logged && ($getPageAction === 'buy' || $getPageAction === 'buyfinish') && $saleIdFromRequest > 0) {
     $redirectTo = '?subtopic=currentcharactertrades&action=buy&sale_id=' . $saleIdFromRequest;

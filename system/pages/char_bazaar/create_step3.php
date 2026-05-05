@@ -72,10 +72,8 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
                                 <div><span>Blessings</span><strong><?= (int)$character['blessings_count'] ?></strong></div>
                                 <div><span>Creation Date</span><strong><?= htmlspecialchars((string)$character['creation_date']) ?></strong></div>
                                 <div><span>Achievement Points</span><strong><?= isset($character['player']['achievement_points']) ? (int)$character['player']['achievement_points'] : 0 ?></strong></div>
-                                <div><span>Full Addons</span><strong><?= (int)$character['full_addons_count'] ?></strong></div>
-                                <div><span><a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open" data-target="rc-cbz-modal-addons">View</a></span></div>
-                                <div><span>Mounts</span><strong><?= (int)$character['mounts_count'] ?></strong></div>
-                                <div><span><a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open" data-target="rc-cbz-modal-mounts">View</a></span></div>
+                                <div class="rc-cbz-inline-action"><span>Full Addons</span><strong><?= (int)$character['full_addons_count'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-addons">View</a></strong></div>
+                                <div class="rc-cbz-inline-action"><span>Mounts</span><strong><?= (int)$character['mounts_count'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-mounts">View</a></strong></div>
                             </div>
                         </div>
 
@@ -200,7 +198,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
 
     <div id="rc-cbz-modal-addons" class="rc-cbz-modal" aria-hidden="true">
         <div class="rc-cbz-modal-card">
-            <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-addons">×</button>
+            <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-addons">&times;</button>
             <h4>Full Addons</h4>
             <div class="rc-cbz-modal-grid">
                 <?php if (!$addonsList): ?>
@@ -218,7 +216,7 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
 
     <div id="rc-cbz-modal-mounts" class="rc-cbz-modal" aria-hidden="true">
         <div class="rc-cbz-modal-card">
-            <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-mounts">×</button>
+            <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-mounts">&times;</button>
             <h4>Full Mounts</h4>
             <div class="rc-cbz-modal-grid">
                 <?php if (!$mountsList): ?>
@@ -282,3 +280,4 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     <?php
 }
 ?>
+

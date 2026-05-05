@@ -22,9 +22,22 @@ $createdAt = !empty($sale['date_start']) ? date('d M Y, H:i:s', strtotime($sale[
 $soldAt = ((int)$sale['status'] === 1 && !empty($sale['date_end'])) ? date('d M Y, H:i:s', strtotime($sale['date_end'])) : '-';
 $deathRows = [];
 if (cbz_has_table($db, 'player_deaths')) {
-    $deaths = $db->query("SELECT `date`, `level` FROM `player_deaths` WHERE `player_id` = " . (int)$sale['player_id'] . " ORDER BY `date` DESC LIMIT 10");
-    if ($deaths) {
-        $deathRows = $deaths->fetchAll();
+    $deathPlayerCol = cbz_find_first_column($db, 'player_deaths', ['player_id', 'playerid']);
+    $deathDateCol = cbz_find_first_column($db, 'player_deaths', ['date', 'time']);
+    $deathLevelCol = cbz_find_first_column($db, 'player_deaths', ['level']);
+    if ($deathPlayerCol && $deathDateCol && $deathLevelCol) {
+        try {
+            $deaths = $db->query(
+                "SELECT `{$deathDateCol}` AS `death_date`, `{$deathLevelCol}` AS `death_level` " .
+                "FROM `player_deaths` WHERE `{$deathPlayerCol}` = " . (int)$sale['player_id'] . " " .
+                "ORDER BY `{$deathDateCol}` DESC LIMIT 10"
+            );
+            if ($deaths) {
+                $deathRows = $deaths->fetchAll();
+            }
+        } catch (Exception $e) {
+            $deathRows = [];
+        }
     }
 }
 
@@ -77,10 +90,8 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                             <div><span>Blessings</span><strong><?= (int)$character['blessings_count'] ?></strong></div>
                             <div><span>Creation Date</span><strong><?= htmlspecialchars((string)$character['creation_date']) ?></strong></div>
                             <div><span>Achievement Points</span><strong><?= isset($character['player']['achievement_points']) ? (int)$character['player']['achievement_points'] : 0 ?></strong></div>
-                            <div><span>Full Addons</span><strong><?= (int)$character['full_addons_count'] ?></strong></div>
-                            <div><span><a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open" data-target="rc-cbz-modal-addons">View</a></span></div>
-                            <div><span>Mounts</span><strong><?= (int)$character['mounts_count'] ?></strong></div>
-                            <div><span><a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open" data-target="rc-cbz-modal-mounts">View</a></span></div>
+                            <div class="rc-cbz-inline-action"><span>Full Addons</span><strong><?= (int)$character['full_addons_count'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-addons">View</a></strong></div>
+                            <div class="rc-cbz-inline-action"><span>Mounts</span><strong><?= (int)$character['mounts_count'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-mounts">View</a></strong></div>
                         </div>
                     </div>
 
@@ -188,8 +199,8 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                 <tr class="Odd"><td class="LabelV">Date</td><td class="LabelV">Description</td></tr>
                 <?php $i = 0; foreach ($deathRows as $death): $i++; ?>
                     <tr class="<?= ($i % 2 === 0) ? 'Even' : 'Odd' ?>">
-                        <td><?= date('d M Y, H:i', (int)$death['date']) ?></td>
-                        <td>Died at level <?= (int)$death['level'] ?></td>
+                        <td><?= date('d M Y, H:i', (int)$death['death_date']) ?></td>
+                        <td>Died at level <?= (int)$death['death_level'] ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -200,7 +211,7 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
 
 <div id="rc-cbz-modal-addons" class="rc-cbz-modal" aria-hidden="true">
     <div class="rc-cbz-modal-card">
-        <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-addons">×</button>
+        <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-addons">&times;</button>
         <h4>Full Addons</h4>
         <div class="rc-cbz-modal-grid">
             <?php if (!$addonsList): ?>
@@ -218,7 +229,7 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
 
 <div id="rc-cbz-modal-mounts" class="rc-cbz-modal" aria-hidden="true">
     <div class="rc-cbz-modal-card">
-        <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-mounts">×</button>
+        <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-mounts">&times;</button>
         <h4>Full Mounts</h4>
         <div class="rc-cbz-modal-grid">
             <?php if (!$mountsList): ?>
@@ -284,3 +295,4 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
 <div class="rc-cbz-back-wrap">
     <a href="?subtopic=currentcharactertrades" class="rc-bazaar-view-btn">Back to Char Bazaar</a>
 </div>
+

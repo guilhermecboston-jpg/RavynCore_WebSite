@@ -4760,6 +4760,25 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-grid-two strong {
     font-size: 12px;
 }
 
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-grid-two .rc-cbz-inline-action strong,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-grid-two .rc-cbz-inline-action strong {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-grid-two .rc-cbz-inline-btn,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-grid-two .rc-cbz-inline-btn {
+    min-width: 40px;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 7px;
+    font-size: 10px;
+    line-height: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-skills-grid,
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-skills-grid {
     display: grid;
