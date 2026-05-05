@@ -48,31 +48,38 @@ foreach ($auctions as $sale) {
                                     <div class="rc-cbz-mini-equip">
                                         <div><?= $equipped[2] ?? '' ?></div>
                                         <div><?= $equipped[1] ?? '' ?></div>
+                                        <div><?= $equipped[3] ?? '' ?></div>
+                                        <div><?= $equipped[6] ?? '' ?></div>
                                         <div><?= $equipped[4] ?? '' ?></div>
+                                        <div><?= $equipped[5] ?? '' ?></div>
+                                        <div><?= $equipped[9] ?? '' ?></div>
                                         <div><?= $equipped[7] ?? '' ?></div>
+                                        <div><?= $equipped[10] ?? '' ?></div>
+                                        <div><?= $equipped[8] ?? '' ?></div>
                                     </div>
                                 </div>
 
                                 <div class="rc-cbz-list-middle">
                                     <div class="rc-cbz-list-row"><span>Sale created:</span><strong><?= date('M d Y, H:i:s', strtotime($sale['date_start'])) ?></strong></div>
                                     <div class="rc-cbz-list-row"><span>Status:</span><strong><?= htmlspecialchars($statusText) ?></strong></div>
-                                    <div class="rc-cbz-list-row"><span>Full Addons:</span><strong><?= (int)$character['full_addons_count'] ?></strong></div>
-                                    <div class="rc-cbz-list-row"><span>Mounts:</span><strong><?= (int)$character['mounts_count'] ?></strong></div>
-                                    <div class="rc-cbz-list-row"><span>Charm Points:</span><strong><?= htmlspecialchars((string)$character['charm_points']) ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Magic Level:</span><strong><?= (int)$character['player']['maglevel'] ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Sword:</span><strong><?= (int)$character['player']['skill_sword'] ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Distance:</span><strong><?= (int)$character['player']['skill_dist'] ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Shielding:</span><strong><?= (int)$character['player']['skill_shielding'] ?></strong></div>
                                 </div>
 
                                 <div class="rc-cbz-list-right">
                                     <div class="rc-cbz-price-box">
-                                        <small>Fixed Price</small>
+                                        <small>Price</small>
                                         <strong><?= number_format((int)$sale['price'], 0, ',', ',') ?> TC</strong>
                                     </div>
 
                                     <?php if (!$logged): ?>
-                                        <a class="rc-bazaar-view-btn" href="?account/manage&redirect=<?= urlencode('?subtopic=currentcharactertrades&action=buy&sale_id=' . $saleId) ?>">Buy Character</a>
+                                        <a class="rc-bazaar-view-btn rc-cbz-buy-btn" href="?account/manage&redirect=<?= urlencode(BASE_URL . '?subtopic=currentcharactertrades') ?>">Buy Character</a>
                                     <?php elseif ($isOwner): ?>
                                         <div class="MyMaxBidLabel" style="font-weight: normal;">My sale.</div>
                                     <?php else: ?>
-                                        <button class="rc-bazaar-view-btn rc-cbz-buy-open" type="button" data-target="rc-cbz-buy-modal-<?= $saleId ?>">Buy Character</button>
+                                        <button class="rc-bazaar-view-btn rc-cbz-buy-open rc-cbz-buy-btn" type="button" data-target="rc-cbz-buy-modal-<?= $saleId ?>">Buy Character</button>
                                     <?php endif; ?>
                                 </div>
                             </div>

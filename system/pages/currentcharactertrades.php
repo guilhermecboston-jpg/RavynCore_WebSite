@@ -20,12 +20,13 @@ if (isset($_POST['sale_id'])) {
 }
 
 if (!$logged && ($getPageAction === 'buy' || $getPageAction === 'buyfinish') && $saleIdFromRequest > 0) {
-    $redirectTo = '?subtopic=currentcharactertrades&action=buy&sale_id=' . $saleIdFromRequest;
+    $redirectTo = BASE_URL . '?subtopic=currentcharactertrades';
     header('Location: ?account/manage&redirect=' . urlencode($redirectTo));
     exit;
 }
 
 if ($getPageDetails > 0) {
+    $cbzBackSubtopic = 'currentcharactertrades';
     require SYSTEM . 'pages/char_bazaar/details.php';
     return;
 }

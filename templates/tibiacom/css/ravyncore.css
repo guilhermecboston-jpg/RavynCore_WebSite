@@ -4862,7 +4862,7 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-left {
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 6px;
 }
 
@@ -4923,6 +4923,26 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-price-box small {
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-price-box strong {
     color: #f6e2b7;
     font-size: 18px;
+}
+
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
+    min-width: 140px;
+    height: 36px;
+    padding: 0 16px;
+    font-size: 13px;
+    border-radius: 9px;
+    letter-spacing: 0.02em;
+}
+
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-wrap {
+    border: 1px solid rgba(132, 156, 200, 0.28);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(17, 28, 46, 0.82) 0%, rgba(12, 20, 35, 0.88) 100%);
+    padding: 10px;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-modal {

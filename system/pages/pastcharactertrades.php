@@ -12,6 +12,7 @@ if ($logged) {
 
 $getPageDetails = isset($_GET['details']) ? (int)$_GET['details'] : 0;
 if ($getPageDetails > 0) {
+    $cbzBackSubtopic = 'pastcharactertrades';
     require SYSTEM . 'pages/char_bazaar/details.php';
     return;
 }

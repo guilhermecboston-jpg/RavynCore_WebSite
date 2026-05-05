@@ -4,6 +4,7 @@ global $config, $db, $template_path;
 require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 
 $saleId = (int)($getPageDetails ?? 0);
+$cbzBackSubtopic = isset($cbzBackSubtopic) ? (string)$cbzBackSubtopic : 'currentcharactertrades';
 $saleStmt = $db->query("SELECT * FROM `myaac_charbazaar` WHERE `id` = {$saleId}");
 $sale = $saleStmt->fetch();
 if (!$sale) {
@@ -247,6 +248,9 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
 
 <script>
     (function() {
+        if (document && document.body) {
+            document.body.classList.add('rc-page-currentcharactertrades');
+        }
         document.querySelectorAll('.rc-cbz-tab').forEach(function(tab) {
             tab.addEventListener('click', function() {
                 var root = tab.closest('.rc-cbz-section');
@@ -293,6 +297,6 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
 
 <br>
 <div class="rc-cbz-back-wrap">
-    <a href="?subtopic=currentcharactertrades" class="rc-bazaar-view-btn">Back to Char Bazaar</a>
+    <a href="?subtopic=<?= urlencode($cbzBackSubtopic) ?>" class="rc-bazaar-view-btn rc-cbz-back-btn">Back to Char Bazaar</a>
 </div>
 
