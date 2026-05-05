@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
@@ -23,166 +23,142 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
         return;
     }
 
-    $account = $db->query('SELECT `coins`, `coins_transferable` FROM `accounts` WHERE `id` = ' . $accountId)->fetch();
-    $titlesCount = '-';
-    if (cbz_has_table($db, 'player_titles')) {
-        $titlesCount = (int)($db->query('SELECT COUNT(*) FROM `player_titles` WHERE `player_id` = ' . $selectCharacter)->fetchColumn() ?? 0);
-    }
+    $account = $db->query('SELECT `coins_transferable` FROM `accounts` WHERE `id` = ' . $accountId)->fetch();
+    $equipped = $character['equipped_inventory'] ?? [];
+    $addonsList = $character['full_addons_list'] ?? [];
+    $mountsList = $character['full_mounts_list'] ?? [];
+    $itemSummaryRows = $character['item_summary_rows'] ?? [];
     ?>
 
-    <style>
-        .rc-bazaar-view-btn{
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            min-width:64px;
-            height:32px;
-            padding:0 14px;
-            border-radius:10px;
-            border:1px solid rgba(136,159,214,.65);
-            background:linear-gradient(180deg,#2b3858,#1c2743);
-            color:#e6ecff;
-            text-decoration:none;
-            font-weight:700;
-            font-size:12px;
-            letter-spacing:.5px;
-        }
-        .rc-bazaar-view-btn:hover{
-            border-color:rgba(236,188,92,.8);
-            color:#fff1c8;
-        }
-    </style>
-
-    <div class="TableContainer">
+    <div class="TableContainer rc-cbz-host">
         <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Setup Sale (3/4)</div></div></div>
-        <table class="Table5" cellspacing="0" cellpadding="0"><tbody><tr><td>
-            <div class="InnerTableContainer">
-                <table style="width:100%;"><tbody><tr><td>
-                    <div class="TableContentContainer">
-                        <table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                            <tr>
-                                <td style="width:180px;text-align:center;">
-                                    <img class="AuctionOutfitImage" src="<?= $character['outfit_url'] ?>">
-                                </td>
-                                <td>
-                                    <div class="AuctionCharacterName"><?= htmlspecialchars($character['name']) ?></div>
-                                    Level: <?= (int)$character['level'] ?> | Vocation: <?= htmlspecialchars($character['vocation']) ?> | <?= htmlspecialchars($character['sex']) ?>
-                                </td>
-                            </tr>
-                        </tbody></table>
-                    </div>
-                </td></tr></tbody></table>
-            </div>
-        </td></tr></tbody></table>
-    </div>
-    <br>
-
-    <div class="TableContainer">
-        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Character Snapshot</div></div></div>
         <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
             <div class="InnerTableContainer">
-                <table class="TableContent" style="border:1px solid #faf0d7;" width="100%">
-                    <tbody>
-                    <tr><td class="LabelV">Health</td><td><?= (int)$character['player']['health'] ?> / <?= (int)$character['player']['healthmax'] ?></td></tr>
-                    <tr><td class="LabelV">Mana</td><td><?= (int)$character['player']['mana'] ?> / <?= (int)$character['player']['manamax'] ?></td></tr>
-                    <tr><td class="LabelV">Capacity</td><td><?= (int)$character['player']['cap'] ?></td></tr>
-                    <tr><td class="LabelV">Soul</td><td><?= isset($character['player']['soul']) ? (int)$character['player']['soul'] : 0 ?></td></tr>
-                    <tr><td class="LabelV">Blessings</td><td><?= (int)$character['blessings_count'] ?></td></tr>
-                    <tr><td class="LabelV">Mounts</td><td><?= (int)$character['mounts_count'] ?></td></tr>
-                    <tr><td class="LabelV">Outfits</td><td><?= (int)$character['addons_count'] ?></td></tr>
-                    <tr><td class="LabelV">Titles</td><td><?= htmlspecialchars((string)$titlesCount) ?></td></tr>
-                    <tr><td class="LabelV">Axe Fighting</td><td><?= (int)$character['player']['skill_axe'] ?> (0%)</td></tr>
-                    <tr><td class="LabelV">Club Fighting</td><td><?= (int)$character['player']['skill_club'] ?> (0%)</td></tr>
-                    <tr><td class="LabelV">Distance Fighting</td><td><?= (int)$character['player']['skill_dist'] ?> (0%)</td></tr>
-                    <tr><td class="LabelV">Fishing</td><td><?= (int)$character['player']['skill_fishing'] ?> (0%)</td></tr>
-                    <tr><td class="LabelV">Fist Fighting</td><td><?= (int)$character['player']['skill_fist'] ?> (0%)</td></tr>
-                    <tr><td class="LabelV">Magic Level</td><td><?= (int)$character['player']['maglevel'] ?> (0%)</td></tr>
-                    <tr><td class="LabelV">Shielding</td><td><?= (int)$character['player']['skill_shielding'] ?> (0%)</td></tr>
-                    <tr><td class="LabelV">Sword Fighting</td><td><?= (int)$character['player']['skill_sword'] ?> (0%)</td></tr>
-                    <tr><td class="LabelV">Creation Date</td><td><?= htmlspecialchars((string)$character['creation_date']) ?></td></tr>
-                    <tr><td class="LabelV">Experience</td><td><?= number_format((int)$character['player']['experience'], 0, ',', '.') ?></td></tr>
-                    <tr><td class="LabelV">Gold</td><td><?= number_format((int)$character['player']['balance'], 0, ',', '.') ?></td></tr>
-                    <tr><td class="LabelV">Achievement Points</td><td><?= isset($character['player']['achievement_points']) ? (int)$character['player']['achievement_points'] : 0 ?></td></tr>
-                    <tr><td class="LabelV">Charm Expansion</td><td><?= htmlspecialchars((string)$character['charm_expansion']) ?></td></tr>
-                    <tr><td class="LabelV">Available Charm Points</td><td><?= htmlspecialchars((string)$character['charm_points']) ?></td></tr>
-                    <tr><td class="LabelV">Spent Charm Points</td><td><?= htmlspecialchars((string)$character['spent_charm_points']) ?></td></tr>
-                    </tbody>
-                </table>
+                <div class="rc-cbz-layout">
+                    <aside class="rc-cbz-profile">
+                        <div class="rc-cbz-outfit">
+                            <img class="AuctionOutfitImage" src="<?= $character['outfit_url'] ?>" alt="Character outfit">
+                            <h4><?= htmlspecialchars($character['name']) ?></h4>
+                            <p>Level <?= (int)$character['level'] ?> • <?= htmlspecialchars($character['vocation']) ?></p>
+                            <p><?= htmlspecialchars($character['sex']) ?> • <?= htmlspecialchars($character['world']) ?></p>
+                        </div>
+                        <div class="rc-cbz-equip">
+                            <h5>Inventory (equipped)</h5>
+                            <div class="rc-cbz-equip-grid">
+                                <div><?= $equipped[2] ?? '' ?></div>
+                                <div><?= $equipped[1] ?? '' ?></div>
+                                <div><?= $equipped[3] ?? '' ?></div>
+                                <div><?= $equipped[6] ?? '' ?></div>
+                                <div><?= $equipped[4] ?? '' ?></div>
+                                <div><?= $equipped[5] ?? '' ?></div>
+                                <div><?= $equipped[9] ?? '' ?></div>
+                                <div><?= $equipped[7] ?? '' ?></div>
+                                <div><?= $equipped[10] ?? '' ?></div>
+                                <div class="rc-cbz-equip-slot-empty"></div>
+                                <div><?= $equipped[8] ?? '' ?></div>
+                                <div class="rc-cbz-equip-slot-empty"></div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <section class="rc-cbz-content">
+                        <div class="rc-cbz-section">
+                            <h3>Character Overview</h3>
+                            <div class="rc-cbz-grid-two">
+                                <div><span>Health</span><strong><?= (int)$character['player']['health'] ?> / <?= (int)$character['player']['healthmax'] ?></strong></div>
+                                <div><span>Mana</span><strong><?= (int)$character['player']['mana'] ?> / <?= (int)$character['player']['manamax'] ?></strong></div>
+                                <div><span>Capacity</span><strong><?= (int)$character['player']['cap'] ?></strong></div>
+                                <div><span>Soul</span><strong><?= isset($character['player']['soul']) ? (int)$character['player']['soul'] : 0 ?></strong></div>
+                                <div><span>Blessings</span><strong><?= (int)$character['blessings_count'] ?></strong></div>
+                                <div><span>Loyalty Title</span><strong><?= htmlspecialchars((string)$character['loyalty_title']) ?></strong></div>
+                                <div><span>Creation Date</span><strong><?= htmlspecialchars((string)$character['creation_date']) ?></strong></div>
+                                <div><span>Achievement Points</span><strong><?= isset($character['player']['achievement_points']) ? (int)$character['player']['achievement_points'] : 0 ?></strong></div>
+                                <div><span>Full Addons</span><strong><?= (int)$character['full_addons_count'] ?></strong></div>
+                                <div><span><a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open" data-target="rc-cbz-modal-addons">View</a></span></div>
+                                <div><span>Full Mounts</span><strong><?= (int)$character['mounts_count'] ?></strong></div>
+                                <div><span><a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open" data-target="rc-cbz-modal-mounts">View</a></span></div>
+                            </div>
+                        </div>
+
+                        <div class="rc-cbz-section">
+                            <h3>Skills</h3>
+                            <div class="rc-cbz-skills-grid">
+                                <div><span>Axe</span><strong><?= (int)$character['player']['skill_axe'] ?></strong></div>
+                                <div><span>Club</span><strong><?= (int)$character['player']['skill_club'] ?></strong></div>
+                                <div><span>Distance</span><strong><?= (int)$character['player']['skill_dist'] ?></strong></div>
+                                <div><span>Fishing</span><strong><?= (int)$character['player']['skill_fishing'] ?></strong></div>
+                                <div><span>Fist</span><strong><?= (int)$character['player']['skill_fist'] ?></strong></div>
+                                <div><span>Magic Level</span><strong><?= (int)$character['player']['maglevel'] ?></strong></div>
+                                <div><span>Shielding</span><strong><?= (int)$character['player']['skill_shielding'] ?></strong></div>
+                                <div><span>Sword</span><strong><?= (int)$character['player']['skill_sword'] ?></strong></div>
+                            </div>
+                        </div>
+
+                        <div class="rc-cbz-section">
+                            <h3>Charms & Bestiary</h3>
+                            <div class="rc-cbz-grid-two">
+                                <div><span>Bestiary Points</span><strong><?= htmlspecialchars((string)$character['bestiary_points']) ?></strong></div>
+                                <div><span>Charm Points</span><strong><?= htmlspecialchars((string)$character['charm_points']) ?></strong></div>
+                                <div><span>Major Charms unlocked</span><strong><?= htmlspecialchars((string)$character['major_charms']) ?></strong></div>
+                                <div><span>Minor Charms unlocked</span><strong><?= htmlspecialchars((string)$character['minor_charms']) ?></strong></div>
+                            </div>
+                        </div>
+
+                        <div class="rc-cbz-section">
+                            <h3>Item Summary</h3>
+                            <div class="rc-cbz-item-tabs">
+                                <button type="button" class="rc-cbz-tab is-active" data-target="inventory">Inventory (<?= htmlspecialchars((string)$character['item_summary']['inventory']) ?>)</button>
+                                <button type="button" class="rc-cbz-tab" data-target="depot">Depot (<?= htmlspecialchars((string)$character['item_summary']['depot']) ?>)</button>
+                                <button type="button" class="rc-cbz-tab" data-target="supply_stash">Supply Stash (<?= htmlspecialchars((string)$character['item_summary']['supply_stash']) ?>)</button>
+                                <button type="button" class="rc-cbz-tab" data-target="inbox">Inbox (<?= htmlspecialchars((string)$character['item_summary']['inbox']) ?>)</button>
+                                <button type="button" class="rc-cbz-tab" data-target="store_inbox">Store Inbox (<?= htmlspecialchars((string)$character['item_summary']['store_inbox']) ?>)</button>
+                            </div>
+
+                            <?php
+                            $itemTabs = ['inventory', 'depot', 'supply_stash', 'inbox', 'store_inbox'];
+                            foreach ($itemTabs as $tab):
+                                $rows = $itemSummaryRows[$tab] ?? [];
+                                $activeClass = $tab === 'inventory' ? ' is-active' : '';
+                            ?>
+                                <div class="rc-cbz-item-panel<?= $activeClass ?>" data-panel="<?= $tab ?>">
+                                    <?php if (empty($rows)): ?>
+                                        <div class="rc-cbz-empty">No items found in this category.</div>
+                                    <?php else: ?>
+                                        <div class="rc-cbz-items-grid">
+                                            <?php foreach ($rows as $row): ?>
+                                                <div class="rc-cbz-item-card">
+                                                    <div class="rc-cbz-item-icon"><?= $row['image'] ?></div>
+                                                    <div class="rc-cbz-item-meta">
+                                                        <strong>Item #<?= (int)$row['item_id'] ?></strong>
+                                                        <small>x<?= (int)$row['amount'] ?></small>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div class="rc-cbz-section">
+                            <h3>Prey & Bosstiary</h3>
+                            <div class="rc-cbz-grid-two">
+                                <div><span>Permanent prey slots</span><strong><?= htmlspecialchars((string)$character['prey_permanent']) ?></strong></div>
+                                <div><span>Prey wildcards</span><strong><?= htmlspecialchars((string)$character['prey_wildcards']) ?></strong></div>
+                                <div><span>Bosstiary</span><strong><?= htmlspecialchars((string)$character['bosstiary']) ?></strong></div>
+                                <div><span>Boss Points</span><strong><?= htmlspecialchars((string)$character['boss_points']) ?></strong></div>
+                            </div>
+                        </div>
+
+                        <div class="rc-cbz-section">
+                            <h3>Task Board</h3>
+                            <div class="rc-cbz-grid-two">
+                                <div><span>Task board entries</span><strong><?= htmlspecialchars((string)$character['task_board']) ?></strong></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </div>
-        </td></tr></tbody></table>
-    </div>
-    <br>
-
-    <div class="TableContainer">
-        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Character Overview</div></div></div>
-        <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
-            <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <tr><td class="LabelV">Full Addons</td><td><?= (int)$character['full_addons_count'] ?></td><td><a class="rc-bazaar-view-btn" href="#addons-preview">VIEW</a></td></tr>
-                <tr><td class="LabelV">Full Mounts</td><td><?= (int)$character['mounts_count'] ?></td><td><a class="rc-bazaar-view-btn" href="#mounts-preview">VIEW</a></td></tr>
-                <tr><td class="LabelV">Loyalty Title</td><td colspan="2"><?= htmlspecialchars((string)$character['loyalty_title']) ?></td></tr>
-            </tbody></table></div>
-        </td></tr></tbody></table>
-    </div>
-    <br>
-
-    <div class="TableContainer">
-        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Skills</div></div></div>
-        <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
-            <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <tr><td class="LabelV">Magic Level</td><td><?= (int)$character['player']['maglevel'] ?></td></tr>
-                <tr><td class="LabelV">Defence Stats</td><td><?= (int)$character['defence_stats'] ?></td></tr>
-                <tr><td class="LabelV">Offence Stats</td><td><?= (int)$character['offence_stats'] ?></td></tr>
-            </tbody></table></div>
-        </td></tr></tbody></table>
-    </div>
-    <br>
-
-    <div class="TableContainer">
-        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Charms & Bestiary</div></div></div>
-        <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
-            <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <tr><td class="LabelV">Bestiary Points</td><td><?= htmlspecialchars((string)$character['bestiary_points']) ?></td></tr>
-                <tr><td class="LabelV">Charm Points</td><td><?= htmlspecialchars((string)$character['charm_points']) ?></td></tr>
-                <tr><td class="LabelV">Major Charms unlocked</td><td><?= htmlspecialchars((string)$character['major_charms']) ?></td></tr>
-                <tr><td class="LabelV">Minor Charms unlocked</td><td><?= htmlspecialchars((string)$character['minor_charms']) ?></td></tr>
-            </tbody></table></div>
-        </td></tr></tbody></table>
-    </div>
-    <br>
-
-    <div class="TableContainer">
-        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Items Summary</div></div></div>
-        <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
-            <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <tr><td class="LabelV">Inventory</td><td><?= htmlspecialchars((string)$character['item_summary']['inventory']) ?></td></tr>
-                <tr><td class="LabelV">Depot</td><td><?= htmlspecialchars((string)$character['item_summary']['depot']) ?></td></tr>
-                <tr><td class="LabelV">Supply Stash</td><td><?= htmlspecialchars((string)$character['item_summary']['supply_stash']) ?></td></tr>
-                <tr><td class="LabelV">Inbox</td><td><?= htmlspecialchars((string)$character['item_summary']['inbox']) ?></td></tr>
-                <tr><td class="LabelV">Store Inbox</td><td><?= htmlspecialchars((string)$character['item_summary']['store_inbox']) ?></td></tr>
-            </tbody></table></div>
-        </td></tr></tbody></table>
-    </div>
-    <br>
-
-    <div class="TableContainer">
-        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Prey & Bosstiary</div></div></div>
-        <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
-            <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <tr><td class="LabelV">Permanent prey slots</td><td><?= htmlspecialchars((string)$character['prey_permanent']) ?></td></tr>
-                <tr><td class="LabelV">Prey wildcards</td><td><?= htmlspecialchars((string)$character['prey_wildcards']) ?></td></tr>
-                <tr><td class="LabelV">Bosstiary</td><td><?= htmlspecialchars((string)$character['bosstiary']) ?></td></tr>
-                <tr><td class="LabelV">Boss Points</td><td><?= htmlspecialchars((string)$character['boss_points']) ?></td></tr>
-            </tbody></table></div>
-        </td></tr></tbody></table>
-    </div>
-    <br>
-
-    <div class="TableContainer">
-        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Task Board</div></div></div>
-        <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
-            <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <tr><td class="LabelV">Task Board</td><td><?= htmlspecialchars((string)$character['task_board']) ?></td></tr>
-            </tbody></table></div>
         </td></tr></tbody></table>
     </div>
     <br>
@@ -190,89 +166,120 @@ if (isset($_POST['auction_submit']) && isset($_POST['auction_character'])) {
     <form method="post" action="?subtopic=createcharacterauction&step=4">
         <input type="hidden" name="auction_character" value="<?= $selectCharacter; ?>">
 
-    <div class="TableContainer">
-        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Sale Information</div></div></div>
-        <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
-            <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <tr>
-                    <td style="vertical-align:middle; text-align: right;" class="LabelV150">Price:</td>
-                    <td class="GreedyCell"><input style="width: 100%;" name="auction_price" type="number" placeholder="Fixed price in Tibia Coins" min="1" step="1" required></td>
-                </tr>
-                <tr>
-                    <td class="LabelV150">Your Balance:</td>
-                    <td><?= (int)$account['coins_transferable'] ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></td>
-                </tr>
-                <tr>
-                    <td class="LabelV150">Create Fee:</td>
-                    <td><?= (int)$charbazaar_create ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></td>
-                </tr>
-                <tr>
-                    <td class="LabelV150">Tax on sale:</td>
-                    <td><?= (int)$charbazaar_tax ?>%</td>
-                </tr>
-            </tbody></table></div>
-        </td></tr></tbody></table>
-    </div>
-    <br>
-
-    <?php
-    $outfits = [];
-    if (cbz_has_table($db, 'player_outfits')) {
-        $stmt = $db->query('SELECT `outfit_id`, `addons` FROM `player_outfits` WHERE `player_id` = ' . $selectCharacter . ' AND `addons` > 0 ORDER BY `outfit_id` ASC');
-        $outfits = $stmt ? $stmt->fetchAll() : [];
-    }
-    $mounts = [];
-    if (cbz_has_table($db, 'player_mounts')) {
-        $stmt = $db->query('SELECT `mount_id` FROM `player_mounts` WHERE `player_id` = ' . $selectCharacter . ' ORDER BY `mount_id` ASC');
-        $mounts = $stmt ? $stmt->fetchAll() : [];
-    }
-    ?>
-
-    <div class="TableContainer" id="addons-preview">
-        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Addons Preview</div></div></div>
-        <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
-            <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <?php if (!$outfits): ?>
-                    <tr><td>No complete addons found.</td></tr>
-                <?php else: ?>
-                    <tr class="Odd"><td class="LabelV">Outfit ID</td><td class="LabelV">Addons</td></tr>
-                    <?php $i = 0; foreach ($outfits as $outfit): $i++; ?>
-                        <tr bgcolor="<?= getStyle($i) ?>">
-                            <td><?= (int)$outfit['outfit_id'] ?></td>
-                            <td><?= (int)$outfit['addons'] ?></td>
+        <div class="TableContainer rc-cbz-host">
+            <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Sale Information</div></div></div>
+            <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
+                <div class="InnerTableContainer">
+                    <table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
+                        <tr>
+                            <td style="vertical-align:middle; text-align:right;" class="LabelV150">Price:</td>
+                            <td class="GreedyCell"><input style="width:100%;" name="auction_price" type="number" placeholder="Fixed price in Tibia Coins" min="1" step="1" required></td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody></table></div>
-        </td></tr></tbody></table>
-    </div>
-    <br>
-
-    <div class="TableContainer" id="mounts-preview">
-        <div class="CaptionContainer"><div class="CaptionInnerContainer"><div class="Text">Mounts Preview</div></div></div>
-        <table class="Table3" cellspacing="0" cellpadding="0"><tbody><tr><td>
-            <div class="InnerTableContainer"><table class="TableContent" style="border:1px solid #faf0d7;" width="100%"><tbody>
-                <?php if (!$mounts): ?>
-                    <tr><td>No mounts found.</td></tr>
-                <?php else: ?>
-                    <tr class="Odd"><td class="LabelV">Mount ID</td></tr>
-                    <?php $i = 0; foreach ($mounts as $mount): $i++; ?>
-                        <tr bgcolor="<?= getStyle($i) ?>">
-                            <td><?= (int)$mount['mount_id'] ?></td>
+                        <tr>
+                            <td class="LabelV150">Your Balance:</td>
+                            <td><?= (int)$account['coins_transferable'] ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody></table></div>
-        </td></tr></tbody></table>
-    </div>
-    <br>
+                        <tr>
+                            <td class="LabelV150">Create Fee:</td>
+                            <td><?= (int)$charbazaar_create ?> <img src="<?= $template_path; ?>/images/account/icon-tibiacointrusted.png"></td>
+                        </tr>
+                        <tr>
+                            <td class="LabelV150">Tax on sale:</td>
+                            <td><?= (int)$charbazaar_tax ?>%</td>
+                        </tr>
+                    </tbody></table>
+                </div>
+            </td></tr></tbody></table>
+        </div>
+        <br>
 
         <table class="InnerTableButtonRow" cellspacing="0" cellpadding="0"><tbody><tr>
-            <td><div style="float: right;"><a href="?subtopic=createcharacterauction&step=1"><div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton.gif)"><div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_over.gif); visibility: hidden;"></div><input class="BigButtonText" type="button" value="Back"></div></div></a></div></td>
-            <td><div style="float: left;"><div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton_green.gif)"><div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_green_over.gif); visibility: hidden;"></div><input name="auction_submit" class="BigButtonText" type="submit" value="Next"></div></div></div></td>
+            <td><div style="float:right;"><a href="?subtopic=createcharacterauction&step=1"><div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton.gif)"><div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_over.gif); visibility: hidden;"></div><input class="BigButtonText" type="button" value="Back"></div></div></a></div></td>
+            <td><div style="float:left;"><div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton_green.gif)"><div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_green_over.gif); visibility: hidden;"></div><input name="auction_submit" class="BigButtonText" type="submit" value="Next"></div></div></div></td>
         </tr></tbody></table>
     </form>
 
+    <div id="rc-cbz-modal-addons" class="rc-cbz-modal" aria-hidden="true">
+        <div class="rc-cbz-modal-card">
+            <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-addons">×</button>
+            <h4>Full Addons</h4>
+            <div class="rc-cbz-modal-grid">
+                <?php if (!$addonsList): ?>
+                    <p class="rc-cbz-empty">No complete addons found.</p>
+                <?php else: foreach ($addonsList as $addon): ?>
+                    <article class="rc-cbz-collect-card">
+                        <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars($addon['image']) ?>" alt="<?= htmlspecialchars($addon['name']) ?>"></div>
+                        <strong><?= htmlspecialchars($addon['name']) ?></strong>
+                        <small>Outfit #<?= (int)$addon['id'] ?></small>
+                    </article>
+                <?php endforeach; endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <div id="rc-cbz-modal-mounts" class="rc-cbz-modal" aria-hidden="true">
+        <div class="rc-cbz-modal-card">
+            <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-mounts">×</button>
+            <h4>Full Mounts</h4>
+            <div class="rc-cbz-modal-grid">
+                <?php if (!$mountsList): ?>
+                    <p class="rc-cbz-empty">No mounts found.</p>
+                <?php else: foreach ($mountsList as $mount): ?>
+                    <article class="rc-cbz-collect-card">
+                        <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars($mount['image']) ?>" alt="<?= htmlspecialchars($mount['name']) ?>"></div>
+                        <strong><?= htmlspecialchars($mount['name']) ?></strong>
+                        <small>Mount #<?= (int)$mount['id'] ?></small>
+                    </article>
+                <?php endforeach; endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            document.querySelectorAll('.rc-cbz-tab').forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    var root = tab.closest('.rc-cbz-section');
+                    if (!root) return;
+                    root.querySelectorAll('.rc-cbz-tab').forEach(function(t){ t.classList.remove('is-active'); });
+                    root.querySelectorAll('.rc-cbz-item-panel').forEach(function(p){ p.classList.remove('is-active'); });
+                    tab.classList.add('is-active');
+                    var panel = root.querySelector('.rc-cbz-item-panel[data-panel="' + tab.getAttribute('data-target') + '"]');
+                    if (panel) panel.classList.add('is-active');
+                });
+            });
+
+            document.querySelectorAll('.rc-cbz-modal-open').forEach(function(btn) {
+                btn.addEventListener('click', function(ev) {
+                    ev.preventDefault();
+                    var id = btn.getAttribute('data-target');
+                    var modal = document.getElementById(id);
+                    if (!modal) return;
+                    modal.classList.add('is-visible');
+                    modal.setAttribute('aria-hidden', 'false');
+                });
+            });
+
+            document.querySelectorAll('.rc-cbz-modal-close').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = btn.getAttribute('data-close');
+                    var modal = document.getElementById(id);
+                    if (!modal) return;
+                    modal.classList.remove('is-visible');
+                    modal.setAttribute('aria-hidden', 'true');
+                });
+            });
+
+            document.querySelectorAll('.rc-cbz-modal').forEach(function(modal) {
+                modal.addEventListener('click', function(ev) {
+                    if (ev.target === modal) {
+                        modal.classList.remove('is-visible');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+                });
+            });
+        })();
+    </script>
     <?php
 }
 ?>

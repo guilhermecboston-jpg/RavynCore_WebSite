@@ -53,12 +53,12 @@ foreach ($auctions as $sale) {
                                             <div class="ShortAuctionDataValue"><b><?= htmlspecialchars($statusText) ?></b></div>
                                         </div>
                                         <div class="ShortAuctionDataBidRow">
-                                            <div class="ShortAuctionDataLabel">Addons:</div>
-                                            <div class="ShortAuctionDataValue"><?= (int)$character['addons_count'] ?> (<a href="?subtopic=currentcharactertrades&details=<?= $saleId ?>#addons-list">View</a>)</div>
+                                            <div class="ShortAuctionDataLabel">Full Addons:</div>
+                                            <div class="ShortAuctionDataValue"><?= (int)$character['full_addons_count'] ?> (<a href="?subtopic=currentcharactertrades&details=<?= $saleId ?>">View</a>)</div>
                                         </div>
                                         <div class="ShortAuctionDataBidRow">
-                                            <div class="ShortAuctionDataLabel">Mounts:</div>
-                                            <div class="ShortAuctionDataValue"><?= (int)$character['mounts_count'] ?> (<a href="?subtopic=currentcharactertrades&details=<?= $saleId ?>#mounts-list">View</a>)</div>
+                                            <div class="ShortAuctionDataLabel">Full Mounts:</div>
+                                            <div class="ShortAuctionDataValue"><?= (int)$character['mounts_count'] ?> (<a href="?subtopic=currentcharactertrades&details=<?= $saleId ?>">View</a>)</div>
                                         </div>
                                     </div>
                                     <div class="AuctionBodyBlock CurrentBid">

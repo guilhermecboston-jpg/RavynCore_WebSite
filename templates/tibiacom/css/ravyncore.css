@@ -4569,3 +4569,404 @@ body.rc-page-accountmanagement .rc-rich-content .rc-staff-actions-meta {
         width: 100% !important;
     }
 }
+
+/* ===== Char Bazaar - Cyclopedia inspired layout ===== */
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-host,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-host {
+    margin-top: 2px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-layout,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-layout {
+    display: grid;
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-profile,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-profile {
+    display: grid;
+    gap: 10px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-outfit,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-outfit,
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-equip,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-equip,
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-section,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-section {
+    border: 1px solid rgba(132, 156, 200, 0.24);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(22, 34, 54, 0.86) 0%, rgba(14, 23, 39, 0.88) 100%);
+    padding: 10px 12px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-outfit,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-outfit {
+    text-align: center;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-outfit .AuctionOutfitImage,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-outfit .AuctionOutfitImage {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-outfit h4,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-outfit h4 {
+    margin: 8px 0 3px;
+    color: #f2d39e;
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-outfit p,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-outfit p {
+    margin: 2px 0;
+    color: #d5e5ff;
+    font-size: 12px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-price,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-price {
+    color: #f6e8c8 !important;
+    font-weight: 700;
+    margin-top: 6px !important;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-equip h5,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-equip h5 {
+    margin: 0 0 8px;
+    color: #f0c77f;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-equip-grid,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-equip-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-equip-grid > div,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-equip-grid > div {
+    min-height: 42px;
+    border: 1px solid rgba(132, 156, 200, 0.24);
+    border-radius: 7px;
+    background: rgba(12, 20, 34, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-equip-slot-empty,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-equip-slot-empty {
+    visibility: hidden;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-content,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-content {
+    display: grid;
+    gap: 10px;
+    min-width: 0;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-section h3,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-section h3 {
+    margin: 0 0 9px;
+    color: #f0c77f;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-grid-two,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-grid-two {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px 12px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-grid-two > div,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-grid-two > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 6px 8px;
+    border: 1px solid rgba(132, 156, 200, 0.18);
+    border-radius: 7px;
+    background: rgba(10, 17, 30, 0.55);
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-grid-two span,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-grid-two span {
+    color: #a9bddf;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-grid-two strong,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-grid-two strong {
+    color: #edf4ff;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-skills-grid,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-skills-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-skills-grid > div,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-skills-grid > div {
+    border: 1px solid rgba(132, 156, 200, 0.2);
+    border-radius: 8px;
+    background: rgba(9, 16, 28, 0.65);
+    padding: 8px 10px;
+    text-align: center;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-skills-grid span,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-skills-grid span {
+    display: block;
+    color: #9fb3d9;
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-skills-grid strong,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-skills-grid strong {
+    color: #f0f5ff;
+    font-size: 16px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-item-tabs,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-item-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-tab,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-tab {
+    border: 1px solid rgba(132, 156, 200, 0.35);
+    border-radius: 8px;
+    background: rgba(20, 33, 55, 0.8);
+    color: #d8e6ff;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-tab.is-active,
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-tab:hover,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-tab.is-active,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-tab:hover {
+    border-color: rgba(240, 199, 127, 0.65);
+    color: #fff0cb;
+    background: rgba(43, 60, 93, 0.9);
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-item-panel,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-item-panel {
+    display: none;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-item-panel.is-active,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-item-panel.is-active {
+    display: block;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-items-grid,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 7px;
+    max-height: 260px;
+    overflow: auto;
+    padding-right: 3px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-item-card,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-item-card {
+    border: 1px solid rgba(132, 156, 200, 0.24);
+    border-radius: 8px;
+    padding: 7px;
+    background: rgba(10, 17, 30, 0.65);
+    display: flex;
+    gap: 7px;
+    align-items: center;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-item-icon,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-item-icon {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(132, 156, 200, 0.22);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8, 14, 24, 0.75);
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-item-meta strong,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-item-meta strong {
+    color: #e8f0ff;
+    font-size: 12px;
+    display: block;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-item-meta small,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-item-meta small {
+    color: #a5bcdf;
+    font-size: 11px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-empty,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-empty {
+    color: #9bb0d3;
+    margin: 4px 0;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-item-fallback,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-item-fallback {
+    font-size: 11px;
+    color: #c9daf8;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 7, 14, 0.72);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+    padding: 16px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal.is-visible,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal.is-visible {
+    display: flex;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal-card,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-card {
+    width: min(920px, 100%);
+    max-height: 85vh;
+    overflow: auto;
+    border: 1px solid rgba(132, 156, 200, 0.3);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(20, 30, 47, 0.97) 0%, rgba(12, 20, 35, 0.97) 100%);
+    padding: 14px;
+    position: relative;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal-card h4,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-card h4 {
+    margin: 0 0 10px;
+    color: #f0c77f;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal-close,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border: 1px solid rgba(132, 156, 200, 0.35);
+    border-radius: 7px;
+    background: rgba(14, 24, 40, 0.85);
+    color: #d9e7ff;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal-grid,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 9px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-collect-card,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-collect-card {
+    border: 1px solid rgba(132, 156, 200, 0.24);
+    border-radius: 9px;
+    padding: 8px;
+    text-align: center;
+    background: rgba(13, 21, 36, 0.8);
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-collect-image,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-collect-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    margin-bottom: 6px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-collect-image img,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-collect-image img {
+    max-width: 100%;
+    max-height: 56px;
+    object-fit: contain;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-collect-card strong,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-collect-card strong {
+    display: block;
+    color: #e9f1ff;
+    font-size: 12px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-collect-card small,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-collect-card small {
+    color: #a5bcdf;
+    font-size: 11px;
+}
+
+@media (max-width: 980px) {
+    body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-layout,
+    body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-layout {
+        grid-template-columns: 1fr;
+    }
+
+    body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-profile,
+    body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-profile {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-skills-grid,
+    body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-skills-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-grid-two,
+    body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-grid-two {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-profile,
+    body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-profile {
+        grid-template-columns: 1fr;
+    }
+}
