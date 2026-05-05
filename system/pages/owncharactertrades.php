@@ -103,6 +103,7 @@ $sales = $db->query("SELECT * FROM `myaac_charbazaar` WHERE `account_old` = " . 
                 $i = 0;
                 foreach ($rows as $sale) {
                     $i++;
+                    $saleId = (int)$sale['id'];
                     $char = $db->query("SELECT `name`,`level` FROM `players` WHERE `id` = " . (int)$sale['player_id'])->fetch();
                     $statusText = cbz_sale_status_label($sale['status']);
                     $updatedAt = !empty($sale['date_end']) ? date('d M Y, H:i', strtotime($sale['date_end'])) : date('d M Y, H:i', strtotime($sale['date_start']));
@@ -113,7 +114,7 @@ $sales = $db->query("SELECT * FROM `myaac_charbazaar` WHERE `account_old` = " . 
                         <td><?= htmlspecialchars($statusText) ?></td>
                         <td><?= $updatedAt ?></td>
                         <td>
-                            <a href="?subtopic=currentcharactertrades&details=<?= (int)$sale['id'] ?>">
+                            <a href="?subtopic=currentcharactertrades&details=<?= $saleId ?>">
                                 <div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton_green.gif);display:inline-block;">
                                     <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
                                         <div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_green_over.gif); visibility: hidden;"></div>
@@ -122,15 +123,22 @@ $sales = $db->query("SELECT * FROM `myaac_charbazaar` WHERE `account_old` = " . 
                                 </div>
                             </a>
                             <?php if ((int)$sale['status'] === 0): ?>
-                            <form method="post" action="?subtopic=owncharactertrades&action=cancel" style="display:inline-block;margin:0 0 0 4px;">
-                                <input type="hidden" name="sale_id" value="<?= (int)$sale['id'] ?>">
-                                <div class="BigButton" style="background-image:url(<?= $template_path; ?>/images/global/buttons/sbutton_red.gif);display:inline-block;">
-                                    <div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);">
-                                        <div class="BigButtonOver" style="background-image: url(<?= $template_path; ?>/images/global/buttons/sbutton_red_over.gif); visibility: hidden;"></div>
-                                        <input class="BigButtonText" type="submit" value="Cancel" onclick="return confirm('Cancel this sale?');">
+                                <button class="rc-bazaar-view-btn rc-cbz-buy-open rc-cbz-buy-btn" type="button" data-target="rc-cbz-cancel-modal-<?= $saleId ?>" style="margin-left: 4px;">Cancel</button>
+
+                                <div id="rc-cbz-cancel-modal-<?= $saleId ?>" class="rc-cbz-modal" aria-hidden="true">
+                                    <div class="rc-cbz-modal-card rc-cbz-buy-modal">
+                                        <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-cancel-modal-<?= $saleId ?>">&times;</button>
+                                        <h4>Are you cancelling this sale?</h4>
+                                        <p><?= htmlspecialchars(($char['name'] ?? 'Unknown') . ' - ' . number_format((int)$sale['price'], 0, ',', ',') . ' TC') ?></p>
+                                        <div class="rc-cbz-buy-actions">
+                                            <form method="post" action="?subtopic=owncharactertrades&action=cancel" style="margin:0;">
+                                                <input type="hidden" name="sale_id" value="<?= $saleId ?>">
+                                                <button class="rc-bazaar-view-btn rc-cbz-buy-btn" type="submit">YES, CANCEL</button>
+                                            </form>
+                                            <button class="rc-bazaar-view-btn rc-cbz-modal-close" data-close="rc-cbz-cancel-modal-<?= $saleId ?>" type="button">No</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </form>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -140,3 +148,37 @@ $sales = $db->query("SELECT * FROM `myaac_charbazaar` WHERE `account_old` = " . 
         </div>
     </td></tr></tbody></table>
 </div>
+
+<script>
+    (function() {
+        if (document && document.body) {
+            document.body.classList.add('rc-page-owncharactertrades');
+        }
+        document.querySelectorAll('.rc-cbz-buy-open').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var id = btn.getAttribute('data-target');
+                var modal = document.getElementById(id);
+                if (!modal) return;
+                modal.classList.add('is-visible');
+                modal.setAttribute('aria-hidden', 'false');
+            });
+        });
+        document.querySelectorAll('.rc-cbz-modal-close').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var id = btn.getAttribute('data-close');
+                var modal = document.getElementById(id);
+                if (!modal) return;
+                modal.classList.remove('is-visible');
+                modal.setAttribute('aria-hidden', 'true');
+            });
+        });
+        document.querySelectorAll('.rc-cbz-modal').forEach(function(modal) {
+            modal.addEventListener('click', function(ev) {
+                if (ev.target === modal) {
+                    modal.classList.remove('is-visible');
+                    modal.setAttribute('aria-hidden', 'true');
+                }
+            });
+        });
+    })();
+</script>

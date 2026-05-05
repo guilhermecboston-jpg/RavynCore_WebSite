@@ -5136,6 +5136,7 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-price-box strong {
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-buy-btn,
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
     min-width: 236px;
     height: 52px;
@@ -5148,7 +5149,8 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
     text-transform: uppercase;
 }
 
-body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn {
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-buy-btn {
     border-color: rgba(148, 112, 255, 0.75);
     background: linear-gradient(180deg, rgba(43, 50, 92, 0.95) 0%, rgba(29, 26, 65, 0.98) 100%);
     box-shadow: 0 0 0 1px rgba(123, 96, 220, 0.25) inset, 0 8px 18px rgba(22, 20, 53, 0.45);
@@ -5178,19 +5180,23 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-helper-target {
     cursor: help;
 }
 
-body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-modal {
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-modal,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-buy-modal {
     max-width: 440px;
 }
 
-body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-modal h4 {
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-modal h4,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-buy-modal h4 {
     margin-bottom: 8px;
 }
 
-body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-modal p {
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-modal p,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-buy-modal p {
     color: #d4e4ff;
 }
 
-body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-actions {
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-actions,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-buy-actions {
     display: flex;
     gap: 10px;
     margin-top: 12px;
@@ -5287,7 +5293,8 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-item-fallback {
 }
 
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal,
-body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal {
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-modal {
     position: fixed;
     inset: 0;
     background: rgba(2, 7, 14, 0.72);
@@ -5299,12 +5306,14 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal {
 }
 
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal.is-visible,
-body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal.is-visible {
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal.is-visible,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-modal.is-visible {
     display: flex;
 }
 
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal-card,
-body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-card {
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-card,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-modal-card {
     width: min(920px, 100%);
     max-height: 85vh;
     overflow: auto;
@@ -5316,7 +5325,8 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-card {
 }
 
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal-card h4,
-body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-card h4 {
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-card h4,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-modal-card h4 {
     margin: 0 0 10px;
     color: #f0c77f;
     text-transform: uppercase;
@@ -5324,7 +5334,8 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-card h4 {
 }
 
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-modal-close,
-body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-close {
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-modal-close,
+body.rc-page-owncharactertrades .rc-rich-content .rc-cbz-modal-close {
     position: absolute;
     top: 8px;
     right: 8px;
