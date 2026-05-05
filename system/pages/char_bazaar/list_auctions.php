@@ -77,11 +77,10 @@ foreach ($auctions as $sale) {
 
                             <div class="rc-cbz-list-body">
                                 <div class="rc-cbz-list-left">
-                                    <div class="rc-cbz-mini-title">Outfit</div>
                                     <div class="AuctionOutfit">
                                         <img class="AuctionOutfitImage" src="<?= $character['outfit_url'] ?>" alt="outfit">
                                     </div>
-                                    <div class="rc-cbz-mini-title">Set</div>
+                                    <div class="rc-cbz-mini-title">Inventory</div>
                                     <div class="rc-cbz-mini-equip">
                                         <div><?= $equipped[2] ?? '' ?></div>
                                         <div><?= $equipped[1] ?? '' ?></div>
@@ -98,7 +97,6 @@ foreach ($auctions as $sale) {
 
                                 <div class="rc-cbz-list-middle">
                                     <div class="rc-cbz-list-row"><span>Sale created:</span><strong><?= date('M d Y, H:i:s', strtotime($sale['date_start'])) ?></strong></div>
-                                    <div class="rc-cbz-list-row"><span>Level:</span><strong><?= (int)$character['level'] ?></strong></div>
                                     <div class="rc-cbz-list-row"><span><?= htmlspecialchars($prevalentLabel) ?>:</span><strong><?= (int)$prevalentValue ?></strong></div>
                                     <div class="rc-cbz-list-row"><span>Gold total in bank:</span><strong><?= number_format((int)$playerData['balance'], 0, ',', ',') ?></strong></div>
                                     <div class="rc-cbz-list-row"><span>Total Boss Points:</span><strong><?= htmlspecialchars((string)$character['boss_points']) ?></strong></div>
@@ -130,13 +128,13 @@ foreach ($auctions as $sale) {
             <?php if ($logged && !$isOwner): ?>
             <div id="rc-cbz-buy-modal-<?= $saleId ?>" class="rc-cbz-modal" aria-hidden="true">
                 <div class="rc-cbz-modal-card rc-cbz-buy-modal">
-                    <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-buy-modal-<?= $saleId ?>">×</button>
+                    <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-buy-modal-<?= $saleId ?>">&times;</button>
                     <h4>Are you buying this character?</h4>
                     <p><?= htmlspecialchars($character['name']) ?> - <?= number_format((int)$sale['price'], 0, ',', ',') ?> TC</p>
                     <div class="rc-cbz-buy-actions">
                         <form action="?subtopic=currentcharactertrades&action=buyfinish" method="post">
                             <input type="hidden" name="sale_id" value="<?= $saleId ?>">
-                            <button class="rc-bazaar-view-btn" type="submit">Yes, Buy</button>
+                            <button class="rc-bazaar-view-btn rc-cbz-buy-btn" type="submit">YES, BUY</button>
                         </form>
                         <button class="rc-bazaar-view-btn rc-cbz-modal-close" data-close="rc-cbz-buy-modal-<?= $saleId ?>" type="button">No</button>
                     </div>
@@ -182,3 +180,4 @@ foreach ($auctions as $sale) {
         });
     })();
 </script>
+

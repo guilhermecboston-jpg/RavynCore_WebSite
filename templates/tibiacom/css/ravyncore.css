@@ -4850,7 +4850,7 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-details-link {
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-body {
     display: grid;
-    grid-template-columns: 180px minmax(0, 1fr) 210px;
+    grid-template-columns: 160px minmax(0, 1fr) 220px;
     gap: 10px;
     align-items: start;
 }
@@ -4863,12 +4863,12 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-left {
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip > div {
-    min-height: 36px;
+    min-height: 32px;
     border: 1px solid rgba(132, 156, 200, 0.22);
     border-radius: 7px;
     background: rgba(10, 17, 30, 0.58);
@@ -4879,15 +4879,20 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip > div {
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-title {
     color: #f0c77f;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
 }
 
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-mini-equip > div:last-child {
+    grid-column: 2;
+}
+
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-middle {
     display: grid;
-    gap: 6px;
+    gap: 5px;
+    margin-left: 8px;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-row {
@@ -4896,16 +4901,18 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-row {
     gap: 10px;
     border: 1px solid rgba(132, 156, 200, 0.17);
     border-radius: 7px;
-    padding: 4px 8px;
+    padding: 3px 8px;
     background: rgba(9, 16, 28, 0.52);
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-row span {
     color: #a8bedf;
+    font-size: 11px;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-row strong {
     color: #eff5ff;
+    font-size: 11px;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-list-right {
@@ -4943,6 +4950,8 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-btn {
     border-radius: 10px;
     letter-spacing: 0.03em;
     font-weight: 800;
+    color: #ffffff !important;
+    text-transform: uppercase;
 }
 
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-buy-btn {
