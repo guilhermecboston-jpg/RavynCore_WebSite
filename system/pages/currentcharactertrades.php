@@ -12,6 +12,18 @@ require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
 $charbazaar_tax = (int)($config['bazaar_tax'] ?? 0);
 $getPageDetails = isset($_GET['details']) ? (int)$_GET['details'] : 0;
 $getPageAction = $_GET['action'] ?? null;
+$saleIdFromRequest = (int)($_POST['sale_id'] ?? $_GET['sale_id'] ?? 0);
+
+if (!$logged && ($getPageAction === 'buy' || $getPageAction === 'buyfinish') && $saleIdFromRequest > 0) {
+    $redirectTo = '?subtopic=currentcharactertrades&action=buy&sale_id=' . $saleIdFromRequest;
+    header('Location: ?account/manage&redirect=' . urlencode($redirectTo));
+    exit;
+}
+
+if ($getPageDetails > 0) {
+    require SYSTEM . 'pages/char_bazaar/details.php';
+    return;
+}
 
 if (!$logged) {
     echo '<div class="SmallBox"><div class="MessageContainer"><div class="Message"><p><b>Log in</b> to purchase characters from Char Bazaar.</p></div></div></div><br>';
@@ -100,8 +112,8 @@ if ($logged && $_SERVER['REQUEST_METHOD'] === 'POST' && $getPageAction === 'buyf
     }
 }
 
-if ($logged && $_SERVER['REQUEST_METHOD'] === 'POST' && $getPageAction === 'buy') {
-    $saleId = (int)($_POST['sale_id'] ?? 0);
+if ($logged && $getPageAction === 'buy') {
+    $saleId = $saleIdFromRequest;
     $sale = null;
     if ($saleId > 0) {
         $saleStmt = $db->query("SELECT * FROM `myaac_charbazaar` WHERE `id` = {$saleId}");
@@ -156,11 +168,6 @@ foreach ($messages as $message) {
 }
 foreach ($errors as $error) {
     echo '<div class="SmallBox"><div class="MessageContainer"><div class="Message"><p style="color:#b32d2d;font-weight:bold;">' . htmlspecialchars($error) . '</p></div></div></div><br>';
-}
-
-if ($getPageDetails > 0) {
-    require SYSTEM . 'pages/char_bazaar/details.php';
-    return;
 }
 
 $subtopic = 'currentcharactertrades';

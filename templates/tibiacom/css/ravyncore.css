@@ -4585,6 +4585,11 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-bazaar-view-btn {
     border-radius: 8px;
 }
 
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-back-wrap {
+    text-align: center;
+    margin: 8px 0 2px;
+}
+
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-layout,
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-layout {
     display: grid;

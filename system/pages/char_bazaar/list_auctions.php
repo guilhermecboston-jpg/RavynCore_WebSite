@@ -68,7 +68,7 @@ foreach ($auctions as $sale) {
                                     </div>
 
                                     <?php if (!$logged): ?>
-                                        <div class="MyMaxBidLabel" style="font-weight: normal;">Please login first.</div>
+                                        <a class="rc-bazaar-view-btn" href="?account/manage&redirect=<?= urlencode('?subtopic=currentcharactertrades&action=buy&sale_id=' . $saleId) ?>">Buy Character</a>
                                     <?php elseif ($isOwner): ?>
                                         <div class="MyMaxBidLabel" style="font-weight: normal;">My sale.</div>
                                     <?php else: ?>

@@ -281,8 +281,6 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
 </script>
 
 <br>
-<div class="TopButtonContainer">
-    <div class="TopButton">
-        <a href="?subtopic=currentcharactertrades"><img style="border:0;" src="<?= $template_path; ?>/images/global/content/back-to-top.gif"></a>
-    </div>
+<div class="rc-cbz-back-wrap">
+    <a href="?subtopic=currentcharactertrades" class="rc-bazaar-view-btn">Back to Char Bazaar</a>
 </div>
