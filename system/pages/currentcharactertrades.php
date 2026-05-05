@@ -7,9 +7,7 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Char Bazaar';
 
 require_once SYSTEM . 'pages/char_bazaar/sale_helpers.php';
-if ($logged) {
-    require_once SYSTEM . 'pages/char_bazaar/coins_balance.php';
-}
+// Intentionally not showing coins balance block here to keep bazaar pages clean.
 
 $charbazaar_tax = (int)($config['bazaar_tax'] ?? 0);
 $getPageDetails = isset($_GET['details']) ? (int)$_GET['details'] : 0;

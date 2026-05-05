@@ -187,7 +187,7 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
             <?php else: ?>
                 <tr class="Odd"><td class="LabelV">Date</td><td class="LabelV">Description</td></tr>
                 <?php $i = 0; foreach ($deathRows as $death): $i++; ?>
-                    <tr bgcolor="<?= getStyle($i) ?>">
+                    <tr class="<?= ($i % 2 === 0) ? 'Even' : 'Odd' ?>">
                         <td><?= date('d M Y, H:i', (int)$death['date']) ?></td>
                         <td>Died at level <?= (int)$death['level'] ?></td>
                     </tr>
