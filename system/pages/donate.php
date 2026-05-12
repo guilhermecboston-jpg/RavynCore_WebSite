@@ -12,6 +12,10 @@ global $config, $twig, $logged;
 defined('MYAAC') or die('Direct access not allowed!');
 
 require_once(PLUGINS . 'pagseguro/config.php');
+$mercadoPagoConfigFile = PLUGINS . 'mercadopago/config.php';
+if (file_exists($mercadoPagoConfigFile)) {
+	require_once($mercadoPagoConfigFile);
+}
 $twig->addGlobal('config', $config);
 
 if (!isset($config['pagSeguro']) || !count($config['pagSeguro']) || !count($config['pagSeguro']['donates'])) {
@@ -44,10 +48,14 @@ if (empty($action)) {
 
         $config['friendly_urls'] = $was_before;
     } else {
+		$hasMercadoPago = isset($config['mercadoPago']) && count($config['mercadoPago']) && count($config['mercadoPago']['donates'] ?? []);
         echo $twig->render('donate.html.twig', [
             'is_localhost' => $is_localhost,
             'is_double'    => $config['pagSeguro']['doubleCoins'],
             'double_start' => $config['pagSeguro']['doubleCoinsStart'],
+			'has_mercado_pago' => $hasMercadoPago,
+			'mercado_pago_is_double' => $config['mercadoPago']['doubleCoins'] ?? false,
+			'mercado_pago_double_start' => $config['mercadoPago']['doubleCoinsStart'] ?? 0,
         ]);
     }
 } elseif ($action == 'final') {
