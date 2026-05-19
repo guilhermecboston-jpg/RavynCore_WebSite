@@ -2,121 +2,133 @@
 defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Supreme Tasks';
 
-function rc_supreme_slug($value)
-{
-	$slug = strtolower(trim((string)$value));
-	$slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
-	return trim((string)$slug, '-');
-}
-
-function rc_supreme_task_image_url($taskName)
-{
-	$base = TEMPLATE . '/images/supreme_tasks';
-	$slug = rc_supreme_slug($taskName);
-	$candidate = $base . '/monsters/' . $slug . '.png';
-	if (file_exists(BASE . $candidate)) {
-		return $candidate;
+if (!function_exists('rc_supreme_slug')) {
+	function rc_supreme_slug($value)
+	{
+		$slug = strtolower(trim((string)$value));
+		$slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+		return trim((string)$slug, '-');
 	}
-
-	$fallback = $base . '/taskfinder-mini.png';
-	return file_exists(BASE . $fallback) ? $fallback : '';
 }
 
-function rc_supreme_limit_creatures($creatures, $max = 3)
-{
-	$parts = array_filter(array_map('trim', explode(',', (string)$creatures)));
-	if (count($parts) <= $max) {
-		return implode(', ', $parts);
-	}
-
-	$display = array_slice($parts, 0, $max);
-	return implode(', ', $display) . '...';
-}
-
-function rc_supreme_format_reward_lines($rewardText, $className)
-{
-	$lines = preg_split('/\r\n|\r|\n/', (string)$rewardText);
-	$html = '<div class="' . $className . '">';
-	foreach ($lines as $line) {
-		$line = trim($line);
-		if ($line === '') {
-			continue;
+if (!function_exists('rc_supreme_task_image_url')) {
+	function rc_supreme_task_image_url($taskName)
+	{
+		$base = TEMPLATE . '/images/supreme_tasks';
+		$slug = rc_supreme_slug($taskName);
+		$candidate = $base . '/monsters/' . $slug . '.png';
+		if (file_exists(BASE . $candidate)) {
+			return $candidate;
 		}
 
-		$icon = '';
-		if (stripos($line, 'Task Coin') !== false) {
-			$icon = TEMPLATE . '/images/supreme_tasks/icon-map-improvedrespawn.png';
-		} elseif (stripos($line, 'EXP X sua Rate') !== false) {
-			$icon = TEMPLATE . '/images/supreme_tasks/prey_xp.png';
+		$fallback = $base . '/taskfinder-mini.png';
+		return file_exists(BASE . $fallback) ? $fallback : '';
+	}
+}
+
+if (!function_exists('rc_supreme_limit_creatures')) {
+	function rc_supreme_limit_creatures($creatures, $max = 3)
+	{
+		$parts = array_filter(array_map('trim', explode(',', (string)$creatures)));
+		if (count($parts) <= $max) {
+			return implode(', ', $parts);
 		}
 
+		$display = array_slice($parts, 0, $max);
+		return implode(', ', $display) . '...';
+	}
+}
+
+if (!function_exists('rc_supreme_format_reward_lines')) {
+	function rc_supreme_format_reward_lines($rewardText, $className)
+	{
+		$lines = preg_split('/\r\n|\r|\n/', (string)$rewardText);
+		$html = '<div class="' . $className . '">';
+		foreach ($lines as $line) {
+			$line = trim($line);
+			if ($line === '') {
+				continue;
+			}
+
+			$icon = '';
+			if (stripos($line, 'Task Coin') !== false) {
+				$icon = TEMPLATE . '/images/supreme_tasks/icon-map-improvedrespawn.png';
+			} elseif (stripos($line, 'EXP X sua Rate') !== false) {
+				$icon = TEMPLATE . '/images/supreme_tasks/prey_xp.png';
+			}
+
+			$iconHtml = '';
+			if (!empty($icon) && file_exists(BASE . $icon)) {
+				$iconHtml = '<img class="rc-st-reward-icon" src="' . $icon . '" alt="" loading="lazy">';
+			}
+
+			$html .= '<div class="rc-st-reward-line">' . $iconHtml . '<span>' . htmlspecialchars($line) . '</span></div>';
+		}
+		$html .= '</div>';
+		return $html;
+	}
+}
+
+if (!function_exists('rc_supreme_task_row')) {
+	function rc_supreme_task_row($id, $task, $amount, $creatures, $firstReward, $repeatReward)
+	{
+		$taskImg = rc_supreme_task_image_url($task);
+		$taskMedia = '';
+		if (!empty($taskImg)) {
+			$taskMedia = '<img class="rc-st-task-monster" src="' . $taskImg . '" alt="' . htmlspecialchars($task) . '" loading="lazy">';
+		}
+
+		return '<tr>'
+			. '<td>' . (int)$id . '</td>'
+			. '<td><div class="rc-st-task-cell"><strong>' . htmlspecialchars($task) . '</strong>' . $taskMedia . '</div></td>'
+			. '<td>' . htmlspecialchars($amount) . '</td>'
+			. '<td>' . htmlspecialchars(rc_supreme_limit_creatures($creatures, 3)) . '</td>'
+			. '<td>' . rc_supreme_format_reward_lines($firstReward, 'rc-st-reward-first') . rc_supreme_format_reward_lines($repeatReward, 'rc-st-reward-repeat') . '</td>'
+			. '</tr>';
+	}
+}
+
+if (!function_exists('rc_supreme_category_block')) {
+	function rc_supreme_category_block($id, $name, $iconFile, $summaryRewards, $tasks, $open = false)
+	{
+		$rows = '';
+		foreach ($tasks as $task) {
+			$rows .= rc_supreme_task_row($task[0], $task[1], $task[2], $task[3], $task[4], $task[5]);
+		}
+
+		$rewardsHtml = '';
+		foreach ($summaryRewards as $reward) {
+			$rewardsHtml .= '<span class="rc-st-chip">' . htmlspecialchars($reward) . '</span>';
+		}
+
+		$iconPath = TEMPLATE . '/images/supreme_tasks/' . $iconFile;
 		$iconHtml = '';
-		if (!empty($icon) && file_exists(BASE . $icon)) {
-			$iconHtml = '<img class="rc-st-reward-icon" src="' . $icon . '" alt="" loading="lazy">';
+		if (file_exists(BASE . $iconPath)) {
+			$iconHtml = '<img class="rc-st-category-icon" src="' . $iconPath . '" alt="' . htmlspecialchars($name) . '" loading="lazy">';
 		}
 
-		$html .= '<div class="rc-st-reward-line">' . $iconHtml . '<span>' . htmlspecialchars($line) . '</span></div>';
+		return '<details class="rc-st-category" id="' . htmlspecialchars($id) . '"' . ($open ? ' open' : '') . '>'
+			. '<summary>'
+			. '<span class="rc-st-summary-title">' . $iconHtml . '<span>' . htmlspecialchars($name) . '</span></span>'
+			. '<span class="rc-st-summary-toggle"><span class="rc-st-toggle-plus">+</span><span class="rc-st-toggle-minus">-</span> Click to show/hide additional information</span>'
+			. '</summary>'
+			. '<div class="rc-st-category-body">'
+			. '<div class="rc-st-rewards-box">'
+			. '<h4>' . $iconHtml . '<span>' . htmlspecialchars($name) . '</span></h4>'
+			. '<p>Complete todas as tasks deste nivel para receber as seguintes recompensas:</p>'
+			. '<div class="rc-st-chip-list">' . $rewardsHtml . '</div>'
+			. '</div>'
+			. '<p class="rc-st-legend"><span class="rc-st-good">Recompensas em verde</span> indicam beneficios exclusivos da primeira conclusao da task.</p>'
+			. '<p class="rc-st-legend"><span class="rc-st-repeat">Recompensas em vermelho</span> representam itens ou bonus disponiveis em todas as repeticoes.</p>'
+			. '<div class="rc-st-table-wrap">'
+			. '<table class="rc-st-table">'
+			. '<thead><tr><th>#</th><th>Task</th><th>Qntd.</th><th>Criaturas</th><th>Recompensas</th></tr></thead>'
+			. '<tbody>' . $rows . '</tbody>'
+			. '</table>'
+			. '</div>'
+			. '</div>'
+			. '</details>';
 	}
-	$html .= '</div>';
-	return $html;
-}
-
-function rc_supreme_task_row($id, $task, $amount, $creatures, $firstReward, $repeatReward)
-{
-	$taskImg = rc_supreme_task_image_url($task);
-	$taskMedia = '';
-	if (!empty($taskImg)) {
-		$taskMedia = '<img class="rc-st-task-monster" src="' . $taskImg . '" alt="' . htmlspecialchars($task) . '" loading="lazy">';
-	}
-
-	return '<tr>'
-		. '<td>' . (int)$id . '</td>'
-		. '<td><div class="rc-st-task-cell"><strong>' . htmlspecialchars($task) . '</strong>' . $taskMedia . '</div></td>'
-		. '<td>' . htmlspecialchars($amount) . '</td>'
-		. '<td>' . htmlspecialchars(rc_supreme_limit_creatures($creatures, 3)) . '</td>'
-		. '<td>' . rc_supreme_format_reward_lines($firstReward, 'rc-st-reward-first') . rc_supreme_format_reward_lines($repeatReward, 'rc-st-reward-repeat') . '</td>'
-		. '</tr>';
-}
-
-function rc_supreme_category_block($id, $name, $iconFile, $summaryRewards, $tasks, $open = false)
-{
-	$rows = '';
-	foreach ($tasks as $task) {
-		$rows .= rc_supreme_task_row($task[0], $task[1], $task[2], $task[3], $task[4], $task[5]);
-	}
-
-	$rewardsHtml = '';
-	foreach ($summaryRewards as $reward) {
-		$rewardsHtml .= '<span class="rc-st-chip">' . htmlspecialchars($reward) . '</span>';
-	}
-
-	$iconPath = TEMPLATE . '/images/supreme_tasks/' . $iconFile;
-	$iconHtml = '';
-	if (file_exists(BASE . $iconPath)) {
-		$iconHtml = '<img class="rc-st-category-icon" src="' . $iconPath . '" alt="' . htmlspecialchars($name) . '" loading="lazy">';
-	}
-
-	return '<details class="rc-st-category" id="' . htmlspecialchars($id) . '"' . ($open ? ' open' : '') . '>'
-		. '<summary>'
-		. '<span class="rc-st-summary-title">' . $iconHtml . '<span>' . htmlspecialchars($name) . '</span></span>'
-		. '<span class="rc-st-summary-toggle"><span class="rc-st-toggle-plus">+</span><span class="rc-st-toggle-minus">-</span> Click to show/hide additional information</span>'
-		. '</summary>'
-		. '<div class="rc-st-category-body">'
-		. '<div class="rc-st-rewards-box">'
-		. '<h4>' . $iconHtml . '<span>' . htmlspecialchars($name) . '</span></h4>'
-		. '<p>Complete todas as tasks deste nivel para receber as seguintes recompensas:</p>'
-		. '<div class="rc-st-chip-list">' . $rewardsHtml . '</div>'
-		. '</div>'
-		. '<p class="rc-st-legend"><span class="rc-st-good">Recompensas em verde</span> indicam beneficios exclusivos da primeira conclusao da task.</p>'
-		. '<p class="rc-st-legend"><span class="rc-st-repeat">Recompensas em vermelho</span> representam itens ou bonus disponiveis em todas as repeticoes.</p>'
-		. '<div class="rc-st-table-wrap">'
-		. '<table class="rc-st-table">'
-		. '<thead><tr><th>#</th><th>Task</th><th>Qntd.</th><th>Criaturas</th><th>Recompensas</th></tr></thead>'
-		. '<tbody>' . $rows . '</tbody>'
-		. '</table>'
-		. '</div>'
-		. '</div>'
-		. '</details>';
 }
 
 $categories = [];

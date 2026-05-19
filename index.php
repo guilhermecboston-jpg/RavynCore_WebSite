@@ -72,6 +72,12 @@ if ((!isset($config['installed']) || !$config['installed']) && file_exists(BASE 
     throw new RuntimeException('Setup detected that <b>install/</b> directory exists. Please visit <a href="' . BASE_URL . 'install">this</a> url to start MyAAC Installation.<br/>Delete <b>install/</b> directory if you already installed MyAAC.<br/>Remember to REFRESH this page when you\'re done!');
 }
 
+// compatibility alias for pages opened as ?pagename (e.g. ?supremetasks)
+if (isset($_GET['supremetasks']) && !isset($_GET['subtopic']) && !isset($_GET['p'])) {
+    $_GET['subtopic'] = 'supremetasks';
+    $_REQUEST['subtopic'] = 'supremetasks';
+}
+
 $found = false;
 if (empty($uri) || isset($_REQUEST['template'])) {
     $_REQUEST['p'] = 'news';

@@ -286,7 +286,7 @@ $socialLinks = [
                         [
                             'label' => 'System',
                             'items' => [],
-                            'fallback' => getLink('supremetasks'),
+                            'fallback' => BASE_URL . '?subtopic=supremetasks',
                         ],
                         [
                             'label' => 'Char Baazar',
