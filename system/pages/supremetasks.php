@@ -1,6 +1,20 @@
 <?php
 defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Supreme Tasks';
+global $template_path, $config;
+
+// Use MyAAC runtime template path safely (TEMPLATE constant is not guaranteed to exist).
+$rcTemplateName = 'tibiacom';
+if (isset($config['template']) && is_string($config['template']) && $config['template'] !== '') {
+	$rcTemplateName = $config['template'];
+}
+if (function_exists('config')) {
+	$configTemplate = config('template');
+	if (is_string($configTemplate) && $configTemplate !== '') {
+		$rcTemplateName = $configTemplate;
+	}
+}
+$rcTemplatePath = '/' . ltrim((string)($template_path ?? ('templates/' . $rcTemplateName)), '/');
 
 echo '<div class="rc-st-page">'
 	. '<header class="rc-st-page-title"><h2>Supreme Tasks</h2></header>'
@@ -15,11 +29,11 @@ echo '<div class="rc-st-page">'
 	. '<section class="rc-st-card">'
 	. '<h3>Categorias</h3>'
 	. '<div class="rc-st-top-categories">'
-	. '<div class="rc-st-cat-link"><img src="' . TEMPLATE . '/images/supreme_tasks/rank.png" alt="" loading="lazy"><span>Hall of the Apprentice</span></div>'
-	. '<div class="rc-st-cat-link"><img src="' . TEMPLATE . '/images/supreme_tasks/rank2.png" alt="" loading="lazy"><span>Chamber of the Warrior</span></div>'
-	. '<div class="rc-st-cat-link"><img src="' . TEMPLATE . '/images/supreme_tasks/rank3.png" alt="" loading="lazy"><span>Veteran\'s Refuge</span></div>'
-	. '<div class="rc-st-cat-link"><img src="' . TEMPLATE . '/images/supreme_tasks/rank4.png" alt="" loading="lazy"><span>Master\'s Den</span></div>'
-	. '<div class="rc-st-cat-link"><img src="' . TEMPLATE . '/images/supreme_tasks/rank5.png" alt="" loading="lazy"><span>Sanctum of the Immortal</span></div>'
+	. '<div class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank.png" alt="" loading="lazy"><span>Hall of the Apprentice</span></div>'
+	. '<div class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank2.png" alt="" loading="lazy"><span>Chamber of the Warrior</span></div>'
+	. '<div class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank3.png" alt="" loading="lazy"><span>Veteran\'s Refuge</span></div>'
+	. '<div class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank4.png" alt="" loading="lazy"><span>Master\'s Den</span></div>'
+	. '<div class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank5.png" alt="" loading="lazy"><span>Sanctum of the Immortal</span></div>'
 	. '</div>'
 	. '</section>'
 	. '<section class="rc-st-card">'
@@ -27,4 +41,3 @@ echo '<div class="rc-st-page">'
 	. '<p>Estamos aplicando os blocos completos (recompensas e tabela detalhada) em uma versao segura para o servidor. Esta pagina ja esta operacional.</p>'
 	. '</section>'
 	. '</div>';
-
