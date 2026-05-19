@@ -235,6 +235,52 @@ if (!function_exists('rc_am_render_image_url')) {
 	}
 }
 
+if (!function_exists('rc_am_load_legacy_id_map')) {
+	function rc_am_load_legacy_id_map(array $candidatePaths)
+	{
+		foreach ($candidatePaths as $candidate) {
+			$path = rc_am_resolve_candidate_path($candidate);
+			if ($path === '' || !is_file($path)) {
+				continue;
+			}
+
+			$content = @file_get_contents($path);
+			if ($content === false || trim($content) === '') {
+				continue;
+			}
+
+			$map = [];
+			if (preg_match_all('/^\s*(\d+)\s+(\d+)\s*$/m', $content, $matches, PREG_SET_ORDER)) {
+				foreach ($matches as $match) {
+					$newId = (int)$match[1];
+					$oldId = (int)$match[2];
+					if ($newId > 0 && $oldId > 0) {
+						$map[$newId] = $oldId;
+					}
+				}
+			}
+
+			if (!empty($map)) {
+				return $map;
+			}
+		}
+
+		return [];
+	}
+}
+
+if (!function_exists('rc_am_map_legacy_id')) {
+	function rc_am_map_legacy_id($id, array $legacyMap)
+	{
+		$id = (int)$id;
+		if ($id <= 0) {
+			return 0;
+		}
+
+		return isset($legacyMap[$id]) ? (int)$legacyMap[$id] : $id;
+	}
+}
+
 if (!function_exists('rc_am_outfit_image_url')) {
 	function rc_am_outfit_image_url($renderer, $lookType, $addons, array $colors, $mountId = 0)
 	{
@@ -293,12 +339,20 @@ if (!function_exists('rc_am_bonus_html')) {
 
 $outfitRenderer = rc_am_normalize_renderer_url($config['outfit_images_url'] ?? '');
 $defaultColors = ['head' => 95, 'body' => 114, 'legs' => 39, 'feet' => 115];
+$serverPath = isset($config['server_path']) ? trim((string)$config['server_path']) : '';
+if ($serverPath !== '' && !preg_match('/[\/\\\\]$/', $serverPath)) {
+	$serverPath .= '/';
+}
 
 $configuredOutfitsPath = $config['ravyncore']['outfits_xml_path'] ?? ($config['outfits_xml_path'] ?? '');
 $configuredMountsPath = $config['ravyncore']['mounts_xml_path'] ?? ($config['mounts_xml_path'] ?? '');
+$configuredLegacyMapPath = $config['ravyncore']['legacy_outfit_mount_map_path'] ?? ($config['legacy_outfit_mount_map_path'] ?? '');
 
 $outfitsPath = rc_am_find_xml_path([
 	$configuredOutfitsPath,
+	$serverPath . 'data/XML/outfits.xml',
+	$serverPath . 'data/xml/outfits.xml',
+	'C:\\Users\\PICHAU\\Desktop\\DURVAL\\RavynCore\\data\\XML\\outfits.xml',
 	'C:\\Users\\PICHAU\\Desktop\\DURVAL\\outfits.xml',
 	'system/data/outfits.xml',
 	'system/data/XML/outfits.xml',
@@ -306,10 +360,18 @@ $outfitsPath = rc_am_find_xml_path([
 ]);
 $mountsPath = rc_am_find_xml_path([
 	$configuredMountsPath,
+	$serverPath . 'data/XML/mounts.xml',
+	$serverPath . 'data/xml/mounts.xml',
+	'C:\\Users\\PICHAU\\Desktop\\DURVAL\\RavynCore\\data\\XML\\mounts.xml',
 	'C:\\Users\\PICHAU\\Desktop\\DURVAL\\mounts.xml',
 	'system/data/mounts.xml',
 	'system/data/XML/mounts.xml',
 	'mounts.xml',
+]);
+$legacyMap = rc_am_load_legacy_id_map([
+	$configuredLegacyMapPath,
+	$serverPath . '_tools_apply_outfit_mount_ids.ps1',
+	'C:\\Users\\PICHAU\\Desktop\\DURVAL\\RavynCore\\_tools_apply_outfit_mount_ids.ps1',
 ]);
 
 $warnings = [];
@@ -394,7 +456,9 @@ foreach ($outfitsMap as $row) {
 	$outfits[] = [
 		'name' => $row['name'],
 		'femaleImage' => rc_am_outfit_image_url($outfitRenderer, $row['femaleLookType'], 3, $defaultColors, 0),
+		'femaleFallbackImage' => rc_am_outfit_image_url($outfitRenderer, rc_am_map_legacy_id($row['femaleLookType'], $legacyMap), 3, $defaultColors, 0),
 		'maleImage' => rc_am_outfit_image_url($outfitRenderer, $row['maleLookType'], 3, $defaultColors, 0),
+		'maleFallbackImage' => rc_am_outfit_image_url($outfitRenderer, rc_am_map_legacy_id($row['maleLookType'], $legacyMap), 3, $defaultColors, 0),
 		'bonus' => $bonusLines,
 		'search' => strtolower($row['name'] . ' ' . implode(' ', $bonusLines)),
 	];
@@ -416,12 +480,15 @@ if ($mountsXml !== null && isset($mountsXml->mount)) {
 
 		$bonusLines = rc_am_collect_bonuses($mountNode);
 		$primaryImage = rc_am_outfit_image_url($outfitRenderer, $clientId, 0, $defaultColors, 0);
+		$legacyClientId = rc_am_map_legacy_id($clientId, $legacyMap);
+		$legacyPrimaryImage = rc_am_outfit_image_url($outfitRenderer, $legacyClientId, 0, $defaultColors, 0);
 		$fallbackImage = rc_am_outfit_image_url($outfitRenderer, 128, 3, $defaultColors, $mountId);
 
 		$mounts[] = [
 			'id' => $mountId,
 			'name' => $name,
 			'primaryImage' => $primaryImage,
+			'legacyPrimaryImage' => $legacyPrimaryImage,
 			'fallbackImage' => $fallbackImage,
 			'bonus' => $bonusLines,
 			'search' => strtolower($name . ' ' . implode(' ', $bonusLines)),
@@ -437,12 +504,20 @@ $outfitsRows = '';
 foreach ($outfits as $row) {
 	$femaleImageHtml = '<span class="rc-am-empty">N/A</span>';
 	if ($row['femaleImage'] !== '') {
-		$femaleImageHtml = '<img src="' . htmlspecialchars($row['femaleImage'], ENT_QUOTES, 'UTF-8') . '" alt="Female ' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '" loading="lazy">';
+		$femaleFallback = '';
+		if (!empty($row['femaleFallbackImage']) && $row['femaleFallbackImage'] !== $row['femaleImage']) {
+			$femaleFallback = ' data-fallback="' . htmlspecialchars($row['femaleFallbackImage'], ENT_QUOTES, 'UTF-8') . '"';
+		}
+		$femaleImageHtml = '<img src="' . htmlspecialchars($row['femaleImage'], ENT_QUOTES, 'UTF-8') . '" alt="Female ' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '" loading="lazy"' . $femaleFallback . '>';
 	}
 
 	$maleImageHtml = '<span class="rc-am-empty">N/A</span>';
 	if ($row['maleImage'] !== '') {
-		$maleImageHtml = '<img src="' . htmlspecialchars($row['maleImage'], ENT_QUOTES, 'UTF-8') . '" alt="Male ' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '" loading="lazy">';
+		$maleFallback = '';
+		if (!empty($row['maleFallbackImage']) && $row['maleFallbackImage'] !== $row['maleImage']) {
+			$maleFallback = ' data-fallback="' . htmlspecialchars($row['maleFallbackImage'], ENT_QUOTES, 'UTF-8') . '"';
+		}
+		$maleImageHtml = '<img src="' . htmlspecialchars($row['maleImage'], ENT_QUOTES, 'UTF-8') . '" alt="Male ' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '" loading="lazy"' . $maleFallback . '>';
 	}
 
 	$outfitsRows .= '<tr data-search="' . htmlspecialchars($row['search'], ENT_QUOTES, 'UTF-8') . '">'
@@ -464,8 +539,15 @@ $mountRows = '';
 foreach ($mounts as $row) {
 	$imageHtml = '<span class="rc-am-empty">N/A</span>';
 	if ($row['primaryImage'] !== '') {
+		$fallbackChain = [];
+		if (!empty($row['legacyPrimaryImage']) && $row['legacyPrimaryImage'] !== $row['primaryImage']) {
+			$fallbackChain[] = $row['legacyPrimaryImage'];
+		}
+		if (!empty($row['fallbackImage'])) {
+			$fallbackChain[] = $row['fallbackImage'];
+		}
 		$imageHtml = '<img src="' . htmlspecialchars($row['primaryImage'], ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '" loading="lazy"'
-			. ($row['fallbackImage'] !== '' ? ' data-fallback="' . htmlspecialchars($row['fallbackImage'], ENT_QUOTES, 'UTF-8') . '"' : '')
+			. (!empty($fallbackChain) ? ' data-fallback="' . htmlspecialchars(implode('|', $fallbackChain), ENT_QUOTES, 'UTF-8') . '"' : '')
 			. '>';
 	}
 
@@ -524,7 +606,7 @@ echo '<section class="rc-st-card">'
 	. 'var search=document.getElementById("rcAmSearchInput");'
 	. 'var countNode=document.getElementById("rcAmVisibleCount");'
 	. 'function activeKind(){var tab=root.querySelector(".rc-am-tab.is-active");return tab?tab.getAttribute("data-kind"):"outfits";}'
-	. 'function applyFallbackImages(){var imgs=root.querySelectorAll("img[data-fallback]");imgs.forEach(function(img){img.addEventListener("error",function(){var fb=img.getAttribute("data-fallback");if(fb&&img.getAttribute("data-failed")!=="1"){img.setAttribute("data-failed","1");img.src=fb;}});});}'
+	. 'function applyFallbackImages(){var imgs=root.querySelectorAll("img[data-fallback]");imgs.forEach(function(img){img.addEventListener("error",function(){var chain=(img.getAttribute("data-fallback")||"").split("|").filter(function(v){return !!v;});if(!chain.length){return;}var idx=parseInt(img.getAttribute("data-fallback-index")||"0",10);if(isNaN(idx)){idx=0;}if(idx>=chain.length){return;}img.setAttribute("data-fallback-index",String(idx+1));img.src=chain[idx];});});}'
 	. 'function setTab(kind){tabs.forEach(function(tab){var active=tab.getAttribute("data-kind")===kind;tab.classList.toggle("is-active",active);tab.setAttribute("aria-selected",active?"true":"false");});areas.forEach(function(area){area.classList.toggle("is-active",area.getAttribute("data-kind")===kind);});if(search){search.placeholder=kind==="mounts"?"Pesquisar mount...":"Pesquisar outfit...";}filterRows();}'
 	. 'function filterRows(){var kind=activeKind();var area=root.querySelector(".rc-am-table-area[data-kind=\\""+kind+"\\"]");if(!area){return;}var rows=[].slice.call(area.querySelectorAll("tbody tr"));var term=((search&&search.value)||"").toLowerCase().trim();var visible=0;rows.forEach(function(row){if(row.classList.contains("rc-am-empty-row")){return;}var text=(row.getAttribute("data-search")||"").toLowerCase();var ok=!term||text.indexOf(term)!==-1;row.style.display=ok?"":"none";if(ok){visible++;}});if(countNode){countNode.textContent=String(visible);}}'
 	. 'tabs.forEach(function(tab){tab.addEventListener("click",function(){setTab(tab.getAttribute("data-kind")||"outfits");});});'

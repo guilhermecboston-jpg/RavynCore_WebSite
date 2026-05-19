@@ -13,5 +13,7 @@ $config['cache_prefix'] = 'myaac_o8rlk44e_';
 $config['things_assets_path'] = 'system/data/things/1524';
 $config['things_assets_version'] = '1524';
 $config['things_assets_cache_path'] = 'images/things-cache';
+$config['outfits_xml_path'] = 'C:\\Users\\PICHAU\\Desktop\\DURVAL\\RavynCore\\data\\XML\\outfits.xml';
+$config['mounts_xml_path'] = 'C:\\Users\\PICHAU\\Desktop\\DURVAL\\RavynCore\\data\\XML\\mounts.xml';
 
 $config['highscores_ids_hidden'] = array(1, 2, 3, 4, 5, 6);
