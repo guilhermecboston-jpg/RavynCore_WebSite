@@ -90,6 +90,9 @@ $config = array(
 	// images
 	'outfit_images_url' => 'http://177.55.153.178/images/animated-outfits/animoutfit.php', // set to animoutfit.php for animated outfit
 	'item_images_url' => 'images/items/', // set to images/items if you host your own items in images folder
+	'things_assets_path' => 'system/data/things/1524', // folder that contains catalog-content.json from OTC assets (example: data/things/1524)
+	'things_assets_version' => '1524', // used when things_assets_path is empty
+	'things_assets_cache_path' => 'images/things-cache', // optional cache for rendered png/webp/gif by id (items, missiles, effects, outfits, mounts)
 
 	// account
 	'account_management' => true, // disable if you're using other method to manage users (fe. tfs account manager)

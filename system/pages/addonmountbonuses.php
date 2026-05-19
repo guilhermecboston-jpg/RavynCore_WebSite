@@ -242,6 +242,30 @@ if (!function_exists('rc_am_outfit_image_url')) {
 			return '';
 		}
 
+		if (function_exists('getAssetImageById')) {
+			if ((int)$mountId > 0) {
+				return getAssetImageById('mount', (int)$mountId, [
+					'base' => (int)$lookType,
+					'addons' => (int)$addons,
+					'head' => (int)$colors['head'],
+					'body' => (int)$colors['body'],
+					'legs' => (int)$colors['legs'],
+					'feet' => (int)$colors['feet'],
+					'direction' => 2,
+				]);
+			}
+
+			return getAssetImageById('outfit', (int)$lookType, [
+				'addons' => (int)$addons,
+				'head' => (int)$colors['head'],
+				'body' => (int)$colors['body'],
+				'legs' => (int)$colors['legs'],
+				'feet' => (int)$colors['feet'],
+				'mount' => 0,
+				'direction' => 2,
+			]);
+		}
+
 		return rc_am_render_image_url($renderer, [
 			'id' => (int)$lookType,
 			'addons' => (int)$addons,

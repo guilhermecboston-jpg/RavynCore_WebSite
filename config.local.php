@@ -10,5 +10,8 @@ $config['date_timezone'] = 'America/Sao_Paulo';
 $config['client'] = '1511';
 $config['session_prefix'] = 'myaac_l4uzz89n_';
 $config['cache_prefix'] = 'myaac_o8rlk44e_';
+$config['things_assets_path'] = 'system/data/things/1524';
+$config['things_assets_version'] = '1524';
+$config['things_assets_cache_path'] = 'images/things-cache';
 
 $config['highscores_ids_hidden'] = array(1, 2, 3, 4, 5, 6);

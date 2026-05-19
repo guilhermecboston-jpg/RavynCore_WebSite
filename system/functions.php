@@ -234,6 +234,26 @@ function getItemImage($id, $count = 1)
     '" />';
 }
 
+function getAssetImageById($type, $id, array $params = [])
+{
+  $type = trim((string)$type);
+  $id = (int)$id;
+  if ($type === '' || $id <= 0) {
+    return '';
+  }
+
+  $query = array_merge(
+    [
+      'subtopic' => 'asset',
+      'type' => strtolower($type),
+      'id' => $id,
+    ],
+    $params
+  );
+
+  return BASE_URL . '?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+}
+
 function getFlagImage($country)
 {
   if (!isset($country[0])) {
