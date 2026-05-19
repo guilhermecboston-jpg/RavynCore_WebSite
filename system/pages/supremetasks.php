@@ -2,18 +2,83 @@
 defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Supreme Tasks';
 
+function rc_supreme_slug($value)
+{
+	$slug = strtolower(trim((string)$value));
+	$slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+	return trim((string)$slug, '-');
+}
+
+function rc_supreme_task_image_url($taskName)
+{
+	$base = TEMPLATE . '/images/supreme_tasks';
+	$slug = rc_supreme_slug($taskName);
+	$candidate = $base . '/monsters/' . $slug . '.png';
+	if (file_exists(BASE . $candidate)) {
+		return $candidate;
+	}
+
+	$fallback = $base . '/taskfinder-mini.png';
+	return file_exists(BASE . $fallback) ? $fallback : '';
+}
+
+function rc_supreme_limit_creatures($creatures, $max = 3)
+{
+	$parts = array_filter(array_map('trim', explode(',', (string)$creatures)));
+	if (count($parts) <= $max) {
+		return implode(', ', $parts);
+	}
+
+	$display = array_slice($parts, 0, $max);
+	return implode(', ', $display) . '...';
+}
+
+function rc_supreme_format_reward_lines($rewardText, $className)
+{
+	$lines = preg_split('/\r\n|\r|\n/', (string)$rewardText);
+	$html = '<div class="' . $className . '">';
+	foreach ($lines as $line) {
+		$line = trim($line);
+		if ($line === '') {
+			continue;
+		}
+
+		$icon = '';
+		if (stripos($line, 'Task Coin') !== false) {
+			$icon = TEMPLATE . '/images/supreme_tasks/icon-map-improvedrespawn.png';
+		} elseif (stripos($line, 'EXP X sua Rate') !== false) {
+			$icon = TEMPLATE . '/images/supreme_tasks/prey_xp.png';
+		}
+
+		$iconHtml = '';
+		if (!empty($icon) && file_exists(BASE . $icon)) {
+			$iconHtml = '<img class="rc-st-reward-icon" src="' . $icon . '" alt="" loading="lazy">';
+		}
+
+		$html .= '<div class="rc-st-reward-line">' . $iconHtml . '<span>' . htmlspecialchars($line) . '</span></div>';
+	}
+	$html .= '</div>';
+	return $html;
+}
+
 function rc_supreme_task_row($id, $task, $amount, $creatures, $firstReward, $repeatReward)
 {
+	$taskImg = rc_supreme_task_image_url($task);
+	$taskMedia = '';
+	if (!empty($taskImg)) {
+		$taskMedia = '<img class="rc-st-task-monster" src="' . $taskImg . '" alt="' . htmlspecialchars($task) . '" loading="lazy">';
+	}
+
 	return '<tr>'
 		. '<td>' . (int)$id . '</td>'
-		. '<td>' . htmlspecialchars($task) . '</td>'
+		. '<td><div class="rc-st-task-cell"><strong>' . htmlspecialchars($task) . '</strong>' . $taskMedia . '</div></td>'
 		. '<td>' . htmlspecialchars($amount) . '</td>'
-		. '<td>' . htmlspecialchars($creatures) . '</td>'
-		. '<td><div class="rc-st-reward-first">' . nl2br(htmlspecialchars($firstReward)) . '</div><div class="rc-st-reward-repeat">' . nl2br(htmlspecialchars($repeatReward)) . '</div></td>'
+		. '<td>' . htmlspecialchars(rc_supreme_limit_creatures($creatures, 3)) . '</td>'
+		. '<td>' . rc_supreme_format_reward_lines($firstReward, 'rc-st-reward-first') . rc_supreme_format_reward_lines($repeatReward, 'rc-st-reward-repeat') . '</td>'
 		. '</tr>';
 }
 
-function rc_supreme_category_block($id, $name, $summaryRewards, $tasks, $open = false)
+function rc_supreme_category_block($id, $name, $iconFile, $summaryRewards, $tasks, $open = false)
 {
 	$rows = '';
 	foreach ($tasks as $task) {
@@ -25,14 +90,20 @@ function rc_supreme_category_block($id, $name, $summaryRewards, $tasks, $open = 
 		$rewardsHtml .= '<span class="rc-st-chip">' . htmlspecialchars($reward) . '</span>';
 	}
 
+	$iconPath = TEMPLATE . '/images/supreme_tasks/' . $iconFile;
+	$iconHtml = '';
+	if (file_exists(BASE . $iconPath)) {
+		$iconHtml = '<img class="rc-st-category-icon" src="' . $iconPath . '" alt="' . htmlspecialchars($name) . '" loading="lazy">';
+	}
+
 	return '<details class="rc-st-category" id="' . htmlspecialchars($id) . '"' . ($open ? ' open' : '') . '>'
 		. '<summary>'
-		. '<span class="rc-st-summary-title">' . htmlspecialchars($name) . '</span>'
-		. '<span class="rc-st-summary-toggle">Click here to ' . ($open ? 'hide' : 'show') . ' additional information.</span>'
+		. '<span class="rc-st-summary-title">' . $iconHtml . '<span>' . htmlspecialchars($name) . '</span></span>'
+		. '<span class="rc-st-summary-toggle"><span class="rc-st-toggle-plus">+</span><span class="rc-st-toggle-minus">-</span> Click to show/hide additional information</span>'
 		. '</summary>'
 		. '<div class="rc-st-category-body">'
 		. '<div class="rc-st-rewards-box">'
-		. '<h4>' . htmlspecialchars($name) . '</h4>'
+		. '<h4>' . $iconHtml . '<span>' . htmlspecialchars($name) . '</span></h4>'
 		. '<p>Complete todas as tasks deste nivel para receber as seguintes recompensas:</p>'
 		. '<div class="rc-st-chip-list">' . $rewardsHtml . '</div>'
 		. '</div>'
@@ -53,6 +124,7 @@ $categories = [];
 $categories[] = rc_supreme_category_block(
 	'hall-apprentice',
 	'Hall of the Apprentice',
+	'rank.png',
 	[
 		'1x Forestbound Backpack',
 		'1x Ticket Boost 50% Exp',
@@ -89,6 +161,7 @@ $categories[] = rc_supreme_category_block(
 $categories[] = rc_supreme_category_block(
 	'chamber-warrior',
 	'Chamber of the Warrior',
+	'rank2.png',
 	[
 		'1x Cryoshard Backpack',
 		'1x Ticket Boost 100% Exp',
@@ -124,6 +197,7 @@ $categories[] = rc_supreme_category_block(
 $categories[] = rc_supreme_category_block(
 	'veterans-refuge',
 	"Veteran's Refuge",
+	'rank3.png',
 	[
 		'1x Voidspark Backpack',
 		'2x Ticket Boost 100% Exp',
@@ -162,6 +236,7 @@ $categories[] = rc_supreme_category_block(
 $categories[] = rc_supreme_category_block(
 	'masters-den',
 	"Master's Den",
+	'rank4.png',
 	[
 		'1x Crimson Hellbound Mount',
 		'1x Blazeforge Backpack',
@@ -200,6 +275,7 @@ $categories[] = rc_supreme_category_block(
 $categories[] = rc_supreme_category_block(
 	'sanctum-immortal',
 	'Sanctum of the Immortal',
+	'rank5.png',
 	[
 		'1x Bloodwing Addon',
 		'1x Corrupted Nature Exercise Dummy',
@@ -235,8 +311,8 @@ $categories[] = rc_supreme_category_block(
 );
 
 echo '<div class="rc-st-page">'
+	. '<header class="rc-st-page-title"><h2>Supreme Tasks</h2></header>'
 	. '<section class="rc-st-card">'
-	. '<h2>Supreme Tasks</h2>'
 	. '<h3>Informacoes</h3>'
 	. '<p>Desenvolvido pela Equipe RavynCore, o sistema de Supreme Tasks foi projetado para transformar a maneira como os jogadores progridem e realizam suas atividades dentro do jogo. Com uma proposta realmente inovadora, ele unifica diversas tarefas e objetivos em uma unica estrutura, oferecendo uma experiencia mais dinamica, fluida e extremamente recompensadora.</p>'
 	. '</section>'
@@ -260,14 +336,15 @@ echo '<div class="rc-st-page">'
 	. '<section class="rc-st-card">'
 	. '<h3>Categorias e Recompensas</h3>'
 	. '<div class="rc-st-top-categories">'
-	. '<a href="#hall-apprentice" class="rc-st-cat-link"><span>Hall of the Apprentice</span></a>'
-	. '<a href="#chamber-warrior" class="rc-st-cat-link"><span>Chamber of the Warrior</span></a>'
-	. '<a href="#veterans-refuge" class="rc-st-cat-link"><span>Veteran\'s Refuge</span></a>'
-	. '<a href="#masters-den" class="rc-st-cat-link"><span>Master\'s Den</span></a>'
-	. '<a href="#sanctum-immortal" class="rc-st-cat-link"><span>Sanctum of the Immortal</span></a>'
+	. '<a href="#hall-apprentice" class="rc-st-cat-link"><img src="' . TEMPLATE . '/images/supreme_tasks/rank.png" alt="" loading="lazy"><span>Hall of the Apprentice</span></a>'
+	. '<a href="#chamber-warrior" class="rc-st-cat-link"><img src="' . TEMPLATE . '/images/supreme_tasks/rank2.png" alt="" loading="lazy"><span>Chamber of the Warrior</span></a>'
+	. '<a href="#veterans-refuge" class="rc-st-cat-link"><img src="' . TEMPLATE . '/images/supreme_tasks/rank3.png" alt="" loading="lazy"><span>Veteran\'s Refuge</span></a>'
+	. '<a href="#masters-den" class="rc-st-cat-link"><img src="' . TEMPLATE . '/images/supreme_tasks/rank4.png" alt="" loading="lazy"><span>Master\'s Den</span></a>'
+	. '<a href="#sanctum-immortal" class="rc-st-cat-link"><img src="' . TEMPLATE . '/images/supreme_tasks/rank5.png" alt="" loading="lazy"><span>Sanctum of the Immortal</span></a>'
 	. '</div>'
 	. '</section>'
 	. implode('', $categories)
+	. '<script>(function(){var links=document.querySelectorAll(".rc-st-cat-link");if(!links.length){return;}var header=document.querySelector(".rc-header");links.forEach(function(link){link.addEventListener("click",function(ev){var href=link.getAttribute("href")||"";if(href.charAt(0)!=="#"){return;}var target=document.querySelector(href);if(!target){return;}ev.preventDefault();target.open=true;var offset=(header?header.offsetHeight:0)+10;var top=target.getBoundingClientRect().top+window.pageYOffset-offset;window.scrollTo({top:Math.max(0,top),behavior:"smooth"});});});})();</script>'
 	. '</div>';
 
 
