@@ -82,6 +82,12 @@ $accountMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['account']);
 $libraryMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['library']);
 $charBazaarMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['charbazaar', 'charactertrades', 'bazaar']);
 $donateMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['donate', 'shop']);
+$systemMenuItems = [
+    ['name' => 'Supreme Tasks', 'link_full' => BASE_URL . '?subtopic=supremetasks', 'blank' => false],
+    ['name' => 'Addon&Mount Bonuses', 'link_full' => BASE_URL . '?subtopic=addonmountbonuses', 'blank' => false],
+    ['name' => "Elemental's Stones Bonuses", 'link_full' => BASE_URL . '?subtopic=elementalstonesbonuses', 'blank' => false],
+    ['name' => "Loyalt's Bonuses", 'link_full' => BASE_URL . '?subtopic=loyaltbonuses', 'blank' => false],
+];
 
 $serverName = $config['lua']['serverName'] ?? 'RavynCore';
 $serverTagline = 'Domine, Conquiste, Seja Lendario';
@@ -285,7 +291,7 @@ $socialLinks = [
                         ],
                         [
                             'label' => 'System',
-                            'items' => [],
+                            'items' => $systemMenuItems,
                             'fallback' => BASE_URL . '?subtopic=supremetasks',
                         ],
                         [

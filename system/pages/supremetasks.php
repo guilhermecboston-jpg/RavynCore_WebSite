@@ -1,6 +1,6 @@
 <?php
 defined('MYAAC') or die('Direct access not allowed!');
-$title = '';
+$title = 'Supreme Tasks';
 global $template_path, $config;
 
 $rcTemplateName = 'tibiacom';
@@ -24,19 +24,110 @@ if (!function_exists('rc_supreme_slug')) {
 	}
 }
 
+if (!function_exists('rc_supreme_monster_slug_candidates')) {
+	function rc_supreme_monster_slug_candidates($value)
+	{
+		$value = strtolower(trim((string)$value));
+		$value = str_replace(['&', '\'', '"'], ' ', $value);
+		$value = preg_replace('/[^a-z0-9]+/', ' ', $value);
+		$words = array_values(array_filter(explode(' ', trim((string)$value))));
+		if (empty($words)) {
+			return [];
+		}
+
+		$candidates = [];
+		$candidates[] = implode('', $words);
+		if (count($words) > 1) {
+			$reversed = $words;
+			$reversed = array_reverse($reversed);
+			$candidates[] = implode('', $reversed);
+		}
+
+		$total = count($words);
+		for ($i = 1; $i < $total; $i++) {
+			$candidates[] = implode('', array_slice($words, $i));
+			$candidates[] = implode('', array_slice($words, 0, $total - $i));
+		}
+
+		$filtered = [];
+		$stopWords = ['of', 'the', 'and', 'or', 'to', 'a', 'an'];
+		foreach ($words as $word) {
+			if (!in_array($word, $stopWords, true)) {
+				$filtered[] = $word;
+			}
+		}
+		if (!empty($filtered) && $filtered !== $words) {
+			$candidates[] = implode('', $filtered);
+			if (count($filtered) > 1) {
+				$reversedFiltered = array_reverse($filtered);
+				$candidates[] = implode('', $reversedFiltered);
+			}
+		}
+
+		foreach ($words as $word) {
+			$candidates[] = $word;
+		}
+
+		return array_values(array_unique(array_filter($candidates)));
+	}
+}
+
 if (!function_exists('rc_supreme_task_image_url')) {
-	function rc_supreme_task_image_url($taskName)
+	function rc_supreme_task_image_url($taskName, $creatures = '')
 	{
 		global $rcTemplatePath;
 
-		$base = $rcTemplatePath . '/images/supreme_tasks';
-		$slug = rc_supreme_slug($taskName);
-		$candidate = $base . '/monsters/' . $slug . '.png';
-		if (file_exists(BASE . $candidate)) {
-			return $candidate;
+		$searchNames = [];
+		if (!empty($creatures)) {
+			$parts = array_filter(array_map('trim', explode(',', (string)$creatures)));
+			if (!empty($parts[0])) {
+				$searchNames[] = $parts[0];
+			}
+		}
+		$searchNames[] = (string)$taskName;
+
+		$aliases = [
+			'corymcharlatan' => 'charlatan',
+			'dawnfireasura' => 'asura',
+			'truedawnfireasura' => 'asura',
+			'darkcarnisylvan' => 'carnisylvandark',
+			'quaralooter' => 'quara',
+			'boarman' => 'boar',
+			'burningbook' => 'burningcursedbook',
+			'weretiger' => 'whiteweretiger',
+			'werecrocodile' => 'feralwerecrocodile',
+		];
+
+		$slugs = [];
+		foreach ($searchNames as $name) {
+			$candidates = rc_supreme_monster_slug_candidates($name);
+			foreach ($candidates as $slug) {
+				$slugs[] = $slug;
+				if (isset($aliases[$slug])) {
+					$slugs[] = $aliases[$slug];
+				}
+			}
+		}
+		$slugs = array_values(array_unique($slugs));
+
+		foreach ($slugs as $slug) {
+			$libraryGif = '/images/library/' . $slug . '.gif';
+			if (file_exists(BASE . $libraryGif)) {
+				return $libraryGif;
+			}
+
+			$libraryPng = '/images/library/' . $slug . '.png';
+			if (file_exists(BASE . $libraryPng)) {
+				return $libraryPng;
+			}
+
+			$templateMonster = $rcTemplatePath . '/images/supreme_tasks/monsters/' . $slug . '.png';
+			if (file_exists(BASE . $templateMonster)) {
+				return $templateMonster;
+			}
 		}
 
-		$fallback = $base . '/taskfinder-mini.png';
+		$fallback = $rcTemplatePath . '/images/supreme_tasks/taskfinder-mini.png';
 		return file_exists(BASE . $fallback) ? $fallback : '';
 	}
 }
@@ -67,19 +158,36 @@ if (!function_exists('rc_supreme_format_reward_lines')) {
 				continue;
 			}
 
-			$icon = '';
-			if (stripos($line, 'Task Coin') !== false) {
-				$icon = $rcTemplatePath . '/images/supreme_tasks/icon-map-improvedrespawn.png';
-			} elseif (stripos($line, 'EXP X sua Rate') !== false) {
-				$icon = $rcTemplatePath . '/images/supreme_tasks/prey_xp.png';
-			}
+			$parts = preg_split('/\s*\/\s*/', $line);
+			foreach ($parts as $part) {
+				$part = trim((string)$part);
+				if ($part === '') {
+					continue;
+				}
 
-			$iconHtml = '';
-			if (!empty($icon) && file_exists(BASE . $icon)) {
-				$iconHtml = '<img class="rc-st-reward-icon" src="' . $icon . '" alt="" loading="lazy">';
-			}
+				$lineHtml = htmlspecialchars($part);
+				$icon = '';
 
-			$html .= '<div class="rc-st-reward-line">' . $iconHtml . '<span>' . htmlspecialchars($line) . '</span></div>';
+				if (preg_match('/^([0-9\.,]+)\s*EXP\s*X\s*sua\s*Rate$/i', $part, $match)) {
+					$xpIcon = $rcTemplatePath . '/images/supreme_tasks/prey_xp.png';
+					if (file_exists(BASE . $xpIcon)) {
+						$lineHtml = htmlspecialchars($match[1]) . ' <img class="rc-st-inline-xp-icon" src="' . $xpIcon . '" alt="XP" loading="lazy"> X sua Rate';
+					}
+				} else {
+					if (stripos($part, 'Task Coin') !== false) {
+						$icon = $rcTemplatePath . '/images/supreme_tasks/icon-map-improvedrespawn.png';
+					} elseif (stripos($part, 'EXP X sua Rate') !== false) {
+						$icon = $rcTemplatePath . '/images/supreme_tasks/prey_xp.png';
+					}
+				}
+
+				$iconHtml = '';
+				if (!empty($icon) && file_exists(BASE . $icon)) {
+					$iconHtml = '<img class="rc-st-reward-icon" src="' . $icon . '" alt="" loading="lazy">';
+				}
+
+				$html .= '<div class="rc-st-reward-line">' . $iconHtml . '<span class="rc-st-reward-text">' . $lineHtml . '</span></div>';
+			}
 		}
 		$html .= '</div>';
 		return $html;
@@ -89,7 +197,7 @@ if (!function_exists('rc_supreme_format_reward_lines')) {
 if (!function_exists('rc_supreme_task_row')) {
 	function rc_supreme_task_row($id, $task, $amount, $creatures, $firstReward, $repeatReward)
 	{
-		$taskImg = rc_supreme_task_image_url($task);
+		$taskImg = rc_supreme_task_image_url($task, $creatures);
 		$taskMedia = '';
 		if (!empty($taskImg)) {
 			$taskMedia = '<img class="rc-st-task-monster" src="' . $taskImg . '" alt="' . htmlspecialchars($task) . '" loading="lazy">';
@@ -341,19 +449,26 @@ $categories[] = rc_supreme_category_block(
 	]
 );
 
+$taskPreviewPath = $rcTemplatePath . '/images/supreme_tasks/taskfinder-mini.png';
+$taskPreviewHtml = file_exists(BASE . $taskPreviewPath)
+	? '<img class="rc-st-feature-preview" src="' . $taskPreviewPath . '" alt="Supreme Tasks UI preview" loading="lazy">'
+	: '<div class="rc-st-feature-preview rc-st-feature-preview-fallback">Interface Preview</div>';
+
 echo '<div class="rc-st-page">'
 	. '<header class="rc-st-page-title"><h2>Supreme Tasks</h2></header>'
-	. '<section class="rc-st-card">'
+	. '<section class="rc-st-overview-grid">'
+	. '<article class="rc-st-card rc-st-card-feature">'
 	. '<h3>Informacoes</h3>'
 	. '<p>Desenvolvido pela Equipe RavynCore, o sistema de Supreme Tasks foi projetado para transformar a maneira como os jogadores progridem e realizam suas atividades dentro do jogo. Com uma proposta realmente inovadora, ele unifica diversas tarefas e objetivos em uma unica estrutura, oferecendo uma experiencia mais dinamica, fluida e extremamente recompensadora.</p>'
-	. '</section>'
-	. '<section class="rc-st-card">'
+	. '</article>'
+	. '<article class="rc-st-card rc-st-card-feature">'
 	. '<h3>Como fazer?</h3>'
-	. '<div class="rc-st-video-placeholder">Interface das Supreme Tasks (video curto em breve)</div>'
+	. '<div class="rc-st-feature-media">' . $taskPreviewHtml . '</div>'
 	. '<p>Para iniciar uma Supreme Task, basta abrir a interface clicando no icone em formato de "pata" brilhante, localizado logo abaixo do seu set. Em seguida, selecione o rank correspondente ao seu nivel atual e escolha a task desejada. Ao abrir a pagina da task, clique em Start ou Repeat, conforme a situacao. Depois disso, e so cacar as criaturas indicadas para comecar a progredir.</p>'
+	. '</article>'
 	. '</section>'
 	. '<section class="rc-st-card">'
-	. '<h3>Observacoes</h3>'
+	. '<h3>Observacoes Importantes</h3>'
 	. '<ul class="rc-st-notes">'
 	. '<li>Quando a recompensa incluir dinheiro, o valor sera enviado diretamente para sua Store Inbox. E importante sempre verificar se o seu personagem possui capacidade disponivel antes de coletar a premiacao.</li>'
 	. '<li>Quando a recompensa incluir qualquer item, ele sera enviado diretamente para sua Store Inbox. E importante sempre verificar se o seu personagem possui capacidade disponivel antes de coletar a premiacao.</li>'
