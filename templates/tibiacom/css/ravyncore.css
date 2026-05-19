@@ -109,11 +109,11 @@ a:hover {
 .rc-header,
 .header,
 .site-header {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    width: 100vw;
+    width: 100%;
     margin: 0;
     z-index: 100;
     border: none;
@@ -132,6 +132,9 @@ a:hover {
     grid-template-columns: auto 1fr auto auto;
     align-items: center;
     gap: 32px;
+    background: rgba(5, 8, 14, 0.72);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .rc-header-brand {
@@ -595,7 +598,7 @@ body.rc-nav-locked .site-header {
     width: 100%;
     max-width: none;
     margin: 16px auto 0;
-    scroll-margin-top: 12px;
+    scroll-margin-top: 132px;
 }
 
 .rc-content-column {

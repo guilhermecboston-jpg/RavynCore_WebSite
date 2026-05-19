@@ -156,7 +156,8 @@
     if (homeMarkers.indexOf(marker) === -1 && !loc.hash) {
         var main = document.getElementById('rcMain');
         if (main) {
-            window.scrollTo(0, Math.max(0, main.offsetTop - 16));
+            var headerOffset = header ? (header.offsetHeight + 12) : 16;
+            window.scrollTo(0, Math.max(0, main.offsetTop - headerOffset));
         }
     }
 

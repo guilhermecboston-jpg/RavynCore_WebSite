@@ -53,6 +53,36 @@ $menuCategories = config('menu_categories') ?: [];
 $menus = get_template_menus();
 $templateLinks = isset($template) && is_array($template) ? $template : [];
 
+$rcMenuGroups = [];
+if (!empty($menus)) {
+    foreach ($menus as $categoryId => $items) {
+        $categoryName = strtolower((string)($menuCategories[$categoryId]['name'] ?? ''));
+        $categoryKey = strtolower((string)($menuCategories[$categoryId]['id'] ?? $categoryName));
+        $normalized = preg_replace('/[^a-z0-9]+/', '', $categoryKey . ' ' . $categoryName);
+        $rcMenuGroups[] = [
+            'normalized' => $normalized,
+            'items' => $items,
+        ];
+    }
+}
+
+$rcGetMenuItemsByNeedles = static function(array $groups, array $needles): array {
+    foreach ($groups as $group) {
+        foreach ($needles as $needle) {
+            if (strpos($group['normalized'], $needle) !== false) {
+                return $group['items'];
+            }
+        }
+    }
+    return [];
+};
+
+$newsMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['latestnews', 'news']);
+$accountMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['account']);
+$libraryMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['library']);
+$charBazaarMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['charbazaar', 'charactertrades', 'bazaar']);
+$donateMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['donate', 'shop']);
+
 $serverName = $config['lua']['serverName'] ?? 'RavynCore';
 $serverTagline = 'Domine, Conquiste, Seja Lendario';
 $headerSubtitle = 'Custom Map';
@@ -236,41 +266,60 @@ $socialLinks = [
 
             <nav id="rcNav" class="rc-nav" aria-label="Primary">
                 <ul>
-                    <?php if (!empty($menus)): ?>
-                        <?php foreach ($menus as $categoryId => $items): ?>
-                            <?php
-                            $categoryName = $menuCategories[$categoryId]['name'] ?? 'Menu';
-                            $categoryKey = strtolower((string)($menuCategories[$categoryId]['id'] ?? $categoryName));
-                            $firstItem = $items[0] ?? null;
-                            if ($categoryKey === 'forum') {
-                                continue;
-                            }
-                            $categoryLink = $firstItem ? $firstItem['link_full'] : '#';
-                            $showDropdown = count($items) > 1;
-                            if ($categoryKey === 'community') {
-                                $categoryLink = '#rcSocialLinks';
-                                $showDropdown = false;
-                            }
-                            ?>
-                            <li class="rc-nav-item">
-                                <a href="<?= $categoryLink; ?>"<?= $categoryKey === 'community' ? ' data-rc-community-link' : ''; ?>><?= escapeHtml($categoryName); ?></a>
-                                <?php if ($showDropdown): ?>
-                                    <div class="rc-nav-dropdown">
-                                        <?php foreach ($items as $item): ?>
-                                            <a href="<?= $item['link_full']; ?>"<?= $item['blank'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
-                                                <?= escapeHtml($item['name']); ?>
-                                            </a>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php endif; ?>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li class="rc-nav-item"><a href="<?= getLink('news'); ?>">News</a></li>
-                        <li class="rc-nav-item"><a href="<?= getLink('highscores'); ?>">Ranking</a></li>
-                        <li class="rc-nav-item"><a href="<?= getLink('guilds'); ?>">Guilds</a></li>
-                        <li class="rc-nav-item"><a href="<?= getLink('serverInfo'); ?>">Info</a></li>
-                    <?php endif; ?>
+                    <?php
+                    $rcTopNav = [
+                        [
+                            'label' => 'Latest News',
+                            'items' => $newsMenuItems,
+                            'fallback' => getLink('news'),
+                        ],
+                        [
+                            'label' => 'Account',
+                            'items' => $accountMenuItems,
+                            'fallback' => $accountManageUrl,
+                        ],
+                        [
+                            'label' => 'Library',
+                            'items' => $libraryMenuItems,
+                            'fallback' => getLink('faq'),
+                        ],
+                        [
+                            'label' => 'System',
+                            'items' => [],
+                            'fallback' => getLink('supremetasks'),
+                        ],
+                        [
+                            'label' => 'Char Baazar',
+                            'items' => $charBazaarMenuItems,
+                            'fallback' => getLink('currentcharactertrades'),
+                        ],
+                        [
+                            'label' => 'Donate',
+                            'items' => $donateMenuItems,
+                            'fallback' => getLink('donate'),
+                        ],
+                    ];
+                    ?>
+                    <?php foreach ($rcTopNav as $navItem): ?>
+                        <?php
+                        $items = $navItem['items'] ?? [];
+                        $firstItem = $items[0] ?? null;
+                        $categoryLink = $firstItem['link_full'] ?? $navItem['fallback'];
+                        $showDropdown = count($items) > 1;
+                        ?>
+                        <li class="rc-nav-item">
+                            <a href="<?= $categoryLink; ?>"><?= escapeHtml($navItem['label']); ?></a>
+                            <?php if ($showDropdown): ?>
+                                <div class="rc-nav-dropdown">
+                                    <?php foreach ($items as $item): ?>
+                                        <a href="<?= $item['link_full']; ?>"<?= $item['blank'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
+                                            <?= escapeHtml($item['name']); ?>
+                                        </a>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
 
                 <div class="rc-nav-mobile-actions">
