@@ -1,9 +1,8 @@
 <?php
 defined('MYAAC') or die('Direct access not allowed!');
-$title = 'Supreme Tasks';
+$title = '';
 global $template_path, $config;
 
-// Use MyAAC runtime template path safely (TEMPLATE constant is not guaranteed to exist).
 $rcTemplateName = 'tibiacom';
 if (isset($config['template']) && is_string($config['template']) && $config['template'] !== '') {
 	$rcTemplateName = $config['template'];
@@ -16,28 +15,365 @@ if (function_exists('config')) {
 }
 $rcTemplatePath = '/' . ltrim((string)($template_path ?? ('templates/' . $rcTemplateName)), '/');
 
+if (!function_exists('rc_supreme_slug')) {
+	function rc_supreme_slug($value)
+	{
+		$slug = strtolower(trim((string)$value));
+		$slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+		return trim((string)$slug, '-');
+	}
+}
+
+if (!function_exists('rc_supreme_task_image_url')) {
+	function rc_supreme_task_image_url($taskName)
+	{
+		global $rcTemplatePath;
+
+		$base = $rcTemplatePath . '/images/supreme_tasks';
+		$slug = rc_supreme_slug($taskName);
+		$candidate = $base . '/monsters/' . $slug . '.png';
+		if (file_exists(BASE . $candidate)) {
+			return $candidate;
+		}
+
+		$fallback = $base . '/taskfinder-mini.png';
+		return file_exists(BASE . $fallback) ? $fallback : '';
+	}
+}
+
+if (!function_exists('rc_supreme_limit_creatures')) {
+	function rc_supreme_limit_creatures($creatures, $max = 3)
+	{
+		$parts = array_filter(array_map('trim', explode(',', (string)$creatures)));
+		if (count($parts) <= $max) {
+			return implode(', ', $parts);
+		}
+
+		$display = array_slice($parts, 0, $max);
+		return implode(', ', $display) . '...';
+	}
+}
+
+if (!function_exists('rc_supreme_format_reward_lines')) {
+	function rc_supreme_format_reward_lines($rewardText, $className)
+	{
+		global $rcTemplatePath;
+
+		$lines = preg_split('/\r\n|\r|\n/', (string)$rewardText);
+		$html = '<div class="' . $className . '">';
+		foreach ($lines as $line) {
+			$line = trim($line);
+			if ($line === '') {
+				continue;
+			}
+
+			$icon = '';
+			if (stripos($line, 'Task Coin') !== false) {
+				$icon = $rcTemplatePath . '/images/supreme_tasks/icon-map-improvedrespawn.png';
+			} elseif (stripos($line, 'EXP X sua Rate') !== false) {
+				$icon = $rcTemplatePath . '/images/supreme_tasks/prey_xp.png';
+			}
+
+			$iconHtml = '';
+			if (!empty($icon) && file_exists(BASE . $icon)) {
+				$iconHtml = '<img class="rc-st-reward-icon" src="' . $icon . '" alt="" loading="lazy">';
+			}
+
+			$html .= '<div class="rc-st-reward-line">' . $iconHtml . '<span>' . htmlspecialchars($line) . '</span></div>';
+		}
+		$html .= '</div>';
+		return $html;
+	}
+}
+
+if (!function_exists('rc_supreme_task_row')) {
+	function rc_supreme_task_row($id, $task, $amount, $creatures, $firstReward, $repeatReward)
+	{
+		$taskImg = rc_supreme_task_image_url($task);
+		$taskMedia = '';
+		if (!empty($taskImg)) {
+			$taskMedia = '<img class="rc-st-task-monster" src="' . $taskImg . '" alt="' . htmlspecialchars($task) . '" loading="lazy">';
+		}
+
+		return '<tr>'
+			. '<td>' . (int)$id . '</td>'
+			. '<td><div class="rc-st-task-cell"><strong>' . htmlspecialchars($task) . '</strong>' . $taskMedia . '</div></td>'
+			. '<td>' . htmlspecialchars($amount) . '</td>'
+			. '<td>' . htmlspecialchars(rc_supreme_limit_creatures($creatures, 3)) . '</td>'
+			. '<td>' . rc_supreme_format_reward_lines($firstReward, 'rc-st-reward-first') . rc_supreme_format_reward_lines($repeatReward, 'rc-st-reward-repeat') . '</td>'
+			. '</tr>';
+	}
+}
+
+if (!function_exists('rc_supreme_category_block')) {
+	function rc_supreme_category_block($id, $name, $iconFile, $summaryRewards, $tasks, $open = false)
+	{
+		global $rcTemplatePath;
+
+		$rows = '';
+		foreach ($tasks as $task) {
+			$rows .= rc_supreme_task_row($task[0], $task[1], $task[2], $task[3], $task[4], $task[5]);
+		}
+
+		$rewardsHtml = '';
+		foreach ($summaryRewards as $reward) {
+			$rewardsHtml .= '<span class="rc-st-chip">' . htmlspecialchars($reward) . '</span>';
+		}
+
+		$iconPath = $rcTemplatePath . '/images/supreme_tasks/' . $iconFile;
+		$iconHtml = '';
+		if (file_exists(BASE . $iconPath)) {
+			$iconHtml = '<img class="rc-st-category-icon" src="' . $iconPath . '" alt="' . htmlspecialchars($name) . '" loading="lazy">';
+		}
+
+		return '<details class="rc-st-category" id="' . htmlspecialchars($id) . '"' . ($open ? ' open' : '') . '>'
+			. '<summary>'
+			. '<span class="rc-st-summary-title">' . $iconHtml . '<span>' . htmlspecialchars($name) . '</span></span>'
+			. '<span class="rc-st-summary-toggle"><span class="rc-st-toggle-plus">+</span><span class="rc-st-toggle-minus">-</span> Click to show/hide additional information</span>'
+			. '</summary>'
+			. '<div class="rc-st-category-body">'
+			. '<div class="rc-st-rewards-box">'
+			. '<h4>' . $iconHtml . '<span>' . htmlspecialchars($name) . '</span></h4>'
+			. '<p>Complete todas as tasks deste nivel para receber as seguintes recompensas:</p>'
+			. '<div class="rc-st-chip-list">' . $rewardsHtml . '</div>'
+			. '</div>'
+			. '<p class="rc-st-legend"><span class="rc-st-good">Recompensas em verde</span> indicam beneficios exclusivos da primeira conclusao da task. Ou seja, essa recompensa so sera recebida na primeira vez em que a task for finalizada pelo personagem.</p>'
+			. '<p class="rc-st-legend"><span class="rc-st-repeat">Recompensas em vermelho</span> representam os itens ou bonus disponiveis em todas as repeticoes da task, mesmo apos ja ter sido completada anteriormente. Essas recompensas geralmente sao mais simples e podem variar em quantidade ou valor.</p>'
+			. '<div class="rc-st-table-wrap">'
+			. '<table class="rc-st-table">'
+			. '<thead><tr><th>#</th><th>Task</th><th>Qntd.</th><th>Criaturas</th><th>Recompensas</th></tr></thead>'
+			. '<tbody>' . $rows . '</tbody>'
+			. '</table>'
+			. '</div>'
+			. '</div>'
+			. '</details>';
+	}
+}
+
+$categories = [];
+
+$categories[] = rc_supreme_category_block(
+	'hall-apprentice',
+	'Hall of the Apprentice',
+	'rank.png',
+	[
+		'1x Forestbound Backpack',
+		'1x Ticket Boost 50% Exp',
+		'1x Boosted Exercise Token',
+		'1x Surprise Casket',
+		'1x Roulette Token',
+		'2x Dust Potion',
+	],
+	[
+		[1, 'Goblin', '100', 'Goblin', "5.000 EXP X sua Rate\n10.000 Gold Coins", '4.000 EXP X sua Rate'],
+		[2, 'Troll', '100', 'Troll, Swamp Troll, Frost Troll, Island Troll', "7.000 EXP X sua Rate\n10.000 Gold Coins", '5.000 EXP X sua Rate'],
+		[3, 'Rotworm', '200', 'Rotworm, Carrion Worm', "10.000 EXP X sua Rate\n20.000 Gold Coins", '10.000 Gold Coins'],
+		[4, 'Minotaur', '200', 'Minotaur, Minotaur Archer, Minotaur Guard, Minotaur Mage', '15.000 EXP X sua Rate', '11.000 EXP X sua Rate'],
+		[5, 'Dwarf', '300', 'Dwarf, Dwarf Soldier, Dwarf Guard, Dwarf Geomancer', '1x Exercise Weapon (3.600 Charges)', '13.000 EXP X sua Rate'],
+		[6, 'Dworcs', '300', 'Dworc Venomsniper, Dworc Voodoomaster, Dworc Fleshhunter', '50.000 Gold Coins', '20.000 Gold Coins'],
+		[7, 'Elf', '400', 'Elf, Elf Scout, Elf Arcanist', "25.000 EXP X sua Rate\n40.000 Gold Coins", '17.000 EXP X sua Rate'],
+		[8, 'Dark Cathedral', '400', 'Dark Apprentice, Dark Magician, Dark Monk, Assassin', "25.000 EXP X sua Rate\n50.000 Gold Coins", '20.000 EXP X sua Rate'],
+		[9, 'Tombs', '800', 'Ghost, Mummy, Ghoul, Demon Skeleton, Skeleton, Crypt Shambler', '5x Prey Cards', '30.000 EXP X sua Rate'],
+		[10, 'Scarab', '600', 'Scarab', "30.000 EXP X sua Rate\n50.000 Gold Coins", '22.000 EXP X sua Rate'],
+		[11, 'Cyclops', '500', 'Cyclops, Cyclops Smith, Cyclops Drone', "35.000 EXP X sua Rate\n60.000 Gold Coins", '25.000 EXP X sua Rate'],
+		[12, 'Mutated Humans', '600', 'Mutated Human', '50.000 EXP X sua Rate', '40.000 EXP X sua Rate'],
+		[13, 'Coryms', '400', 'Corym Charlatan, Corym Skirmisher, Corym Vanguard', "70.000 EXP X sua Rate\n60.000 Gold Coins", '50.000 EXP X sua Rate'],
+		[14, 'Banuta Surface', '500', 'Kongra, Sibang, Merklin', '100.000 Gold Coins', '70.000 Gold Coins'],
+		[15, 'Pirates', '700', 'Pirate Marauder, Pirate Cutthroat, Pirate Corsair, Pirate Buccaneer', "1x Exercise Weapon (7.200 Charges)", "Random Item: Brutus Bloodbeard's Hat, The Lethal Lissy's Shirt, Ron The Ripper's Sabre, Deadeye Devious' Eye Patch"],
+		[16, 'Barbarians', '700', 'Barbarian Bloodwalker, Barbarian Brutetamer, Barbarian Headsplitter, Barbarian Skullhunter', "200.000 EXP X sua Rate\n5x Shard", "100.000 EXP X sua Rate\n1x Shard"],
+		[17, 'Djinn', '700', 'Marid, Efreet, Green Djinn, Blue Djinn', '250.000 EXP X sua Rate', '150.000 EXP X sua Rate'],
+		[18, 'Stonerefiner', '500', 'Stonerefiner', "300.000 EXP X sua Rate\n150.000 Gold Coins", '200.000 EXP X sua Rate'],
+		[19, 'Dragon', '800', 'Dragon, Dragon Hatchling', '400.000 EXP X sua Rate', '300.000 EXP X sua Rate'],
+		[20, 'Oramond', '1000', 'Minotaur Hunter, Mooh Tah Warrior, Minotaur Amazon, Worm Priestess, Execowtioner, Moohtant', "800.000 EXP X sua Rate\n1x Exercise Weapon (10.800 Charges)", '1.000.000 EXP X sua Rate'],
+	],
+	true
+);
+
+$categories[] = rc_supreme_category_block(
+	'chamber-warrior',
+	'Chamber of the Warrior',
+	'rank2.png',
+	[
+		'1x Cryoshard Backpack',
+		'1x Ticket Boost 100% Exp',
+		'2x Boosted Exercise Token',
+		'2x Surprise Casket',
+		'2x Roulette Token',
+		'1x Addon Casket',
+	],
+	[
+		[21, 'Quara', '1000', 'Quara Mantassin Scout, Quara Constrictor Scout, Quara Pincher Scout, Quara Predator Scout, Quara Hydromancer Scout', "1.000.000 EXP X sua Rate\n200.000 Gold Coins", '700.000 EXP X sua Rate'],
+		[22, 'Ancient Scarab', '1000', 'Ancient Scarab', '5x Prey Cards', '200.000 Gold Coins'],
+		[23, 'Giant Spider', '2000', 'Wailing Widow, Brimstone Bug, Giant Spider', '1.300.000 EXP X sua Rate', '1.000.000 EXP X sua Rate'],
+		[24, 'Wyrm', '2000', 'Wyrm, Elder Wyrm', "1.500.000 EXP X sua Rate\n300.000 Gold Coins", '1.200.000 EXP X sua Rate'],
+		[25, 'Cult', '3000', 'Cult Believer, Vicious Squire, Cult Enforcer, Renegade Knight, Vile Grandmaster, Cult Scholar, Hero', "2.000.000 EXP X sua Rate\n500.000 Gold Coins", '1.500.000 EXP X sua Rate'],
+		[26, 'Deepling', '2500', 'Deepling Spellsinger, Deepling Scout, Deepling Warrior, Deepling Guard', '1x Zaoan Chess Box', '300.000 Gold Coins'],
+		[27, 'Wereboar', '2000', 'Werefox, Werebadger, Wereboar, Werebear, Werewolf', "2.500.000 EXP X sua Rate\n500.000 Gold Coins", '2.000.000 EXP X sua Rate'],
+		[28, 'Minotaur Cult', '3000', 'Minotaur Cult Follower, Minotaur Cult Prophet, Minotaur Cult Zealot', '1x Exercise Weapon (14.400 Charges)', '400.000 Gold Coins'],
+		[29, 'Feyrist Nightmare', '3000', 'Weakened Frazzlemaw, Enfeebled Silencer', "3.000.000 EXP X sua Rate\n500.000 Gold Coins", '2.500.000 EXP X sua Rate'],
+		[30, 'Glooth', '4000', 'Glooth Bandit, Glooth Brigand', '20x Gold Token / 20x Silver Token', '7x Gold Token / 7x Silver Token'],
+		[31, 'Exotic Cave', '3000', 'Exotic Spider, Exotic Bat', '1x Roulette Coin', '500.000 Gold Coins'],
+		[32, 'Pirat', '3000', 'Pirat Bombardier, Pirat Cutthroat, Pirat Mate, Pirat Scoundrel', "3.500.000 EXP X sua Rate\n500.000 Gold Coins", '3.000.000 EXP X sua Rate'],
+		[33, 'Werehyaena', '2000', 'Werehyaena, Werehyaena Shaman', '1x Mystic Bag', '3.500.000 EXP X sua Rate'],
+		[34, 'Dragon Lord', '2000', 'Dragon Lord, Dragon Lord Hatchling', '1x Dragon Claw', '600.000 Gold Coins'],
+		[35, 'Frost Dragon', '3000', 'Frost Dragon, Frost Dragon Hatchling', '5.000.000 EXP X sua Rate', '4.000.000 EXP X sua Rate'],
+		[36, 'Banuta Deeper', '4000', 'Medusa, Serpent Spawn, Hydra, Eternal Guardian', '2x Common Mount Box', '800.000 Gold Coins'],
+		[37, 'Nightmare', '2000', 'Nightmare, Nightmare Scion', '1x Exercise Weapon (18.000 Charges)', '1.000.000 Gold Coins'],
+		[38, 'Draken', '5000', 'Draken Abomination, Draken Elite, Draken Spellweaver, Draken Warmaster, Lizard Legionnaire, Lizard Magistratus, Lizard Noble, Lizard Chosen, Lizard Dragon Priest, Lizard High Guard', "6.000.000 EXP X sua Rate\n1.000.000 Gold Coins", '4.500.000 EXP X sua Rate'],
+		[39, 'The Hive', '5000', 'Waspoid, Crawler, Spitter, Kollos, Spidris, Spidris Elite, Hive Overseer', "7.000.000 EXP X sua Rate\n1.500.000 Gold Coins", '5.000.000 EXP X sua Rate'],
+		[40, 'MOTA', '3000', 'Fury, Floating Savant', '1x Mini Obelisk', '1.500.000 Gold Coins'],
+	]
+);
+
+$categories[] = rc_supreme_category_block(
+	'veterans-refuge',
+	"Veteran's Refuge",
+	'rank3.png',
+	[
+		'1x Voidspark Backpack',
+		'2x Ticket Boost 100% Exp',
+		'2x Boosted Exercise Token',
+		'2x Surprise Casket',
+		'3x Roulette Token',
+		'1x Addon Casket',
+		'2x Mount Casket',
+		'25x Prey Cards',
+		'10x Exalted Core',
+	],
+	[
+		[41, 'Iksupan', '6000', 'Iks Yapunac, Mitmah Scout, Mitmah Seer', '1x Task Coin / 1x Music Box', '15x Gold Tokens'],
+		[42, 'Carnivor', '10000', 'Lumbering Carnivor, Spiky Carnivor, Menacing Carnivor', '1x Task Coin / 10x Prey Cards', '20x Silver Tokens'],
+		[43, 'Grim Reaper', '3000', 'Hellspawn, Grim Reaper', "1x Task Coin\n8.000.000 EXP X sua Rate", '6.000.000 EXP X sua Rate'],
+		[44, 'Candia', '5000', 'Candy Horror, Nibblemaw, Honey Elemental, Angry Sugar Fairy, Candy Floss Elemental, Goggle Cake', "1x Task Coin\n3.000.000 Gold Coins", '2.000.000 Gold Coins'],
+		[45, 'Lycanthrope', '6000', 'Werelion, Werelioness', '1x Task Coin / 2x Mystic Bag', '2x Exalted Core'],
+		[46, 'The Void', '10000', 'Breach Brood, Dread Intruder, Sparkion', "1x Task Coin\n9.000.000 EXP X sua Rate\n2.000.000 Gold Coins", '7.000.000 EXP X sua Rate'],
+		[47, 'Asura', '7000', 'Dawnfire Asura, Midnight Asura, Frost Flower Asura', '1x Task Coin / 1x Exercise Weapon (21.600 Charges)', '2.500.000 Gold Coins'],
+		[48, 'Spectre', '12000', 'Gazer Spectre, Burster Spectre, Ripper Spectre', "1x Task Coin\n10.000.000 EXP X sua Rate", '8.000.000 EXP X sua Rate'],
+		[49, 'Catacombs', '15000', 'Destroyer, Dark Torturer, Demon, Grim Reaper, Hellhound, Hellspawn, Juggernaut', '1x Task Coin / 10x Prey Cards', '15 Gold Tokens / 20 Silver Tokens'],
+		[50, 'Roshamuul', '8000', 'Guzzlemaw, Frazzlemaw, Silencer, Choking Fear, Retching Horror', '1x Task Coin / 300x Cluster Of Solace', '100x Cluster Of Solace'],
+		[51, 'Warzone 1 2 3', '10000', 'Hideous Fungus, Humongous Fungus, Humorless Fungus, Stone Devourer, Weeper, Magma Crawler, Lost Berserker, Lava Golem, Cliff Strider, Ironblight, Orewalker', '1x Task Coin / 50x Major Crystalline Token', '20x Major Crystalline Token'],
+		[52, 'Weretiger', '6000', 'Weretiger, White Weretiger, Cunning Werepanther', '1x Task Coin / 4.000.000 Gold Coins', '3.000.000 Gold Coins'],
+		[53, 'Werecrocodile', '6000', 'Werecrocodile, Feral Werecrocodile, Werepanther', '1x Task Coin / 2x Roulette Coin', '10.000.000 EXP X sua Rate'],
+		[54, 'Winter & Summer', '5000', 'Crazed Summer Rearguard, Crazed Summer Vanguard, Crazed Winter Rearguard, Crazed Winter Vanguard, Insane Siren, Soul-broken Harbinger', "1x Task Coin\n12.000.000 EXP X sua Rate\n5.000.000 Gold Coins", "10.000.000 EXP X sua Rate\n2.000.000 Gold Coins"],
+		[55, 'Deathling', '4000', 'Deathling Scout, Deathling Spellsinger', '1x Task Coin / 1x Exercise Weapon (25.200 Charges)', '3.000.000 Gold Coins'],
+		[56, 'Great Pearl', '8000', 'Foam Stalker, Two-headed Turtle', '2x Task Coin + amplifications', 'Random Item: Bestiary Betterment, Strike Enhancement, Stamina Extension'],
+		[57, 'Moon Goddess', '10000', 'Makara, Naga Archer, Naga Warrior', '2x Task Coin + random tomes/cupcakes', 'Random Item: Lemon Cupcake, Strawberry Cupcake, Blueberry Cupcake'],
+		[58, 'Forest of Life', '8000', 'Dark Carnisylvan, Hulking Carnisylvan, Poisonous Carnisylvan', '2x Task Coin / 3x Mystic Bag', '4.000.000 Gold Coins'],
+		[59, 'Kilmaresh Deeper', '10000', 'Burning Gladiator, Black Sphinx Acolyte, Priestess Of The Wild Sun', '2x Task Coin + utility items', '3.000.000 Gold Coins'],
+		[60, 'Issavi', '7000', 'Sphinx, Manticore, Lamassu, Feral Sphinx, Crypt Warden', '2x Task Coin / 10.000.000 EXP X sua Rate', '8.000.000 EXP X sua Rate'],
+	]
+);
+
+$categories[] = rc_supreme_category_block(
+	'masters-den',
+	"Master's Den",
+	'rank4.png',
+	[
+		'1x Crimson Hellbound Mount',
+		'1x Blazeforge Backpack',
+		'1x Infinite Food',
+		'3x Ticket Boost 100% Exp',
+		'3x Boosted Exercise Token',
+		'3x Surprise Casket',
+		'5x Roulette Token',
+		'2x Addon Casket',
+		'3x Mount Casket',
+		'50x Prey Cards',
+		'20x Exalted Core',
+	],
+	[
+		[61, 'Warzone 4 5 6', '14000', 'Chasm Spawn, Drillworm, Cave Devourer, Tunnel Tyrant, Deepworm, Diremaw', '5x Task Coin / 12.000.000 EXP X sua Rate', '12.000.000 EXP X sua Rate'],
+		[62, 'Falcon Bastion', '16000', 'Falcon Knight, Falcon Paladin', '1x Task Coin / 1x Oberon Chest', 'Random Item: Lemon Cupcake, Strawberry Cupcake, Blueberry Cupcake'],
+		[63, 'Kilmaresh Mountains', '14000', 'Ogre Rowdy, Ogre Ruffian, Ogre Sage', '1x Task Coin / 15.000.000 EXP X sua Rate', '13.000.000 EXP X sua Rate'],
+		[64, 'Goanna', '15000', 'Young Goanna, Adult Goanna', '1x Task Coin / 15x Prey Cards', '15.000.000 EXP X sua Rate'],
+		[65, 'Prison', '17000', 'Demon Outcast, Blightwalker, Plaguesmith, Dark Torturer, Hellhound, Juggernaut', '1x Task Coin / 8.000.000 Gold Coins', '6.000.000 Gold Coins'],
+		[66, 'Cobra Bastion', '18000', 'Cobra Assassin, Cobra Scout, Cobra Vizier', '1x Task Coin / 1x Scarlett Chest', '15.000.000 EXP X sua Rate'],
+		[67, 'Bulltaur Lair', '20000', 'Bulltaur Alchemist, Bulltaur Brute, Bulltaur Forgepriest', "1x Task Coin\n15.000.000 EXP X sua Rate\n6.000.000 Gold Coins", "12.000.000 EXP X sua Rate\n2.000.000 Gold Coins"],
+		[68, 'Lost Soul', '18000', 'Flimsy Lost Soul, Mean Lost Soul, Freakish Lost Soul', '1x Task Coin / 1x Exercise Weapon (32.400 Charges)', '7.000.000 Gold Coins'],
+		[69, 'Deep Desert', '20000', 'Skeleton Elite Warrior, Undead Elite Gladiator', '1x Task Coin / 10.000.000 Gold Coins', '7.000.000 Gold Coins'],
+		[70, "Nimmersatt's", '20000', 'Dragolisk, Mega Dragon, Wardragon', "1x Task Coin\n17.000.000 EXP X sua Rate\n7.000.000 Gold Coins", "15.000.000 EXP X sua Rate\n3.000.000 Gold Coins"],
+		[71, 'Salt Cave', '20000', 'Bashmu, Juvenile Bashmu', '1x Task Coin / 2x Mini Obelisk', '1x Golden Prison Key'],
+		[72, 'Ruins of Nuur', '22000', 'Girtablilu Warrior, Venerable Girtablilu', '1x Task Coin / 3x Soul Core Bag / 5.000.000 Gold Coins', '8.000.000 Gold Coins'],
+		[73, 'Ingol', '23000', 'Boar Man, Carnivostrich, Crape Man, Harpy, Liodile, Rhindeer', '1x Task Coin / 3x Roulette Coin', '10.000.000 Gold Coins'],
+		[74, 'Ferumbras Seal', '20000', 'Vexclaw, Grimeleech, Hellflayer', '1x Task Coin / 20.000.000 EXP X sua Rate / 1x Boots Of Homecoming', '17.000.000 EXP X sua Rate'],
+		[75, 'Warzone 7 8 9', '16000', 'Afflicted Strider, Blemished Spawn, Eyeless Devourer, Lavafungus, Lavaworm, Streaked Devourer, Cave Chimera, Tremendous Tyrant, Varnished Diremaw', '1x Task Coin / 1x Fiery Horseshoe', '50x Gold Token / 50x Silver Token'],
+		[76, 'Podzilla Stalk', '21000', 'Rootthing Amber Shaper, Rootthing Nutshell, Rootthing Bug Tracker', '1x Task Coin / 2x Stone Of Temporary Ascension', '18.000.000 EXP X sua Rate'],
+		[77, 'True Asura', '23000', 'True Dawnfire Asura, True Midnight Asura, True Frost Flower Asura', '1x Task Coin / 1x Exercise Weapon (43.200 Charges)', '10.000.000 Gold Coins'],
+		[78, 'Podzilla Bottom', '21000', 'Quara Looter, Quara Plunderer, Quara Raider', '5x Task Coin', '20.000.000 EXP X sua Rate'],
+	]
+);
+
+$categories[] = rc_supreme_category_block(
+	'sanctum-immortal',
+	'Sanctum of the Immortal',
+	'rank5.png',
+	[
+		'1x Bloodwing Addon',
+		'1x Corrupted Nature Exercise Dummy',
+		'1x Holycrest Backpack',
+		'2x Epic Bag of Stones',
+		'4x Ticket Boost 100% Exp',
+		'5x Boosted Exercise Token',
+		'5x Surprise Casket',
+		'8x Roulette Token',
+		'2x Addon Casket',
+		'3x Mount Casket',
+		'100x Prey Cards',
+		'30x Exalted Core',
+	],
+	[
+		[79, 'Earth Library', '10000', 'Cursed Book, Ink Blob', '3x Task Coin / 25.000.000 EXP X sua Rate', '20.000.000 EXP X sua Rate'],
+		[80, 'Ice Library', '25000', 'Icecold Book, Squid Warden, Animated Feather', '3x Task Coin / 25.000.000 EXP X sua Rate', '20.000.000 EXP X sua Rate'],
+		[81, 'Fire Library', '25000', 'Burning Book, Rage Squid, Guardian Of Tales', '3x Task Coin / 25.000.000 EXP X sua Rate', '20.000.000 EXP X sua Rate'],
+		[82, 'Energy Library', '25000', 'Energetic Book, Brain Squid, Energuardian Of Tales', '3x Task Coin / 1x Library Ticket', '20.000.000 EXP X sua Rate'],
+		[83, 'Furious Crater', '35000', 'Vibrant Phantom, Courage Leech, Cloak Of Terror', '3x Task Coin / 1x Bag You Desire / 1x Mini Obelisk', '-'],
+		[84, 'Mirrored Nightmare', '35000', "Many Faces, Druid's Apparition, Knight's Apparition, Paladin's Apparition, Sorcerer's Apparition, Distorted Phantom", '3x Task Coin / 1x Bag You Desire / 1x Mini Obelisk', '-'],
+		[85, 'Rotten Wasteland', '35000', 'Branchy Crawler, Rotten Golem, Mould Phantom', '3x Task Coin / 1x Bag You Desire / 1x Mini Obelisk', '-'],
+		[86, 'Claustrophobic Inferno', '35000', 'Brachiodemon, Infernal Demon, Infernal Phantom', '3x Task Coin / 1x Bag You Desire / 1x Mini Obelisk', '-'],
+		[87, 'Ebb and Flow', '35000', 'Bony Sea Devil, Turbulent Elemental, Capricious Phantom', '3x Task Coin / 1x Bag You Desire / 1x Mini Obelisk', '-'],
+		[88, 'Crystal Enigma', '50000', 'Emerald Tortoise, Gore Horn, Gorerilla, Hulking Prehemoth, Sabretooth', '3x Task Coin / 1x Primal Bag / 1x Stone Of Temporary Ascension', '-'],
+		[89, 'Sparkling Pools', '50000', 'Headpecker, Mantosaurus, Mercurial Menace, Noxious Ripptor, Shrieking Cry-stal', '3x Task Coin / 1x Primal Bag / 1x Stone Of Temporary Ascension', '-'],
+		[90, 'Monster Graveyard', '50000', 'Sulphider, Sulphur Spouter, Nighthunter, Stalking Stalk, Undertaker', '3x Task Coin / 1x Primal Bag / 1x Stone Of Temporary Ascension', '-'],
+		[91, 'Putrefactory', '60000', 'Meandering Mushroom, Oozing Carcass, Rotten Man-maggot, Sopping Carcass, Bloodjaw', '3x Task Coin / 5x Tainted Heart', '-'],
+		[92, 'Gloom Pillars', '60000', 'Converter, Darklight Construct, Darklight Emitter, Wandering Pillar, Bloodjaw', '3x Task Coin / 1x Exercise Weapon (46.800 Charges)', '-'],
+		[93, 'Jaded Roots', '60000', 'Bloated Man-maggot, Mycobiontic Beetle, Oozing Corpus, Sopping Corpus, Bloodjaw', '3x Task Coin / 5x Roulette Coin', '-'],
+		[94, 'Darklight Core', '60000', 'Darklight Matter, Darklight Source, Darklight Striker, Walking Pillar, Bloodjaw', '3x Task Coin / 5x Darklight Heart', '-'],
+	]
+);
+
 echo '<div class="rc-st-page">'
 	. '<header class="rc-st-page-title"><h2>Supreme Tasks</h2></header>'
 	. '<section class="rc-st-card">'
 	. '<h3>Informacoes</h3>'
-	. '<p>Desenvolvido pela Equipe RavynCore, o sistema de Supreme Tasks foi projetado para transformar a progressao dos jogadores em uma experiencia dinamica e recompensadora.</p>'
+	. '<p>Desenvolvido pela Equipe RavynCore, o sistema de Supreme Tasks foi projetado para transformar a maneira como os jogadores progridem e realizam suas atividades dentro do jogo. Com uma proposta realmente inovadora, ele unifica diversas tarefas e objetivos em uma unica estrutura, oferecendo uma experiencia mais dinamica, fluida e extremamente recompensadora.</p>'
 	. '</section>'
 	. '<section class="rc-st-card">'
 	. '<h3>Como fazer?</h3>'
-	. '<p>Abra a interface de tasks no jogo, selecione o rank do seu nivel, escolha uma task e clique em Start/Repeat. Depois disso, cace as criaturas indicadas para progredir.</p>'
+	. '<div class="rc-st-video-placeholder">Interface das Supreme Tasks (video curto em breve)</div>'
+	. '<p>Para iniciar uma Supreme Task, basta abrir a interface clicando no icone em formato de "pata" brilhante, localizado logo abaixo do seu set. Em seguida, selecione o rank correspondente ao seu nivel atual e escolha a task desejada. Ao abrir a pagina da task, clique em Start ou Repeat, conforme a situacao. Depois disso, e so cacar as criaturas indicadas para comecar a progredir.</p>'
 	. '</section>'
 	. '<section class="rc-st-card">'
-	. '<h3>Categorias</h3>'
+	. '<h3>Observacoes</h3>'
+	. '<ul class="rc-st-notes">'
+	. '<li>Quando a recompensa incluir dinheiro, o valor sera enviado diretamente para sua Store Inbox. E importante sempre verificar se o seu personagem possui capacidade disponivel antes de coletar a premiacao.</li>'
+	. '<li>Quando a recompensa incluir qualquer item, ele sera enviado diretamente para sua Store Inbox. E importante sempre verificar se o seu personagem possui capacidade disponivel antes de coletar a premiacao.</li>'
+	. '<li>Voce pode verificar o progresso da sua task atraves da interface da Supreme Task.</li>'
+	. '<li>Apos concluir a task pela primeira vez, voce podera repeti-la quantas vezes desejar.</li>'
+	. '<li>Voce pode verificar se ha algum Task Boost ativo acessando a aba de Skills do seu personagem.</li>'
+	. '<li>Apenas uma unica task pode estar ativa por personagem por vez.</li>'
+	. '<li>Para concluir a task, clique novamente no botao que antes exibia Start/Repeat e agora aparecera como Redeem.</li>'
+	. '</ul>'
+	. '</section>'
+	. '<section class="rc-st-card">'
+	. '<h3>Categorias e Recompensas</h3>'
 	. '<div class="rc-st-top-categories">'
-	. '<div class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank.png" alt="" loading="lazy"><span>Hall of the Apprentice</span></div>'
-	. '<div class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank2.png" alt="" loading="lazy"><span>Chamber of the Warrior</span></div>'
-	. '<div class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank3.png" alt="" loading="lazy"><span>Veteran\'s Refuge</span></div>'
-	. '<div class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank4.png" alt="" loading="lazy"><span>Master\'s Den</span></div>'
-	. '<div class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank5.png" alt="" loading="lazy"><span>Sanctum of the Immortal</span></div>'
+	. '<a href="#hall-apprentice" class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank.png" alt="" loading="lazy"><span>Hall of the Apprentice</span></a>'
+	. '<a href="#chamber-warrior" class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank2.png" alt="" loading="lazy"><span>Chamber of the Warrior</span></a>'
+	. '<a href="#veterans-refuge" class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank3.png" alt="" loading="lazy"><span>Veteran\'s Refuge</span></a>'
+	. '<a href="#masters-den" class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank4.png" alt="" loading="lazy"><span>Master\'s Den</span></a>'
+	. '<a href="#sanctum-immortal" class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank5.png" alt="" loading="lazy"><span>Sanctum of the Immortal</span></a>'
 	. '</div>'
 	. '</section>'
-	. '<section class="rc-st-card">'
-	. '<h3>Em atualizacao</h3>'
-	. '<p>Estamos aplicando os blocos completos (recompensas e tabela detalhada) em uma versao segura para o servidor. Esta pagina ja esta operacional.</p>'
-	. '</section>'
+	. implode('', $categories)
+	. '<script>(function(){var links=document.querySelectorAll(".rc-st-cat-link");if(!links.length){return;}var header=document.querySelector(".rc-header");links.forEach(function(link){link.addEventListener("click",function(ev){var href=link.getAttribute("href")||"";if(href.charAt(0)!=="#"){return;}var target=document.querySelector(href);if(!target){return;}ev.preventDefault();target.open=true;var offset=(header?header.offsetHeight:0)+10;var top=target.getBoundingClientRect().top+window.pageYOffset-offset;window.scrollTo({top:Math.max(0,top),behavior:"smooth"});});});})();</script>'
 	. '</div>';

@@ -5534,19 +5534,19 @@ body.rc-page-supremetasks .rc-rich-content {
   border-radius: 10px;
   border: 1px solid rgba(122, 154, 210, 0.42);
   background: linear-gradient(130deg, rgba(11, 23, 41, 0.92), rgba(12, 21, 36, 0.88));
-  padding: 12px 14px;
+  padding: 14px 16px;
   color: #e8efff;
   font-weight: 700;
-  min-height: 66px;
+  min-height: 78px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .rc-st-cat-link img {
-  width: 30px;
-  height: 30px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
 }
 
@@ -5590,8 +5590,8 @@ body.rc-page-supremetasks .rc-rich-content {
 }
 
 .rc-st-category-icon {
-  width: 34px;
-  height: 34px;
+  width: 46px;
+  height: 46px;
   object-fit: contain;
 }
 
