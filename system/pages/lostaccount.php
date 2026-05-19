@@ -34,7 +34,14 @@ if ($action == '') {
 }
 
 $email_rcv = stripslashes(trim($_REQUEST['email_rcv'] ?? ''));
-if ($action == 'step1' && $action_type == 'no_char') {
+$nick_step1 = stripslashes(trim($_REQUEST['nick'] ?? ''));
+$emailOnlyRequest =
+    $action == 'step1' &&
+    $action_type == 'email' &&
+    empty($nick_step1) &&
+    !empty($email_rcv);
+
+if ($action == 'step1' && ($action_type == 'no_char' || $emailOnlyRequest)) {
     if (empty($email_rcv)) {
         echo 'Invalid action. Try again.<br/>';
 

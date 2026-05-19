@@ -127,26 +127,26 @@ $config = array(
 
 	// recovery key
 	'recovery_key_length' => 15,                // length of recovery key code
-	'account_show_rk' => false,
+	'account_show_rk' => true,
 	'generate_new_reckey' => true,				// let player generate new recovery key, he will receive e-mail with new rec key (not display on page, hacker can't generate rec key)
 	'generate_new_reckey_price' => 250,			// coins price for new recovery key
 
 	// mail
-	'mail_enabled' => false, // is aac maker configured to send e-mails?
-	'mail_address' => 'no-reply@your-server.org', // server e-mail address (from:)
-	'mail_admin' => 'your-address@your-server.org', // admin email address, where mails from contact form will be sent
+	'mail_enabled' => true, // is aac maker configured to send e-mails?
+	'mail_address' => 'guilhermecboston@gmail.com', // server e-mail address (from:)
+	'mail_admin' => 'guilhermecboston@gmail.com', // admin email address, where mails from contact form will be sent
 	'mail_signature' => array( // signature that will be included at the end of every message sent using _mail function
 		'plain' => ""/*"--\nMy Server,\nhttp://www.myserver.com"*/,
 		'html' => ''/*'<br/>My Server,\n<a href="http://www.myserver.com">myserver.com</a>'*/
 	),
-	'smtp_enabled' => false, // send by smtp or mail function (set false if use mail function, set to true if you use GMail or Microsoft Outlook)
-	'smtp_host' => '', // mail host. smtp.gmail.com for GMail / smtp-mail.outlook.com for Microsoft Outlook
-	'smtp_port' => 25, // 25 (default) / 465 (ssl, GMail) / 587 (tls, Microsoft Outlook)
+	'smtp_enabled' => true, // send by smtp or mail function (set false if use mail function, set to true if you use GMail or Microsoft Outlook)
+	'smtp_host' => 'smtp.gmail.com', // mail host. smtp.gmail.com for GMail / smtp-mail.outlook.com for Microsoft Outlook
+	'smtp_port' => 587, // 25 (default) / 465 (ssl, GMail) / 587 (tls, Microsoft Outlook)
 	'smtp_auth' => true, // need authorization?
-	'smtp_user' => 'admin@example.org', // here your email username
-	'smtp_pass' => '',
-	'smtp_secure' => '', // What kind of encryption to use on the SMTP connection. Options: '', 'ssl' (GMail) or 'tls' (Microsoft Outlook)
-	'smtp_debug' => false, // set true to debug (you will see more info in error.log)
+	'smtp_user' => 'guilhermecboston@gmail.com', // here your email username
+	'smtp_pass' => 'ixzucxkjqcaoegxp',
+	'smtp_secure' => 'tls', // What kind of encryption to use on the SMTP connection. Options: '', 'ssl' (GMail) or 'tls' (Microsoft Outlook)
+	'smtp_debug' => true, // set true to debug (you will see more info in error.log)
 
 	// reCAPTCHA (prevent spam bots)
 	'recaptcha_enabled' => false, // enable recaptcha verification code
@@ -185,12 +185,12 @@ $config = array(
 
 	// new character config
 	'character_samples' => array( // vocations, format: ID_of_vocation => 'Name of Character to copy'
-		//0 => 'Rook Sample',
-		1 => 'Sorcerer Sample',
-		2 => 'Druid Sample',
-		3 => 'Paladin Sample',
-		4 => 'Knight Sample',
-		9 => 'Monk Sample',
+		0 => 'Rook Sample',
+		//1 => 'Sorcerer Sample',
+		//2 => 'Druid Sample',
+		//3 => 'Paladin Sample',
+		//4 => 'Knight Sample',
+		//9 => 'Monk Sample',
 	),
 
 
@@ -212,7 +212,8 @@ $config = array(
 	// if you use TFS 1.3 with support for 'towns' table in database, then you can ignore this - it will be configured automatically (generated from your .OTBM map)
 	'towns' => array(
 		0 => 'No Town',
-		1 => 'Tutorial City',
+		//1 => 'Tutorial City',
+		1 => 'RavynCore',
 		5 => 'AbDendriel',
 		6 => 'Carlin',
 		8 => 'Thais',
@@ -317,7 +318,7 @@ $config = array(
 
 	// status bar
 	'status_bar' => true,
-	'client_link' => 'https://github.com/.../gameclient/releases', // link to download tibia client
+	'client_link' => 'http://ravyncore.com/downloads/RavynCore_OTC.rar', // link to download tibia client
 	'discord_link' => 'https://discord.gg/7TVemZum', // link to join discord channel
 	'whatsapp_link' => '5511912345678', // wa.me/5511912345678
 	'instagram_link' => 'ravyncore_', // www.instagram.com/profile
