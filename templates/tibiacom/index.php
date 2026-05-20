@@ -80,7 +80,16 @@ $rcGetMenuItemsByNeedles = static function(array $groups, array $needles): array
 $newsMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['latestnews', 'news']);
 $accountMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['account']);
 $libraryMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['library']);
-$charBazaarMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['charbazaar', 'charactertrades', 'bazaar']);
+$charBazaarMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['charbazaar', 'charactertrade', 'charactertrades', 'bazaar']);
+if (count($charBazaarMenuItems) < 2) {
+    $charBazaarMenuItems = [
+        ['name' => 'Current Bazaar', 'link_full' => BASE_URL . '?subtopic=currentcharactertrades', 'blank' => false],
+        ['name' => 'Create Auction', 'link_full' => BASE_URL . '?subtopic=createcharacterauction', 'blank' => false],
+        ['name' => 'Own Trades', 'link_full' => BASE_URL . '?subtopic=owncharactertrades', 'blank' => false],
+        ['name' => 'Own Bids', 'link_full' => BASE_URL . '?subtopic=ownbids', 'blank' => false],
+        ['name' => 'Past Trades', 'link_full' => BASE_URL . '?subtopic=pastcharactertrades', 'blank' => false],
+    ];
+}
 $donateMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['donate', 'shop']);
 $systemMenuItems = [
     ['name' => 'Supreme Tasks', 'link_full' => BASE_URL . '?subtopic=supremetasks', 'blank' => false],

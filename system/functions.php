@@ -231,16 +231,42 @@ function getItemImage($id, $count = 1)
 
 function getAssetImageById($type, $id, array $params = [])
 {
+  global $config;
+
   $type = trim((string)$type);
+  $normalizedType = strtolower($type);
   $id = (int)$id;
   if ($type === '' || $id <= 0) {
     return '';
   }
 
+  if (in_array($normalizedType, ['outfit', 'outfits', 'mount', 'mounts'], true)) {
+    $renderer = trim((string)($config['outfit_images_url'] ?? ''));
+    if ($renderer !== '') {
+      $rendererParams = [
+        'id' => $normalizedType === 'mount' || $normalizedType === 'mounts'
+          ? max(1, (int)($params['base'] ?? 128))
+          : $id,
+        'addons' => max(0, (int)($params['addons'] ?? 0)),
+        'head' => max(0, (int)($params['head'] ?? 114)),
+        'body' => max(0, (int)($params['body'] ?? 95)),
+        'legs' => max(0, (int)($params['legs'] ?? 78)),
+        'feet' => max(0, (int)($params['feet'] ?? 69)),
+        'mount' => $normalizedType === 'mount' || $normalizedType === 'mounts'
+          ? $id
+          : max(0, (int)($params['mount'] ?? 0)),
+        'direction' => max(0, (int)($params['direction'] ?? 2)),
+      ];
+
+      $delimiter = (strpos($renderer, '?') === false) ? '?' : '&';
+      return $renderer . $delimiter . http_build_query($rendererParams, '', '&', PHP_QUERY_RFC3986);
+    }
+  }
+
   $query = array_merge(
     [
       'subtopic' => 'asset',
-      'type' => strtolower($type),
+      'type' => $normalizedType,
       'id' => $id,
     ],
     $params
