@@ -27,7 +27,7 @@
 
   var manifestCache = {};
   var imageCache = {};
-  var DEFAULT_OUTFIT_DIRECTION = 3;
+  var DEFAULT_OUTFIT_DIRECTION = 2;
 
   function colorMultiplier(id) {
     var value = outfitColors[id] || 0;
@@ -56,11 +56,6 @@
       });
     }
     return imageCache[url];
-  }
-
-  function manifestUrlFromPage() {
-    var canvas = document.querySelector("canvas[data-manifest]");
-    return window.RavynCoreThingsManifestUrl || (canvas && canvas.getAttribute("data-manifest")) || "images/things-web/manifest.json";
   }
 
   function buildSheetList(manifest) {
@@ -255,8 +250,7 @@
   }
 
   async function renderCanvas(canvas) {
-    var manifestUrl = canvas.getAttribute("data-manifest") || manifestUrlFromPage();
-    canvas.setAttribute("data-manifest", manifestUrl);
+    var manifestUrl = canvas.getAttribute("data-manifest");
     var lookType = canvas.getAttribute("data-looktype");
     var category = canvas.getAttribute("data-category") || "outfits";
     var manifest = await loadManifest(manifestUrl);
@@ -302,52 +296,8 @@
     }
   }
 
-  function upgradeLegacyOutfitImages(scope) {
-    var manifestUrl = manifestUrlFromPage();
-    var images = [].slice.call(scope.querySelectorAll('img[src*="type=outfit"], img[src*="type=outfits"], img[src*="animoutfit.php"]'));
-    images.forEach(function (image) {
-      if (image.getAttribute("data-rc-upgraded") === "1") {
-        return;
-      }
-
-      var src = image.getAttribute("src") || "";
-      var url;
-      try {
-        url = new URL(src, window.location.href);
-      } catch (error) {
-        return;
-      }
-
-      var type = (url.searchParams.get("type") || "").toLowerCase();
-      var isOutfit = type === "outfit" || type === "outfits" || src.indexOf("animoutfit.php") !== -1;
-      var lookType = parseInt(url.searchParams.get("id") || "", 10);
-      if (!isOutfit || !lookType) {
-        return;
-      }
-
-      image.setAttribute("data-rc-upgraded", "1");
-      var canvas = document.createElement("canvas");
-      canvas.className = (image.className ? image.className + " " : "") + "rc-thing-canvas rc-upgraded-outfit";
-      canvas.width = Math.max(56, parseInt(image.getAttribute("width") || image.clientWidth || "80", 10));
-      canvas.height = Math.max(56, parseInt(image.getAttribute("height") || image.clientHeight || "80", 10));
-      canvas.setAttribute("data-rc-thing", "asset");
-      canvas.setAttribute("data-category", "outfits");
-      canvas.setAttribute("data-manifest", manifestUrl);
-      canvas.setAttribute("data-looktype", String(lookType));
-      canvas.setAttribute("data-addons", url.searchParams.get("addons") || "3");
-      canvas.setAttribute("data-head", url.searchParams.get("head") || "95");
-      canvas.setAttribute("data-body", url.searchParams.get("body") || "114");
-      canvas.setAttribute("data-legs", url.searchParams.get("legs") || "39");
-      canvas.setAttribute("data-feet", url.searchParams.get("feet") || "115");
-      canvas.setAttribute("data-direction", url.searchParams.get("direction") || String(DEFAULT_OUTFIT_DIRECTION));
-      canvas.setAttribute("aria-label", image.getAttribute("alt") || "Outfit");
-      image.replaceWith(canvas);
-    });
-  }
-
   function init(root) {
     var scope = root || document;
-    upgradeLegacyOutfitImages(scope);
     var canvases = [].slice.call(scope.querySelectorAll("canvas[data-rc-thing]"));
     var startRender = function (canvas) {
       if (canvas.getAttribute("data-render-started") === "1") {
@@ -386,7 +336,7 @@
     canvases.forEach(startRender);
   }
 
-  window.RavynCoreThingsRenderer = { init: init, upgradeLegacyOutfitImages: upgradeLegacyOutfitImages };
+  window.RavynCoreThingsRenderer = { init: init };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () { init(document); });

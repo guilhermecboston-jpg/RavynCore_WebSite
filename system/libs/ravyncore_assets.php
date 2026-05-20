@@ -173,7 +173,7 @@ if (!function_exists('rc_assets_cache_key')) {
 				. '_b' . max(0, (int)($params['body'] ?? 114))
 				. '_l' . max(0, (int)($params['legs'] ?? 39))
 				. '_f' . max(0, (int)($params['feet'] ?? 115))
-				. '_d' . max(0, (int)($params['direction'] ?? 3));
+				. '_d' . max(0, (int)($params['direction'] ?? 2));
 		}
 
 		if ($normalizedType === 'items') {
@@ -238,7 +238,7 @@ if (!function_exists('rc_assets_generate_cached_file')) {
 			'--feet',
 			escapeshellarg((string)max(0, (int)($params['feet'] ?? 115))),
 			'--direction',
-			escapeshellarg((string)max(0, (int)($params['direction'] ?? 3))),
+			escapeshellarg((string)max(0, (int)($params['direction'] ?? 2))),
 		];
 
 		$command = implode(' ', $args);

@@ -279,7 +279,7 @@ function getThingCanvasHtml($category, $id, array $params = [])
   $width = max(16, (int)($params['width'] ?? 96));
   $height = max(16, (int)($params['height'] ?? 96));
   $addons = max(0, (int)($params['addons'] ?? ($category === 'outfits' ? 3 : 0)));
-  $direction = max(0, (int)($params['direction'] ?? ($category === 'outfits' ? 3 : 0)));
+  $direction = max(0, (int)($params['direction'] ?? ($category === 'outfits' ? 2 : 0)));
   $class = trim('rc-thing-canvas ' . (string)($params['class'] ?? ''));
   $label = (string)($params['label'] ?? ('Asset ' . $id));
 

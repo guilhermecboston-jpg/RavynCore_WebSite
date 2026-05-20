@@ -74,17 +74,15 @@
         foreach($topPlayers as $player){
             $outfit_html = '';
             if ($config['online_outfit']){
-                $outfit_html = getThingCanvasHtml('outfits', (int)$player['looktype'], [
+                $outfitUrl = getAssetImageById('outfit', (int)$player['looktype'], [
                     'addons' => !empty($player['lookaddons']) ? (int)$player['lookaddons'] : 0,
                     'head' => (int)$player['lookhead'],
                     'body' => (int)$player['lookbody'],
                     'legs' => (int)$player['looklegs'],
                     'feet' => (int)$player['lookfeet'],
-                    'width' => 56,
-                    'height' => 56,
-                    'class' => 'rc-themebox-outfit',
-                    'label' => $player['name'] . ' outfit',
+                    'direction' => 2,
                 ]);
+                $outfit_html = '<img class="rc-themebox-outfit" src="' . htmlspecialchars($outfitUrl, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($player['name'] . ' outfit', ENT_QUOTES, 'UTF-8') . '">';
             }
             $player_voc = $config['vocations'][$player['vocation']];
         ?>

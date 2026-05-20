@@ -383,18 +383,17 @@ if (!$rank_vocation = $_POST['profession'] ?? null) {
                                                     $player['value'] = $player['level'];
                                                 echo '
 			<tr style="height: 64px;"><td>' . ($offset + $i) . '.</td>';
-                                                if ($config['highscores_outfit'])
-                                                    echo '<td><div class="rc-highscores-outfit">' . getThingCanvasHtml('outfits', (int)$player['looktype'], [
+                                                if ($config['highscores_outfit']) {
+                                                    $outfitUrl = getAssetImageById('outfit', (int)$player['looktype'], [
                                                         'addons' => $outfit_addons ? (int)$player['lookaddons'] : 0,
                                                         'head' => (int)$player['lookhead'],
                                                         'body' => (int)$player['lookbody'],
                                                         'legs' => (int)$player['looklegs'],
                                                         'feet' => (int)$player['lookfeet'],
-                                                        'width' => 56,
-                                                        'height' => 56,
-                                                        'class' => 'rc-highscores-outfit-canvas',
-                                                        'label' => $player['name'] . ' outfit',
-                                                    ]) . '</div></td>';
+                                                        'direction' => 2,
+                                                    ]);
+                                                    echo '<td><div class="rc-highscores-outfit"><img class="rc-highscores-outfit-canvas" src="' . htmlspecialchars($outfitUrl, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($player['name'] . ' outfit', ENT_QUOTES, 'UTF-8') . '" /></div></td>';
+                                                }
 
                                                 echo '
 			<td>

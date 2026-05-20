@@ -155,20 +155,17 @@ foreach ($topPlayers as &$player) {
     $player['vocation_name'] = $vocationName;
     $player['vocation_icon'] = rc_vocation_icon($vocationName);
     $player['outfit_html'] = '';
-
     if (!empty($config['online_outfit'])) {
         $lookAddons = isset($player['lookaddons']) ? (int)$player['lookaddons'] : 0;
-        $player['outfit_html'] = getThingCanvasHtml('outfits', (int)$player['looktype'], [
+        $outfitUrl = getAssetImageById('outfit', (int)$player['looktype'], [
             'addons' => $lookAddons,
             'head' => (int)$player['lookhead'],
             'body' => (int)$player['lookbody'],
             'legs' => (int)$player['looklegs'],
             'feet' => (int)$player['lookfeet'],
-            'width' => 56,
-            'height' => 56,
-            'class' => 'rc-rank-outfit',
-            'label' => $player['name'] . ' outfit',
+            'direction' => 2,
         ]);
+        $player['outfit_html'] = '<img class="rc-rank-outfit" src="' . htmlspecialchars($outfitUrl, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($player['name'] . ' outfit', ENT_QUOTES, 'UTF-8') . '">';
     }
 }
 unset($player);
@@ -560,7 +557,6 @@ $socialLinks = [
 <?php $rcGenericJsVer = @filemtime(BASE . $template_path . '/js/generic.js') ?: time(); ?>
 <script src="<?= $template_path; ?>/js/generic.js?v=<?= $rcGenericJsVer; ?>"></script>
 <?php $rcThingsRendererVer = @filemtime(BASE . $template_path . '/js/ravyncore-things-renderer.js') ?: time(); ?>
-<script>window.RavynCoreThingsManifestUrl = <?= json_encode(function_exists('getThingManifestUrl') ? getThingManifestUrl() : 'images/things-web/manifest.json'); ?>;</script>
 <script src="<?= $template_path; ?>/js/ravyncore-things-renderer.js?v=<?= $rcThingsRendererVer; ?>"></script>
 <?php $rcJsVer = @filemtime(BASE . $template_path . '/js/ravyncore.js') ?: time(); ?>
 <script src="<?= $template_path; ?>/js/ravyncore.js?v=<?= $rcJsVer; ?>"></script>

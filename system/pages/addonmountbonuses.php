@@ -329,7 +329,7 @@ if (!function_exists('rc_am_outfit_image_url')) {
 					'body' => (int)$colors['body'],
 					'legs' => (int)$colors['legs'],
 					'feet' => (int)$colors['feet'],
-					'direction' => 3,
+					'direction' => 2,
 				]);
 			}
 
@@ -340,7 +340,7 @@ if (!function_exists('rc_am_outfit_image_url')) {
 				'legs' => (int)$colors['legs'],
 				'feet' => (int)$colors['feet'],
 				'mount' => 0,
-				'direction' => 3,
+				'direction' => 2,
 			]);
 		}
 
@@ -352,7 +352,7 @@ if (!function_exists('rc_am_outfit_image_url')) {
 			'legs' => (int)$colors['legs'],
 			'feet' => (int)$colors['feet'],
 			'mount' => (int)$mountId,
-			'direction' => 3,
+			'direction' => 2,
 		]);
 	}
 }
@@ -374,7 +374,7 @@ if (!function_exists('rc_am_thing_canvas_html')) {
 			. ' data-body="' . (int)$colors['body'] . '"'
 			. ' data-legs="' . (int)$colors['legs'] . '"'
 			. ' data-feet="' . (int)$colors['feet'] . '"'
-			. ' data-direction="3"'
+			. ' data-direction="2"'
 			. ' aria-label="' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '"></canvas>'
 			. '<span class="rc-thing-fallback" hidden>' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</span>';
 	}
