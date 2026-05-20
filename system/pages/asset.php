@@ -80,6 +80,11 @@ if ($cached !== '') {
 	rc_asset_output_file($cached);
 }
 
+$generated = rc_assets_generate_cached_file($type, $id, $_REQUEST);
+if ($generated !== '') {
+	rc_asset_output_file($generated);
+}
+
 global $config;
 
 switch ($type) {

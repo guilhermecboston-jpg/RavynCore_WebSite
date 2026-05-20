@@ -93,6 +93,7 @@ $config = array(
 	'things_assets_path' => 'system/data/things/1524', // folder that contains catalog-content.json from OTC assets (example: data/things/1524)
 	'things_assets_version' => '1524', // used when things_assets_path is empty
 	'things_assets_cache_path' => 'images/things-cache', // optional cache for rendered png/webp/gif by id (items, missiles, effects, outfits, mounts)
+	'things_assets_python_path' => 'python', // used by asset.php to render missing outfit images from things assets on demand
 
 	// account
 	'account_management' => true, // disable if you're using other method to manage users (fe. tfs account manager)
