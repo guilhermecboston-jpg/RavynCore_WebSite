@@ -110,7 +110,13 @@ foreach($playersOnline as $player){
 		'level' => $player['level'],
 		'vocation' => $config['vocations'][$player['vocation']],
 		'country_image' => $config['account_country'] ? getFlagImage($player['country']) : null,
-		'outfit' => $config['online_outfit'] ? $config['outfit_images_url'] . '?id=' . $player['looktype'] . ($outfit_addons ? '&addons=' . $player['lookaddons'] : '') . '&head=' . $player['lookhead'] . '&body=' . $player['lookbody'] . '&legs=' . $player['looklegs'] . '&feet=' . $player['lookfeet'] : null
+		'outfit' => $config['online_outfit'] ? getAssetImageById('outfit', (int)$player['looktype'], [
+			'addons' => $outfit_addons ? (int)$player['lookaddons'] : 0,
+			'head' => (int)$player['lookhead'],
+			'body' => (int)$player['lookbody'],
+			'legs' => (int)$player['looklegs'],
+			'feet' => (int)$player['lookfeet'],
+		]) : null
 	);
 
 	if($config['online_vocations']) {

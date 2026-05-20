@@ -17,7 +17,14 @@ if (empty($race)) {
 	$replaces = [];
 	$replaces['boosted_monster_name'] = $monsterquery['boostname'];
 	$replaces['boosted_monster_uri'] = str_replace(' ', '', strtolower($monsterquery['boostname']));
-	$replaces['boosted_monster_image'] = "{$config['outfit_images_url']}?id={$monstertype}&addons={$monsteraddons}&head={$monsterhead}&body={$monsterbody}&legs={$monsterlegs}&feet={$monsterfeet}&mount={$monstermount}";
+	$replaces['boosted_monster_image'] = getAssetImageById('outfit', (int)$monstertype, [
+		'addons' => (int)$monsteraddons,
+		'head' => (int)$monsterhead,
+		'body' => (int)$monsterbody,
+		'legs' => (int)$monsterlegs,
+		'feet' => (int)$monsterfeet,
+		'mount' => (int)$monstermount,
+	]);
 
 	echo $twig->render('library/library.html.twig', $replaces);
 

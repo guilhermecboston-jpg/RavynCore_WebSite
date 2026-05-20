@@ -75,7 +75,7 @@ if ($type === '' || $id <= 0) {
 	rc_asset_output_placeholder(404);
 }
 
-$cached = rc_assets_find_cached_file($type, $id);
+$cached = rc_assets_find_cached_file($type, $id, $_REQUEST);
 if ($cached !== '') {
 	rc_asset_output_file($cached);
 }

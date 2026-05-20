@@ -72,15 +72,24 @@
         <?php
         $topPlayers = getTopPlayers(5);
         foreach($topPlayers as $player){
-            $outfit_url = '';
+            $outfit_html = '';
             if ($config['online_outfit']){
-                $outfit_url = $config['outfit_images_url'] . '?id=' . $player['looktype'] . ( !empty( $player['lookaddons'] ) ? '&addons=' . $player['lookaddons'] : '' ) . '&head=' . $player['lookhead'] . '&body=' . $player['lookbody'] . '&legs=' . $player['looklegs'] . '&feet=' . $player['lookfeet'];
-                $player['outfit'] = $outfit_url;
+                $outfit_html = getThingCanvasHtml('outfits', (int)$player['looktype'], [
+                    'addons' => !empty($player['lookaddons']) ? (int)$player['lookaddons'] : 0,
+                    'head' => (int)$player['lookhead'],
+                    'body' => (int)$player['lookbody'],
+                    'legs' => (int)$player['looklegs'],
+                    'feet' => (int)$player['lookfeet'],
+                    'width' => 64,
+                    'height' => 64,
+                    'class' => 'rc-themebox-outfit',
+                    'label' => $player['name'] . ' outfit',
+                ]);
             }
             $player_voc = $config['vocations'][$player['vocation']];
         ?>
         <div class="rank_player">
-            <div class="rank_outfit" style="background-image: url('<?php echo $player['outfit'] ?>')"></div>
+            <div class="rank_outfit"><?php echo $outfit_html; ?></div>
             <div class="rank_text">
                 <a href="<?php echo getPlayerLink($player['name'], false) ?>"><b><?php echo $player['name'] ?></b></a><br>
                 <small>Level: <?php echo $player['level'] ?> / <?php echo $player_voc ?></small>

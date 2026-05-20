@@ -154,17 +154,21 @@ foreach ($topPlayers as &$player) {
     $vocationName = $config['vocations'][$player['vocation']] ?? 'Adventurer';
     $player['vocation_name'] = $vocationName;
     $player['vocation_icon'] = rc_vocation_icon($vocationName);
-    $player['outfit_url'] = '';
+    $player['outfit_html'] = '';
 
     if (!empty($config['online_outfit'])) {
         $lookAddons = isset($player['lookaddons']) ? (int)$player['lookaddons'] : 0;
-        $player['outfit_url'] = $config['outfit_images_url']
-            . '?id=' . (int)$player['looktype']
-            . ($lookAddons > 0 ? '&addons=' . $lookAddons : '')
-            . '&head=' . (int)$player['lookhead']
-            . '&body=' . (int)$player['lookbody']
-            . '&legs=' . (int)$player['looklegs']
-            . '&feet=' . (int)$player['lookfeet'];
+        $player['outfit_html'] = getThingCanvasHtml('outfits', (int)$player['looktype'], [
+            'addons' => $lookAddons,
+            'head' => (int)$player['lookhead'],
+            'body' => (int)$player['lookbody'],
+            'legs' => (int)$player['looklegs'],
+            'feet' => (int)$player['lookfeet'],
+            'width' => 70,
+            'height' => 70,
+            'class' => 'rc-rank-outfit',
+            'label' => $player['name'] . ' outfit',
+        ]);
     }
 }
 unset($player);
@@ -503,8 +507,8 @@ $socialLinks = [
                     <?php foreach ($topPlayers as $player): ?>
                         <a class="rc-rank-row" href="<?= getPlayerLink($player['name'], false); ?>" aria-label="View <?= escapeHtml($player['name']); ?>">
                             <span class="rc-rank-position">#<?= (int)$player['rank']; ?></span>
-                            <?php if (!empty($player['outfit_url'])): ?>
-                                <img class="rc-rank-outfit" src="<?= $player['outfit_url']; ?>" alt="<?= escapeHtml($player['name']); ?>">
+                            <?php if (!empty($player['outfit_html'])): ?>
+                                <?= $player['outfit_html']; ?>
                             <?php else: ?>
                                 <img class="rc-rank-outfit" src="<?= $player['vocation_icon']; ?>" alt="<?= escapeHtml($player['vocation_name']); ?>">
                             <?php endif; ?>
@@ -555,6 +559,8 @@ $socialLinks = [
 
 <?php $rcGenericJsVer = @filemtime(BASE . $template_path . '/js/generic.js') ?: time(); ?>
 <script src="<?= $template_path; ?>/js/generic.js?v=<?= $rcGenericJsVer; ?>"></script>
+<?php $rcThingsRendererVer = @filemtime(BASE . $template_path . '/js/ravyncore-things-renderer.js') ?: time(); ?>
+<script src="<?= $template_path; ?>/js/ravyncore-things-renderer.js?v=<?= $rcThingsRendererVer; ?>"></script>
 <?php $rcJsVer = @filemtime(BASE . $template_path . '/js/ravyncore.js') ?: time(); ?>
 <script src="<?= $template_path; ?>/js/ravyncore.js?v=<?= $rcJsVer; ?>"></script>
 <?= template_place_holder('body_end'); ?>

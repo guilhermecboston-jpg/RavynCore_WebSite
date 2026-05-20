@@ -169,14 +169,17 @@
   async function renderCanvas(canvas) {
     var manifestUrl = canvas.getAttribute("data-manifest");
     var lookType = canvas.getAttribute("data-looktype");
+    var category = canvas.getAttribute("data-category") || "outfits";
     var manifest = await loadManifest(manifestUrl);
-    var appearance = manifest.appearances && manifest.appearances[lookType];
+    var categoryMap = manifest.categories && manifest.categories[category];
+    var appearance = (categoryMap && categoryMap[lookType]) || (manifest.appearances && manifest.appearances[lookType]);
     if (!appearance) {
-      throw new Error("Missing appearance " + lookType);
+      throw new Error("Missing " + category + " appearance " + lookType);
     }
 
-    var direction = Math.min(Math.max(parseInt(canvas.getAttribute("data-direction") || "2", 10), 0), appearance.patternWidth - 1);
-    var addons = parseInt(canvas.getAttribute("data-addons") || "3", 10);
+    var directionDefault = category === "outfits" ? "2" : "0";
+    var direction = Math.min(Math.max(parseInt(canvas.getAttribute("data-direction") || directionDefault, 10), 0), appearance.patternWidth - 1);
+    var addons = parseInt(canvas.getAttribute("data-addons") || (category === "outfits" ? "3" : "0"), 10);
     var z = 0;
     var phase = 0;
     var patterns = addonPatterns(addons, appearance.patternHeight);
@@ -208,17 +211,19 @@
         var columns = Math.max(1, Math.floor(sheetSize / sheet.spriteWidth));
         var sx = (offset % columns) * sheet.spriteWidth;
         var sy = Math.floor(offset / columns) * sheet.spriteHeight;
-        var targetContext = layer === 0 ? baseContext : templateContext;
+        var targetContext = (category === "outfits" && layer > 0) ? templateContext : baseContext;
         targetContext.drawImage(image, sx, sy, sheet.spriteWidth, sheet.spriteHeight, 0, 0, sheet.spriteWidth, sheet.spriteHeight);
       }
     }
 
-    colorize(baseCanvas, templateCanvas, {
-      head: parseInt(canvas.getAttribute("data-head") || "95", 10),
-      body: parseInt(canvas.getAttribute("data-body") || "114", 10),
-      legs: parseInt(canvas.getAttribute("data-legs") || "39", 10),
-      feet: parseInt(canvas.getAttribute("data-feet") || "115", 10)
-    });
+    if (category === "outfits") {
+      colorize(baseCanvas, templateCanvas, {
+        head: parseInt(canvas.getAttribute("data-head") || "95", 10),
+        body: parseInt(canvas.getAttribute("data-body") || "114", 10),
+        legs: parseInt(canvas.getAttribute("data-legs") || "39", 10),
+        feet: parseInt(canvas.getAttribute("data-feet") || "115", 10)
+      });
+    }
 
     var context = canvas.getContext("2d");
     var bounds = firstVisibleBounds(baseCanvas);
@@ -244,7 +249,7 @@
 
   function init(root) {
     var scope = root || document;
-    var canvases = [].slice.call(scope.querySelectorAll("canvas[data-rc-thing='outfit']"));
+    var canvases = [].slice.call(scope.querySelectorAll("canvas[data-rc-thing]"));
     var startRender = function (canvas) {
       if (canvas.getAttribute("data-render-started") === "1") {
         return;
@@ -252,7 +257,7 @@
       canvas.setAttribute("data-render-started", "1");
       renderCanvas(canvas).catch(function (error) {
         if (window.console && console.warn) {
-          console.warn("RavynCore things renderer failed for looktype " + canvas.getAttribute("data-looktype"), error);
+          console.warn("RavynCore things renderer failed for " + (canvas.getAttribute("data-category") || "outfits") + " " + canvas.getAttribute("data-looktype"), error);
         }
         canvas.classList.add("is-missing");
         var fallback = canvas.parentNode && canvas.parentNode.querySelector(".rc-thing-fallback");

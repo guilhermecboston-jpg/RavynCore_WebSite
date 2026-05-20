@@ -161,6 +161,30 @@ if (!function_exists('rc_assets_get_python_path')) {
 	}
 }
 
+if (!function_exists('rc_assets_cache_key')) {
+	function rc_assets_cache_key($type, $id, array $params = [])
+	{
+		$normalizedType = rc_assets_normalize_type($type);
+		$id = (int)$id;
+		if ($normalizedType === 'outfits' || $normalizedType === 'mounts') {
+			return $id
+				. '_a' . max(0, (int)($params['addons'] ?? 3))
+				. '_h' . max(0, (int)($params['head'] ?? 95))
+				. '_b' . max(0, (int)($params['body'] ?? 114))
+				. '_l' . max(0, (int)($params['legs'] ?? 39))
+				. '_f' . max(0, (int)($params['feet'] ?? 115))
+				. '_d' . max(0, (int)($params['direction'] ?? 2));
+		}
+
+		if ($normalizedType === 'items') {
+			$count = max(1, min(100, (int)($params['count'] ?? 1)));
+			return $count > 1 ? $id . '_c' . $count : (string)$id;
+		}
+
+		return (string)$id;
+	}
+}
+
 if (!function_exists('rc_assets_generate_cached_file')) {
 	function rc_assets_generate_cached_file($type, $id, array $params = [])
 	{
@@ -170,9 +194,7 @@ if (!function_exists('rc_assets_generate_cached_file')) {
 			return '';
 		}
 
-		// The current OTC things renderer supports outfit appearances, which also
-		// covers mount client ids used by mounts.xml.
-		if ($normalizedType !== 'outfits') {
+		if (!in_array($normalizedType, ['items', 'outfits', 'effects', 'missiles'], true)) {
 			return '';
 		}
 
@@ -184,12 +206,12 @@ if (!function_exists('rc_assets_generate_cached_file')) {
 			return '';
 		}
 
-		$targetDir = $cacheRoot . DIRECTORY_SEPARATOR . 'outfits';
+		$targetDir = $cacheRoot . DIRECTORY_SEPARATOR . $normalizedType;
 		if (!is_dir($targetDir)) {
 			@mkdir($targetDir, 0775, true);
 		}
 
-		$target = $targetDir . DIRECTORY_SEPARATOR . $id . '.png';
+		$target = $targetDir . DIRECTORY_SEPARATOR . rc_assets_cache_key($normalizedType, $id, $params) . '.png';
 		if (is_file($target)) {
 			return $target;
 		}
@@ -198,7 +220,7 @@ if (!function_exists('rc_assets_generate_cached_file')) {
 			escapeshellarg($python),
 			escapeshellarg($generator),
 			'--type',
-			'outfits',
+			escapeshellarg($normalizedType),
 			'--ids',
 			escapeshellarg((string)$id),
 			'--things',
@@ -223,13 +245,17 @@ if (!function_exists('rc_assets_generate_cached_file')) {
 		$output = [];
 		$exitCode = 1;
 		@exec($command, $output, $exitCode);
+		$generated = $targetDir . DIRECTORY_SEPARATOR . $id . '.png';
+		if ($exitCode === 0 && is_file($generated) && $generated !== $target) {
+			@rename($generated, $target);
+		}
 
 		return ($exitCode === 0 && is_file($target)) ? $target : '';
 	}
 }
 
 if (!function_exists('rc_assets_find_cached_file')) {
-	function rc_assets_find_cached_file($type, $id)
+	function rc_assets_find_cached_file($type, $id, array $params = [])
 	{
 		$type = strtolower(trim((string)$type));
 		$id = (int)$id;
@@ -253,10 +279,20 @@ if (!function_exists('rc_assets_find_cached_file')) {
 		}
 
 		$extensions = ['png', 'gif', 'webp', 'jpg', 'jpeg'];
+		$cacheKey = rc_assets_cache_key($normalizedType, $id, $params);
 		foreach ($extensions as $ext) {
-			$file = $dir . DIRECTORY_SEPARATOR . $id . '.' . $ext;
+			$file = $dir . DIRECTORY_SEPARATOR . $cacheKey . '.' . $ext;
 			if (is_file($file)) {
 				return $file;
+			}
+		}
+
+		if ($cacheKey !== (string)$id && !in_array($normalizedType, ['outfits', 'mounts'], true)) {
+			foreach ($extensions as $ext) {
+				$file = $dir . DIRECTORY_SEPARATOR . $id . '.' . $ext;
+				if (is_file($file)) {
+					return $file;
+				}
 			}
 		}
 

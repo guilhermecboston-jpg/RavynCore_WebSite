@@ -212,22 +212,17 @@ function getItemNameById($id)
 function getItemImage($id, $count = 1)
 {
   $tooltip = '';
+  $id = (int)$id;
+  $count = max(1, (int)$count);
 
   $name = getItemNameById($id);
   if (!empty($name)) {
     $tooltip = ' class="item_image" title="' . $name . '"';
   }
 
-  $file_name = $id;
-  if ($count > 1) {
-    $file_name .= '-' . $count;
-  }
-
-  global $config;
   return '<img src="' .
-    $config['item_images_url'] .
-    $file_name .
-    '.gif"' .
+    getAssetImageById('item', $id, ['count' => $count]) .
+    '"' .
     $tooltip .
     ' width="32" height="32" border="0" alt="' .
     $id .
@@ -252,6 +247,61 @@ function getAssetImageById($type, $id, array $params = [])
   );
 
   return BASE_URL . '?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+}
+
+function getThingManifestUrl()
+{
+  $relativePath = 'images/things-web/manifest.json';
+  $absolutePath = BASE . $relativePath;
+  $version = is_file($absolutePath) ? (string)filemtime($absolutePath) : (string)time();
+
+  return BASE_URL . $relativePath . '?v=' . rawurlencode($version);
+}
+
+function getThingCanvasHtml($category, $id, array $params = [])
+{
+  $category = strtolower(trim((string)$category));
+  $id = (int)$id;
+  if ($id <= 0) {
+    return '';
+  }
+
+  $aliases = [
+    'outfit' => 'outfits',
+    'outfits' => 'outfits',
+    'mount' => 'outfits',
+    'mounts' => 'outfits',
+    'item' => 'items',
+    'items' => 'items',
+  ];
+  $category = $aliases[$category] ?? $category;
+
+  $width = max(16, (int)($params['width'] ?? 96));
+  $height = max(16, (int)($params['height'] ?? 96));
+  $addons = max(0, (int)($params['addons'] ?? ($category === 'outfits' ? 3 : 0)));
+  $direction = max(0, (int)($params['direction'] ?? ($category === 'outfits' ? 2 : 0)));
+  $class = trim('rc-thing-canvas ' . (string)($params['class'] ?? ''));
+  $label = (string)($params['label'] ?? ('Asset ' . $id));
+
+  $colors = [
+    'head' => max(0, (int)($params['head'] ?? 95)),
+    'body' => max(0, (int)($params['body'] ?? 114)),
+    'legs' => max(0, (int)($params['legs'] ?? 39)),
+    'feet' => max(0, (int)($params['feet'] ?? 115)),
+  ];
+
+  return '<canvas class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '" width="' . $width . '" height="' . $height . '" data-rc-thing="asset"'
+    . ' data-category="' . htmlspecialchars($category, ENT_QUOTES, 'UTF-8') . '"'
+    . ' data-manifest="' . htmlspecialchars(getThingManifestUrl(), ENT_QUOTES, 'UTF-8') . '"'
+    . ' data-looktype="' . $id . '"'
+    . ' data-addons="' . $addons . '"'
+    . ' data-head="' . $colors['head'] . '"'
+    . ' data-body="' . $colors['body'] . '"'
+    . ' data-legs="' . $colors['legs'] . '"'
+    . ' data-feet="' . $colors['feet'] . '"'
+    . ' data-direction="' . $direction . '"'
+    . ' aria-label="' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '"></canvas>'
+    . '<span class="rc-thing-fallback" hidden>' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</span>';
 }
 
 function getFlagImage($country)

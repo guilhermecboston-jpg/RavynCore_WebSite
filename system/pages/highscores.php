@@ -384,7 +384,17 @@ if (!$rank_vocation = $_POST['profession'] ?? null) {
                                                 echo '
 			<tr style="height: 64px;"><td>' . ($offset + $i) . '.</td>';
                                                 if ($config['highscores_outfit'])
-                                                    echo '<td><img style="position:absolute;margin-top:' . (in_array($player['looktype'], array(75, 266, 302)) ? '-15px;margin-left:5px' : '-45px;margin-left:-25px') . ';" src="' . $config['outfit_images_url'] . '?id=' . $player['looktype'] . ($outfit_addons ? '&addons=' . $player['lookaddons'] : '') . '&head=' . $player['lookhead'] . '&body=' . $player['lookbody'] . '&legs=' . $player['looklegs'] . '&feet=' . $player['lookfeet'] . '" alt="" /></td>';
+                                                    echo '<td><div class="rc-highscores-outfit">' . getThingCanvasHtml('outfits', (int)$player['looktype'], [
+                                                        'addons' => $outfit_addons ? (int)$player['lookaddons'] : 0,
+                                                        'head' => (int)$player['lookhead'],
+                                                        'body' => (int)$player['lookbody'],
+                                                        'legs' => (int)$player['looklegs'],
+                                                        'feet' => (int)$player['lookfeet'],
+                                                        'width' => 72,
+                                                        'height' => 72,
+                                                        'class' => 'rc-highscores-outfit-canvas',
+                                                        'label' => $player['name'] . ' outfit',
+                                                    ]) . '</div></td>';
 
                                                 echo '
 			<td>

@@ -150,7 +150,13 @@ if ($player->isLoaded() && !$player->isDeleted()) {
     $hidden = $player->isHidden();
 
     if ($config['characters']['outfit'])
-        $outfit = $config['outfit_images_url'] . '?id=' . $player->getLookType() . ($db->hasColumn('players', 'lookaddons') ? '&addons=' . $player->getLookAddons() : '') . '&head=' . $player->getLookHead() . '&body=' . $player->getLookBody() . '&legs=' . $player->getLookLegs() . '&feet=' . $player->getLookFeet();
+        $outfit = getAssetImageById('outfit', $player->getLookType(), [
+            'addons' => $db->hasColumn('players', 'lookaddons') ? $player->getLookAddons() : 0,
+            'head' => $player->getLookHead(),
+            'body' => $player->getLookBody(),
+            'legs' => $player->getLookLegs(),
+            'feet' => $player->getLookFeet(),
+        ]);
 
     $flag = '';
     if ($config['account_country']) {
@@ -570,7 +576,13 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
                 $fullAddonsList[] = [
                     'id' => $outfitId,
                     'name' => $outfitCatalog[$outfitId] ?? ('Outfit #' . $outfitId),
-                    'image' => $config['outfit_images_url'] . '?id=' . $outfitId . '&addons=3&head=' . $player->getLookHead() . '&body=' . $player->getLookBody() . '&legs=' . $player->getLookLegs() . '&feet=' . $player->getLookFeet()
+                    'image' => getAssetImageById('outfit', $outfitId, [
+                        'addons' => 3,
+                        'head' => $player->getLookHead(),
+                        'body' => $player->getLookBody(),
+                        'legs' => $player->getLookLegs(),
+                        'feet' => $player->getLookFeet(),
+                    ])
                 ];
             }
 
@@ -606,8 +618,14 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
                 $fullMountsList[] = [
                     'id' => $mountId,
                     'name' => $mountCatalog[$mountId] ?? ('Mount #' . $mountId),
-                    // Uses outfit renderer with mount parameter when available on server endpoint.
-                    'image' => $config['outfit_images_url'] . '?id=' . $player->getLookType() . '&addons=' . max(3, (int)$player->getLookAddons()) . '&mount=' . $mountId . '&head=' . $player->getLookHead() . '&body=' . $player->getLookBody() . '&legs=' . $player->getLookLegs() . '&feet=' . $player->getLookFeet()
+                    'image' => getAssetImageById('mount', $mountId, [
+                        'base' => $player->getLookType(),
+                        'addons' => max(3, (int)$player->getLookAddons()),
+                        'head' => $player->getLookHead(),
+                        'body' => $player->getLookBody(),
+                        'legs' => $player->getLookLegs(),
+                        'feet' => $player->getLookFeet(),
+                    ])
                 ];
             }
 

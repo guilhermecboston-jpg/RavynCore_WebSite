@@ -149,12 +149,13 @@ if (!function_exists('cbz_get_full_addons_list')) {
                 'id' => $outfitId,
                 'name' => $catalog[$outfitId] ?? ('Outfit #' . $outfitId),
                 'addons' => (int)$row['addons'],
-                'image' => $config['outfit_images_url'] . '?id=' . $outfitId .
-                    '&addons=3' .
-                    '&head=' . (int)$player['lookhead'] .
-                    '&body=' . (int)$player['lookbody'] .
-                    '&legs=' . (int)$player['looklegs'] .
-                    '&feet=' . (int)$player['lookfeet'],
+                'image' => getAssetImageById('outfit', $outfitId, [
+                    'addons' => 3,
+                    'head' => (int)$player['lookhead'],
+                    'body' => (int)$player['lookbody'],
+                    'legs' => (int)$player['looklegs'],
+                    'feet' => (int)$player['lookfeet'],
+                ]),
             ];
         }
 
@@ -202,13 +203,14 @@ if (!function_exists('cbz_get_full_mounts_list')) {
             $list[] = [
                 'id' => $mountId,
                 'name' => $catalog[$mountId] ?? ('Mount #' . $mountId),
-                'image' => $config['outfit_images_url'] . '?id=' . (int)$player['looktype'] .
-                    '&addons=' . max(3, (int)($player['lookaddons'] ?? 0)) .
-                    '&mount=' . $mountId .
-                    '&head=' . (int)$player['lookhead'] .
-                    '&body=' . (int)$player['lookbody'] .
-                    '&legs=' . (int)$player['looklegs'] .
-                    '&feet=' . (int)$player['lookfeet'],
+                'image' => getAssetImageById('mount', $mountId, [
+                    'base' => (int)$player['looktype'],
+                    'addons' => max(3, (int)($player['lookaddons'] ?? 0)),
+                    'head' => (int)$player['lookhead'],
+                    'body' => (int)$player['lookbody'],
+                    'legs' => (int)$player['looklegs'],
+                    'feet' => (int)$player['lookfeet'],
+                ]),
             ];
         }
 
@@ -411,7 +413,13 @@ if (!function_exists('cbz_get_character_sale_data')) {
         $bosstiary = cbz_has_table($db, 'player_bosstiary') ? (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `player_bosstiary` WHERE `player_id` = {$playerId}") ?? 0) : '-';
         $bossPoints = cbz_has_column($db, 'players', 'boss_points') ? (int)$player['boss_points'] : '-';
 
-        $outfitUrl = "{$config['outfit_images_url']}?id={$player['looktype']}" . (!empty($player['lookaddons']) ? "&addons={$player['lookaddons']}" : '') . "&head={$player['lookhead']}&body={$player['lookbody']}&legs={$player['looklegs']}&feet={$player['lookfeet']}";
+        $outfitUrl = getAssetImageById('outfit', (int)$player['looktype'], [
+            'addons' => !empty($player['lookaddons']) ? (int)$player['lookaddons'] : 0,
+            'head' => (int)$player['lookhead'],
+            'body' => (int)$player['lookbody'],
+            'legs' => (int)$player['looklegs'],
+            'feet' => (int)$player['lookfeet'],
+        ]);
 
         $creationDate = '-';
         if (!empty($player['created']) && is_numeric($player['created'])) {

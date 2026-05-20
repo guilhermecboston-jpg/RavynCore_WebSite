@@ -23,6 +23,11 @@
     --rc-radius: 16px;
     --rc-radius-card: 10px;
     --rc-radius-cta: 8px;
+    --rc-font-title: 'Cinzel', 'Georgia', serif;
+    --rc-font-reading: 'Georgia', 'Times New Roman', serif;
+    --rc-font-ui: 'Rajdhani', 'Segoe UI', sans-serif;
+    --rc-reading-size: 17px;
+    --rc-reading-line: 1.58;
 }
 
 *,
@@ -44,10 +49,64 @@ body {
 
 body.rc-page {
     min-height: 100vh;
-    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-family: var(--rc-font-reading);
+    font-size: var(--rc-reading-size);
+    line-height: var(--rc-reading-line);
     color: var(--rc-text);
     background: #050812;
     position: relative;
+}
+
+body.rc-page .rc-nav,
+body.rc-page .rc-header,
+body.rc-page .rc-header-actions,
+body.rc-page button,
+body.rc-page input,
+body.rc-page select,
+body.rc-page textarea,
+body.rc-page .rc-btn,
+body.rc-page .BigButtonText {
+    font-family: var(--rc-font-ui);
+}
+
+body.rc-page .rc-rich-content,
+body.rc-page .rc-panel,
+body.rc-page .rc-panel-content,
+body.rc-page .TableContent,
+body.rc-page .InnerTableContainer {
+    font-family: var(--rc-font-reading);
+    font-size: var(--rc-reading-size);
+    line-height: var(--rc-reading-line);
+    color: #edf0f5;
+}
+
+body.rc-page .rc-rich-content p,
+body.rc-page .rc-panel p,
+body.rc-page .TableContent p,
+body.rc-page .BoxContent p {
+    font-size: 18px;
+    line-height: 1.52;
+    color: #eef1f6;
+}
+
+body.rc-page .rc-rich-content td,
+body.rc-page .rc-rich-content th,
+body.rc-page .TableContent td,
+body.rc-page .TableContent th {
+    font-size: 16px;
+    line-height: 1.42;
+}
+
+body.rc-page h1,
+body.rc-page h2,
+body.rc-page h3,
+body.rc-page h4,
+body.rc-page .CaptionContainer .Text,
+body.rc-page .rc-title-ornate,
+body.rc-page .rc-st-page-title h2 {
+    font-family: var(--rc-font-title);
+    color: #ffd15c;
+    letter-spacing: 0.025em;
 }
 
 body,
@@ -777,6 +836,26 @@ body.rc-nav-locked .site-header {
     align-self: end !important;
 
     transform: translateY(-10px) scale(1.08) !important; /* SOBE */
+}
+
+canvas.rc-rank-outfit {
+    image-rendering: pixelated;
+}
+
+.rc-highscores-outfit {
+    width: 76px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+.rc-highscores-outfit-canvas,
+.rc-themebox-outfit,
+.rank_outfit .rc-themebox-outfit {
+    display: block;
+    image-rendering: pixelated;
 }
 
 /* TEXTO */
