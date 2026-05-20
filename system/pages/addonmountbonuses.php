@@ -31,6 +31,23 @@ if (!function_exists('rc_am_format_number')) {
 	}
 }
 
+if (!function_exists('rc_am_outfit_group')) {
+	function rc_am_outfit_group($name)
+	{
+		$normalized = strtolower(trim((string)$name));
+		$pairs = [
+			'noblewoman' => ['key' => 'nobleman-noblewoman', 'name' => 'Nobleman / Noblewoman'],
+			'nobleman' => ['key' => 'nobleman-noblewoman', 'name' => 'Nobleman / Noblewoman'],
+			'norsewoman' => ['key' => 'norseman-norsewoman', 'name' => 'Norseman / Norsewoman'],
+			'norseman' => ['key' => 'norseman-norsewoman', 'name' => 'Norseman / Norsewoman'],
+			'retro noblewoman' => ['key' => 'retro-nobleman-noblewoman', 'name' => 'Retro Nobleman / Retro Noblewoman'],
+			'retro nobleman' => ['key' => 'retro-nobleman-noblewoman', 'name' => 'Retro Nobleman / Retro Noblewoman'],
+		];
+
+		return $pairs[$normalized] ?? ['key' => $normalized, 'name' => trim((string)$name)];
+	}
+}
+
 if (!function_exists('rc_am_append_bonus')) {
 	function rc_am_append_bonus(&$list, $label, $value, $suffix = '')
 	{
@@ -450,11 +467,12 @@ if ($outfitsXml !== null && isset($outfitsXml->outfit)) {
 
 		$typeRaw = strtolower(rc_am_attr_string($outfitNode, 'type'));
 		$isFemale = ($typeRaw === '0' || $typeRaw === 'female');
-		$key = strtolower($name);
+		$group = rc_am_outfit_group($name);
+		$key = $group['key'];
 
 		if (!isset($outfitsMap[$key])) {
 			$outfitsMap[$key] = [
-				'name' => $name,
+				'name' => $group['name'],
 				'femaleLookType' => 0,
 				'maleLookType' => 0,
 				'femaleBonus' => [],
@@ -474,6 +492,20 @@ if ($outfitsXml !== null && isset($outfitsXml->outfit)) {
 
 $outfits = [];
 foreach ($outfitsMap as $row) {
+	if ((int)$row['femaleLookType'] <= 0 && (int)$row['maleLookType'] > 0) {
+		$row['femaleLookType'] = (int)$row['maleLookType'];
+		if (empty($row['femaleBonus'])) {
+			$row['femaleBonus'] = $row['maleBonus'];
+		}
+	}
+
+	if ((int)$row['maleLookType'] <= 0 && (int)$row['femaleLookType'] > 0) {
+		$row['maleLookType'] = (int)$row['femaleLookType'];
+		if (empty($row['maleBonus'])) {
+			$row['maleBonus'] = $row['femaleBonus'];
+		}
+	}
+
 	$femaleBonus = $row['femaleBonus'];
 	$maleBonus = $row['maleBonus'];
 
@@ -561,7 +593,7 @@ if ($outfitsRows === '') {
 
 $mountRows = '';
 foreach ($mounts as $row) {
-	$imageHtml = rc_am_thing_canvas_html((int)$row['clientId'], $row['name'], 0, $defaultColors, $thingsWebManifestUrl, 'rc-thing-canvas-mount');
+	$imageHtml = rc_am_thing_canvas_html((int)$row['clientId'], $row['name'], 3, $defaultColors, $thingsWebManifestUrl, 'rc-thing-canvas-mount');
 
 	$mountRows .= '<tr data-search="' . htmlspecialchars($row['search'], ENT_QUOTES, 'UTF-8') . '">'
 		. '<td class="rc-am-name-cell">' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '</td>'
@@ -577,7 +609,8 @@ echo '<div class="rc-am-page">'
 	. '<header class="rc-st-page-title"><h2>Addon&Mount Bonuses</h2></header>'
 	. '<section class="rc-st-card">'
 	. '<h3>Sobre</h3>'
-	. '<p>Com o objetivo de valorizar outfits e mounts, esta pagina le os dados direto dos seus arquivos XML e gera as imagens pelo renderer de outfit do proprio site. Assim, nao e necessario manter colecoes de .gif/.png salvas para cada registro.</p>'
+	. '<p>Com o intuito de valorizar outfits e montaria, foi implementado um sistema de outfits e mounts b&ocirc;nus que permite adicionar atributos ao personagem.</p>'
+	. '<p>&Eacute; importante ressaltar que N&Atilde;O &eacute; necess&aacute;rio estar utilizando o outfits ou montaria para receber o b&ocirc;nus, al&eacute;m disso, os b&ocirc;nus das outfits e montarias adquiridas s&atilde;o ACUMULATIVOS.</p>'
 	. '</section>';
 
 if (!empty($warnings)) {
