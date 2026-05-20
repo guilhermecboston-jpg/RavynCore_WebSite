@@ -164,8 +164,8 @@ foreach ($topPlayers as &$player) {
             'body' => (int)$player['lookbody'],
             'legs' => (int)$player['looklegs'],
             'feet' => (int)$player['lookfeet'],
-            'width' => 70,
-            'height' => 70,
+            'width' => 56,
+            'height' => 56,
             'class' => 'rc-rank-outfit',
             'label' => $player['name'] . ' outfit',
         ]);
@@ -560,6 +560,7 @@ $socialLinks = [
 <?php $rcGenericJsVer = @filemtime(BASE . $template_path . '/js/generic.js') ?: time(); ?>
 <script src="<?= $template_path; ?>/js/generic.js?v=<?= $rcGenericJsVer; ?>"></script>
 <?php $rcThingsRendererVer = @filemtime(BASE . $template_path . '/js/ravyncore-things-renderer.js') ?: time(); ?>
+<script>window.RavynCoreThingsManifestUrl = <?= json_encode(function_exists('getThingManifestUrl') ? getThingManifestUrl() : 'images/things-web/manifest.json'); ?>;</script>
 <script src="<?= $template_path; ?>/js/ravyncore-things-renderer.js?v=<?= $rcThingsRendererVer; ?>"></script>
 <?php $rcJsVer = @filemtime(BASE . $template_path . '/js/ravyncore.js') ?: time(); ?>
 <script src="<?= $template_path; ?>/js/ravyncore.js?v=<?= $rcJsVer; ?>"></script>

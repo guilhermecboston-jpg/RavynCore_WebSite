@@ -390,8 +390,8 @@ if (!$rank_vocation = $_POST['profession'] ?? null) {
                                                         'body' => (int)$player['lookbody'],
                                                         'legs' => (int)$player['looklegs'],
                                                         'feet' => (int)$player['lookfeet'],
-                                                        'width' => 72,
-                                                        'height' => 72,
+                                                        'width' => 56,
+                                                        'height' => 56,
                                                         'class' => 'rc-highscores-outfit-canvas',
                                                         'label' => $player['name'] . ' outfit',
                                                     ]) . '</div></td>';

@@ -27,6 +27,7 @@
 
   var manifestCache = {};
   var imageCache = {};
+  var DEFAULT_OUTFIT_DIRECTION = 3;
 
   function colorMultiplier(id) {
     var value = outfitColors[id] || 0;
@@ -55,6 +56,11 @@
       });
     }
     return imageCache[url];
+  }
+
+  function manifestUrlFromPage() {
+    var canvas = document.querySelector("canvas[data-manifest]");
+    return window.RavynCoreThingsManifestUrl || (canvas && canvas.getAttribute("data-manifest")) || "images/things-web/manifest.json";
   }
 
   function buildSheetList(manifest) {
@@ -166,22 +172,17 @@
     return bounds.right >= 0 ? bounds : null;
   }
 
-  async function renderCanvas(canvas) {
-    var manifestUrl = canvas.getAttribute("data-manifest");
-    var lookType = canvas.getAttribute("data-looktype");
-    var category = canvas.getAttribute("data-category") || "outfits";
-    var manifest = await loadManifest(manifestUrl);
-    var categoryMap = manifest.categories && manifest.categories[category];
-    var appearance = (categoryMap && categoryMap[lookType]) || (manifest.appearances && manifest.appearances[lookType]);
-    if (!appearance) {
-      throw new Error("Missing " + category + " appearance " + lookType);
-    }
+  function numberAttribute(element, name, fallback) {
+    var value = parseInt(element.getAttribute(name) || fallback, 10);
+    return Number.isFinite(value) ? value : fallback;
+  }
 
-    var directionDefault = category === "outfits" ? "2" : "0";
+  async function drawAppearanceFrame(canvas, manifest, appearance, category, frame) {
+    var directionDefault = category === "outfits" ? String(DEFAULT_OUTFIT_DIRECTION) : "0";
     var direction = Math.min(Math.max(parseInt(canvas.getAttribute("data-direction") || directionDefault, 10), 0), appearance.patternWidth - 1);
     var addons = parseInt(canvas.getAttribute("data-addons") || (category === "outfits" ? "3" : "0"), 10);
     var z = 0;
-    var phase = 0;
+    var phase = Math.max(0, frame % Math.max(1, appearance.phases || 1));
     var patterns = addonPatterns(addons, appearance.patternHeight);
     var firstSpriteId = appearance.spriteIds[0];
     var firstSheet = findSheet(manifest, firstSpriteId);
@@ -205,7 +206,7 @@
           continue;
         }
 
-        var image = await loadImage(new URL(sheet.src, manifestUrl).href);
+        var image = await loadImage(new URL(sheet.src, canvas.getAttribute("data-manifest")).href);
         var offset = spriteId - sheet.first;
         var sheetSize = manifest.spriteSheetSize || 384;
         var columns = Math.max(1, Math.floor(sheetSize / sheet.spriteWidth));
@@ -227,8 +228,14 @@
 
     var context = canvas.getContext("2d");
     var bounds = firstVisibleBounds(baseCanvas);
-    canvas.width = parseInt(canvas.getAttribute("width") || "96", 10);
-    canvas.height = parseInt(canvas.getAttribute("height") || "96", 10);
+    var canvasWidth = numberAttribute(canvas, "width", 96);
+    var canvasHeight = numberAttribute(canvas, "height", 96);
+    if (canvas.width !== canvasWidth) {
+      canvas.width = canvasWidth;
+    }
+    if (canvas.height !== canvasHeight) {
+      canvas.height = canvasHeight;
+    }
     context.imageSmoothingEnabled = false;
     context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -238,17 +245,109 @@
 
     var sourceWidth = bounds.right - bounds.left + 1;
     var sourceHeight = bounds.bottom - bounds.top + 1;
-    var scale = Math.min(canvas.width / sourceWidth, canvas.height / sourceHeight, 2);
+    var scaleLimit = parseFloat(canvas.getAttribute("data-max-scale") || "1.75");
+    var scale = Math.min(canvas.width / sourceWidth, canvas.height / sourceHeight, scaleLimit);
     var drawWidth = Math.max(1, Math.floor(sourceWidth * scale));
     var drawHeight = Math.max(1, Math.floor(sourceHeight * scale));
     var dx = Math.floor((canvas.width - drawWidth) / 2);
     var dy = Math.floor((canvas.height - drawHeight) / 2);
     context.drawImage(baseCanvas, bounds.left, bounds.top, sourceWidth, sourceHeight, dx, dy, drawWidth, drawHeight);
-    canvas.classList.add("is-rendered");
+  }
+
+  async function renderCanvas(canvas) {
+    var manifestUrl = canvas.getAttribute("data-manifest") || manifestUrlFromPage();
+    canvas.setAttribute("data-manifest", manifestUrl);
+    var lookType = canvas.getAttribute("data-looktype");
+    var category = canvas.getAttribute("data-category") || "outfits";
+    var manifest = await loadManifest(manifestUrl);
+    var categoryMap = manifest.categories && manifest.categories[category];
+    var appearance = (categoryMap && categoryMap[lookType]) || (manifest.appearances && manifest.appearances[lookType]);
+    if (!appearance) {
+      throw new Error("Missing " + category + " appearance " + lookType);
+    }
+
+    var phases = Math.max(1, appearance.phases || 1);
+    var shouldAnimate = category === "outfits" && phases > 1 && canvas.getAttribute("data-animate") !== "0";
+    var currentPhase = 0;
+    var drawing = false;
+
+    var draw = function () {
+      if (drawing) {
+        return;
+      }
+      drawing = true;
+      drawAppearanceFrame(canvas, manifest, appearance, category, currentPhase).then(function () {
+        canvas.classList.add("is-rendered");
+      }).catch(function (error) {
+        if (window.console && console.warn) {
+          console.warn("RavynCore things renderer failed for " + category + " " + lookType, error);
+        }
+        canvas.classList.add("is-missing");
+        var fallback = canvas.parentNode && canvas.parentNode.querySelector(".rc-thing-fallback");
+        if (fallback) {
+          fallback.hidden = false;
+        }
+      }).finally(function () {
+        drawing = false;
+      });
+    };
+
+    draw();
+    if (shouldAnimate && canvas.getAttribute("data-animation-started") !== "1") {
+      canvas.setAttribute("data-animation-started", "1");
+      window.setInterval(function () {
+        currentPhase = (currentPhase + 1) % phases;
+        draw();
+      }, parseInt(canvas.getAttribute("data-frame-delay") || "260", 10));
+    }
+  }
+
+  function upgradeLegacyOutfitImages(scope) {
+    var manifestUrl = manifestUrlFromPage();
+    var images = [].slice.call(scope.querySelectorAll('img[src*="type=outfit"], img[src*="type=outfits"], img[src*="animoutfit.php"]'));
+    images.forEach(function (image) {
+      if (image.getAttribute("data-rc-upgraded") === "1") {
+        return;
+      }
+
+      var src = image.getAttribute("src") || "";
+      var url;
+      try {
+        url = new URL(src, window.location.href);
+      } catch (error) {
+        return;
+      }
+
+      var type = (url.searchParams.get("type") || "").toLowerCase();
+      var isOutfit = type === "outfit" || type === "outfits" || src.indexOf("animoutfit.php") !== -1;
+      var lookType = parseInt(url.searchParams.get("id") || "", 10);
+      if (!isOutfit || !lookType) {
+        return;
+      }
+
+      image.setAttribute("data-rc-upgraded", "1");
+      var canvas = document.createElement("canvas");
+      canvas.className = (image.className ? image.className + " " : "") + "rc-thing-canvas rc-upgraded-outfit";
+      canvas.width = Math.max(56, parseInt(image.getAttribute("width") || image.clientWidth || "80", 10));
+      canvas.height = Math.max(56, parseInt(image.getAttribute("height") || image.clientHeight || "80", 10));
+      canvas.setAttribute("data-rc-thing", "asset");
+      canvas.setAttribute("data-category", "outfits");
+      canvas.setAttribute("data-manifest", manifestUrl);
+      canvas.setAttribute("data-looktype", String(lookType));
+      canvas.setAttribute("data-addons", url.searchParams.get("addons") || "3");
+      canvas.setAttribute("data-head", url.searchParams.get("head") || "95");
+      canvas.setAttribute("data-body", url.searchParams.get("body") || "114");
+      canvas.setAttribute("data-legs", url.searchParams.get("legs") || "39");
+      canvas.setAttribute("data-feet", url.searchParams.get("feet") || "115");
+      canvas.setAttribute("data-direction", url.searchParams.get("direction") || String(DEFAULT_OUTFIT_DIRECTION));
+      canvas.setAttribute("aria-label", image.getAttribute("alt") || "Outfit");
+      image.replaceWith(canvas);
+    });
   }
 
   function init(root) {
     var scope = root || document;
+    upgradeLegacyOutfitImages(scope);
     var canvases = [].slice.call(scope.querySelectorAll("canvas[data-rc-thing]"));
     var startRender = function (canvas) {
       if (canvas.getAttribute("data-render-started") === "1") {
@@ -287,7 +386,7 @@
     canvases.forEach(startRender);
   }
 
-  window.RavynCoreThingsRenderer = { init: init };
+  window.RavynCoreThingsRenderer = { init: init, upgradeLegacyOutfitImages: upgradeLegacyOutfitImages };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () { init(document); });

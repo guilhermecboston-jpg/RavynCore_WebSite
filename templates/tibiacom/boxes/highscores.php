@@ -10,8 +10,8 @@ foreach($topPlayers as &$player) {
 			'body' => (int)$player['lookbody'],
 			'legs' => (int)$player['looklegs'],
 			'feet' => (int)$player['lookfeet'],
-			'width' => 64,
-			'height' => 64,
+			'width' => 56,
+			'height' => 56,
 			'class' => 'rc-themebox-outfit',
 			'label' => $player['name'] . ' outfit',
 		]);
