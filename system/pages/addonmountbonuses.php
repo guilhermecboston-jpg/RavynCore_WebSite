@@ -325,6 +325,29 @@ if (!function_exists('rc_am_outfit_image_url')) {
 	}
 }
 
+if (!function_exists('rc_am_thing_canvas_html')) {
+	function rc_am_thing_canvas_html($lookType, $label, $addons, array $colors, $manifestUrl, $className = '')
+	{
+		$lookType = (int)$lookType;
+		if ($lookType <= 0 || $manifestUrl === '') {
+			return '<span class="rc-am-empty">N/A</span>';
+		}
+
+		$class = trim('rc-thing-canvas ' . $className);
+		return '<canvas class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '" width="96" height="96" data-rc-thing="outfit"'
+			. ' data-manifest="' . htmlspecialchars($manifestUrl, ENT_QUOTES, 'UTF-8') . '"'
+			. ' data-looktype="' . $lookType . '"'
+			. ' data-addons="' . (int)$addons . '"'
+			. ' data-head="' . (int)$colors['head'] . '"'
+			. ' data-body="' . (int)$colors['body'] . '"'
+			. ' data-legs="' . (int)$colors['legs'] . '"'
+			. ' data-feet="' . (int)$colors['feet'] . '"'
+			. ' data-direction="2"'
+			. ' aria-label="' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '"></canvas>'
+			. '<span class="rc-thing-fallback" hidden>' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</span>';
+	}
+}
+
 if (!function_exists('rc_am_bonus_html')) {
 	function rc_am_bonus_html(array $bonusLines)
 	{
@@ -337,8 +360,21 @@ if (!function_exists('rc_am_bonus_html')) {
 	}
 }
 
+if (!function_exists('rc_am_asset_url')) {
+	function rc_am_asset_url($relativePath)
+	{
+		$relativePath = ltrim((string)$relativePath, '/\\');
+		$absolutePath = BASE . $relativePath;
+		$version = is_file($absolutePath) ? (string)filemtime($absolutePath) : (string)time();
+
+		return BASE_URL . str_replace('\\', '/', $relativePath) . '?v=' . rawurlencode($version);
+	}
+}
+
 $outfitRenderer = rc_am_normalize_renderer_url($config['outfit_images_url'] ?? '');
 $defaultColors = ['head' => 95, 'body' => 114, 'legs' => 39, 'feet' => 115];
+$thingsWebManifestUrl = rc_am_asset_url('images/things-web/manifest.json');
+$thingsRendererUrl = rc_am_asset_url('templates/tibiacom/js/ravyncore-things-renderer.js');
 $serverPath = isset($config['server_path']) ? trim((string)$config['server_path']) : '';
 if ($serverPath !== '' && !preg_match('/[\/\\\\]$/', $serverPath)) {
 	$serverPath .= '/';
@@ -455,8 +491,10 @@ foreach ($outfitsMap as $row) {
 
 	$outfits[] = [
 		'name' => $row['name'],
+		'femaleLookType' => (int)$row['femaleLookType'],
 		'femaleImage' => rc_am_outfit_image_url($outfitRenderer, $row['femaleLookType'], 3, $defaultColors, 0),
 		'femaleFallbackImage' => rc_am_outfit_image_url($outfitRenderer, rc_am_map_legacy_id($row['femaleLookType'], $legacyMap), 3, $defaultColors, 0),
+		'maleLookType' => (int)$row['maleLookType'],
 		'maleImage' => rc_am_outfit_image_url($outfitRenderer, $row['maleLookType'], 3, $defaultColors, 0),
 		'maleFallbackImage' => rc_am_outfit_image_url($outfitRenderer, rc_am_map_legacy_id($row['maleLookType'], $legacyMap), 3, $defaultColors, 0),
 		'bonus' => $bonusLines,
@@ -486,6 +524,7 @@ if ($mountsXml !== null && isset($mountsXml->mount)) {
 
 		$mounts[] = [
 			'id' => $mountId,
+			'clientId' => $clientId,
 			'name' => $name,
 			'primaryImage' => $primaryImage,
 			'legacyPrimaryImage' => $legacyPrimaryImage,
@@ -502,23 +541,8 @@ usort($mounts, function ($a, $b) {
 
 $outfitsRows = '';
 foreach ($outfits as $row) {
-	$femaleImageHtml = '<span class="rc-am-empty">N/A</span>';
-	if ($row['femaleImage'] !== '') {
-		$femaleFallback = '';
-		if (!empty($row['femaleFallbackImage']) && $row['femaleFallbackImage'] !== $row['femaleImage']) {
-			$femaleFallback = ' data-fallback="' . htmlspecialchars($row['femaleFallbackImage'], ENT_QUOTES, 'UTF-8') . '"';
-		}
-		$femaleImageHtml = '<img src="' . htmlspecialchars($row['femaleImage'], ENT_QUOTES, 'UTF-8') . '" alt="Female ' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '" loading="lazy"' . $femaleFallback . '>';
-	}
-
-	$maleImageHtml = '<span class="rc-am-empty">N/A</span>';
-	if ($row['maleImage'] !== '') {
-		$maleFallback = '';
-		if (!empty($row['maleFallbackImage']) && $row['maleFallbackImage'] !== $row['maleImage']) {
-			$maleFallback = ' data-fallback="' . htmlspecialchars($row['maleFallbackImage'], ENT_QUOTES, 'UTF-8') . '"';
-		}
-		$maleImageHtml = '<img src="' . htmlspecialchars($row['maleImage'], ENT_QUOTES, 'UTF-8') . '" alt="Male ' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '" loading="lazy"' . $maleFallback . '>';
-	}
+	$femaleImageHtml = rc_am_thing_canvas_html((int)$row['femaleLookType'], 'Female ' . $row['name'], 3, $defaultColors, $thingsWebManifestUrl);
+	$maleImageHtml = rc_am_thing_canvas_html((int)$row['maleLookType'], 'Male ' . $row['name'], 3, $defaultColors, $thingsWebManifestUrl);
 
 	$outfitsRows .= '<tr data-search="' . htmlspecialchars($row['search'], ENT_QUOTES, 'UTF-8') . '">'
 		. '<td class="rc-am-name-cell">' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '</td>'
@@ -537,19 +561,7 @@ if ($outfitsRows === '') {
 
 $mountRows = '';
 foreach ($mounts as $row) {
-	$imageHtml = '<span class="rc-am-empty">N/A</span>';
-	if ($row['primaryImage'] !== '') {
-		$fallbackChain = [];
-		if (!empty($row['legacyPrimaryImage']) && $row['legacyPrimaryImage'] !== $row['primaryImage']) {
-			$fallbackChain[] = $row['legacyPrimaryImage'];
-		}
-		if (!empty($row['fallbackImage'])) {
-			$fallbackChain[] = $row['fallbackImage'];
-		}
-		$imageHtml = '<img src="' . htmlspecialchars($row['primaryImage'], ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '" loading="lazy"'
-			. (!empty($fallbackChain) ? ' data-fallback="' . htmlspecialchars(implode('|', $fallbackChain), ENT_QUOTES, 'UTF-8') . '"' : '')
-			. '>';
-	}
+	$imageHtml = rc_am_thing_canvas_html((int)$row['clientId'], $row['name'], 0, $defaultColors, $thingsWebManifestUrl, 'rc-thing-canvas-mount');
 
 	$mountRows .= '<tr data-search="' . htmlspecialchars($row['search'], ENT_QUOTES, 'UTF-8') . '">'
 		. '<td class="rc-am-name-cell">' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '</td>'
@@ -599,6 +611,7 @@ echo '<section class="rc-st-card">'
 	. '</table>'
 	. '</div>'
 	. '</section>'
+	. '<script src="' . htmlspecialchars($thingsRendererUrl, ENT_QUOTES, 'UTF-8') . '"></script>'
 	. '<script>(function(){'
 	. 'var root=document.querySelector(".rc-am-page");if(!root){return;}'
 	. 'var tabs=[].slice.call(root.querySelectorAll(".rc-am-tab"));'

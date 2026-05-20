@@ -6103,7 +6103,8 @@ body.rc-page-addonmountbonuses .rc-panel-content > h3 {
   text-transform: uppercase;
 }
 
-.rc-am-outfit-slot img {
+.rc-am-outfit-slot img,
+.rc-am-outfit-slot canvas {
   width: 82px;
   height: 82px;
   object-fit: contain;
@@ -6122,11 +6123,28 @@ body.rc-page-addonmountbonuses .rc-panel-content > h3 {
   padding: 8px 10px;
 }
 
-.rc-am-mount-visual img {
+.rc-am-mount-visual img,
+.rc-am-mount-visual canvas {
   width: 116px;
   height: 84px;
   object-fit: contain;
   image-rendering: pixelated;
+}
+
+.rc-thing-canvas {
+  display: block;
+}
+
+.rc-thing-canvas.is-missing {
+  display: none;
+}
+
+.rc-thing-fallback {
+  max-width: 96px;
+  color: #8ca8d3;
+  font-size: 13px;
+  line-height: 1.15;
+  text-align: center;
 }
 
 .rc-am-empty {
