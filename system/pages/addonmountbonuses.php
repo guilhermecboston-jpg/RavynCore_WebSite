@@ -48,6 +48,21 @@ if (!function_exists('rc_am_outfit_group')) {
 	}
 }
 
+if (!function_exists('rc_am_mount_looktype')) {
+	function rc_am_mount_looktype($name, $clientId)
+	{
+		$overrides = [
+			'battlefrazzle' => 1882,
+			'tidal seawater predator' => 1908,
+			'ashen coast predator' => 1909,
+			'crimson bay predator' => 1910,
+		];
+		$key = strtolower(trim((string)$name));
+
+		return isset($overrides[$key]) ? $overrides[$key] : (int)$clientId;
+	}
+}
+
 if (!function_exists('rc_am_append_bonus')) {
 	function rc_am_append_bonus(&$list, $label, $value, $suffix = '')
 	{
@@ -549,6 +564,7 @@ if ($mountsXml !== null && isset($mountsXml->mount)) {
 		}
 
 		$bonusLines = rc_am_collect_bonuses($mountNode);
+		$renderLookType = rc_am_mount_looktype($name, $clientId);
 		$primaryImage = rc_am_outfit_image_url($outfitRenderer, $clientId, 0, $defaultColors, 0);
 		$legacyClientId = rc_am_map_legacy_id($clientId, $legacyMap);
 		$legacyPrimaryImage = rc_am_outfit_image_url($outfitRenderer, $legacyClientId, 0, $defaultColors, 0);
@@ -557,6 +573,7 @@ if ($mountsXml !== null && isset($mountsXml->mount)) {
 		$mounts[] = [
 			'id' => $mountId,
 			'clientId' => $clientId,
+			'renderLookType' => $renderLookType,
 			'name' => $name,
 			'primaryImage' => $primaryImage,
 			'legacyPrimaryImage' => $legacyPrimaryImage,
@@ -593,7 +610,7 @@ if ($outfitsRows === '') {
 
 $mountRows = '';
 foreach ($mounts as $row) {
-	$imageHtml = rc_am_thing_canvas_html((int)$row['clientId'], $row['name'], 3, $defaultColors, $thingsWebManifestUrl, 'rc-thing-canvas-mount');
+	$imageHtml = rc_am_thing_canvas_html((int)$row['renderLookType'], $row['name'], 3, $defaultColors, $thingsWebManifestUrl, 'rc-thing-canvas-mount');
 
 	$mountRows .= '<tr data-search="' . htmlspecialchars($row['search'], ENT_QUOTES, 'UTF-8') . '">'
 		. '<td class="rc-am-name-cell">' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '</td>'
