@@ -56,6 +56,32 @@ $formatDuration = static function ($seconds): string {
     return $seconds . ' seconds';
 };
 
+$normalizeFragDurationSeconds = static function ($rawValue, int $defaultSeconds, bool $smallNumberMeansDays = false): int {
+    if ($rawValue === null || $rawValue === '') {
+        return $defaultSeconds;
+    }
+
+    if (!is_numeric($rawValue)) {
+        return $defaultSeconds;
+    }
+
+    $value = (float)$rawValue;
+    if ($value <= 0) {
+        return $defaultSeconds;
+    }
+
+    if ($smallNumberMeansDays && $value <= 120) {
+        $value *= 86400;
+    }
+
+    // Some forks store these durations in milliseconds.
+    if ($value > (86400 * 30) && abs(fmod($value, 1000.0)) < 0.0001) {
+        $value /= 1000.0;
+    }
+
+    return max(1, (int)round($value));
+};
+
 $formatRentPeriod = static function ($value) use ($formatDuration): string {
     if ($value === null || $value === '') {
         return '7 days';
@@ -220,10 +246,25 @@ $regenerationRows = [
     ['Monk', '8', '10', '8', '10'],
 ];
 
+$fragSeconds = $normalizeFragDurationSeconds(
+    $configLuaValue(['timeToDecreaseFrags'], 12 * 3600),
+    12 * 3600
+);
+$redSkullSeconds = $normalizeFragDurationSeconds(
+    $configLuaValue(['redSkullLength', 'redSkullDuration'], 5 * 86400),
+    5 * 86400,
+    true
+);
+$blackSkullSeconds = $normalizeFragDurationSeconds(
+    $configLuaValue(['blackSkullLength', 'blackSkullDuration'], 14 * 86400),
+    14 * 86400,
+    true
+);
+
 $fragDurations = [
-    ['Frag', $formatDuration((int)$configLuaValue(['timeToDecreaseFrags'], 12 * 3600))],
-    ['Red Skull', $formatDuration((int)$configLuaValue(['redSkullLength', 'redSkullDuration'], 5 * 86400))],
-    ['Black Skull', $formatDuration((int)$configLuaValue(['blackSkullLength', 'blackSkullDuration'], 14 * 86400))],
+    ['Frag', $formatDuration($fragSeconds)],
+    ['Red Skull', $formatDuration($redSkullSeconds)],
+    ['Black Skull', $formatDuration($blackSkullSeconds)],
 ];
 
 $fragKills = [
