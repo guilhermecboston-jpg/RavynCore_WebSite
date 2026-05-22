@@ -553,7 +553,7 @@ body.rc-page-serverinfo .rc-rich-content .rc-si-stat-mp {
     <section class="rc-si-section">
         <h2 class="rc-si-title">Party Bonus</h2>
         <div class="rc-si-body">
-            <p class="rc-si-note">Note: Experience bonus based on party composition with different vocations.</p>
+            <p class="rc-si-note">Note: Experience bonus based on party composition with different vocations. Shared exp ONLY while all members are on the same FLOOR.</p>
             <table class="rc-si-table">
                 <thead>
                 <tr>
