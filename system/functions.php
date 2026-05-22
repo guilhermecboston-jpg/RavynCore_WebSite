@@ -1750,6 +1750,118 @@ function getAccountLoyaltyTitle($loyaltyPoints): string
   return 'None';
 }
 
+function getAccountLegacyLoyaltyPointsBatch(array $accountIds = []): array
+{
+  global $db, $config;
+
+  $ids = [];
+  foreach ($accountIds as $accountId) {
+    $accountId = (int)$accountId;
+    if ($accountId > 0) {
+      $ids[$accountId] = true;
+    }
+  }
+  $ids = array_keys($ids);
+
+  if (empty($ids)) {
+    return [];
+  }
+
+  $result = [];
+  foreach ($ids as $accountId) {
+    $result[$accountId] = 0;
+  }
+
+  if (
+    !isset($db) ||
+    !method_exists($db, 'hasTable') ||
+    !method_exists($db, 'hasColumn') ||
+    !$db->hasTable('accounts')
+  ) {
+    return $result;
+  }
+
+  $findFirstExistingColumn = static function (string $table, array $candidates) use ($db): ?string {
+    foreach ($candidates as $column) {
+      if ($db->hasColumn($table, $column)) {
+        return $column;
+      }
+    }
+
+    return null;
+  };
+
+  $loyaltyPointsColumn = $findFirstExistingColumn('accounts', ['loyalty_points', 'loyaltyPoints', 'loyaltypoints']);
+  $premdaysColumn = $findFirstExistingColumn('accounts', ['premdays_purchased', 'premdaysPurchased', 'premium_days_purchased', 'premiumDaysPurchased']);
+  $createdColumn = $findFirstExistingColumn('accounts', ['created', 'creation', 'created_at', 'registered_at']);
+
+  if (!$loyaltyPointsColumn && !$premdaysColumn && !$createdColumn) {
+    return $result;
+  }
+
+  $columns = ['`id`'];
+  if ($loyaltyPointsColumn) {
+    $columns[] = '`' . $loyaltyPointsColumn . '` AS `legacy_loyalty_points`';
+  }
+  if ($premdaysColumn) {
+    $columns[] = '`' . $premdaysColumn . '` AS `legacy_premdays_purchased`';
+  }
+  if ($createdColumn) {
+    $columns[] = '`' . $createdColumn . '` AS `legacy_created_at`';
+  }
+
+  $placeholders = implode(', ', array_fill(0, count($ids), '?'));
+  $sql = 'SELECT ' . implode(', ', $columns) . ' FROM `accounts` WHERE `id` IN (' . $placeholders . ')';
+  $legacyFormulaEnabled = !isset($config['ravyncore_loyalty_use_legacy_fallback']) ||
+    getBoolean($config['ravyncore_loyalty_use_legacy_fallback']);
+
+  try {
+    $stmt = $db->prepare($sql);
+    foreach ($ids as $index => $accountId) {
+      $stmt->bindValue($index + 1, (int)$accountId, PDO::PARAM_INT);
+    }
+    $stmt->execute();
+
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+      $accountId = (int)($row['id'] ?? 0);
+      if ($accountId <= 0) {
+        continue;
+      }
+
+      $explicitPoints = isset($row['legacy_loyalty_points']) ? max(0, (int)$row['legacy_loyalty_points']) : 0;
+      $legacyFormulaPoints = 0;
+
+      if ($legacyFormulaEnabled) {
+        $premdaysPurchased = isset($row['legacy_premdays_purchased']) ? max(0, (int)$row['legacy_premdays_purchased']) : 0;
+        $createdTimestamp = 0;
+
+        if (array_key_exists('legacy_created_at', $row)) {
+          $createdValue = $row['legacy_created_at'];
+          if (is_numeric($createdValue)) {
+            $createdTimestamp = (int)$createdValue;
+          } elseif (is_string($createdValue) && trim($createdValue) !== '') {
+            $parsed = strtotime($createdValue);
+            if ($parsed !== false) {
+              $createdTimestamp = (int)$parsed;
+            }
+          }
+        }
+
+        $accountAgeDays = $createdTimestamp > 0
+          ? (int)floor(max(0, time() - $createdTimestamp) / 86400)
+          : 0;
+        $legacyFormulaPoints = max(0, $accountAgeDays + ($premdaysPurchased * 4));
+      }
+
+      $result[$accountId] = max($explicitPoints, $legacyFormulaPoints);
+    }
+  } catch (\Exception $e) {
+    log_append('loyalty_errors.log', date('Y-m-d H:i:s') . ' accounts legacy query error: ' . $e->getMessage());
+  }
+
+  return $result;
+}
+
 function getAccountLoyaltyPointsBatch(array $accountIds = []): array
 {
   global $db, $config;
@@ -1947,10 +2059,14 @@ function getAccountLoyaltyPointsBatch(array $accountIds = []): array
     }
   }
 
+  $legacyPointsByAccount = getAccountLegacyLoyaltyPointsBatch($filterIds);
+
   $result = [];
   if (!empty($filterIds)) {
     foreach ($filterIds as $accountId) {
-      $result[$accountId] = max(0, (int)floor((float)($totalsByAccount[$accountId] ?? 0)));
+      $purchasePoints = max(0, (int)floor((float)($totalsByAccount[$accountId] ?? 0)));
+      $legacyPoints = max(0, (int)($legacyPointsByAccount[$accountId] ?? 0));
+      $result[$accountId] = $purchasePoints > 0 ? $purchasePoints : $legacyPoints;
     }
     return $result;
   }
@@ -1961,6 +2077,18 @@ function getAccountLoyaltyPointsBatch(array $accountIds = []): array
       continue;
     }
     $result[$accountId] = max(0, (int)floor((float)$totalBrl));
+  }
+
+  foreach ($legacyPointsByAccount as $accountId => $legacyPoints) {
+    $accountId = (int)$accountId;
+    if ($accountId <= 0) {
+      continue;
+    }
+
+    $legacyPoints = max(0, (int)$legacyPoints);
+    if (!isset($result[$accountId]) || (int)$result[$accountId] <= 0) {
+      $result[$accountId] = $legacyPoints;
+    }
   }
 
   return $result;

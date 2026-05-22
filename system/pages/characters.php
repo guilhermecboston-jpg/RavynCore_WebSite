@@ -67,7 +67,7 @@
     }
 </style>
 
-<?php global $db, $config, $template_path, $twig, $achievements ?>
+<?php global $db, $config, $template_path, $twig ?>
 <?php
 /**
  * Characters
@@ -627,24 +627,6 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
         }
     }
 
-    $achievementPoints = 0;
-    $listAchievement = [];
-    require_once BASE . '/tools/achievements.php';
-    foreach ($achievements as $achievement => $value) {
-        $achievementStorage = $config['achievements_base'] + $achievement;
-        $achievementsPlayer = $db->query("SELECT `key`, `value` FROM `player_storage` WHERE `key` = {$achievementStorage} AND `player_id` = {$player->getId()}")->fetch();
-        if ($achievementsPlayer && $achievementsPlayer['key'] == $achievementStorage) {
-            $achievementPoints = $achievementPoints + $value['points'];
-            $insertAchievement = [
-                'BASE_URL' => BASE_URL,
-                'PATH_URL' => $template_path,
-                'name'     => $value['name'],
-                'grade'    => $value['grade'],
-                'secret'   => $value['secret'] ?? false,
-            ];
-        }
-    }
-    $listAchievement[] = $insertAchievement ?? [];
     $formerNames = get_former_names($player->getName());
     if (!empty($oldName)) {
         $oldNameClean = str_replace('Former name:', '', strip_tags($oldName));
@@ -657,8 +639,6 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
     $twig->display('characters.search_rc_dark.html.twig', array(
         'outfit' => $outfit ?? null,
         'player' => $player,
-        'achievementPoints' => $achievementPoints,
-        'achievements' => $listAchievement,
         'account' => $account,
         'expCurrent' => $expCurrent,
         'expNext' => $expNext,
