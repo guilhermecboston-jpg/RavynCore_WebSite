@@ -78,6 +78,17 @@ if (isset($_GET['supremetasks']) && !isset($_GET['subtopic']) && !isset($_GET['p
     $_REQUEST['subtopic'] = 'supremetasks';
 }
 
+// compatibility alias for legacy highscores links without subtopic
+if (
+    !isset($_GET['subtopic']) &&
+    !isset($_GET['p']) &&
+    (isset($_GET['list']) || isset($_GET['category']) || isset($_GET['vocation']) || isset($_GET['world']) || isset($_GET['world_type'])) &&
+    !isset($_GET['name'])
+) {
+    $_GET['subtopic'] = 'highscores';
+    $_REQUEST['subtopic'] = 'highscores';
+}
+
 $found = false;
 if (empty($uri) || isset($_REQUEST['template'])) {
     $_REQUEST['p'] = 'news';
@@ -326,6 +337,12 @@ if ($load_it) {
 
     $content .= ob_get_contents();
     ob_end_clean();
+
+    if (in_array($page, ['characters', 'accountmanagement'], true)) {
+        $content = str_ireplace('Achievement Points:', 'Loyalt Points:', $content);
+        $content = str_ireplace('Achievement Points', 'Loyalt Points', $content);
+    }
+
     $hooks->trigger(HOOK_AFTER_PAGE);
 }
 
