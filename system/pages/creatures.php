@@ -24,7 +24,7 @@ if (empty($race)) {
 		'legs' => (int)$monsterlegs,
 		'feet' => (int)$monsterfeet,
 		'mount' => (int)$monstermount,
-		'direction' => 2,
+		'direction' => 0,
 	]);
 
 	echo $twig->render('library/library.html.twig', $replaces);

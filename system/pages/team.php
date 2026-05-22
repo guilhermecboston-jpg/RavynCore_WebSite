@@ -58,7 +58,7 @@ foreach ($groupList as $id => $group) {
                 'body' => $member->getLookBody(),
                 'legs' => $member->getLookLegs(),
                 'feet' => $member->getLookFeet(),
-                'direction' => 2,
+                'direction' => 0,
             ]) : null,
             'status' => $config['team_display_status'] ? $member->isOnline() : null,
             'link' => getPlayerLink($member->getName()),

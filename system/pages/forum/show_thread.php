@@ -55,7 +55,7 @@ foreach ($posts as &$post) {
             'body' => $player->getLookBody(),
             'legs' => $player->getLookLegs(),
             'feet' => $player->getLookFeet(),
-            'direction' => 2,
+            'direction' => 0,
         ]);
     }
 

@@ -27,7 +27,7 @@
 
   var manifestCache = {};
   var imageCache = {};
-  var DEFAULT_OUTFIT_DIRECTION = 2;
+  var DEFAULT_OUTFIT_DIRECTION = 0;
 
   function colorMultiplier(id) {
     var value = outfitColors[id] || 0;

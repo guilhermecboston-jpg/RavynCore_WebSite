@@ -156,7 +156,7 @@ if ($player->isLoaded() && !$player->isDeleted()) {
             'body' => $player->getLookBody(),
             'legs' => $player->getLookLegs(),
             'feet' => $player->getLookFeet(),
-            'direction' => 2,
+            'direction' => 0,
         ]);
 
     $flag = '';
@@ -583,7 +583,7 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
                         'body' => $player->getLookBody(),
                         'legs' => $player->getLookLegs(),
                         'feet' => $player->getLookFeet(),
-                        'direction' => 2,
+                        'direction' => 0,
                     ])
                 ];
             }
@@ -627,7 +627,7 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
                         'body' => $player->getLookBody(),
                         'legs' => $player->getLookLegs(),
                         'feet' => $player->getLookFeet(),
-                        'direction' => 2,
+                        'direction' => 0,
                     ])
                 ];
             }

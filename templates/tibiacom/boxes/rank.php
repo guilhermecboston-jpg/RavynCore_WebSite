@@ -80,7 +80,7 @@
                     'body' => (int)$player['lookbody'],
                     'legs' => (int)$player['looklegs'],
                     'feet' => (int)$player['lookfeet'],
-                    'direction' => 2,
+                    'direction' => 0,
                 ]);
                 $outfit_html = '<img class="rc-themebox-outfit" src="' . htmlspecialchars($outfitUrl, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($player['name'] . ' outfit', ENT_QUOTES, 'UTF-8') . '">';
             }

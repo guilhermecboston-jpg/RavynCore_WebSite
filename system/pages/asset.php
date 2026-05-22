@@ -120,7 +120,7 @@ switch ($type) {
 			'legs' => max(0, (int)($_REQUEST['legs'] ?? 78)),
 			'feet' => max(0, (int)($_REQUEST['feet'] ?? 69)),
 			'mount' => max(0, (int)($_REQUEST['mount'] ?? 0)),
-			'direction' => max(0, (int)($_REQUEST['direction'] ?? 2)),
+			'direction' => max(0, (int)($_REQUEST['direction'] ?? 0)),
 		]);
 		break;
 
@@ -135,7 +135,7 @@ switch ($type) {
 			'legs' => max(0, (int)($_REQUEST['legs'] ?? 78)),
 			'feet' => max(0, (int)($_REQUEST['feet'] ?? 69)),
 			'mount' => $id,
-			'direction' => max(0, (int)($_REQUEST['direction'] ?? 2)),
+			'direction' => max(0, (int)($_REQUEST['direction'] ?? 0)),
 		]);
 		break;
 
