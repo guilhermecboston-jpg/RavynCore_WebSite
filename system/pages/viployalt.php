@@ -236,7 +236,7 @@ body.rc-page-viployalt .rc-rich-content .rc-vl-center {
         <div class="rc-vl-body">
             <ul class="rc-vl-note">
                 <li>This bonus is linked to your <em>account</em>, therefore it is a <strong>non-transferable</strong> bonus.</li>
-                <li>By purchasing the <strong>monthly</strong> VIP package in our store, your account will receive <strong>1 loyalty point</strong>.</li>
+                <li>By purchasing the <strong>monthly</strong> VIP package in our store, your account will receive <strong>120 loyalty point</strong>.</li>
                 <li>All characters on the account receive the skill bonus corresponding to the title.</li>
                 <li>To check your loyalty level, just look at your <em>server log</em> when accessing any character in the game.</li>
             </ul>
@@ -280,7 +280,7 @@ body.rc-page-viployalt .rc-rich-content .rc-vl-center {
             <p class="rc-vl-footer-note">
                 The point for purchasing a <strong>30-day VIP</strong> in the store is automatically credited to your account, without
                 needing the days to pass like on the global server. Additionally, we have a fixed and progressive bonus up to
-                <strong>+10 skill</strong>. It is an eternal bonus for your account, which is why the cost is <em>progressive</em> -
+                <strong>+20 skill</strong>. It is an eternal bonus for your account, which is why the cost is <em>progressive</em> -
                 we do not want it to be easily accessible to players since many invest a lot of time in skill training.
             </p>
         </div>
