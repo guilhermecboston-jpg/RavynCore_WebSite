@@ -443,7 +443,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
     <section class="esb-section">
         <h2 class="esb-title">Elemental Stones Bonuses</h2>
         <div class="esb-body">
-            <p class="esb-text">Stone catalog with item IDs. If an image is not available yet, add it later and it will automatically appear by the same ID.</p>
+            <p class="esb-text">Stone catalog by level. Images are loaded automatically when available.</p>
             <table class="esb-table">
                 <thead>
                 <tr>
@@ -476,8 +476,6 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                             <td class="esb-stone-cell">
                                 <span class="esb-item-cell">
                                     <?= getItemImage($itemId) ?>
-                                    <span class="esb-item-qty">x1</span>
-                                    <span class="esb-item-code">ID <?= $itemId ?></span>
                                 </span>
                             </td>
                         <?php } ?>
@@ -582,12 +580,10 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                                     <span class="esb-fusion-pair">
                                         <span class="esb-fusion-item" title="<?= htmlspecialchars($fromTitle, ENT_QUOTES, 'UTF-8') ?>">
                                             <?= getItemImage($fromItemId) ?>
-                                            <span class="esb-fusion-id">ID <?= $fromItemId ?></span>
                                         </span>
                                         <span class="esb-fusion-arrow">&rarr;</span>
                                         <span class="esb-fusion-item" title="<?= htmlspecialchars($toTitle, ENT_QUOTES, 'UTF-8') ?>">
                                             <?= getItemImage($toItemId) ?>
-                                            <span class="esb-fusion-id">ID <?= $toItemId ?></span>
                                         </span>
                                     </span>
                                 <?php } ?>
@@ -600,22 +596,19 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                                 $fromIds[] = (int)$stoneLevels[$stoneColor][(int)$step['from']];
                             }
                             $fromPreviewId = (int)$fromIds[0];
-                            $fromIdsTooltip = 'Stone IDs: ' . implode(', ', $fromIds);
                             ?>
                             <div class="esb-cost-inline">
                                 <span class="esb-cost-item">
                                     <?= getItemImage(3031) ?>
                                     <span class="esb-cost-meta">
                                         <strong><?= htmlspecialchars($step['gold'], ENT_QUOTES, 'UTF-8') ?></strong>
-                                        <span>ID 3031</span>
                                     </span>
                                 </span>
                                 <span class="esb-cost-plus">+</span>
-                                <span class="esb-cost-item" title="<?= htmlspecialchars($fromIdsTooltip, ENT_QUOTES, 'UTF-8') ?>">
+                                <span class="esb-cost-item">
                                     <?= getItemImage($fromPreviewId) ?>
                                     <span class="esb-cost-meta">
                                         <strong>x<?= (int)$step['stone_qty'] ?></strong>
-                                        <span>IDs do nivel</span>
                                     </span>
                                 </span>
                                 <span class="esb-cost-plus">+</span>
@@ -623,7 +616,6 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                                     <?= getItemImage(60581) ?>
                                     <span class="esb-cost-meta">
                                         <strong>x<?= (int)$step['dust_qty'] ?></strong>
-                                        <span>ID 60581</span>
                                     </span>
                                 </span>
                             </div>
@@ -637,7 +629,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
     </section>
 
     <section class="esb-section">
-        <h2 class="esb-title">Stone Dust (60581) Generation</h2>
+        <h2 class="esb-title">Stone Dust Generation</h2>
         <div class="esb-body">
             <p class="esb-text">How Stone Dust is generated from Bag of Stone + Crystal Coin.</p>
             <table class="esb-table">
@@ -655,14 +647,14 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                         <td>
                             <div class="esb-attr-cell">
                                 <?= getItemImage((int)$row['bag_id']) ?>
-                                <span><?= htmlspecialchars($row['bag_name'], ENT_QUOTES, 'UTF-8') ?> (#<?= (int)$row['bag_id'] ?>)</span>
+                                <span>x1</span>
                             </div>
                         </td>
                         <td><?= htmlspecialchars($row['cost'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td>
                             <div class="esb-attr-cell">
                                 <?= getItemImage(60581) ?>
-                                <span><?= (int)$row['dust_qty'] ?>x Stone Dust (#60581)</span>
+                                <span>x<?= (int)$row['dust_qty'] ?></span>
                             </div>
                         </td>
                         <td><strong>100%</strong></td>
