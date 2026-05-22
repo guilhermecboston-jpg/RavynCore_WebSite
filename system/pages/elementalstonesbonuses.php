@@ -54,21 +54,21 @@ $increaseRows = [
 ];
 
 $fusionSteps = [
-    ['from' => 0, 'to' => 1, 'gold' => '1kk', 'stone_qty' => 3, 'dust_qty' => 1, 'chance' => 100],
-    ['from' => 1, 'to' => 2, 'gold' => '2kk', 'stone_qty' => 3, 'dust_qty' => 2, 'chance' => 90],
-    ['from' => 2, 'to' => 3, 'gold' => '5kk', 'stone_qty' => 3, 'dust_qty' => 3, 'chance' => 80],
-    ['from' => 3, 'to' => 4, 'gold' => '10kk', 'stone_qty' => 3, 'dust_qty' => 4, 'chance' => 55],
-    ['from' => 4, 'to' => 5, 'gold' => '20kk', 'stone_qty' => 3, 'dust_qty' => 5, 'chance' => 50],
-    ['from' => 5, 'to' => 6, 'gold' => '40kk', 'stone_qty' => 3, 'dust_qty' => 6, 'chance' => 45],
-    ['from' => 6, 'to' => 7, 'gold' => '75kk', 'stone_qty' => 3, 'dust_qty' => 7, 'chance' => 40],
-    ['from' => 7, 'to' => 8, 'gold' => '200kk', 'stone_qty' => 3, 'dust_qty' => 8, 'chance' => 35],
-    ['from' => 8, 'to' => 9, 'gold' => '600kk', 'stone_qty' => 3, 'dust_qty' => 9, 'chance' => 30],
+    ['from' => 0, 'to' => 1, 'gold' => '2kk', 'stone_qty' => 3, 'dust_qty' => 1, 'chance' => 90],
+    ['from' => 1, 'to' => 2, 'gold' => '5kk', 'stone_qty' => 3, 'dust_qty' => 2, 'chance' => 80],
+    ['from' => 2, 'to' => 3, 'gold' => '10kk', 'stone_qty' => 3, 'dust_qty' => 3, 'chance' => 55],
+    ['from' => 3, 'to' => 4, 'gold' => '20kk', 'stone_qty' => 3, 'dust_qty' => 4, 'chance' => 45],
+    ['from' => 4, 'to' => 5, 'gold' => '40kk', 'stone_qty' => 3, 'dust_qty' => 5, 'chance' => 35],
+    ['from' => 5, 'to' => 6, 'gold' => '75kk', 'stone_qty' => 3, 'dust_qty' => 6, 'chance' => 30],
+    ['from' => 6, 'to' => 7, 'gold' => '200kk', 'stone_qty' => 3, 'dust_qty' => 7, 'chance' => 25],
+    ['from' => 7, 'to' => 8, 'gold' => '600kk', 'stone_qty' => 3, 'dust_qty' => 8, 'chance' => 20],
+    ['from' => 8, 'to' => 9, 'gold' => '800kk', 'stone_qty' => 3, 'dust_qty' => 9, 'chance' => 15],
 ];
 
 $transformRows = [
-    ['bag_id' => 60576, 'bag_name' => 'Bag of Stone 1', 'cost' => '1kk + 1x Crystal Coin', 'dust_qty' => 1],
-    ['bag_id' => 60577, 'bag_name' => 'Bag of Stone 2', 'cost' => '2kk + 1x Crystal Coin', 'dust_qty' => 2],
-    ['bag_id' => 60578, 'bag_name' => 'Bag of Stone 3', 'cost' => '3kk + 1x Crystal Coin', 'dust_qty' => 3],
+    ['bag_id' => 60576, 'coin_cost' => '1kk', 'dust_qty' => 1],
+    ['bag_id' => 60577, 'coin_cost' => '2kk', 'dust_qty' => 2],
+    ['bag_id' => 60578, 'coin_cost' => '3kk', 'dust_qty' => 3],
 ];
 
 if (!function_exists('esb_percent_value')) {
@@ -599,9 +599,10 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                             ?>
                             <div class="esb-cost-inline">
                                 <span class="esb-cost-item">
-                                    <?= getItemImage(3031) ?>
+                                    <?= getItemImage(3043) ?>
                                     <span class="esb-cost-meta">
                                         <strong><?= htmlspecialchars($step['gold'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                        <span>Crystal Coin</span>
                                     </span>
                                 </span>
                                 <span class="esb-cost-plus">+</span>
@@ -629,9 +630,9 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
     </section>
 
     <section class="esb-section">
-        <h2 class="esb-title">Stone Dust Generation</h2>
+        <h2 class="esb-title">Conversion</h2>
         <div class="esb-body">
-            <p class="esb-text">How Stone Dust is generated from Bag of Stone + Crystal Coin.</p>
+            <p class="esb-text">Convert Bag of Stone into Stone Dust using Crystal Coins.</p>
             <table class="esb-table">
                 <thead>
                 <tr>
@@ -645,16 +646,36 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                 <?php foreach ($transformRows as $row) { ?>
                     <tr>
                         <td>
-                            <div class="esb-attr-cell">
-                                <?= getItemImage((int)$row['bag_id']) ?>
-                                <span>x1</span>
+                            <div class="esb-cost-inline">
+                                <span class="esb-cost-item">
+                                    <?= getItemImage((int)$row['bag_id']) ?>
+                                    <span class="esb-cost-meta">
+                                        <strong>x1</strong>
+                                        <span><?= (int)$row['bag_id'] ?></span>
+                                    </span>
+                                </span>
                             </div>
                         </td>
-                        <td><?= htmlspecialchars($row['cost'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td>
-                            <div class="esb-attr-cell">
-                                <?= getItemImage(60581) ?>
-                                <span>x<?= (int)$row['dust_qty'] ?></span>
+                            <div class="esb-cost-inline">
+                                <span class="esb-cost-item">
+                                    <?= getItemImage(3043) ?>
+                                    <span class="esb-cost-meta">
+                                        <strong><?= htmlspecialchars($row['coin_cost'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                        <span>Crystal Coin (3043)</span>
+                                    </span>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="esb-cost-inline">
+                                <span class="esb-cost-item">
+                                    <?= getItemImage(60581) ?>
+                                    <span class="esb-cost-meta">
+                                        <strong>x<?= (int)$row['dust_qty'] ?></strong>
+                                        <span>60581</span>
+                                    </span>
+                                </span>
                             </div>
                         </td>
                         <td><strong>100%</strong></td>
