@@ -90,7 +90,8 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                             <div><span>Soul</span><strong><?= isset($character['player']['soul']) ? (int)$character['player']['soul'] : 0 ?></strong></div>
                             <div><span>Blessings</span><strong><?= (int)$character['blessings_count'] ?></strong></div>
                             <div><span>Creation Date</span><strong><?= htmlspecialchars((string)$character['creation_date']) ?></strong></div>
-                            <div><span>Achievement Points</span><strong><?= isset($character['player']['achievement_points']) ? (int)$character['player']['achievement_points'] : 0 ?></strong></div>
+                            <div><span>Loyalty Title</span><strong><?= htmlspecialchars((string)$character['loyalty_title']) ?></strong></div>
+                            <div><span>Loyalty Points</span><strong><?= number_format((int)$character['loyalty_points'], 0, ',', '.') ?></strong></div>
                             <div class="rc-cbz-inline-action"><span>Full Addons</span><strong><?= (int)$character['full_addons_count'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-addons">View</a></strong></div>
                             <div class="rc-cbz-inline-action"><span>Mounts</span><strong><?= (int)$character['mounts_count'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-mounts">View</a></strong></div>
                         </div>

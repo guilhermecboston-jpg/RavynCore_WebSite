@@ -250,6 +250,20 @@ if (!empty($selectedWorldTypes) && $worldIdColumnExists && !empty($worldTypeMap)
 $whereSql = implode(' AND ', $conditions);
 $worldSelect = $worldIdColumnExists ? ', players.world_id' : '';
 
+$accountCreatedColumn = $findFirstExistingColumn('accounts', ['created', 'creation', 'created_at', 'registered_at']);
+$accountPremdaysPurchasedColumn = $findFirstExistingColumn('accounts', ['premdays_purchased', 'premdaysPurchased', 'premium_days_purchased', 'premiumDaysPurchased']);
+$accountLoyaltyPointsColumn = $findFirstExistingColumn('accounts', ['loyalty_points', 'loyaltyPoints', 'loyaltypoints']);
+$accountLoyaltySelect = ', accounts.id AS account_id';
+if ($accountCreatedColumn) {
+    $accountLoyaltySelect .= ', accounts.`' . $accountCreatedColumn . '` AS account_created';
+}
+if ($accountPremdaysPurchasedColumn) {
+    $accountLoyaltySelect .= ', accounts.`' . $accountPremdaysPurchasedColumn . '` AS account_premdays_purchased';
+}
+if ($accountLoyaltyPointsColumn) {
+    $accountLoyaltySelect .= ', accounts.`' . $accountLoyaltyPointsColumn . '` AS account_loyalty_points';
+}
+
 $limit = $config['highscores_length'] ?? 50;
 if (!is_int($limit) && !ctype_digit((string)$limit)) {
     $limit = 50;
@@ -280,7 +294,7 @@ if ($activeType === 'skill') {
 $skills = [];
 if ($skill === SKILL_CUSTOM_COLUMN && $customColumn !== null) {
     $skills = $db->query(
-        'SELECT accounts.country, players.id, players.name' . $online . ', level, experience, vocation' . $promotion . $worldSelect . ', players.`' . $customColumn . '` AS value ' .
+        'SELECT accounts.country, players.id, players.name' . $online . ', level, experience, vocation' . $promotion . $worldSelect . $accountLoyaltySelect . ', players.`' . $customColumn . '` AS value ' .
         'FROM accounts, players ' .
         'WHERE ' . $whereSql . ' AND accounts.id = players.account_id ' .
         'ORDER BY value DESC, level DESC, players.name ASC ' .
@@ -298,7 +312,7 @@ if ($skill === SKILL_CUSTOM_COLUMN && $customColumn !== null) {
             POT::SKILL_FISH => 'skill_fishing',
         ];
         $skills = $db->query(
-            'SELECT accounts.country, players.id, players.name' . $online . ', level, vocation' . $promotion . $worldSelect . ', ' . $skillIds[$skill] . ' AS value ' .
+            'SELECT accounts.country, players.id, players.name' . $online . ', level, vocation' . $promotion . $worldSelect . $accountLoyaltySelect . ', ' . $skillIds[$skill] . ' AS value ' .
             'FROM accounts, players ' .
             'WHERE ' . $whereSql . ' AND accounts.id = players.account_id ' .
             'ORDER BY ' . $skillIds[$skill] . ' DESC, players.name ASC ' .
@@ -306,7 +320,7 @@ if ($skill === SKILL_CUSTOM_COLUMN && $customColumn !== null) {
         )->fetchAll();
     } else {
         $skills = $db->query(
-            'SELECT accounts.country, players.id, players.name' . $online . ', player_skills.value, level, vocation' . $promotion . $worldSelect . ' ' .
+            'SELECT accounts.country, players.id, players.name' . $online . ', player_skills.value, level, vocation' . $promotion . $worldSelect . $accountLoyaltySelect . ' ' .
             'FROM accounts, players, player_skills ' .
             'WHERE ' . $whereSql . ' AND players.id = player_skills.player_id AND player_skills.skillid = ' . $skill . ' AND accounts.id = players.account_id ' .
             'ORDER BY player_skills.value DESC, player_skills.count DESC, players.name ASC ' .
@@ -315,21 +329,21 @@ if ($skill === SKILL_CUSTOM_COLUMN && $customColumn !== null) {
     }
 } elseif ($skill === SKILL_FRAGS && $config['otserv_version'] == TFS_03 && $config['highscores_frags']) {
     $skills = $db->query(
-        'SELECT accounts.country, players.id, players.name' . $online . ', level, vocation' . $promotion . $worldSelect . ', COUNT(player_killers.player_id) AS value ' .
+        'SELECT accounts.country, players.id, players.name' . $online . ', level, vocation' . $promotion . $worldSelect . $accountLoyaltySelect . ', COUNT(player_killers.player_id) AS value ' .
         'FROM accounts, players, player_killers ' .
         'WHERE ' . $whereSql . ' AND players.id = player_killers.player_id AND accounts.id = players.account_id ' .
         'GROUP BY player_id ORDER BY value DESC LIMIT ' . $limit_ . ' OFFSET ' . $offset
     )->fetchAll();
 } elseif ($skill === SKILL_BALANCE && $config['highscores_balance']) {
     $skills = $db->query(
-        'SELECT accounts.country, players.id, players.name' . $online . ', level, balance AS value, vocation' . $promotion . $worldSelect . ' ' .
+        'SELECT accounts.country, players.id, players.name' . $online . ', level, balance AS value, vocation' . $promotion . $worldSelect . $accountLoyaltySelect . ' ' .
         'FROM accounts, players ' .
         'WHERE ' . $whereSql . ' AND accounts.id = players.account_id ' .
         'ORDER BY value DESC, name ASC LIMIT ' . $limit_ . ' OFFSET ' . $offset
     )->fetchAll();
 } elseif ($skill === POT::SKILL_MAGLEVEL) {
     $skills = $db->query(
-        'SELECT accounts.country, players.id, players.name' . $online . ', maglevel, level, vocation' . $promotion . $worldSelect . ' ' .
+        'SELECT accounts.country, players.id, players.name' . $online . ', maglevel, level, vocation' . $promotion . $worldSelect . $accountLoyaltySelect . ' ' .
         'FROM accounts, players ' .
         'WHERE ' . $whereSql . ' AND accounts.id = players.account_id ' .
         'ORDER BY maglevel DESC, manaspent DESC, players.name ASC LIMIT ' . $limit_ . ' OFFSET ' . $offset
@@ -337,7 +351,7 @@ if ($skill === SKILL_CUSTOM_COLUMN && $customColumn !== null) {
 } else {
     $activeCategory = 'experience';
     $skills = $db->query(
-        'SELECT accounts.country, players.id, players.name' . $online . ', level, experience, vocation' . $promotion . $worldSelect . ' ' .
+        'SELECT accounts.country, players.id, players.name' . $online . ', level, experience, vocation' . $promotion . $worldSelect . $accountLoyaltySelect . ' ' .
         'FROM accounts, players ' .
         'WHERE ' . $whereSql . ' AND accounts.id = players.account_id ' .
         'ORDER BY level DESC, experience DESC, players.name ASC LIMIT ' . $limit_ . ' OFFSET ' . $offset
@@ -703,6 +717,8 @@ body.rc-page-highscores .rc-rich-content .rc-hs-empty {
                     <th>Name</th>
                     <th>Vocation</th>
                     <th>World</th>
+                    <th>Loyalty Title</th>
+                    <th class="rc-hs-right">Loyalty Points</th>
                     <th class="rc-hs-right">Level</th>
                     <th class="rc-hs-right"><?= htmlspecialchars($valueColumnLabel, ENT_QUOTES, 'UTF-8') ?></th>
                 </tr>
@@ -740,6 +756,15 @@ body.rc-page-highscores .rc-rich-content .rc-hs-empty {
                         $worldName = $worldNameMap[$worldId] ?? $worldName;
                     }
 
+                    $loyaltyData = [
+                        'id' => isset($player['account_id']) ? (int)$player['account_id'] : 0,
+                        'created' => $player['account_created'] ?? null,
+                        'premdays_purchased' => $player['account_premdays_purchased'] ?? null,
+                        'loyalty_points' => $player['account_loyalty_points'] ?? null,
+                    ];
+                    $playerLoyaltyPoints = ravynLoyaltyPoints($loyaltyData);
+                    $playerLoyaltyTitle = ravynLoyaltyTitle($playerLoyaltyPoints);
+
                     $playerLevel = (int)($player['level'] ?? 0);
                     $valueNumber = 0;
                     if ($activeCategory === 'experience') {
@@ -759,6 +784,8 @@ body.rc-page-highscores .rc-rich-content .rc-hs-empty {
                         </td>
                         <td><?= htmlspecialchars($vocationName, ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string)$worldName, ENT_QUOTES, 'UTF-8') ?></td>
+                        <td><?= htmlspecialchars($playerLoyaltyTitle, ENT_QUOTES, 'UTF-8') ?></td>
+                        <td class="rc-hs-right"><?= $formatRankingNumber($playerLoyaltyPoints) ?></td>
                         <td class="rc-hs-right"><?= $formatRankingNumber($playerLevel) ?></td>
                         <td class="rc-hs-right"><strong><?= $formatRankingNumber($valueNumber) ?></strong></td>
                     </tr>
@@ -766,7 +793,7 @@ body.rc-page-highscores .rc-rich-content .rc-hs-empty {
 
                 <?php if ($rowsShown === 0) { ?>
                     <tr>
-                        <td colspan="6" class="rc-hs-empty">No records found.</td>
+                        <td colspan="8" class="rc-hs-empty">No records found.</td>
                     </tr>
                 <?php } ?>
                 </tbody>

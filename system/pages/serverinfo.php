@@ -1,9 +1,97 @@
 <?php
 defined('MYAAC') or die('Direct access not allowed!');
 
+global $config;
+
 $title = 'Server Info';
 
-$serverSaveRaw = trim((string)(configLua('globalServerSaveTime') ?? '10:00:00'));
+$configLuaValue = static function (array $keys, $default = null) {
+    foreach ($keys as $key) {
+        $value = configLua($key);
+        if ($value !== null && $value !== '') {
+            return $value;
+        }
+    }
+
+    return $default;
+};
+
+$formatMultiplier = static function ($value): string {
+    if (!is_numeric($value)) {
+        return '-';
+    }
+
+    $number = (float)$value;
+    if (abs($number - floor($number)) < 0.00001) {
+        return (int)$number . 'x';
+    }
+
+    return rtrim(rtrim(number_format($number, 2, '.', ''), '0'), '.') . 'x';
+};
+
+$formatDuration = static function ($seconds): string {
+    if (!is_numeric($seconds)) {
+        return '-';
+    }
+
+    $seconds = max(0, (int)$seconds);
+    if ($seconds === 0) {
+        return '0';
+    }
+
+    $units = [
+        86400 => 'day',
+        3600 => 'hour',
+        60 => 'minute',
+        1 => 'second',
+    ];
+
+    foreach ($units as $unitSeconds => $unitName) {
+        if ($seconds >= $unitSeconds && $seconds % $unitSeconds === 0) {
+            $value = (int)($seconds / $unitSeconds);
+            return $value . ' ' . $unitName . ($value === 1 ? '' : 's');
+        }
+    }
+
+    return $seconds . ' seconds';
+};
+
+$formatRentPeriod = static function ($value) use ($formatDuration): string {
+    if ($value === null || $value === '') {
+        return '7 days';
+    }
+
+    if (is_numeric($value)) {
+        $numeric = (float)$value;
+        if ($numeric <= 31) {
+            $days = (int)max(1, round($numeric));
+            return $days . ' day' . ($days === 1 ? '' : 's');
+        }
+
+        return $formatDuration((int)$numeric);
+    }
+
+    $normalized = strtolower(trim((string)$value));
+    $map = [
+        'daily' => '1 day',
+        'day' => '1 day',
+        'weekly' => '7 days',
+        'week' => '7 days',
+        'monthly' => '30 days',
+        'month' => '30 days',
+        'yearly' => '365 days',
+        'year' => '365 days',
+        'never' => 'Never',
+    ];
+
+    if (isset($map[$normalized])) {
+        return $map[$normalized];
+    }
+
+    return (string)$value;
+};
+
+$serverSaveRaw = trim((string)$configLuaValue(['globalServerSaveTime', 'serverSaveTime'], '10:00:00'));
 if (!preg_match('/^\d{1,2}:\d{2}(:\d{2})?$/', $serverSaveRaw)) {
     $serverSaveRaw = '10:00:00';
 }
@@ -13,42 +101,76 @@ if (!$serverSave) {
     $serverSave = DateTime::createFromFormat('H:i:s', '10:00:00');
 }
 
-$houseBidLevel = (int)(configLua('houseBuyLevel') ?: 300);
+$houseBidLevel = (int)$configLuaValue(['houseBuyLevel', 'houseRequiredLevel'], 300);
+$houseBidDuration = $formatDuration((int)$configLuaValue(['houseBidTime', 'houseBiddingTime'], 2 * 86400));
+$houseRentInterval = $formatRentPeriod($configLuaValue(['houseRentPeriod', 'houserentperiod'], '7 days'));
 $generalServerSaveText = $serverSave ? $serverSave->format('h:i A') : '10:00 AM';
 
-$experienceRates = [
-    ['1', '8', '50x'],
-    ['9', '50', '80x'],
-    ['51', '100', '60x'],
-    ['101', '150', '40x'],
-    ['151', '200', '30x'],
-    ['201', '300', '15x'],
-    ['301', '400', '12x'],
-    ['401', '500', '10x'],
-    ['501', '600', '7x'],
-    ['601', '700', '6x'],
-    ['701', '800', '5x'],
-    ['801', '900', '4x'],
-    ['901', '1000', '3x'],
-    ['1001', '1200', '2x'],
-    ['1201', '1400', '1.5x'],
-    ['1401', '&infin;', '1.2x'],
-];
+$rateStages = $config['lua']['rateStages'] ?? [];
+$experienceRates = [];
+$skillRates = [];
+$magicRates = [];
 
-$skillRates = [
-    ['1', '80', '10x'],
-    ['81', '100', '7x'],
-    ['101', '120', '4x'],
-    ['121', '&infin;', '2x'],
-];
+if (!empty($rateStages['experienceStages']) && is_array($rateStages['experienceStages'])) {
+    foreach ($rateStages['experienceStages'] as $stage) {
+        if (!isset($stage['minlevel'], $stage['multiplier'])) {
+            continue;
+        }
 
-$magicRates = [
-    ['0', '80', '10x'],
-    ['81', '100', '7x'],
-    ['101', '120', '4x'],
-    ['121', '130', '3x'],
-    ['131', '&infin;', '2x'],
-];
+        $experienceRates[] = [
+            (string)(int)$stage['minlevel'],
+            isset($stage['maxlevel']) && $stage['maxlevel'] !== null && $stage['maxlevel'] !== 0
+                ? (string)(int)$stage['maxlevel']
+                : '&infin;',
+            $formatMultiplier($stage['multiplier']),
+        ];
+    }
+}
+
+if (!empty($rateStages['skillsStages']) && is_array($rateStages['skillsStages'])) {
+    foreach ($rateStages['skillsStages'] as $stage) {
+        if (!isset($stage['minlevel'], $stage['multiplier'])) {
+            continue;
+        }
+
+        $skillRates[] = [
+            (string)(int)$stage['minlevel'],
+            isset($stage['maxlevel']) && $stage['maxlevel'] !== null && $stage['maxlevel'] !== 0
+                ? (string)(int)$stage['maxlevel']
+                : '&infin;',
+            $formatMultiplier($stage['multiplier']),
+        ];
+    }
+}
+
+if (!empty($rateStages['magicLevelStages']) && is_array($rateStages['magicLevelStages'])) {
+    foreach ($rateStages['magicLevelStages'] as $stage) {
+        if (!isset($stage['minlevel'], $stage['multiplier'])) {
+            continue;
+        }
+
+        $magicRates[] = [
+            (string)(int)$stage['minlevel'],
+            isset($stage['maxlevel']) && $stage['maxlevel'] !== null && $stage['maxlevel'] !== 0
+                ? (string)(int)$stage['maxlevel']
+                : '&infin;',
+            $formatMultiplier($stage['multiplier']),
+        ];
+    }
+}
+
+if (empty($experienceRates)) {
+    $experienceRates[] = ['1', '&infin;', $formatMultiplier($configLuaValue(['rateExperience', 'rateExp'], 1))];
+}
+if (empty($skillRates)) {
+    $skillRates[] = ['1', '&infin;', $formatMultiplier($configLuaValue(['rateSkill'], 1))];
+}
+if (empty($magicRates)) {
+    $magicRates[] = ['0', '&infin;', $formatMultiplier($configLuaValue(['rateMagic'], 1))];
+}
+
+$lootRate = $formatMultiplier($configLuaValue(['rateLoot'], 2.5));
+$bestiaryRate = $formatMultiplier($configLuaValue(['rateBestiary', 'rateBestiaryExperience', 'rateBestiaryKill'], 2));
 
 $houseCommands = [
     ['aleta sio', 'Opens the list of characters invited to enter your house'],
@@ -99,14 +221,24 @@ $regenerationRows = [
 ];
 
 $fragDurations = [
-    ['Frag', '12 hours'],
-    ['Red Skull', '5 days'],
-    ['Black Skull', '14 days'],
+    ['Frag', $formatDuration((int)$configLuaValue(['timeToDecreaseFrags'], 12 * 3600))],
+    ['Red Skull', $formatDuration((int)$configLuaValue(['redSkullLength', 'redSkullDuration'], 5 * 86400))],
+    ['Black Skull', $formatDuration((int)$configLuaValue(['blackSkullLength', 'blackSkullDuration'], 14 * 86400))],
 ];
 
 $fragKills = [
-    ['Red Skull', '7', '14', '21'],
-    ['Black Skull', '14', '28', '42'],
+    [
+        'Red Skull',
+        (string)(int)$configLuaValue(['killsDayRedSkull', 'dailyFragsToRedSkull'], 7),
+        (string)(int)$configLuaValue(['killsWeekRedSkull', 'weeklyFragsToRedSkull'], 14),
+        (string)(int)$configLuaValue(['killsMonthRedSkull', 'monthlyFragsToRedSkull'], 21),
+    ],
+    [
+        'Black Skull',
+        (string)(int)$configLuaValue(['killsDayBlackSkull', 'dailyFragsToBlackSkull'], 14),
+        (string)(int)$configLuaValue(['killsWeekBlackSkull', 'weeklyFragsToBlackSkull'], 28),
+        (string)(int)$configLuaValue(['killsMonthBlackSkull', 'monthlyFragsToBlackSkull'], 42),
+    ],
 ];
 ?>
 <style>
@@ -343,11 +475,11 @@ body.rc-page-serverinfo .rc-rich-content .rc-si-stat-mp {
                 <tbody>
                 <tr>
                     <td class="rc-si-label">Loot</td>
-                    <td class="rc-si-center"><strong>2.5x</strong></td>
+                    <td class="rc-si-center"><strong><?= htmlspecialchars($lootRate, ENT_QUOTES, 'UTF-8') ?></strong></td>
                 </tr>
                 <tr>
                     <td class="rc-si-label">Bestiary</td>
-                    <td class="rc-si-center"><strong>2x</strong></td>
+                    <td class="rc-si-center"><strong><?= htmlspecialchars($bestiaryRate, ENT_QUOTES, 'UTF-8') ?></strong></td>
                 </tr>
                 </tbody>
             </table>
@@ -365,11 +497,11 @@ body.rc-page-serverinfo .rc-rich-content .rc-si-stat-mp {
                 </tr>
                 <tr>
                     <td class="rc-si-label">Bid duration (<em>auction time</em>)</td>
-                    <td>2 days</td>
+                    <td><?= htmlspecialchars($houseBidDuration, ENT_QUOTES, 'UTF-8') ?></td>
                 </tr>
                 <tr>
                     <td class="rc-si-label">Rent payment interval</td>
-                    <td>7 days</td>
+                    <td><?= htmlspecialchars($houseRentInterval, ENT_QUOTES, 'UTF-8') ?></td>
                 </tr>
                 </tbody>
             </table>

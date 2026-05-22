@@ -525,59 +525,8 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
         return null;
     };
 
-    $loyaltyPoints = 0;
-    $loyaltyTitle = '-';
-    if ($db->hasTable('accounts')) {
-        $loyaltyPointsColumn = $findFirstExistingColumn('accounts', ['loyalty_points', 'loyaltyPoints', 'loyaltypoints']);
-        $loyaltyTitleColumn = $findFirstExistingColumn('accounts', ['loyalty_title', 'loyaltyTitle', 'loyaltytitle']);
-
-        if ($loyaltyPointsColumn || $loyaltyTitleColumn) {
-            $selectFields = [];
-            if ($loyaltyPointsColumn) {
-                $selectFields[] = '`' . $loyaltyPointsColumn . '` AS `loyalty_points`';
-            }
-            if ($loyaltyTitleColumn) {
-                $selectFields[] = '`' . $loyaltyTitleColumn . '` AS `loyalty_title`';
-            }
-
-            if (!empty($selectFields)) {
-                $loyaltyRow = $db->query(
-                    'SELECT ' . implode(', ', $selectFields) .
-                    ' FROM `accounts` WHERE `id` = ' . (int)$account->getId() . ' LIMIT 1'
-                )->fetch();
-
-                if ($loyaltyRow) {
-                    if (isset($loyaltyRow['loyalty_points']) && $loyaltyRow['loyalty_points'] !== null && $loyaltyRow['loyalty_points'] !== '') {
-                        $loyaltyPoints = (int)$loyaltyRow['loyalty_points'];
-                    }
-
-                    if (isset($loyaltyRow['loyalty_title']) && $loyaltyRow['loyalty_title'] !== null && $loyaltyRow['loyalty_title'] !== '') {
-                        $loyaltyTitle = (string)$loyaltyRow['loyalty_title'];
-                    }
-                }
-            }
-        }
-    }
-
-    if (($loyaltyTitle === '-' || $loyaltyTitle === '0' || $loyaltyTitle === 0) && $loyaltyPoints > 0) {
-        $loyaltyRanks = [
-            3600 => 'Eternal Hero',
-            2700 => 'Sage of Tibia',
-            1800 => 'Keeper of Tibia',
-            900 => 'Sentinel of Tibia',
-            360 => 'Steward of Tibia',
-            180 => 'Scout of Tibia',
-            90 => 'Huntsman',
-            30 => 'Squire',
-        ];
-
-        foreach ($loyaltyRanks as $requiredPoints => $rankName) {
-            if ($loyaltyPoints >= $requiredPoints) {
-                $loyaltyTitle = $rankName;
-                break;
-            }
-        }
-    }
+    $loyaltyPoints = ravynLoyaltyPoints($account);
+    $loyaltyTitle = ravynLoyaltyTitle($loyaltyPoints);
 
     $charmPoints = 0;
     if ($db->hasTable('player_charms') && $db->hasColumn('player_charms', 'player_id') && $db->hasColumn('player_charms', 'charm_points')) {

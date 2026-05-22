@@ -98,6 +98,8 @@ foreach ($auctions as $sale) {
                                 <div class="rc-cbz-list-middle">
                                     <div class="rc-cbz-list-row"><span>Sale created:</span><strong><?= date('M d Y, H:i:s', strtotime($sale['date_start'])) ?></strong></div>
                                     <div class="rc-cbz-list-row"><span><?= htmlspecialchars($prevalentLabel) ?>:</span><strong><?= (int)$prevalentValue ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Loyalty Title:</span><strong><?= htmlspecialchars((string)$character['loyalty_title']) ?></strong></div>
+                                    <div class="rc-cbz-list-row"><span>Loyalty Points:</span><strong><?= number_format((int)$character['loyalty_points'], 0, ',', '.') ?></strong></div>
                                     <div class="rc-cbz-list-row"><span>Gold total in bank:</span><strong><?= number_format((int)$playerData['balance'], 0, ',', ',') ?></strong></div>
                                     <div class="rc-cbz-list-row"><span>Total Boss Points:</span><strong><?= htmlspecialchars((string)$character['boss_points']) ?></strong></div>
                                     <div class="rc-cbz-list-row"><span>Total Charm Points:</span><strong><?= htmlspecialchars((string)$character['spent_charm_points']) ?></strong></div>

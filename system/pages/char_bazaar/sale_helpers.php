@@ -381,10 +381,8 @@ if (!function_exists('cbz_get_character_sale_data')) {
         $offenceStats = (int)$player['skill_sword'] + (int)$player['skill_axe'] + (int)$player['skill_club'] + (int)$player['skill_dist'] + (int)$player['maglevel'];
         $defenceStats = (int)$player['skill_shielding'] + (int)$player['skill_fist'];
 
-        $loyaltyTitle = '-';
-        if (cbz_has_column($db, 'players', 'loyalty_title')) {
-            $loyaltyTitle = $player['loyalty_title'] ?: '-';
-        }
+        $loyaltyPoints = ravynLoyaltyPoints((int)($player['account_id'] ?? 0));
+        $loyaltyTitle = ravynLoyaltyTitle($loyaltyPoints);
 
         $summary = [
             'inventory' => (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `player_items` WHERE `player_id` = {$playerId} AND `pid` BETWEEN 1 AND 10") ?? 0),
@@ -463,6 +461,7 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'minor_charms' => $minorCharms,
             'defence_stats' => $defenceStats,
             'offence_stats' => $offenceStats,
+            'loyalty_points' => $loyaltyPoints,
             'loyalty_title' => $loyaltyTitle,
             'item_summary' => $summary,
             'item_summary_rows' => $itemSummaryRows,

@@ -1682,6 +1682,157 @@ function isVipSystemEnabled(): bool
   return getBoolean(configLua('vipSystemEnabled'));
 }
 
+function ravynLoyaltyPoints($accountData = null): int
+{
+  global $db;
+
+  $accountId = 0;
+  $accountRow = [];
+
+  if (is_array($accountData)) {
+    $accountRow = $accountData;
+    if (isset($accountData['id']) && is_numeric($accountData['id'])) {
+      $accountId = (int)$accountData['id'];
+    } elseif (isset($accountData['account_id']) && is_numeric($accountData['account_id'])) {
+      $accountId = (int)$accountData['account_id'];
+    }
+  } elseif (is_object($accountData)) {
+    if (method_exists($accountData, 'getId')) {
+      $accountId = (int)$accountData->getId();
+    }
+    if (method_exists($accountData, 'getCreated')) {
+      $accountRow['created'] = $accountData->getCreated();
+    }
+  } elseif (is_numeric($accountData)) {
+    $accountId = (int)$accountData;
+  }
+
+  $hasInlineLoyaltyPoints = false;
+  foreach (['loyalty_points', 'loyaltyPoints', 'loyaltypoints'] as $inlineKey) {
+    if (array_key_exists($inlineKey, $accountRow) && $accountRow[$inlineKey] !== null && $accountRow[$inlineKey] !== '') {
+      $hasInlineLoyaltyPoints = true;
+      break;
+    }
+  }
+
+  $hasInlinePremdays = false;
+  foreach (['premdays_purchased', 'premdaysPurchased', 'premium_days_purchased', 'premiumDaysPurchased'] as $inlineKey) {
+    if (array_key_exists($inlineKey, $accountRow) && $accountRow[$inlineKey] !== null && $accountRow[$inlineKey] !== '') {
+      $hasInlinePremdays = true;
+      break;
+    }
+  }
+
+  $hasInlineCreated = false;
+  foreach (['created', 'creation', 'created_at', 'registered_at'] as $inlineKey) {
+    if (array_key_exists($inlineKey, $accountRow) && $accountRow[$inlineKey] !== null && $accountRow[$inlineKey] !== '') {
+      $hasInlineCreated = true;
+      break;
+    }
+  }
+
+  $hasEnoughInlineData = $hasInlineLoyaltyPoints || ($hasInlinePremdays && $hasInlineCreated);
+
+  if (
+    $accountId > 0 &&
+    !$hasEnoughInlineData &&
+    isset($db) &&
+    method_exists($db, 'hasTable') &&
+    method_exists($db, 'hasColumn') &&
+    $db->hasTable('accounts')
+  ) {
+    $selectFields = ['`id`'];
+    $columnCandidates = [
+      'loyalty_points' => ['loyalty_points', 'loyaltyPoints', 'loyaltypoints'],
+      'premdays_purchased' => ['premdays_purchased', 'premdaysPurchased', 'premium_days_purchased', 'premiumDaysPurchased'],
+      'created' => ['created', 'creation', 'created_at', 'registered_at'],
+    ];
+
+    foreach ($columnCandidates as $alias => $candidates) {
+      foreach ($candidates as $column) {
+        if ($db->hasColumn('accounts', $column)) {
+          $selectFields[] = '`' . $column . '` AS `' . $alias . '`';
+          break;
+        }
+      }
+    }
+
+    if (!empty($selectFields)) {
+      $accountDbRow = $db
+        ->query('SELECT ' . implode(', ', $selectFields) . ' FROM `accounts` WHERE `id` = ' . $accountId . ' LIMIT 1')
+        ->fetch();
+      if (is_array($accountDbRow)) {
+        $accountRow = array_merge($accountRow, $accountDbRow);
+      }
+    }
+  }
+
+  $pickValue = static function (array $source, array $keys) {
+    foreach ($keys as $key) {
+      if (array_key_exists($key, $source) && $source[$key] !== null && $source[$key] !== '') {
+        return $source[$key];
+      }
+    }
+
+    return null;
+  };
+
+  $explicitPointsRaw = $pickValue($accountRow, ['loyalty_points', 'loyaltyPoints', 'loyaltypoints']);
+  $explicitPoints = is_numeric($explicitPointsRaw) ? (int)$explicitPointsRaw : null;
+
+  $createdRaw = $pickValue($accountRow, ['created', 'creation', 'created_at', 'registered_at']);
+  $createdTimestamp = 0;
+  if (is_numeric($createdRaw)) {
+    $createdTimestamp = (int)$createdRaw;
+  } elseif (is_string($createdRaw) && trim($createdRaw) !== '') {
+    $parsedDate = strtotime($createdRaw);
+    if ($parsedDate !== false) {
+      $createdTimestamp = (int)$parsedDate;
+    }
+  }
+
+  if ($createdTimestamp < 0) {
+    $createdTimestamp = 0;
+  }
+
+  $accountAgeDays = $createdTimestamp > 0 ? (int)floor(max(0, time() - $createdTimestamp) / 86400) : 0;
+  $premdaysPurchasedRaw = $pickValue($accountRow, ['premdays_purchased', 'premdaysPurchased', 'premium_days_purchased', 'premiumDaysPurchased']);
+  $premdaysPurchased = is_numeric($premdaysPurchasedRaw) ? max(0, (int)$premdaysPurchasedRaw) : 0;
+
+  $computedPoints = $accountAgeDays + ($premdaysPurchased * 4);
+  if ($explicitPoints !== null && $explicitPoints > 0) {
+    return max($explicitPoints, $computedPoints);
+  }
+
+  return max(0, $computedPoints);
+}
+
+function ravynLoyaltyTitle($loyaltyPoints): string
+{
+  $points = max(0, (int)$loyaltyPoints);
+  $titleByRequiredPoints = [
+    7200 => 'Legacy of RavynCore',
+    3600 => 'Supreme of RavynCore',
+    3240 => 'Sage of RavynCore',
+    2880 => 'Guardian of RavynCore',
+    2520 => 'Keeper of RavynCore',
+    2160 => 'Warrior of RavynCore',
+    1800 => 'Squire of RavynCore',
+    1440 => 'Warden of RavynCore',
+    1080 => 'Steward of RavynCore',
+    720 => 'Sentinel of RavynCore',
+    360 => 'Scout of RavynCore',
+  ];
+
+  foreach ($titleByRequiredPoints as $requiredPoints => $title) {
+    if ($points >= $requiredPoints) {
+      return $title;
+    }
+  }
+
+  return '-';
+}
+
 /**
  * @param $configFile
  * @return array
@@ -1747,7 +1898,9 @@ function loadStagesData($configFile)
         $result[$lastKey][] = [
           'minlevel' => $minlevel ? (int) str_replace([' ', ','], '', $minlevel) : null,
           'maxlevel' => $maxlevel ? (int) str_replace([' ', ','], '', $maxlevel) : null,
-          'multiplier' => $multiplier ? (int) str_replace([' ', ','], '', $multiplier) : null,
+          'multiplier' => $multiplier
+            ? (float)str_replace(',', '.', str_replace(' ', '', $multiplier))
+            : null,
         ];
       }
     }
