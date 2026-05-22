@@ -274,12 +274,12 @@ body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-viewing
       <table class="rc-legacy-table">
         <tbody>
           <tr>
-            <td class="rc-legacy-label">Loyalty Title:</td>
-            <td>{{ loyaltyTitle }}</td>
+            <td class="rc-legacy-label">Loyalt Title:</td>
+            <td>{{ loyaltyTitle|default("None") }}</td>
           </tr>
           <tr>
-            <td class="rc-legacy-label">Loyalty Points:</td>
-            <td>{{ loyaltyPoints }}</td>
+            <td class="rc-legacy-label">Loyalt Points:</td>
+            <td>{{ loyaltyPoints|default(0)|number_format(0, ",", ".") }}</td>
           </tr>
           <tr>
             <td class="rc-legacy-label">Created:</td>

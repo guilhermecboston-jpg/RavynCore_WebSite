@@ -97,8 +97,8 @@
 
                           {% set rows = rows + 1 %}
                           <tr bgcolor="{{ getStyle(rows) }}">
-                            <td class="LabelV175">Loyalty Points:</td>
-                            <td>{{ loyaltyPoints }}</td>
+                            <td class="LabelV175">Loyalt Points:</td>
+                            <td>{{ loyaltyPoints|default(0)|number_format(0, ",", ".") }}</td>
                           </tr>
 
                           {% set rows = rows + 1 %}
@@ -121,7 +121,7 @@
 
                           {% set rows = rows + 1 %}
                           <tr bgcolor="{{ getStyle(rows) }}">
-                            <td class="LabelV175">Loyalty Title:</td>
+                            <td class="LabelV175">Loyalt Title:</td>
                             <td>{{ characterLoyaltyTitle }}</td>
                           </tr>
 
