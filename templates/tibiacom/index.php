@@ -80,6 +80,48 @@ $rcGetMenuItemsByNeedles = static function(array $groups, array $needles): array
 $newsMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['latestnews', 'news']);
 $accountMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['account']);
 $libraryMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['library']);
+$libraryHiddenLinks = [
+    'creatures',
+    'spells',
+    'commands',
+    'gallery',
+    'experiencetable',
+];
+$libraryMenuItems = array_values(array_filter($libraryMenuItems, static function(array $item) use ($libraryHiddenLinks): bool {
+    $link = strtolower(trim((string)($item['link'] ?? '')));
+
+    if ($link === '') {
+        $linkFull = (string)($item['link_full'] ?? '');
+        $query = parse_url($linkFull, PHP_URL_QUERY);
+        if (is_string($query)) {
+            parse_str($query, $queryParts);
+            $link = strtolower(trim((string)($queryParts['subtopic'] ?? '')));
+        }
+    }
+
+    return !in_array($link, $libraryHiddenLinks, true);
+}));
+
+$hasVipLoyalt = false;
+foreach ($libraryMenuItems as $item) {
+    $itemLink = strtolower(trim((string)($item['link'] ?? '')));
+    $itemLinkFull = strtolower((string)($item['link_full'] ?? ''));
+    if ($itemLink === 'viployalt' || strpos($itemLinkFull, 'subtopic=viployalt') !== false) {
+        $hasVipLoyalt = true;
+        break;
+    }
+}
+
+if (!$hasVipLoyalt) {
+    array_unshift($libraryMenuItems, [
+        'name' => 'VIP & Loyalt',
+        'link' => 'viployalt',
+        'link_full' => BASE_URL . '?subtopic=viployalt',
+        'blank' => false,
+        'color' => '',
+    ]);
+}
+
 $charBazaarMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['charbazaar', 'charactertrade', 'charactertrades', 'bazaar']);
 if (count($charBazaarMenuItems) < 2) {
     $charBazaarMenuItems = [
