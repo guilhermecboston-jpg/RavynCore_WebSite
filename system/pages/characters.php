@@ -80,6 +80,13 @@
 defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Characters';
 
+if (!headers_sent()) {
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Cache-Control: post-check=0, pre-check=0', false);
+    header('Pragma: no-cache');
+    header('Expires: 0');
+}
+
 require_once SYSTEM . 'item.php';
 
 $groups = new OTS_Groups_List();
@@ -698,7 +705,7 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
         }
     }
 
-    $twig->display('characters.search_legacy.html.twig', array(
+    $twig->display('characters.search_rc_dark.html.twig', array(
         'outfit' => $outfit ?? null,
         'player' => $player,
         'achievementPoints' => $achievementPoints,
