@@ -343,6 +343,44 @@ if ($load_it) {
         $content = str_ireplace('Achievement Points', 'Loyalt Points', $content);
     }
 
+    $isAccountManageRequest = $page === 'accountmanagement'
+        || (isset($uri) && stripos($uri, 'account/manage') !== false);
+
+    if ($isAccountManageRequest) {
+        $hasLoyaltyTitleRow = stripos($content, 'Loyalt Title:') !== false || stripos($content, 'Loyalty Title:') !== false;
+        $hasLoyaltyPointsRow = stripos($content, 'Loyalt Points:') !== false || stripos($content, 'Loyalty Points:') !== false;
+
+        if ((!$hasLoyaltyTitleRow || !$hasLoyaltyPointsRow) && isset($account_logged) && $account_logged && $account_logged->isLoaded()) {
+            $accountLoyaltyPoints = getAccountLoyaltyPoints((int)$account_logged->getId());
+            $accountLoyaltyTitle = getAccountLoyaltyTitle($accountLoyaltyPoints);
+
+            $loyaltyRows = '';
+            if (!$hasLoyaltyTitleRow) {
+                $loyaltyRows .= '<tr style="background-color: ' . $config['darkborder'] . ';">'
+                    . '<td class="LabelV">Loyalt Title:</td>'
+                    . '<td>' . htmlspecialchars($accountLoyaltyTitle, ENT_QUOTES, 'UTF-8') . '</td>'
+                    . '</tr>';
+            }
+
+            if (!$hasLoyaltyPointsRow) {
+                $loyaltyRows .= '<tr style="background-color: ' . $config['lightborder'] . ';">'
+                    . '<td class="LabelV">Loyalt Points:</td>'
+                    . '<td>' . number_format($accountLoyaltyPoints, 0, ',', '.') . '</td>'
+                    . '</tr>';
+            }
+
+            if ($loyaltyRows !== '') {
+                $registeredRowPattern = '/(<tr[^>]*>\s*<td[^>]*>\s*Registered:\s*<\/td>)/i';
+                if (preg_match($registeredRowPattern, $content) === 1) {
+                    $content = preg_replace($registeredRowPattern, $loyaltyRows . '$1', $content, 1);
+                } elseif (stripos($content, 'Tournament Coins:') !== false) {
+                    $tournamentRowPattern = '/(<\/tr>\s*)(?=<tr[^>]*>\s*<td[^>]*>\s*Registered:\s*<\/td>)/i';
+                    $content = preg_replace($tournamentRowPattern, '</tr>' . $loyaltyRows, $content, 1);
+                }
+            }
+        }
+    }
+
     $hooks->trigger(HOOK_AFTER_PAGE);
 }
 
