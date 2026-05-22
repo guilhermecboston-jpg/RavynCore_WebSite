@@ -116,34 +116,6 @@ body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-status-
     font-weight: 700;
 }
 
-body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-badges {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    flex-wrap: wrap;
-}
-
-body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-badge {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    min-width: 54px;
-}
-
-body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-badge img {
-    width: 34px;
-    height: 34px;
-    image-rendering: crisp-edges;
-}
-
-body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-badge span {
-    font-size: 11px;
-    font-weight: 700;
-    color: #d8c79a !important;
-}
-
 body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-name-online {
     display: inline-block;
     width: 8px;
@@ -179,12 +151,6 @@ body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-viewing
     color: #b8c7e0 !important;
     font-style: italic;
     font-size: 13px;
-}
-
-body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-empty {
-    color: #b8c7e0 !important;
-    text-align: center;
-    font-size: 12px;
 }
 
 @media (max-width: 900px) {
@@ -299,24 +265,6 @@ body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-empty {
           {% endif %}
         </tbody>
       </table>
-    </div>
-  </div>
-
-  <div class="rc-legacy-panel">
-    <div class="rc-legacy-title">Account Badges</div>
-    <div class="rc-legacy-body">
-      {% if account_badges|length > 0 %}
-        <div class="rc-legacy-badges">
-          {% for badge in account_badges %}
-            <div class="rc-legacy-badge">
-              <img src="{{ badge.icon }}" alt="Badge {{ badge.year }}">
-              <span>{{ badge.year }}</span>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <div class="rc-legacy-empty">No badges available.</div>
-      {% endif %}
     </div>
   </div>
 

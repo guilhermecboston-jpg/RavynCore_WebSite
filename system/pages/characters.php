@@ -698,21 +698,6 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
         }
     }
 
-    $accountBadges = [];
-    $createdTimestamp = (int)$account->getCreated();
-    if ($createdTimestamp > 0) {
-        $createdYear = (int)date('Y', $createdTimestamp);
-        $currentYear = (int)date('Y');
-        $startYear = max($createdYear, $currentYear - 2);
-
-        for ($year = $startYear; $year <= $currentYear; $year++) {
-            $accountBadges[] = [
-                'year' => $year,
-                'icon' => $template_path . '/images/premiumfeatures/PremiumIcon-Loyalty.png',
-            ];
-        }
-    }
-
     $twig->display('characters.search_legacy.html.twig', array(
         'outfit' => $outfit ?? null,
         'player' => $player,
@@ -774,7 +759,6 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
         'charmPoints' => $charmPoints,
         'loyaltyPoints' => $loyaltyPoints,
         'loyaltyTitle' => $loyaltyTitle,
-        'account_badges' => $accountBadges,
         'fullAddons' => $fullAddons,
         'fullMounts' => $fullMounts,
         'fullAddonsList' => $fullAddonsList,
