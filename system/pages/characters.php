@@ -109,6 +109,41 @@ function retrieve_former_name($name)
     return '';
 }
 
+function get_former_names($name)
+{
+    global $db;
+
+    $formerNames = [];
+    if (
+        !$db->hasTable('player_namelocks') ||
+        !$db->hasColumn('player_namelocks', 'name') ||
+        !$db->hasColumn('player_namelocks', 'new_name')
+    ) {
+        return $formerNames;
+    }
+
+    $lookupName = $name;
+    $maxDepth = 20;
+    while ($maxDepth-- > 0) {
+        $query = $db->query('SELECT `name` FROM `player_namelocks` WHERE `new_name` = ' . $db->quote($lookupName) . ' LIMIT 1');
+        $row = $query->fetch();
+
+        if (!$row || empty($row['name'])) {
+            break;
+        }
+
+        $oldName = (string)$row['name'];
+        if (in_array($oldName, $formerNames, true)) {
+            break;
+        }
+
+        $formerNames[] = $oldName;
+        $lookupName = $oldName;
+    }
+
+    return $formerNames;
+}
+
 $name = '';
 if (isset($_REQUEST['name']))
     $name = urldecode(stripslashes(ucwords(strtolower($_REQUEST['name']))));
@@ -654,8 +689,31 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
         }
     }
     $listAchievement[] = $insertAchievement ?? [];
+    $formerNames = get_former_names($player->getName());
+    if (!empty($oldName)) {
+        $oldNameClean = str_replace('Former name:', '', strip_tags($oldName));
+        $oldNameClean = trim($oldNameClean, " \t\n\r\0\x0B()");
+        if ($oldNameClean !== '' && !in_array($oldNameClean, $formerNames, true)) {
+            $formerNames[] = $oldNameClean;
+        }
+    }
 
-    $twig->display('characters.html.twig', array(
+    $accountBadges = [];
+    $createdTimestamp = (int)$account->getCreated();
+    if ($createdTimestamp > 0) {
+        $createdYear = (int)date('Y', $createdTimestamp);
+        $currentYear = (int)date('Y');
+        $startYear = max($createdYear, $currentYear - 2);
+
+        for ($year = $startYear; $year <= $currentYear; $year++) {
+            $accountBadges[] = [
+                'year' => $year,
+                'icon' => $template_path . '/images/premiumfeatures/PremiumIcon-Loyalty.png',
+            ];
+        }
+    }
+
+    $twig->display('characters.search_legacy.html.twig', array(
         'outfit' => $outfit ?? null,
         'player' => $player,
         'achievementPoints' => $achievementPoints,
@@ -668,6 +726,7 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
         'flag' => $flag,
         'country' => $country,
         'oldName' => $oldName,
+        'former_names' => $formerNames,
         'sex' => $player_sex,
         'health_max' => $player_HealthMax,
         'health_current' => $player_HealthCurrent,
@@ -715,6 +774,7 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
         'charmPoints' => $charmPoints,
         'loyaltyPoints' => $loyaltyPoints,
         'loyaltyTitle' => $loyaltyTitle,
+        'account_badges' => $accountBadges,
         'fullAddons' => $fullAddons,
         'fullMounts' => $fullMounts,
         'fullAddonsList' => $fullAddonsList,

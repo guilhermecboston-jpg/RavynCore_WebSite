@@ -1,0 +1,387 @@
+<style>
+body.rc-page-characters .rc-rich-content .rc-character-legacy {
+    margin: 0 auto;
+    max-width: 980px;
+    font-family: Verdana, Arial, Helvetica, sans-serif !important;
+    color: #4b4131 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy * {
+    box-sizing: border-box;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-panel {
+    border: 2px solid #bb8f27 !important;
+    border-radius: 7px !important;
+    margin: 0 0 12px !important;
+    overflow: hidden;
+    background: #d8ccb0 !important;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-title {
+    background: linear-gradient(180deg, #3a6593 0%, #24486f 100%) !important;
+    color: #efe2c6 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 20px;
+    padding: 10px 16px !important;
+    border-bottom: 1px solid #8f6f3b;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-body {
+    background: #dfd3bb !important;
+    padding: 16px !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-search-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy input[type="text"].rc-legacy-search-input {
+    width: 100% !important;
+    min-height: 42px !important;
+    padding: 10px 14px !important;
+    border: 1px solid #aa9a77 !important;
+    border-radius: 6px !important;
+    background: #e8dfcb !important;
+    color: #4a4031 !important;
+    font-size: 18px !important;
+    font-family: Verdana, Arial, Helvetica, sans-serif !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-search-button {
+    min-width: 92px;
+    min-height: 42px;
+    border: 1px solid #103868 !important;
+    border-radius: 5px !important;
+    background: linear-gradient(180deg, #2f67a5 0%, #1c4a80 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: Verdana, Arial, Helvetica, sans-serif !important;
+    cursor: pointer;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #b9ab89 !important;
+    background: #e5dbc6 !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-table th,
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-table td {
+    border: 1px solid #b9ab89 !important;
+    padding: 10px 12px !important;
+    font-size: 14px;
+    line-height: 1.25;
+    color: #4b4131 !important;
+    background: #e5dbc6 !important;
+    text-align: left;
+    vertical-align: middle;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-table thead th {
+    background: #d2c6ae !important;
+    color: #4b4031 !important;
+    font-weight: 700;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-label {
+    width: 22%;
+    font-weight: 700;
+    background: #d2c6ae !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy a {
+    color: #1e6ab1 !important;
+    text-decoration: none;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-status-vip {
+    color: #18a24a !important;
+    font-weight: 700;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-status-free {
+    color: #b94040 !important;
+    font-weight: 700;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-badges {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    min-width: 54px;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-badge img {
+    width: 34px;
+    height: 34px;
+    image-rendering: crisp-edges;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-badge span {
+    font-size: 11px;
+    font-weight: 700;
+    color: #614f2f !important;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-name-online {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1cb24f !important;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-action {
+    text-align: right;
+    white-space: nowrap;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-view-button {
+    min-width: 52px;
+    min-height: 26px;
+    padding: 3px 10px;
+    border: 1px solid #16416f !important;
+    border-radius: 4px !important;
+    background: linear-gradient(180deg, #2d6aa8 0%, #1b4e84 100%) !important;
+    color: #ffffff !important;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: Verdana, Arial, Helvetica, sans-serif !important;
+    cursor: pointer;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-viewing {
+    color: #7d7461 !important;
+    font-style: italic;
+    font-size: 13px;
+}
+
+body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-empty {
+    color: #72644d !important;
+    text-align: center;
+    font-size: 14px;
+}
+
+@media (max-width: 800px) {
+    body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-search-row {
+        grid-template-columns: 1fr;
+    }
+
+    body.rc-page-characters .rc-rich-content .rc-character-legacy .rc-legacy-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+</style>
+
+<div class="rc-character-legacy">
+  <form action="{{ characters_link }}" method="post">
+    <div class="rc-legacy-panel">
+      <div class="rc-legacy-title">Search Character</div>
+      <div class="rc-legacy-body">
+        <div class="rc-legacy-search-row">
+          <input class="rc-legacy-search-input" type="text" name="name" value="{{ player.getName() }}" maxlength="29" pattern="[A-Za-z\s]+" title="Use only letters and spaces" data-rc-letters-only>
+          <button type="submit" class="rc-legacy-search-button">Search</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="rc-legacy-panel">
+    <div class="rc-legacy-title">Character Information</div>
+    <div class="rc-legacy-body">
+      <table class="rc-legacy-table">
+        <tbody>
+          <tr>
+            <td class="rc-legacy-label">Name:</td>
+            <td>{{ player.getName() }}</td>
+          </tr>
+          {% if former_names|length > 0 %}
+            <tr>
+              <td class="rc-legacy-label">Former Names:</td>
+              <td>{{ former_names|join(', ') }}</td>
+            </tr>
+          {% endif %}
+          <tr>
+            <td class="rc-legacy-label">Sex:</td>
+            <td>{{ sex|capitalize }}</td>
+          </tr>
+          <tr>
+            <td class="rc-legacy-label">Vocation:</td>
+            <td>{{ vocation }}</td>
+          </tr>
+          <tr>
+            <td class="rc-legacy-label">Level:</td>
+            <td><b>{{ player.getLevel() }}</b></td>
+          </tr>
+          <tr>
+            <td class="rc-legacy-label">World:</td>
+            <td>{{ config.lua.serverName }}</td>
+          </tr>
+          <tr>
+            <td class="rc-legacy-label">Residence:</td>
+            <td>{{ town }}</td>
+          </tr>
+          {% if guild.rank is not null %}
+            <tr>
+              <td class="rc-legacy-label">Guild:</td>
+              <td>{{ guild.rank }} of {{ guild.link|raw }}</td>
+            </tr>
+          {% endif %}
+          <tr>
+            <td class="rc-legacy-label">Last Login:</td>
+            <td>{% if player.getLastLogin() == 0 %}Never logged in.{% else %}{{ player.getLastLogin()|date("M j, Y, h:i A") }}{% endif %}</td>
+          </tr>
+          <tr>
+            <td class="rc-legacy-label">Account Status:</td>
+            <td>
+              {% if account.isPremium() %}
+                <span class="rc-legacy-status-vip">VIP Account</span>
+              {% else %}
+                <span class="rc-legacy-status-free">Free Account</span>
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {{ hook(constant('HOOK_CHARACTERS_BEFORE_DEATHS')) }}
+
+  <div class="rc-legacy-panel">
+    <div class="rc-legacy-title">Character Deaths</div>
+    <div class="rc-legacy-body">
+      <table class="rc-legacy-table">
+        <thead>
+          <tr>
+            <th style="width: 24%;">Date</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if deaths|length > 0 %}
+            {% for death in deaths %}
+              <tr>
+                <td>{{ death.time|date("M j, Y, h:i A") }}</td>
+                <td>{{ death.description|raw }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="2">No deaths recorded for this character.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="rc-legacy-panel">
+    <div class="rc-legacy-title">Account Badges</div>
+    <div class="rc-legacy-body">
+      {% if account_badges|length > 0 %}
+        <div class="rc-legacy-badges">
+          {% for badge in account_badges %}
+            <div class="rc-legacy-badge">
+              <img src="{{ badge.icon }}" alt="Badge {{ badge.year }}">
+              <span>{{ badge.year }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="rc-legacy-empty">No badges available.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="rc-legacy-panel">
+    <div class="rc-legacy-title">Account Information</div>
+    <div class="rc-legacy-body">
+      <table class="rc-legacy-table">
+        <tbody>
+          <tr>
+            <td class="rc-legacy-label">Loyalty Title:</td>
+            <td>{{ loyaltyTitle }}</td>
+          </tr>
+          <tr>
+            <td class="rc-legacy-label">Achievement Points:</td>
+            <td>{{ achievementPoints }}</td>
+          </tr>
+          <tr>
+            <td class="rc-legacy-label">Created:</td>
+            <td>{{ account.getCreated()|date("M j, Y, h:i A") }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if not hidden %}
+    <div class="rc-legacy-panel">
+      <div class="rc-legacy-title">Characters on this Account</div>
+      <div class="rc-legacy-body">
+        <table class="rc-legacy-table">
+          <thead>
+            <tr>
+              <th style="width: 42%;">Name</th>
+              <th style="width: 24%;">Vocation</th>
+              <th style="width: 10%;">Level</th>
+              <th style="width: 16%;">World</th>
+              <th style="width: 8%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for accountPlayer in account_players %}
+              {% if not accountPlayer.isHidden() and (config('characters')['deleted'] or not accountPlayer.isDeleted()) %}
+                <tr>
+                  <td>
+                    {{ accountPlayer.getName() }}
+                    {% if accountPlayer.isOnline() %}<span class="rc-legacy-name-online"></span>{% endif %}
+                  </td>
+                  <td>{{ accountPlayer.getVocationName() }}</td>
+                  <td>{{ accountPlayer.getLevel() }}</td>
+                  <td>{{ config.lua.serverName }}</td>
+                  <td class="rc-legacy-action">
+                    {% if accountPlayer.getId() == player.getId() %}
+                      <span class="rc-legacy-viewing">viewing</span>
+                    {% else %}
+                      <form action="{{ characters_link }}" method="post" style="margin:0;">
+                        <input type="hidden" name="name" value="{{ accountPlayer.getName() }}">
+                        <button type="submit" class="rc-legacy-view-button">View</button>
+                      </form>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+
+  {{ hook(constant('HOOK_CHARACTERS_AFTER_CHARACTERS')) }}
+</div>
+
