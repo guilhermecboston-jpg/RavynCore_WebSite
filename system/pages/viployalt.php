@@ -4,12 +4,12 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'VIP & Loyalt';
 
 $benefits = [
-    ['Wheel Cooldown', '30% lower cooldown on Gift of Life passive and Avatar spell.'],
+    ['Wheel Cooldown', '30% lower cooldown on Gift of Life passive and Avatar spell. You can reset your points anywhere.'],
     ['Protected Imbuement', 'No imbuement will be consumed inside protection zones (including capacity).'],
     ['Familiar Optimization', 'Familiars will deal 30% more damage with their spells.'],
     ['EXP Bonus', 'Every monster defeated will grant a 10% experience bonus.'],
-    ['Additional Critical', 'All characters on the account will have 3% more critical chance.'],
-    ['Exercise Speed', 'The speed of all exercise weapons is increased by 10%.'],
+    ['Additional Critical', 'All characters on the account will have 3% more critical chance and 5% more critical damage.'],
+    ['Exercise Speed', 'The speed and additional gain from all weapons exercises have been increased by 10%.'],
     ['Full Bless', 'When buying bless from the Inquisition NPC, the character will receive all 7 blessings.'],
     ['Health Regeneration', 'There is an additional regeneration of 10 health every 3 seconds.'],
     ['Mana Regeneration', 'There is an additional regeneration of 20 mana every 3 seconds.'],
@@ -19,17 +19,17 @@ $benefits = [
 ];
 
 $loyaltyTitles = [
-    ['Scout of RubinOT', '0', '+0'],
-    ['Sentinel of RubinOT', '1', '+1'],
-    ['Steward of RubinOT', '3', '+2'],
-    ['Warden of RubinOT', '6', '+3'],
-    ['Squire of RubinOT', '9', '+4'],
-    ['Warrior of RubinOT', '15', '+5'],
-    ['Keeper of RubinOT', '21', '+6'],
-    ['Guardian of RubinOT', '30', '+7'],
-    ['Sage of RubinOT', '42', '+8'],
-    ['Savant of RubinOT', '56', '+9'],
-    ['Enlightened of RubinOT', '70', '+10'],
+    ['Scout of RavynCore', '360', '+1'],
+    ['Sentinel of RavynCore', '720', '+2'],
+    ['Steward of RavynCore', '1080', '+3'],
+    ['Warden of RavynCore', '1440', '+4'],
+    ['Squire of RavynCore', '1800', '+5'],
+    ['Warrior of RavynCore', '2160', '+6'],
+    ['Keeper of RavynCore', '2520', '+7'],
+    ['Guardian of RavynCore', '2880', '+8'],
+    ['Sage of RavynCore', '3240', '+9'],
+    ['Supreme of RavynCore', '3600', '+10'],
+    ['Legacy of RavynCore', '7200', '+20'],
 ];
 
 $vocationBonuses = [
@@ -41,9 +41,9 @@ $vocationBonuses = [
 ];
 
 $vipMounts = [
-    ['name' => 'VIP Mount 1', 'src' => getAssetImageById('mount', 1, ['base' => 128, 'direction' => 3])],
-    ['name' => 'VIP Mount 2', 'src' => getAssetImageById('mount', 2, ['base' => 128, 'direction' => 3])],
-    ['name' => 'VIP Mount 3', 'src' => getAssetImageById('mount', 3, ['base' => 128, 'direction' => 3])],
+    ['name' => 'VIP Mount 1', 'src' => getAssetImageById('mount', 232, ['base' => 128, 'direction' => 3])],
+    ['name' => 'VIP Mount 2', 'src' => getAssetImageById('mount', 238, ['base' => 128, 'direction' => 3])],
+    ['name' => 'VIP Mount 3', 'src' => getAssetImageById('mount', 239, ['base' => 128, 'direction' => 3])],
 ];
 ?>
 <style>
