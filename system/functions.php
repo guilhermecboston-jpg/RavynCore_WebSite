@@ -1682,135 +1682,19 @@ function isVipSystemEnabled(): bool
   return getBoolean(configLua('vipSystemEnabled'));
 }
 
-function ravynLoyaltyPoints($accountData = null): int
+function getAccountLoyaltyApprovedStatuses(): array
 {
-  global $db;
-
-  $accountId = 0;
-  $accountRow = [];
-
-  if (is_array($accountData)) {
-    $accountRow = $accountData;
-    if (isset($accountData['id']) && is_numeric($accountData['id'])) {
-      $accountId = (int)$accountData['id'];
-    } elseif (isset($accountData['account_id']) && is_numeric($accountData['account_id'])) {
-      $accountId = (int)$accountData['account_id'];
-    }
-  } elseif (is_object($accountData)) {
-    if (method_exists($accountData, 'getId')) {
-      $accountId = (int)$accountData->getId();
-    }
-    if (method_exists($accountData, 'getCreated')) {
-      $accountRow['created'] = $accountData->getCreated();
-    }
-  } elseif (is_numeric($accountData)) {
-    $accountId = (int)$accountData;
-  }
-
-  $hasInlineLoyaltyPoints = false;
-  foreach (['loyalty_points', 'loyaltyPoints', 'loyaltypoints'] as $inlineKey) {
-    if (array_key_exists($inlineKey, $accountRow) && $accountRow[$inlineKey] !== null && $accountRow[$inlineKey] !== '') {
-      $hasInlineLoyaltyPoints = true;
-      break;
-    }
-  }
-
-  $hasInlinePremdays = false;
-  foreach (['premdays_purchased', 'premdaysPurchased', 'premium_days_purchased', 'premiumDaysPurchased'] as $inlineKey) {
-    if (array_key_exists($inlineKey, $accountRow) && $accountRow[$inlineKey] !== null && $accountRow[$inlineKey] !== '') {
-      $hasInlinePremdays = true;
-      break;
-    }
-  }
-
-  $hasInlineCreated = false;
-  foreach (['created', 'creation', 'created_at', 'registered_at'] as $inlineKey) {
-    if (array_key_exists($inlineKey, $accountRow) && $accountRow[$inlineKey] !== null && $accountRow[$inlineKey] !== '') {
-      $hasInlineCreated = true;
-      break;
-    }
-  }
-
-  $hasEnoughInlineData = $hasInlineLoyaltyPoints || ($hasInlinePremdays && $hasInlineCreated);
-
-  if (
-    $accountId > 0 &&
-    !$hasEnoughInlineData &&
-    isset($db) &&
-    method_exists($db, 'hasTable') &&
-    method_exists($db, 'hasColumn') &&
-    $db->hasTable('accounts')
-  ) {
-    $selectFields = ['`id`'];
-    $columnCandidates = [
-      'loyalty_points' => ['loyalty_points', 'loyaltyPoints', 'loyaltypoints'],
-      'premdays_purchased' => ['premdays_purchased', 'premdaysPurchased', 'premium_days_purchased', 'premiumDaysPurchased'],
-      'created' => ['created', 'creation', 'created_at', 'registered_at'],
-    ];
-
-    foreach ($columnCandidates as $alias => $candidates) {
-      foreach ($candidates as $column) {
-        if ($db->hasColumn('accounts', $column)) {
-          $selectFields[] = '`' . $column . '` AS `' . $alias . '`';
-          break;
-        }
-      }
-    }
-
-    if (!empty($selectFields)) {
-      $accountDbRow = $db
-        ->query('SELECT ' . implode(', ', $selectFields) . ' FROM `accounts` WHERE `id` = ' . $accountId . ' LIMIT 1')
-        ->fetch();
-      if (is_array($accountDbRow)) {
-        $accountRow = array_merge($accountRow, $accountDbRow);
-      }
-    }
-  }
-
-  $pickValue = static function (array $source, array $keys) {
-    foreach ($keys as $key) {
-      if (array_key_exists($key, $source) && $source[$key] !== null && $source[$key] !== '') {
-        return $source[$key];
-      }
-    }
-
-    return null;
-  };
-
-  $explicitPointsRaw = $pickValue($accountRow, ['loyalty_points', 'loyaltyPoints', 'loyaltypoints']);
-  $explicitPoints = is_numeric($explicitPointsRaw) ? (int)$explicitPointsRaw : null;
-
-  $createdRaw = $pickValue($accountRow, ['created', 'creation', 'created_at', 'registered_at']);
-  $createdTimestamp = 0;
-  if (is_numeric($createdRaw)) {
-    $createdTimestamp = (int)$createdRaw;
-  } elseif (is_string($createdRaw) && trim($createdRaw) !== '') {
-    $parsedDate = strtotime($createdRaw);
-    if ($parsedDate !== false) {
-      $createdTimestamp = (int)$parsedDate;
-    }
-  }
-
-  if ($createdTimestamp < 0) {
-    $createdTimestamp = 0;
-  }
-
-  $accountAgeDays = $createdTimestamp > 0 ? (int)floor(max(0, time() - $createdTimestamp) / 86400) : 0;
-  $premdaysPurchasedRaw = $pickValue($accountRow, ['premdays_purchased', 'premdaysPurchased', 'premium_days_purchased', 'premiumDaysPurchased']);
-  $premdaysPurchased = is_numeric($premdaysPurchasedRaw) ? max(0, (int)$premdaysPurchasedRaw) : 0;
-
-  $computedPoints = $accountAgeDays + ($premdaysPurchased * 4);
-  if ($explicitPoints !== null && $explicitPoints > 0) {
-    return max($explicitPoints, $computedPoints);
-  }
-
-  return max(0, $computedPoints);
+  return [
+    'pagseguro' => ['paid', 'available', 'approved', 'confirmed', 'completed'],
+    'mercadopago' => ['approved', 'paid', 'confirmed', 'completed'],
+  ];
 }
 
-function ravynLoyaltyTitle($loyaltyPoints): string
+function getAccountLoyaltyTitleTiers(): array
 {
-  $points = max(0, (int)$loyaltyPoints);
-  $titleByRequiredPoints = [
+  global $config;
+
+  $defaultTiers = [
     7200 => 'Legacy of RavynCore',
     3600 => 'Supreme of RavynCore',
     3240 => 'Sage of RavynCore',
@@ -1824,13 +1708,299 @@ function ravynLoyaltyTitle($loyaltyPoints): string
     360 => 'Scout of RavynCore',
   ];
 
+  if (!isset($config['ravyncore_loyalty_titles']) || !is_array($config['ravyncore_loyalty_titles'])) {
+    return $defaultTiers;
+  }
+
+  $parsed = [];
+  foreach ($config['ravyncore_loyalty_titles'] as $key => $value) {
+    if (is_array($value)) {
+      $required = isset($value['points']) ? (int)$value['points'] : 0;
+      $title = isset($value['title']) ? trim((string)$value['title']) : '';
+    } else {
+      $required = (int)$key;
+      $title = trim((string)$value);
+    }
+
+    if ($required <= 0 || $title === '') {
+      continue;
+    }
+
+    $parsed[$required] = $title;
+  }
+
+  if (empty($parsed)) {
+    return $defaultTiers;
+  }
+
+  krsort($parsed, SORT_NUMERIC);
+  return $parsed;
+}
+
+function getAccountLoyaltyTitle($loyaltyPoints): string
+{
+  $points = max(0, (int)$loyaltyPoints);
+  $titleByRequiredPoints = getAccountLoyaltyTitleTiers();
   foreach ($titleByRequiredPoints as $requiredPoints => $title) {
-    if ($points >= $requiredPoints) {
+    if ($points >= (int)$requiredPoints) {
       return $title;
     }
   }
 
-  return '-';
+  return 'None';
+}
+
+function getAccountLoyaltyPointsBatch(array $accountIds = []): array
+{
+  global $db, $config;
+
+  $filterIds = [];
+  foreach ($accountIds as $accountId) {
+    $accountId = (int)$accountId;
+    if ($accountId > 0) {
+      $filterIds[$accountId] = true;
+    }
+  }
+  $filterIds = array_keys($filterIds);
+
+  $pointsByAccount = [];
+  foreach ($filterIds as $accountId) {
+    $pointsByAccount[$accountId] = 0;
+  }
+
+  if (!isset($db) || !method_exists($db, 'hasTable') || !method_exists($db, 'hasColumn')) {
+    return $pointsByAccount;
+  }
+
+  $statuses = getAccountLoyaltyApprovedStatuses();
+  $pagSeguroCodeValues = [];
+  $mercadoPagoCodeValues = [];
+
+  if (isset($config['pagSeguro']['donates']) && is_array($config['pagSeguro']['donates'])) {
+    foreach ($config['pagSeguro']['donates'] as $code => $row) {
+      $value = isset($row['value']) ? (float)$row['value'] : 0.0;
+      if ($value > 0) {
+        $pagSeguroCodeValues[(string)$code] = $value;
+      }
+    }
+  }
+
+  if (isset($config['mercadoPago']['donates']) && is_array($config['mercadoPago']['donates'])) {
+    foreach ($config['mercadoPago']['donates'] as $code => $row) {
+      $value = isset($row['value']) ? (float)$row['value'] : 0.0;
+      if ($value > 0) {
+        $mercadoPagoCodeValues[(string)$code] = $value;
+      }
+    }
+  }
+
+  $totalsByAccount = [];
+  $placeholders = static function (int $count): string {
+    return implode(', ', array_fill(0, $count, '?'));
+  };
+
+  if (
+    $db->hasTable('pagseguro_transactions') &&
+    $db->hasColumn('pagseguro_transactions', 'account_id') &&
+    $db->hasColumn('pagseguro_transactions', 'transaction_code') &&
+    $db->hasColumn('pagseguro_transactions', 'payment_status') &&
+    $db->hasColumn('pagseguro_transactions', 'code')
+  ) {
+    $hasAmountBrl = $db->hasColumn('pagseguro_transactions', 'amount_brl');
+    $hasDelivered = $db->hasColumn('pagseguro_transactions', 'delivered');
+    $params = [];
+    $sql = 'SELECT `account_id`, `transaction_code`, `code`' .
+      ($hasAmountBrl ? ', `amount_brl`' : '') .
+      ' FROM `pagseguro_transactions` WHERE LOWER(`payment_status`) IN (' . $placeholders(count($statuses['pagseguro'])) . ')';
+
+    foreach ($statuses['pagseguro'] as $status) {
+      $params[] = strtolower($status);
+    }
+
+    if ($hasDelivered) {
+      $sql .= " AND `delivered` = '1'";
+    }
+
+    if (!empty($filterIds)) {
+      $sql .= ' AND `account_id` IN (' . $placeholders(count($filterIds)) . ')';
+      foreach ($filterIds as $filterId) {
+        $params[] = (int)$filterId;
+      }
+    }
+
+    try {
+      $stmt = $db->prepare($sql);
+      foreach ($params as $index => $paramValue) {
+        $stmt->bindValue($index + 1, $paramValue, is_int($paramValue) ? PDO::PARAM_INT : PDO::PARAM_STR);
+      }
+      $stmt->execute();
+      $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $seenTransactions = [];
+      foreach ($rows as $row) {
+        $accountId = (int)($row['account_id'] ?? 0);
+        if ($accountId <= 0) {
+          continue;
+        }
+
+        $transactionCode = (string)($row['transaction_code'] ?? '');
+        if ($transactionCode === '') {
+          continue;
+        }
+
+        $seenKey = $accountId . ':' . $transactionCode;
+        if (isset($seenTransactions[$seenKey])) {
+          continue;
+        }
+        $seenTransactions[$seenKey] = true;
+
+        $amountBrl = $hasAmountBrl ? (float)($row['amount_brl'] ?? 0) : 0.0;
+        if ($amountBrl <= 0) {
+          $code = (string)($row['code'] ?? '');
+          $amountBrl = $pagSeguroCodeValues[$code] ?? 0.0;
+        }
+
+        if ($amountBrl <= 0) {
+          continue;
+        }
+
+        if (!isset($totalsByAccount[$accountId])) {
+          $totalsByAccount[$accountId] = 0.0;
+        }
+        $totalsByAccount[$accountId] += $amountBrl;
+      }
+    } catch (\Exception $e) {
+      log_append('loyalty_errors.log', date('Y-m-d H:i:s') . ' pagseguro query error: ' . $e->getMessage());
+    }
+  }
+
+  if (
+    $db->hasTable('mercadopago_transactions') &&
+    $db->hasColumn('mercadopago_transactions', 'account_id') &&
+    $db->hasColumn('mercadopago_transactions', 'payment_id') &&
+    $db->hasColumn('mercadopago_transactions', 'payment_status') &&
+    $db->hasColumn('mercadopago_transactions', 'code')
+  ) {
+    $hasAmountBrl = $db->hasColumn('mercadopago_transactions', 'amount_brl');
+    $hasDelivered = $db->hasColumn('mercadopago_transactions', 'delivered');
+    $params = [];
+    $sql = 'SELECT `account_id`, `payment_id`, `code`' .
+      ($hasAmountBrl ? ', `amount_brl`' : '') .
+      ' FROM `mercadopago_transactions` WHERE LOWER(`payment_status`) IN (' . $placeholders(count($statuses['mercadopago'])) . ')';
+
+    foreach ($statuses['mercadopago'] as $status) {
+      $params[] = strtolower($status);
+    }
+
+    if ($hasDelivered) {
+      $sql .= " AND `delivered` = '1'";
+    }
+
+    if (!empty($filterIds)) {
+      $sql .= ' AND `account_id` IN (' . $placeholders(count($filterIds)) . ')';
+      foreach ($filterIds as $filterId) {
+        $params[] = (int)$filterId;
+      }
+    }
+
+    try {
+      $stmt = $db->prepare($sql);
+      foreach ($params as $index => $paramValue) {
+        $stmt->bindValue($index + 1, $paramValue, is_int($paramValue) ? PDO::PARAM_INT : PDO::PARAM_STR);
+      }
+      $stmt->execute();
+      $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $seenPayments = [];
+      foreach ($rows as $row) {
+        $accountId = (int)($row['account_id'] ?? 0);
+        if ($accountId <= 0) {
+          continue;
+        }
+
+        $paymentId = (string)($row['payment_id'] ?? '');
+        if ($paymentId === '') {
+          continue;
+        }
+
+        $seenKey = $accountId . ':' . $paymentId;
+        if (isset($seenPayments[$seenKey])) {
+          continue;
+        }
+        $seenPayments[$seenKey] = true;
+
+        $amountBrl = $hasAmountBrl ? (float)($row['amount_brl'] ?? 0) : 0.0;
+        if ($amountBrl <= 0) {
+          $code = (string)($row['code'] ?? '');
+          $amountBrl = $mercadoPagoCodeValues[$code] ?? 0.0;
+        }
+
+        if ($amountBrl <= 0) {
+          continue;
+        }
+
+        if (!isset($totalsByAccount[$accountId])) {
+          $totalsByAccount[$accountId] = 0.0;
+        }
+        $totalsByAccount[$accountId] += $amountBrl;
+      }
+    } catch (\Exception $e) {
+      log_append('loyalty_errors.log', date('Y-m-d H:i:s') . ' mercadopago query error: ' . $e->getMessage());
+    }
+  }
+
+  $result = [];
+  if (!empty($filterIds)) {
+    foreach ($filterIds as $accountId) {
+      $result[$accountId] = max(0, (int)floor((float)($totalsByAccount[$accountId] ?? 0)));
+    }
+    return $result;
+  }
+
+  foreach ($totalsByAccount as $accountId => $totalBrl) {
+    $accountId = (int)$accountId;
+    if ($accountId <= 0) {
+      continue;
+    }
+    $result[$accountId] = max(0, (int)floor((float)$totalBrl));
+  }
+
+  return $result;
+}
+
+function getAccountLoyaltyPoints($accountId): int
+{
+  $accountId = (int)$accountId;
+  if ($accountId <= 0) {
+    return 0;
+  }
+
+  $batch = getAccountLoyaltyPointsBatch([$accountId]);
+  return (int)($batch[$accountId] ?? 0);
+}
+
+function ravynLoyaltyPoints($accountData = null): int
+{
+  $accountId = 0;
+
+  if (is_array($accountData)) {
+    if (isset($accountData['id'])) {
+      $accountId = (int)$accountData['id'];
+    } elseif (isset($accountData['account_id'])) {
+      $accountId = (int)$accountData['account_id'];
+    }
+  } elseif (is_object($accountData)) {
+    if (method_exists($accountData, 'getId')) {
+      $accountId = (int)$accountData->getId();
+    }
+  } elseif (is_numeric($accountData)) {
+    $accountId = (int)$accountData;
+  }
+
+  return getAccountLoyaltyPoints($accountId);
+}
+
+function ravynLoyaltyTitle($loyaltyPoints): string
+{
+  return getAccountLoyaltyTitle((int)$loyaltyPoints);
 }
 
 /**

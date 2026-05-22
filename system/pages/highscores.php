@@ -104,6 +104,11 @@ $categoryAliases = [
     'fishing' => 'fishing',
     'frags' => 'frags',
     'balance' => 'balance',
+    'achievement_points' => 'loyalty_points',
+    'achievement points' => 'loyalty_points',
+    'loyalty' => 'loyalty_points',
+    'loyalty_points' => 'loyalty_points',
+    'loyalty points' => 'loyalty_points',
 ];
 
 $categoryDefinitions = [
@@ -119,7 +124,7 @@ $categoryDefinitions = [
     'drome_level' => ['label' => 'Drome Level', 'type' => 'column', 'column' => 'drome_level'],
     'linked_tasks' => ['label' => 'Linked Tasks', 'type' => 'column', 'column' => 'linked_tasks'],
     'exp_today' => ['label' => 'Exp Today', 'type' => 'column', 'column' => 'exp_today'],
-    'achievement_points' => ['label' => 'Achievement Points', 'type' => 'column', 'column' => 'achievement_points'],
+    'loyalty_points' => ['label' => 'Loyalty Points', 'type' => 'account_loyalty'],
     'battle_pass_points' => ['label' => 'Battle Pass Points', 'type' => 'column', 'column' => 'battle_pass_points'],
     'charm_unlock_points' => ['label' => 'Charm Unlock Points', 'type' => 'column', 'column' => 'charm_unlock_points'],
     'prestige_points' => ['label' => 'Prestige Points', 'type' => 'column', 'column' => 'prestige_points'],
@@ -250,19 +255,7 @@ if (!empty($selectedWorldTypes) && $worldIdColumnExists && !empty($worldTypeMap)
 $whereSql = implode(' AND ', $conditions);
 $worldSelect = $worldIdColumnExists ? ', players.world_id' : '';
 
-$accountCreatedColumn = $findFirstExistingColumn('accounts', ['created', 'creation', 'created_at', 'registered_at']);
-$accountPremdaysPurchasedColumn = $findFirstExistingColumn('accounts', ['premdays_purchased', 'premdaysPurchased', 'premium_days_purchased', 'premiumDaysPurchased']);
-$accountLoyaltyPointsColumn = $findFirstExistingColumn('accounts', ['loyalty_points', 'loyaltyPoints', 'loyaltypoints']);
 $accountLoyaltySelect = ', accounts.id AS account_id';
-if ($accountCreatedColumn) {
-    $accountLoyaltySelect .= ', accounts.`' . $accountCreatedColumn . '` AS account_created';
-}
-if ($accountPremdaysPurchasedColumn) {
-    $accountLoyaltySelect .= ', accounts.`' . $accountPremdaysPurchasedColumn . '` AS account_premdays_purchased';
-}
-if ($accountLoyaltyPointsColumn) {
-    $accountLoyaltySelect .= ', accounts.`' . $accountLoyaltyPointsColumn . '` AS account_loyalty_points';
-}
 
 $limit = $config['highscores_length'] ?? 50;
 if (!is_int($limit) && !ctype_digit((string)$limit)) {
@@ -292,7 +285,46 @@ if ($activeType === 'skill') {
 }
 
 $skills = [];
-if ($skill === SKILL_CUSTOM_COLUMN && $customColumn !== null) {
+if ($activeType === 'account_loyalty') {
+    $skills = $db->query(
+        'SELECT accounts.country, players.id, players.name' . $online . ', level, experience, vocation' . $promotion . $worldSelect . $accountLoyaltySelect . ' ' .
+        'FROM accounts, players ' .
+        'WHERE ' . $whereSql . ' AND accounts.id = players.account_id '
+    )->fetchAll();
+
+    $accountIds = [];
+    foreach ($skills as $playerRow) {
+        $accountId = (int)($playerRow['account_id'] ?? 0);
+        if ($accountId > 0) {
+            $accountIds[] = $accountId;
+        }
+    }
+    $loyaltyByAccount = getAccountLoyaltyPointsBatch($accountIds);
+
+    foreach ($skills as &$playerRow) {
+        $accountId = (int)($playerRow['account_id'] ?? 0);
+        $playerRow['__loyalty_points'] = (int)($loyaltyByAccount[$accountId] ?? 0);
+    }
+    unset($playerRow);
+
+    usort($skills, static function (array $a, array $b): int {
+        $loyaltyA = (int)($a['__loyalty_points'] ?? 0);
+        $loyaltyB = (int)($b['__loyalty_points'] ?? 0);
+        if ($loyaltyA !== $loyaltyB) {
+            return $loyaltyB <=> $loyaltyA;
+        }
+
+        $levelA = (int)($a['level'] ?? 0);
+        $levelB = (int)($b['level'] ?? 0);
+        if ($levelA !== $levelB) {
+            return $levelB <=> $levelA;
+        }
+
+        return strcasecmp((string)($a['name'] ?? ''), (string)($b['name'] ?? ''));
+    });
+
+    $skills = array_slice($skills, $offset, $limit_);
+} elseif ($skill === SKILL_CUSTOM_COLUMN && $customColumn !== null) {
     $skills = $db->query(
         'SELECT accounts.country, players.id, players.name' . $online . ', level, experience, vocation' . $promotion . $worldSelect . $accountLoyaltySelect . ', players.`' . $customColumn . '` AS value ' .
         'FROM accounts, players ' .
@@ -356,6 +388,18 @@ if ($skill === SKILL_CUSTOM_COLUMN && $customColumn !== null) {
         'WHERE ' . $whereSql . ' AND accounts.id = players.account_id ' .
         'ORDER BY level DESC, experience DESC, players.name ASC LIMIT ' . $limit_ . ' OFFSET ' . $offset
     )->fetchAll();
+}
+
+$loyaltyByAccount = [];
+if (!empty($skills)) {
+    $accountIds = [];
+    foreach ($skills as $playerRow) {
+        $accountId = (int)($playerRow['account_id'] ?? 0);
+        if ($accountId > 0) {
+            $accountIds[] = $accountId;
+        }
+    }
+    $loyaltyByAccount = getAccountLoyaltyPointsBatch($accountIds);
 }
 
 $countRow = $db->query('SELECT COUNT(*) AS total FROM players WHERE ' . $whereSql)->fetch();
@@ -756,14 +800,11 @@ body.rc-page-highscores .rc-rich-content .rc-hs-empty {
                         $worldName = $worldNameMap[$worldId] ?? $worldName;
                     }
 
-                    $loyaltyData = [
-                        'id' => isset($player['account_id']) ? (int)$player['account_id'] : 0,
-                        'created' => $player['account_created'] ?? null,
-                        'premdays_purchased' => $player['account_premdays_purchased'] ?? null,
-                        'loyalty_points' => $player['account_loyalty_points'] ?? null,
-                    ];
-                    $playerLoyaltyPoints = ravynLoyaltyPoints($loyaltyData);
-                    $playerLoyaltyTitle = ravynLoyaltyTitle($playerLoyaltyPoints);
+                    $playerAccountId = isset($player['account_id']) ? (int)$player['account_id'] : 0;
+                    $playerLoyaltyPoints = isset($player['__loyalty_points'])
+                        ? (int)$player['__loyalty_points']
+                        : (int)($loyaltyByAccount[$playerAccountId] ?? 0);
+                    $playerLoyaltyTitle = getAccountLoyaltyTitle($playerLoyaltyPoints);
 
                     $playerLevel = (int)($player['level'] ?? 0);
                     $valueNumber = 0;
@@ -771,6 +812,8 @@ body.rc-page-highscores .rc-rich-content .rc-hs-empty {
                         $valueNumber = (int)($player['experience'] ?? 0);
                     } elseif ($activeCategory === 'magic') {
                         $valueNumber = (int)($player['maglevel'] ?? 0);
+                    } elseif ($activeCategory === 'loyalty_points') {
+                        $valueNumber = $playerLoyaltyPoints;
                     } else {
                         $valueNumber = (int)($player['value'] ?? 0);
                     }

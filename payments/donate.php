@@ -47,6 +47,27 @@ if ('post' == strtolower($method)) {
       $payment_method = $transaction->getPaymentMethod()->getType()->getTypeFromValue();
       $payment_status = $transaction->getStatus()->getTypeFromValue();
       $request = json_encode($_POST);
+      $hasAmountBrlColumn = $db->hasColumn('pagseguro_transactions', 'amount_brl');
+
+      $items = $transaction->getItems();
+      $firstItem = (is_array($items) && isset($items[0])) ? $items[0] : null;
+      $donateCode = $firstItem ? $firstItem->getId() : null;
+      if (
+        !($donateSelected =
+          $config['pagSeguro']['donates'][$donateCode] ?? null)
+      ) {
+        return false;
+      }
+
+      $amountBrl = isset($donateSelected['value']) ? (float)$donateSelected['value'] : 0.0;
+      $grossAmount = $transaction->getGrossAmount();
+      if (is_numeric($grossAmount) && (float)$grossAmount > 0) {
+        $amountBrl = (float)$grossAmount;
+      }
+      if ($amountBrl < 0) {
+        $amountBrl = 0.0;
+      }
+      $amountBrlSql = number_format($amountBrl, 2, '.', '');
 
       $transactionDB = $db
         ->query(
@@ -55,12 +76,6 @@ if ('post' == strtolower($method)) {
           )} AND `account_id` = {$account_id}"
         )
         ->fetch();
-      if (
-        !($donateSelected =
-          $config['pagSeguro']['donates'][$transaction->getItems()[0]->getId()] ?? null)
-      ) {
-        return false;
-      }
 
       if (!($id = $transactionDB['id'] ?? null)) {
         $createdAt = date('Y-m-d H:i:s');
@@ -70,15 +85,27 @@ if ('post' == strtolower($method)) {
           (int) ($config['pagSeguro']['doubleCoins'] &&
             $bought >= (int) $config['pagSeguro']['doubleCoinsStart']);
         $coins_amount = ($is_doubled === 1 ? $bought * 2 : $bought) + $extra;
-        $values = "{$db->quote($transaction_code)}, {$account_id}, {$db->quote(
-          $payment_method
-        )}, {$db->quote($payment_status)}, {$db->quote(
-          $donateSelected['id']
-        )}, {$coins_amount}, {$bought}, {$is_doubled}, {$db->quote($request)}, {$db->quote(
-          $createdAt
-        )}";
+
+        $insertColumns = ['transaction_code', 'account_id', 'payment_method', 'payment_status', 'code', 'coins_amount', 'bought', 'in_double', 'request', 'created_at'];
+        $insertValues = [
+          $db->quote($transaction_code),
+          $account_id,
+          $db->quote($payment_method),
+          $db->quote($payment_status),
+          $db->quote($donateSelected['id']),
+          $coins_amount,
+          $bought,
+          $is_doubled,
+          $db->quote($request),
+          $db->quote($createdAt),
+        ];
+        if ($hasAmountBrlColumn) {
+          $insertColumns[] = 'amount_brl';
+          $insertValues[] = $amountBrlSql;
+        }
+
         $db->exec(
-          "INSERT INTO `pagseguro_transactions` (`transaction_code`, `account_id`, `payment_method`, `payment_status`, `code`, `coins_amount`, `bought`, `in_double`, `request`, `created_at`) VALUES ({$values})"
+          "INSERT INTO `pagseguro_transactions` (`" . implode('`, `', $insertColumns) . "`) VALUES (" . implode(', ', $insertValues) . ')'
         );
         $transactionDB = $db
           ->query("SELECT * FROM `pagseguro_transactions` WHERE `id` = {$db->lastInsertId()}")
@@ -102,10 +129,18 @@ if ('post' == strtolower($method)) {
           $db->exec(
             "UPDATE `accounts` SET {$field} = {$field} + {$coins_amount} WHERE `id` = {$account_id}"
           );
+
+          $updateParts = [
+            '`delivered` = 1',
+            '`payment_status` = ' . $db->quote($payment_status),
+            '`request` = ' . $db->quote($request),
+            '`updated_at` = ' . $db->quote($updateAt),
+          ];
+          if ($hasAmountBrlColumn) {
+            $updateParts[] = '`amount_brl` = ' . $amountBrlSql;
+          }
           $db->exec(
-            "UPDATE `pagseguro_transactions` SET `delivered` = 1, `request` = {$db->quote(
-              $request
-            )}, `updated_at` = {$db->quote($updateAt)} WHERE `id` = {$id}"
+            'UPDATE `pagseguro_transactions` SET ' . implode(', ', $updateParts) . " WHERE `id` = {$id}"
           );
 
           // if you want to activate win items when buy above amount coins
@@ -134,10 +169,16 @@ if ('post' == strtolower($method)) {
           );
         }
       } else {
+        $updateParts = [
+          '`payment_status` = ' . $db->quote($payment_status),
+          '`request` = ' . $db->quote($request),
+          '`updated_at` = ' . $db->quote($updateAt),
+        ];
+        if ($hasAmountBrlColumn && $amountBrl > 0) {
+          $updateParts[] = '`amount_brl` = ' . $amountBrlSql;
+        }
         $db->exec(
-          "UPDATE `pagseguro_transactions` SET `request` = {$db->quote(
-            $request
-          )}, `updated_at` = {$db->quote($updateAt)} WHERE `id` = {$id}"
+          'UPDATE `pagseguro_transactions` SET ' . implode(', ', $updateParts) . " WHERE `id` = {$id}"
         );
         if ($transactionDB['delivered'] == '1' && $payment_status == 'CANCELLED') {
           if ($account_id) {
@@ -152,7 +193,9 @@ if ('post' == strtolower($method)) {
       }
     } catch (PagSeguroServiceException | \Exception $e) {
       log_append('pagseguro_donate_errors.log', date('Y-m-d H:i:s') . ': ' . $e->getMessage());
-      die($e->getMessage());
+      http_response_code(200);
+      echo 'OK';
+      exit;
     }
   }
 }

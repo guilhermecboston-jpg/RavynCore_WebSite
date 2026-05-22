@@ -112,7 +112,9 @@ if ('post' == strtolower($method)) {
       }
     } catch (PagSeguroServiceException | \Exception $e) {
       log_append('pagseguro_buybox_errors.log', date('Y-m-d H:i:s') . ': ' . $e->getMessage());
-      die($e->getMessage());
+      http_response_code(200);
+      echo 'OK';
+      exit;
     }
   }
 }

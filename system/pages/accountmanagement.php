@@ -155,6 +155,8 @@ if ($action == '') {
     $accountExpire = $expiresIn > 0 && $expiresIn > time()
         ? ["Your VIP Time will expire in " . date("M d Y, G:i:s", $expiresIn), false]
         : ['You do not have VIP time!', true];
+    $accountLoyaltyPoints = getAccountLoyaltyPoints((int)$account_logged->getId());
+    $accountLoyaltyTitle = getAccountLoyaltyTitle($accountLoyaltyPoints);
 
     $twig->display('account.management.html.twig', array(
         'welcome_message' => $welcome_message,
@@ -174,6 +176,8 @@ if ($action == '') {
         'account_web_lastlogin' => $account_logged->getCustomField('web_lastlogin'),
         'account_status' => $account_status,
         'account_registered' => $account_registered,
+        'account_loyalty_points' => $accountLoyaltyPoints,
+        'account_loyalty_title' => $accountLoyaltyTitle,
         'account_rlname' => $account_rlname,
         'account_location' => $account_location,
         'account_phone' => $account_phone,

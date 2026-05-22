@@ -18,19 +18,25 @@ $benefits = [
     ['Proficiency Bonus', 'Receives an additional 10% experience on weapon proficiency.'],
 ];
 
-$loyaltyTitles = [
-    ['Scout of RavynCore', '360', '+1'],
-    ['Sentinel of RavynCore', '720', '+2'],
-    ['Steward of RavynCore', '1080', '+3'],
-    ['Warden of RavynCore', '1440', '+4'],
-    ['Squire of RavynCore', '1800', '+5'],
-    ['Warrior of RavynCore', '2160', '+6'],
-    ['Keeper of RavynCore', '2520', '+7'],
-    ['Guardian of RavynCore', '2880', '+8'],
-    ['Sage of RavynCore', '3240', '+9'],
-    ['Supreme of RavynCore', '3600', '+10'],
-    ['Legacy of RavynCore', '7200', '+20'],
+$loyaltyTitles = [];
+$titleTiers = function_exists('getAccountLoyaltyTitleTiers') ? getAccountLoyaltyTitleTiers() : [
+    7200 => 'Legacy of RavynCore',
+    3600 => 'Supreme of RavynCore',
+    3240 => 'Sage of RavynCore',
+    2880 => 'Guardian of RavynCore',
+    2520 => 'Keeper of RavynCore',
+    2160 => 'Warrior of RavynCore',
+    1800 => 'Squire of RavynCore',
+    1440 => 'Warden of RavynCore',
+    1080 => 'Steward of RavynCore',
+    720 => 'Sentinel of RavynCore',
+    360 => 'Scout of RavynCore',
 ];
+$titleTiersAsc = $titleTiers;
+ksort($titleTiersAsc, SORT_NUMERIC);
+foreach ($titleTiersAsc as $requiredPoints => $titleName) {
+    $loyaltyTitles[] = [(string)$titleName, (string)$requiredPoints, '-'];
+}
 
 $vocationBonuses = [
     ['Knights', 'axe, sword, club and shielding'],

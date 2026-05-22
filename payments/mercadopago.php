@@ -94,6 +94,23 @@ $bought = (int)$donateSelected['coins'];
 $extra = (int)$donateSelected['extra'];
 $isDouble = (bool)($config['mercadoPago']['doubleCoins'] ?? false) && $bought >= (int)($config['mercadoPago']['doubleCoinsStart'] ?? 0);
 $coinsAmount = ($isDouble ? $bought * 2 : $bought) + $extra;
+if (!is_numeric($coinsAmount) || $coinsAmount < 0) {
+	$coinsAmount = 0;
+}
+
+$hasAmountBrlColumn = $db->hasColumn('mercadopago_transactions', 'amount_brl');
+$currencyId = strtoupper((string)($payment['currency_id'] ?? 'BRL'));
+$amountBrl = 0.0;
+if (isset($payment['transaction_amount']) && is_numeric($payment['transaction_amount'])) {
+	$amountBrl = (float)$payment['transaction_amount'];
+}
+if ($currencyId === 'BRL' && $amountBrl <= 0 && isset($donateSelected['value']) && is_numeric($donateSelected['value'])) {
+	$amountBrl = (float)$donateSelected['value'];
+}
+if ($amountBrl < 0) {
+	$amountBrl = 0.0;
+}
+$amountBrlSql = number_format($amountBrl, 2, '.', '');
 
 $paymentMethod = (string)($payment['payment_method_id'] ?? ($payment['payment_type_id'] ?? 'unknown'));
 $paymentStatus = (string)($payment['status'] ?? 'unknown');
@@ -109,18 +126,25 @@ try {
 	$query = "SELECT * FROM `mercadopago_transactions` WHERE `payment_id` = " . $db->quote($paymentId) . " FOR UPDATE";
 	$transactionDB = $db->query($query)->fetch();
 	if (!$transactionDB) {
-		$values = $db->quote($paymentId) . ", " .
-			$db->quote($externalReference) . ", " .
-			$accountId . ", " .
-			$db->quote($paymentMethod) . ", " .
-			$db->quote($paymentStatus) . ", " .
-			$db->quote($code) . ", " .
-			$coinsAmount . ", " .
-			$bought . ", " .
-			($isDouble ? 1 : 0) . ", " .
-			$db->quote($request) . ", " .
-			$db->quote($createdAt);
-		$db->exec("INSERT INTO `mercadopago_transactions` (`payment_id`, `external_reference`, `account_id`, `payment_method`, `payment_status`, `code`, `coins_amount`, `bought`, `in_double`, `request`, `created_at`) VALUES ({$values})");
+		$insertColumns = ['payment_id', 'external_reference', 'account_id', 'payment_method', 'payment_status', 'code', 'coins_amount', 'bought', 'in_double', 'request', 'created_at'];
+		$insertValues = [
+			$db->quote($paymentId),
+			$db->quote($externalReference),
+			$accountId,
+			$db->quote($paymentMethod),
+			$db->quote($paymentStatus),
+			$db->quote($code),
+			$coinsAmount,
+			$bought,
+			($isDouble ? 1 : 0),
+			$db->quote($request),
+			$db->quote($createdAt),
+		];
+		if ($hasAmountBrlColumn) {
+			$insertColumns[] = 'amount_brl';
+			$insertValues[] = $amountBrlSql;
+		}
+		$db->exec("INSERT INTO `mercadopago_transactions` (`" . implode('`, `', $insertColumns) . "`) VALUES (" . implode(', ', $insertValues) . ")");
 		$transactionDB = $db->query("SELECT * FROM `mercadopago_transactions` WHERE `id` = " . $db->lastInsertId() . " FOR UPDATE")->fetch();
 	}
 
@@ -131,7 +155,11 @@ try {
 	if ((int)$transactionDB['delivered'] === 0 && $paymentStatus === 'approved') {
 		$field = strtolower($config['mercadoPago']['donationType'] ?? 'coins_transferable');
 		$db->exec("UPDATE `accounts` SET {$field} = {$field} + {$coinsAmount} WHERE `id` = {$accountId}");
-		$db->exec("UPDATE `mercadopago_transactions` SET `delivered` = 1, `payment_status` = " . $db->quote($paymentStatus) . ", `request` = " . $db->quote($requestLog) . ", `updated_at` = " . $db->quote($updateAt) . " WHERE `id` = {$id}");
+		$updateApproved = "`delivered` = 1, `payment_status` = " . $db->quote($paymentStatus) . ", `request` = " . $db->quote($requestLog) . ", `updated_at` = " . $db->quote($updateAt);
+		if ($hasAmountBrlColumn) {
+			$updateApproved .= ", `amount_brl` = {$amountBrlSql}";
+		}
+		$db->exec("UPDATE `mercadopago_transactions` SET {$updateApproved} WHERE `id` = {$id}");
 
 		$values = "{$accountId}, 1, {$coinsAmount}, {$db->quote('Donate - Mercado Pago')}, {$db->quote($updateAt)}, 3";
 		$db->exec("INSERT INTO `coins_transactions` (`account_id`, `type`, `amount`, `description`, `timestamp`, `coin_type`) VALUES ({$values})");
@@ -140,7 +168,11 @@ try {
 		$values2 = "{$accountId}, 0, {$db->quote('Donate - Mercado Pago')}, 3, {$coinsAmount}, {$timestamp}, 0, 0";
 		$db->exec("INSERT INTO `store_history` (`account_id`, `mode`, `description`, `coin_type`, `coin_amount`, `time`, `timestamp`, `coins`) VALUES ({$values2})");
 	} else {
-		$db->exec("UPDATE `mercadopago_transactions` SET `payment_status` = " . $db->quote($paymentStatus) . ", `request` = " . $db->quote($requestLog) . ", `updated_at` = " . $db->quote($updateAt) . " WHERE `id` = {$id}");
+		$updateDefault = "`payment_status` = " . $db->quote($paymentStatus) . ", `request` = " . $db->quote($requestLog) . ", `updated_at` = " . $db->quote($updateAt);
+		if ($hasAmountBrlColumn && $amountBrl > 0) {
+			$updateDefault .= ", `amount_brl` = {$amountBrlSql}";
+		}
+		$db->exec("UPDATE `mercadopago_transactions` SET {$updateDefault} WHERE `id` = {$id}");
 	}
 
 	$db->commit();

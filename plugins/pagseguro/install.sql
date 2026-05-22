@@ -5,6 +5,7 @@ CREATE TABLE `pagseguro_transactions` (
    `payment_method` VARCHAR(50) NOT NULL,
    `payment_status` VARCHAR(50) NOT NULL,
    `code` VARCHAR(10) NOT NULL,
+   `amount_brl` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
    `coins_amount` INT(11) NOT NULL,
    `bought` INT(11) DEFAULT NULL,
    `delivered` CHAR(1) NOT NULL DEFAULT '0',
@@ -18,6 +19,7 @@ CREATE TABLE `pagseguro_transactions` (
    ON DELETE CASCADE,
    INDEX `payment_method` (`payment_method`),
    INDEX `payment_status` (`payment_status`),
+   INDEX `amount_brl` (`amount_brl`),
    INDEX `coins_amount` (`coins_amount`),
    INDEX `delivered` (`delivered`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8;

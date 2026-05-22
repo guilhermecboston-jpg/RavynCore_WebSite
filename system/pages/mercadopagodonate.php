@@ -102,13 +102,8 @@ $curlError = curl_error($ch);
 curl_close($ch);
 
 if ($response === false || !in_array($httpCode, [200, 201], true)) {
-	echo 'Error creating Mercado Pago checkout.';
-	if (!empty($curlError)) {
-		echo '<br/>' . htmlspecialchars($curlError);
-	}
-	if (!empty($response)) {
-		echo '<br/>' . htmlspecialchars($response);
-	}
+	log_append('mercadopago_donate_errors.log', date('Y-m-d H:i:s') . ': checkout create error - ' . $curlError . ' - ' . $response);
+	echo 'Error creating Mercado Pago checkout. Please try again in a few moments.';
 	return;
 }
 

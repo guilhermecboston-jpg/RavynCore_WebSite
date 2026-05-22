@@ -35,5 +35,6 @@ try {
     $checkoutUrl = $paymentRequest->register($credentials);
     header('Location:' . $checkoutUrl);
 } catch (PagSeguroServiceException $e) {
-    die($e->getMessage());
+    log_append('pagseguro_buybox_errors.log', date('Y-m-d H:i:s') . ': ' . $e->getMessage());
+    error('Could not start PagSeguro checkout. Please try again in a few moments.');
 }
