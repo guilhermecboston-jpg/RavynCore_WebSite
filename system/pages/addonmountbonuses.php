@@ -357,26 +357,40 @@ if (!function_exists('rc_am_outfit_image_url')) {
 	}
 }
 
-if (!function_exists('rc_am_thing_canvas_html')) {
-	function rc_am_thing_canvas_html($lookType, $label, $addons, array $colors, $manifestUrl, $className = '')
+if (!function_exists('rc_am_visual_image_html')) {
+	function rc_am_visual_image_html($primarySrc, $label, array $fallbacks = [], $className = '')
 	{
-		$lookType = (int)$lookType;
-		if ($lookType <= 0 || $manifestUrl === '') {
+		$label = trim((string)$label);
+		$class = trim((string)$className);
+		$primarySrc = trim((string)$primarySrc);
+
+		$fallbackQueue = [];
+		foreach ($fallbacks as $fallback) {
+			$fallback = trim((string)$fallback);
+			if ($fallback === '' || $fallback === $primarySrc || in_array($fallback, $fallbackQueue, true)) {
+				continue;
+			}
+
+			$fallbackQueue[] = $fallback;
+		}
+
+		if ($primarySrc === '' && !empty($fallbackQueue)) {
+			$primarySrc = array_shift($fallbackQueue);
+		}
+
+		if ($primarySrc === '') {
 			return '<span class="rc-am-empty">N/A</span>';
 		}
 
-		$class = trim('rc-thing-canvas ' . $className);
-		return '<canvas class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '" width="96" height="96" data-rc-thing="outfit"'
-			. ' data-manifest="' . htmlspecialchars($manifestUrl, ENT_QUOTES, 'UTF-8') . '"'
-			. ' data-looktype="' . $lookType . '"'
-			. ' data-addons="' . (int)$addons . '"'
-			. ' data-head="' . (int)$colors['head'] . '"'
-			. ' data-body="' . (int)$colors['body'] . '"'
-			. ' data-legs="' . (int)$colors['legs'] . '"'
-			. ' data-feet="' . (int)$colors['feet'] . '"'
-			. ' data-direction="2"'
-			. ' aria-label="' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '"></canvas>'
-			. '<span class="rc-thing-fallback" hidden>' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</span>';
+		$fallbackAttr = '';
+		if (!empty($fallbackQueue)) {
+			$fallbackAttr = ' data-fallback="' . htmlspecialchars(implode('|', $fallbackQueue), ENT_QUOTES, 'UTF-8') . '" data-fallback-index="0"';
+		}
+
+		return '<img src="' . htmlspecialchars($primarySrc, ENT_QUOTES, 'UTF-8') . '"'
+			. ($class !== '' ? ' class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '"' : '')
+			. $fallbackAttr
+			. ' alt="' . htmlspecialchars($label !== '' ? $label : 'Visual', ENT_QUOTES, 'UTF-8') . '">';
 	}
 }
 
@@ -405,8 +419,6 @@ if (!function_exists('rc_am_asset_url')) {
 
 $outfitRenderer = rc_am_normalize_renderer_url($config['outfit_images_url'] ?? '');
 $defaultColors = ['head' => 95, 'body' => 114, 'legs' => 39, 'feet' => 115];
-$thingsWebManifestUrl = rc_am_asset_url('images/things-web/manifest.json');
-$thingsRendererUrl = rc_am_asset_url('templates/tibiacom/js/ravyncore-things-renderer.js');
 $serverPath = isset($config['server_path']) ? trim((string)$config['server_path']) : '';
 if ($serverPath !== '' && !preg_match('/[\/\\\\]$/', $serverPath)) {
 	$serverPath .= '/';
@@ -590,8 +602,18 @@ usort($mounts, function ($a, $b) {
 
 $outfitsRows = '';
 foreach ($outfits as $row) {
-	$femaleImageHtml = rc_am_thing_canvas_html((int)$row['femaleLookType'], 'Female ' . $row['name'], 3, $defaultColors, $thingsWebManifestUrl);
-	$maleImageHtml = rc_am_thing_canvas_html((int)$row['maleLookType'], 'Male ' . $row['name'], 3, $defaultColors, $thingsWebManifestUrl);
+	$femaleImageHtml = rc_am_visual_image_html(
+		$row['femaleImage'],
+		'Female ' . $row['name'],
+		[$row['femaleFallbackImage']],
+		'rc-am-outfit-image'
+	);
+	$maleImageHtml = rc_am_visual_image_html(
+		$row['maleImage'],
+		'Male ' . $row['name'],
+		[$row['maleFallbackImage']],
+		'rc-am-outfit-image'
+	);
 
 	$outfitsRows .= '<tr data-search="' . htmlspecialchars($row['search'], ENT_QUOTES, 'UTF-8') . '">'
 		. '<td class="rc-am-name-cell">' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '</td>'
@@ -610,7 +632,12 @@ if ($outfitsRows === '') {
 
 $mountRows = '';
 foreach ($mounts as $row) {
-	$imageHtml = rc_am_thing_canvas_html((int)$row['renderLookType'], $row['name'], 3, $defaultColors, $thingsWebManifestUrl, 'rc-thing-canvas-mount');
+	$imageHtml = rc_am_visual_image_html(
+		$row['primaryImage'],
+		$row['name'],
+		[$row['legacyPrimaryImage'], $row['fallbackImage']],
+		'rc-am-mount-image'
+	);
 
 	$mountRows .= '<tr data-search="' . htmlspecialchars($row['search'], ENT_QUOTES, 'UTF-8') . '">'
 		. '<td class="rc-am-name-cell">' . htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') . '</td>'
@@ -661,7 +688,6 @@ echo '<section class="rc-st-card">'
 	. '</table>'
 	. '</div>'
 	. '</section>'
-	. '<script src="' . htmlspecialchars($thingsRendererUrl, ENT_QUOTES, 'UTF-8') . '"></script>'
 	. '<script>(function(){'
 	. 'var root=document.querySelector(".rc-am-page");if(!root){return;}'
 	. 'var tabs=[].slice.call(root.querySelectorAll(".rc-am-tab"));'

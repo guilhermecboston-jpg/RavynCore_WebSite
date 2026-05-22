@@ -252,9 +252,6 @@ $socialLinks = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="<?= BASE_URL; ?>images/favicon.ico">
     <link rel="shortcut icon" type="image/x-icon" href="<?= BASE_URL; ?>images/favicon.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="tools/fonts/fontawesome/all.css">
     <?php $rcCssVer = @filemtime(BASE . $template_path . '/css/ravyncore.css') ?: time(); ?>
     <link rel="stylesheet" href="<?= $template_path; ?>/css/ravyncore.css?v=<?= $rcCssVer; ?>">
@@ -565,8 +562,6 @@ $socialLinks = [
 
 <?php $rcGenericJsVer = @filemtime(BASE . $template_path . '/js/generic.js') ?: time(); ?>
 <script src="<?= $template_path; ?>/js/generic.js?v=<?= $rcGenericJsVer; ?>"></script>
-<?php $rcThingsRendererVer = @filemtime(BASE . $template_path . '/js/ravyncore-things-renderer.js') ?: time(); ?>
-<script src="<?= $template_path; ?>/js/ravyncore-things-renderer.js?v=<?= $rcThingsRendererVer; ?>"></script>
 <?php $rcJsVer = @filemtime(BASE . $template_path . '/js/ravyncore.js') ?: time(); ?>
 <script src="<?= $template_path; ?>/js/ravyncore.js?v=<?= $rcJsVer; ?>"></script>
 <?= template_place_holder('body_end'); ?>

@@ -1,11 +1,3 @@
-@font-face {
-    font-family: 'Asul';
-    src: url('https://static.tibia.com/styles/fonts/Asul-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
 :root {
     --rc-bg: #06080d;
     --rc-surface: #0f1522;
@@ -31,11 +23,11 @@
     --rc-radius: 16px;
     --rc-radius-card: 10px;
     --rc-radius-cta: 8px;
-    --rc-font-title: 'Cinzel', 'Georgia', serif;
-    --rc-font-reading: 'Asul', 'Georgia', 'Times New Roman', serif;
-    --rc-font-ui: 'Rajdhani', 'Segoe UI', sans-serif;
-    --rc-reading-size: 17px;
-    --rc-reading-line: 1.58;
+    --rc-font-title: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+    --rc-font-reading: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+    --rc-font-ui: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+    --rc-reading-size: 12px;
+    --rc-reading-line: 1.45;
 }
 
 *,
@@ -92,8 +84,8 @@ body.rc-page .rc-rich-content p,
 body.rc-page .rc-panel p,
 body.rc-page .TableContent p,
 body.rc-page .BoxContent p {
-    font-size: 18px;
-    line-height: 1.52;
+    font-size: 12px;
+    line-height: 1.45;
     color: #eef1f6;
 }
 
@@ -101,8 +93,8 @@ body.rc-page .rc-rich-content td,
 body.rc-page .rc-rich-content th,
 body.rc-page .TableContent td,
 body.rc-page .TableContent th {
-    font-size: 16px;
-    line-height: 1.42;
+    font-size: 11px;
+    line-height: 1.35;
 }
 
 body.rc-page h1,
@@ -223,14 +215,14 @@ a:hover {
 }
 
 .rc-header-title {
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: 22px;
     letter-spacing: 0.05em;
 }
 
 .rc-header-subtitle {
     margin-top: -8px;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: 13px;
     letter-spacing: 0.28em;
     color: #d8c79a;
@@ -367,7 +359,7 @@ body.rc-nav-locked .site-header {
     color: var(--rc-text-soft, #b9b2a4);
     border-radius: 6px;
     border: 1px solid transparent;
-    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-weight: 600;
     font-size: 13.5px;
     letter-spacing: 0.18em;
@@ -561,7 +553,7 @@ body.rc-nav-locked .site-header {
 
 .rc-hero-eyebrow {
     margin: 0;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: clamp(14px, 1.6vw, 20px);
     letter-spacing: 0.46em;
     text-transform: uppercase;
@@ -579,7 +571,7 @@ body.rc-nav-locked .site-header {
 
 .rc-hero h1 {
     margin: 0;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: clamp(1.7rem, 3vw, 2.6rem);
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -589,7 +581,7 @@ body.rc-nav-locked .site-header {
 .rc-hero-tagline {
     margin-top: 8px;
     margin-bottom: 6px;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: 31px;
     letter-spacing: 1.5px;
     color: #eee0c5;
@@ -688,7 +680,7 @@ body.rc-nav-locked .site-header {
 
 .rc-panel h3 {
     margin: 0 0 12px;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: 1.06rem;
     letter-spacing: 0.07em;
     text-transform: uppercase;
@@ -1089,7 +1081,7 @@ img.rc-themebox-outfit,
 
 .rc-feature h3 {
     margin: 0 0 6px;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: 14.5px;
     font-weight: 700;
     letter-spacing: 0.16em;
@@ -1127,7 +1119,7 @@ img.rc-themebox-outfit,
 
 .rc-social-strip-label {
     margin: 0;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: 12px;
     letter-spacing: 0.32em;
     text-transform: uppercase;
@@ -1179,7 +1171,7 @@ img.rc-themebox-outfit,
 }
 
 .rc-footer-subtitle {
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: 15px;
     letter-spacing: 3px;
     line-height: 1;
@@ -1193,7 +1185,7 @@ img.rc-themebox-outfit,
 
 .rc-footer-brand strong {
     display: block;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     letter-spacing: 0.05em;
     text-transform: uppercase;
 }
@@ -1317,7 +1309,7 @@ body.rc-page .rc-rich-content .TableContent tr + tr th {
 
 .rc-rich-content .Text {
     display: block !important;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: #f0c87f;
@@ -1457,7 +1449,7 @@ textarea {
     background: linear-gradient(180deg, #1f2a3e 0%, #1a2334 100%) !important;
     color: #f3f7ff !important;
     padding: 9px 11px;
-    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: 1rem;
     line-height: 1.2;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -1491,7 +1483,7 @@ input[type="radio"] {
 
 input[type="submit"],
 button {
-    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
 }
 
 .BigButton,
@@ -1605,7 +1597,7 @@ body.rc-page option {
 }
 
 .rc-helper-div #HelperDivHeadline {
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     letter-spacing: 0.05em;
     color: #f0c87f;
     margin-bottom: 6px;
@@ -1764,7 +1756,7 @@ body.rc-page option {
         justify-content: flex-start;
         padding: 0 4px 6px;
         height: auto;
-        font-family: 'Cinzel', 'Georgia', serif;
+        font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
         font-size: 11px;
         font-weight: 700;
         letter-spacing: 0.32em;
@@ -1814,7 +1806,7 @@ body.rc-page option {
         padding: 11px 14px;
         border-bottom: none;
         border-radius: 8px;
-        font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+        font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
         font-weight: 600;
         font-size: 13.5px;
         letter-spacing: 0.16em;
@@ -2634,7 +2626,7 @@ body.rc-page .rc-rich-content .rc-createchar-title td,
 body[class*="account"] .rc-rich-content .rc-createchar-title td {
     background: linear-gradient(180deg, rgba(38, 74, 119, 0.92) 0%, rgba(28, 57, 96, 0.92) 100%) !important;
     color: #f1d39a !important;
-    font-family: 'Cinzel', 'Georgia', serif !important;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif !important;
     font-weight: 700 !important;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -3708,7 +3700,7 @@ body.rc-page .rc-rich-content .rc-title-ornate {
     background:
         linear-gradient(180deg, rgba(38, 74, 119, 0.92) 0%, rgba(28, 57, 96, 0.92) 100%);
     color: #f1d39a;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -3794,7 +3786,7 @@ body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer {
 
 body.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .Text {
     color: #f1d39a !important;
-    font-family: 'Cinzel', 'Georgia', serif;
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     font-size: 26px;
     font-weight: 700;
     letter-spacing: 0.03em;
@@ -5564,7 +5556,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
 .rc-st-page-title h2 {
   margin: 0;
   color: #f2c16b;
-  font-family: 'Cinzel', 'Georgia', serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 44px;
   font-weight: 800;
   text-transform: uppercase;
@@ -5593,7 +5585,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
 .rc-st-card h3 {
   margin: 0 0 11px;
   color: #efd39b;
-  font-family: 'Cinzel', 'Georgia', serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 27px;
   font-weight: 700;
   letter-spacing: 0.4px;
@@ -5602,7 +5594,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
 .rc-st-card p {
   margin: 0;
   color: #d4deef;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   line-height: 1.7;
   font-size: 17px;
   font-weight: 500;
@@ -5631,7 +5623,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
 
 .rc-st-feature-preview-fallback {
   color: #9eb8df;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 18px;
   font-weight: 600;
 }
@@ -5645,7 +5637,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
 
 .rc-st-notes li {
   color: #d2ddf1;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 16px;
   line-height: 1.45;
   font-weight: 500;
@@ -5711,7 +5703,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
 .rc-st-summary-title {
   color: #f1d4a2;
   font-size: 29px;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-weight: 800;
   display: inline-flex;
   align-items: center;
@@ -5799,7 +5791,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
   color: #e6efff;
   padding: 6px 12px;
   font-size: 16px;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-weight: 600;
   background: rgba(13, 26, 47, 0.72);
 }
@@ -5808,7 +5800,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
   margin-top: 10px !important;
   font-size: 17px !important;
   color: #c8d6f0 !important;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-weight: 500;
 }
 
@@ -5859,7 +5851,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
 }
 
 .rc-st-task-cell strong {
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 16px;
   font-weight: 700;
   color: #f1f5ff;
@@ -5905,7 +5897,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
   border-bottom: 1px solid rgba(98, 132, 184, 0.45);
   padding: 12px 13px;
   font-size: 16px;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-weight: 700;
 }
 
@@ -5916,7 +5908,7 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
   vertical-align: top;
   font-size: 15px;
   line-height: 1.4;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-weight: 500;
 }
 
@@ -6023,7 +6015,7 @@ body.rc-page-addonmountbonuses .rc-panel-content > h3 {
 }
 
 .rc-am-warning-list li {
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 16px;
   color: #ffd6b0;
 }
@@ -6047,7 +6039,7 @@ body.rc-page-addonmountbonuses .rc-panel-content > h3 {
   background: rgba(8, 18, 33, 0.9);
   color: #e4eeff;
   padding: 0 14px;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 17px;
   font-weight: 600;
   outline: none;
@@ -6078,7 +6070,7 @@ body.rc-page-addonmountbonuses .rc-panel-content > h3 {
   border-right: 1px solid rgba(106, 146, 209, 0.28);
   background: transparent;
   color: #bcd0ef;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -6103,7 +6095,7 @@ body.rc-page-addonmountbonuses .rc-panel-content > h3 {
 
 .rc-am-results {
   color: #cfe0fb;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 16px;
   white-space: nowrap;
 }
@@ -6141,14 +6133,14 @@ body.rc-page-addonmountbonuses .rc-panel-content > h3 {
   text-align: left;
   color: #f4f8ff;
   background: rgba(10, 26, 49, 0.95);
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 16px;
   font-weight: 700;
 }
 
 .rc-am-table td {
   color: #cfe1fb;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-size: 15px;
   line-height: 1.45;
   background: rgba(9, 20, 38, 0.25);
@@ -6189,7 +6181,7 @@ body.rc-page-addonmountbonuses .rc-panel-content > h3 {
 .rc-am-outfit-slot span {
   color: #a9c0e5;
   font-size: 12px;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -6242,7 +6234,7 @@ body.rc-page-addonmountbonuses .rc-panel-content > h3 {
 .rc-am-empty {
   color: #8ca8d3;
   font-size: 13px;
-  font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
 }
 
 .rc-am-bonus-list {
@@ -6278,3 +6270,4 @@ body.rc-page-addonmountbonuses .rc-panel-content > h3 {
     min-width: 860px;
   }
 }
+

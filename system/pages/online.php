@@ -116,6 +116,7 @@ foreach($playersOnline as $player){
 			'body' => (int)$player['lookbody'],
 			'legs' => (int)$player['looklegs'],
 			'feet' => (int)$player['lookfeet'],
+			'direction' => 2,
 		]) : null
 	);
 

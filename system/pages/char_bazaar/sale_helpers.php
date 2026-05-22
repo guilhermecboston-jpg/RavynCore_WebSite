@@ -155,6 +155,7 @@ if (!function_exists('cbz_get_full_addons_list')) {
                     'body' => (int)$player['lookbody'],
                     'legs' => (int)$player['looklegs'],
                     'feet' => (int)$player['lookfeet'],
+                    'direction' => 2,
                 ]),
             ];
         }
@@ -210,6 +211,7 @@ if (!function_exists('cbz_get_full_mounts_list')) {
                     'body' => (int)$player['lookbody'],
                     'legs' => (int)$player['looklegs'],
                     'feet' => (int)$player['lookfeet'],
+                    'direction' => 2,
                 ]),
             ];
         }
@@ -419,6 +421,7 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'body' => (int)$player['lookbody'],
             'legs' => (int)$player['looklegs'],
             'feet' => (int)$player['lookfeet'],
+            'direction' => 2,
         ]);
 
         $creationDate = '-';
