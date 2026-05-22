@@ -558,15 +558,15 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                     <article class="esb-level-box">
                         <header class="esb-level-head"><?= htmlspecialchars($group['title'], ENT_QUOTES, 'UTF-8') ?></header>
                         <div class="esb-level-tabs" data-level-tabs="<?= htmlspecialchars($groupKey, ENT_QUOTES, 'UTF-8') ?>">
-                            <?php for ($level = 1; $level <= 9; $level++) { ?>
-                                <button type="button" class="esb-level-btn<?= $level === 1 ? ' is-active' : '' ?>" data-level-btn="<?= htmlspecialchars($groupKey, ENT_QUOTES, 'UTF-8') ?>" data-level="<?= $level ?>">
+                            <?php for ($level = 0; $level <= 9; $level++) { ?>
+                                <button type="button" class="esb-level-btn<?= $level === 0 ? ' is-active' : '' ?>" data-level-btn="<?= htmlspecialchars($groupKey, ENT_QUOTES, 'UTF-8') ?>" data-level="<?= $level ?>">
                                     Nivel <?= $level ?>
                                 </button>
                             <?php } ?>
                         </div>
 
-                        <?php for ($level = 1; $level <= 9; $level++) { ?>
-                            <div class="esb-level-table-wrap<?= $level === 1 ? ' is-active' : '' ?>" data-level-table="<?= htmlspecialchars($groupKey, ENT_QUOTES, 'UTF-8') ?>" data-level="<?= $level ?>">
+                        <?php for ($level = 0; $level <= 9; $level++) { ?>
+                            <div class="esb-level-table-wrap<?= $level === 0 ? ' is-active' : '' ?>" data-level-table="<?= htmlspecialchars($groupKey, ENT_QUOTES, 'UTF-8') ?>" data-level="<?= $level ?>">
                                 <table class="esb-table">
                                     <thead>
                                     <tr>
