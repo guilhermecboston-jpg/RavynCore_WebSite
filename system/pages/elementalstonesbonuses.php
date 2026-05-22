@@ -189,29 +189,49 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-table thead th {
     background: rgba(18, 29, 47, 0.95);
 }
 
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-color {
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-element-label {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    width: 100%;
     font-weight: 700;
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-color-dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    display: inline-block;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-item-cell {
     display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 2px;
+    min-width: 52px;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-item-id {
     color: #9eb3d6;
     font-size: 12px;
+}
+
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-item-qty {
+    color: #f0c982;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-item-code {
+    color: #95a9cb;
+    font-size: 11px;
+    line-height: 1.1;
+}
+
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-element-col,
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-element-cell {
+    text-align: center;
+}
+
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-stone-col,
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-stone-cell {
+    text-align: center;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-grid-3 {
@@ -292,66 +312,6 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-note strong {
     color: #f0c982;
 }
 
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-modal-tabs {
-    display: inline-flex;
-    border: 1px solid rgba(89, 124, 184, 0.55);
-    border-radius: 10px;
-    overflow: hidden;
-    background: rgba(9, 17, 32, 0.86);
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-modal-tab-btn {
-    border: 0;
-    background: transparent;
-    color: #c4d7f6;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    padding: 10px 18px;
-    cursor: pointer;
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-modal-tab-btn.is-active {
-    color: #f0c982;
-    background: linear-gradient(180deg, rgba(49, 78, 118, 0.95) 0%, rgba(29, 56, 93, 0.95) 100%);
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-modal-panel {
-    display: none;
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-modal-panel.is-active {
-    display: block;
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-action-btn {
-    border: 1px solid rgba(98, 137, 197, 0.72);
-    border-radius: 6px;
-    background: linear-gradient(180deg, rgba(49, 87, 135, 0.95) 0%, rgba(29, 64, 112, 0.95) 100%);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 6px 10px;
-    cursor: pointer;
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-action-btn:hover {
-    filter: brightness(1.07);
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-result {
-    border: 1px solid rgba(150, 172, 216, 0.24);
-    border-radius: 8px;
-    background: rgba(8, 16, 30, 0.78);
-    color: #d7e7ff;
-    padding: 10px 12px;
-    font-size: 13px;
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-result strong {
-    color: #f0c982;
-}
-
 @media (max-width: 1024px) {
     body.rc-page-elementalstonesbonuses .rc-rich-content .esb-grid-3 {
         grid-template-columns: 1fr;
@@ -374,18 +334,17 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-result strong {
             <table class="esb-table">
                 <thead>
                 <tr>
-                    <th>Color</th>
-                    <th>Element</th>
-                    <th>Level 0</th>
-                    <th>Level 1</th>
-                    <th>Level 2</th>
-                    <th>Level 3</th>
-                    <th>Level 4</th>
-                    <th>Level 5</th>
-                    <th>Level 6</th>
-                    <th>Level 7</th>
-                    <th>Level 8</th>
-                    <th>Level 9</th>
+                    <th class="esb-element-col">Element</th>
+                    <th class="esb-stone-col">Level 0</th>
+                    <th class="esb-stone-col">Level 1</th>
+                    <th class="esb-stone-col">Level 2</th>
+                    <th class="esb-stone-col">Level 3</th>
+                    <th class="esb-stone-col">Level 4</th>
+                    <th class="esb-stone-col">Level 5</th>
+                    <th class="esb-stone-col">Level 6</th>
+                    <th class="esb-stone-col">Level 7</th>
+                    <th class="esb-stone-col">Level 8</th>
+                    <th class="esb-stone-col">Level 9</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -393,20 +352,19 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-result strong {
                     $meta = $colorMeta[$color];
                 ?>
                     <tr>
-                        <td>
-                            <span class="esb-color">
-                                <span class="esb-color-dot" style="background: <?= htmlspecialchars($meta['hex'], ENT_QUOTES, 'UTF-8') ?>;"></span>
-                                <?= htmlspecialchars($color, ENT_QUOTES, 'UTF-8') ?>
+                        <td class="esb-element-cell">
+                            <span class="esb-element-label">
+                                <?= htmlspecialchars($meta['element'], ENT_QUOTES, 'UTF-8') ?>
                             </span>
                         </td>
-                        <td><?= htmlspecialchars($meta['element'], ENT_QUOTES, 'UTF-8') ?></td>
                         <?php for ($level = 0; $level <= 9; $level++) {
                             $itemId = (int)$levels[$level];
                         ?>
-                            <td>
+                            <td class="esb-stone-cell">
                                 <span class="esb-item-cell">
                                     <?= getItemImage($itemId) ?>
-                                    <span class="esb-item-id">#<?= $itemId ?></span>
+                                    <span class="esb-item-qty">x1</span>
+                                    <span class="esb-item-code">ID <?= $itemId ?></span>
                                 </span>
                             </td>
                         <?php } ?>
@@ -541,69 +499,10 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-result strong {
                 <?php } ?>
                 </tbody>
             </table>
-            <p class="esb-note"><strong>Flow:</strong> click and show <em>Fusion result</em> while forging. The message should state if the attempt was successful or failed. On success, item goes directly to <strong>Store Inbox</strong> (no exaltation chest required).</p>
+            <p class="esb-note"><strong>Flow:</strong> Stone Dust is generated by transforming Bag of Stone + cost, and the resulting item is sent directly to <strong>Store Inbox</strong>.</p>
         </div>
     </section>
 
-    <section class="esb-section">
-        <h2 class="esb-title">OTC Modal - Fusion / Transform</h2>
-        <div class="esb-body">
-            <div class="esb-modal-tabs">
-                <button type="button" class="esb-modal-tab-btn is-active" data-modal-btn="fusion">FUSION</button>
-                <button type="button" class="esb-modal-tab-btn" data-modal-btn="transform">TRANSFORM</button>
-            </div>
-
-            <div class="esb-modal-panel is-active" data-modal-panel="fusion">
-                <table class="esb-table">
-                    <thead>
-                    <tr>
-                        <th>Nivel</th>
-                        <th>Custo</th>
-                        <th>Chance</th>
-                        <th style="width: 110px;">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($fusionSteps as $step) { ?>
-                        <tr>
-                            <td><strong><?= (int)$step['from'] ?> -> <?= (int)$step['to'] ?></strong></td>
-                            <td><?= htmlspecialchars($step['cost'], ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><strong><?= (int)$step['chance'] ?>%</strong></td>
-                            <td><button type="button" class="esb-action-btn" data-fusion-action data-chance="<?= (int)$step['chance'] ?>">Forge</button></td>
-                        </tr>
-                    <?php } ?>
-                    </tbody>
-                </table>
-                <div id="esbFusionResult" class="esb-result"><strong>Fusion result:</strong> waiting for action.</div>
-            </div>
-
-            <div class="esb-modal-panel" data-modal-panel="transform">
-                <table class="esb-table">
-                    <thead>
-                    <tr>
-                        <th>Input</th>
-                        <th>Cost</th>
-                        <th>Output</th>
-                        <th>Chance</th>
-                        <th style="width: 110px;">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($transformRows as $row) { ?>
-                        <tr>
-                            <td><?= htmlspecialchars($row['bag_name'], ENT_QUOTES, 'UTF-8') ?> (#<?= (int)$row['bag_id'] ?>)</td>
-                            <td><?= htmlspecialchars($row['cost'], ENT_QUOTES, 'UTF-8') ?></td>
-                            <td><?= (int)$row['dust_qty'] ?>x Stone Dust (#60581)</td>
-                            <td><strong>100%</strong></td>
-                            <td><button type="button" class="esb-action-btn" data-transform-action data-dust="<?= (int)$row['dust_qty'] ?>">Transform</button></td>
-                        </tr>
-                    <?php } ?>
-                    </tbody>
-                </table>
-                <div id="esbTransformResult" class="esb-result"><strong>Fusion result:</strong> waiting for action.</div>
-            </div>
-        </div>
-    </section>
 </div>
 
 <script>
@@ -633,60 +532,5 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-result strong {
     }
 
     ['damage', 'protection', 'increase'].forEach(setupLevelTabs);
-
-    var modalButtons = document.querySelectorAll('[data-modal-btn]');
-    var modalPanels = document.querySelectorAll('[data-modal-panel]');
-    modalButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            var tab = button.getAttribute('data-modal-btn');
-            modalButtons.forEach(function(btn) {
-                btn.classList.remove('is-active');
-            });
-            modalPanels.forEach(function(panel) {
-                panel.classList.remove('is-active');
-            });
-            button.classList.add('is-active');
-            var target = document.querySelector('[data-modal-panel="' + tab + '"]');
-            if (target) {
-                target.classList.add('is-active');
-            }
-        });
-    });
-
-    var fusionResult = document.getElementById('esbFusionResult');
-    document.querySelectorAll('[data-fusion-action]').forEach(function(button) {
-        button.addEventListener('click', function() {
-            var chance = parseInt(button.getAttribute('data-chance') || '0', 10);
-            if (fusionResult) {
-                fusionResult.innerHTML = '<strong>Fusion result:</strong> forging...';
-            }
-
-            setTimeout(function() {
-                var roll = Math.random() * 100;
-                var success = roll < chance;
-                if (!fusionResult) {
-                    return;
-                }
-
-                if (success) {
-                    fusionResult.innerHTML = '<strong>Fusion result:</strong> attempt was successful. Item sent to Store Inbox.';
-                } else {
-                    fusionResult.innerHTML = '<strong>Fusion result:</strong> attempt failed. Stone remains at the same level.';
-                }
-            }, 350);
-        });
-    });
-
-    var transformResult = document.getElementById('esbTransformResult');
-    document.querySelectorAll('[data-transform-action]').forEach(function(button) {
-        button.addEventListener('click', function() {
-            var dust = parseInt(button.getAttribute('data-dust') || '0', 10);
-            if (!transformResult) {
-                return;
-            }
-
-            transformResult.innerHTML = '<strong>Fusion result:</strong> transform completed (100%). Created ' + dust + 'x Stone Dust (60581) and sent to Store Inbox.';
-        });
-    });
 })();
 </script>
