@@ -291,7 +291,11 @@ if ($load_it) {
     }
 
     $success = false;
-    $tmp_content = getCustomPage($page, $success);
+    $skipCustomPageOverride = in_array($page, ['characters', 'accountmanagement'], true);
+    $tmp_content = '';
+    if (!$skipCustomPageOverride) {
+        $tmp_content = getCustomPage($page, $success);
+    }
     if ($success) {
         $content .= $tmp_content;
         if (hasFlag(FLAG_CONTENT_PAGES) || superAdmin()) {
