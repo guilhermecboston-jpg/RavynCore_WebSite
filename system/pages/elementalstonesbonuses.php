@@ -78,19 +78,46 @@ if (!function_exists('esb_percent_value')) {
     }
 }
 
+if (!function_exists('esb_item_image')) {
+    function esb_item_image($id, $tooltip = '')
+    {
+        $html = getItemImage((int)$id);
+        $tooltip = trim((string)$tooltip);
+        if ($tooltip === '') {
+            return $html;
+        }
+
+        $safeTooltip = htmlspecialchars($tooltip, ENT_QUOTES, 'UTF-8');
+        if (strpos($html, 'class="item_image"') !== false) {
+            if (strpos($html, 'title="') !== false) {
+                return preg_replace('/title="[^"]*"/', 'title="' . $safeTooltip . '"', $html, 1);
+            }
+
+            return str_replace('class="item_image"', 'class="item_image" title="' . $safeTooltip . '"', $html);
+        }
+
+        if (strpos($html, '<img ') !== false) {
+            return preg_replace('/<img\s+/', '<img class="item_image" title="' . $safeTooltip . '" ', $html, 1);
+        }
+
+        return $html;
+    }
+}
+
 if (!function_exists('esb_level_percent')) {
     function esb_level_percent($level)
     {
         static $values = [
-            1 => 1,
-            2 => 3,
-            3 => 6,
-            4 => 10,
-            5 => 14,
-            6 => 18,
-            7 => 22,
-            8 => 25,
-            9 => 28,
+            0 => 1.00,
+            1 => 1.40,
+            2 => 2.00,
+            3 => 2.75,
+            4 => 4.00,
+            5 => 6.00,
+            6 => 10.00,
+            7 => 16.00,
+            8 => 20.00,
+            9 => 28.00,
         ];
 
         $level = (int)$level;
@@ -105,7 +132,20 @@ if (!function_exists('esb_increase_value')) {
         $basePercent = esb_level_percent($level);
         switch ($key) {
             case 'skill':
-                return '+' . max(0, $level - 1);
+                $skillIncrease = [
+                    0 => 1,
+                    1 => 2,
+                    2 => 4,
+                    3 => 6,
+                    4 => 8,
+                    5 => 10,
+                    6 => 12,
+                    7 => 16,
+                    8 => 20,
+                    9 => 28,
+                ];
+
+                return '+' . (int)($skillIncrease[$level] ?? 0);
             case 'momentum':
             case 'critical_damage':
                 return esb_percent_value($basePercent * 2);
@@ -115,6 +155,8 @@ if (!function_exists('esb_increase_value')) {
     }
 }
 ?>
+<script type="text/javascript" src="tools/js/tipped.js"></script>
+<link rel="stylesheet" type="text/css" href="tools/css/tipped.css"/>
 <style>
 body.rc-page-elementalstonesbonuses .rc-panel-content > h3 {
     display: none;
@@ -333,6 +375,18 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-note strong {
     color: #f0c982;
 }
 
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-rules {
+    margin: 0;
+    padding-left: 20px;
+    color: #d0def8;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-rules li {
+    margin-bottom: 5px;
+}
+
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-level-col {
     min-width: 420px;
 }
@@ -443,7 +497,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
     <section class="esb-section">
         <h2 class="esb-title">Elemental Stones Bonuses</h2>
         <div class="esb-body">
-            <p class="esb-text">Stone catalog by level. Images are loaded automatically when available.</p>
+            <p class="esb-text">Catalogo de stones por nivel.</p>
             <table class="esb-table">
                 <thead>
                 <tr>
@@ -475,7 +529,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                         ?>
                             <td class="esb-stone-cell">
                                 <span class="esb-item-cell">
-                                    <?= getItemImage($itemId) ?>
+                                    <?= esb_item_image($itemId, $meta['element'] . ' Stone - Nivel ' . $level) ?>
                                 </span>
                             </td>
                         <?php } ?>
@@ -489,7 +543,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
     <section class="esb-section">
         <h2 class="esb-title">Percentages - Stones by Level</h2>
         <div class="esb-body">
-            <p class="esb-text">Select a stone level to preview bonuses with 1 stone equipped.</p>
+            <p class="esb-text">Selecione um nivel de pedra para visualizar os bonus com 1 pedra equipada.</p>
 
             <div class="esb-grid-3">
                 <?php
@@ -533,7 +587,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                                         <tr>
                                             <td>
                                                 <div class="esb-attr-cell">
-                                                    <?= getItemImage($itemId) ?>
+                                                    <?= esb_item_image($itemId, $row['label'] . ' - Nivel ' . $level) ?>
                                                     <span><?= htmlspecialchars($row['label'], ENT_QUOTES, 'UTF-8') ?></span>
                                                 </div>
                                             </td>
@@ -547,14 +601,21 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                     </article>
                 <?php } ?>
             </div>
-            <p class="esb-note"><strong>Note:</strong> these percentage values are shown for page preview and can be adjusted anytime to match the final server script.</p>
+            <p class="esb-note"><strong>Nota:</strong> estes valores percentuais sao apresentados na pre-visualizacao da pagina e podem ser ajustados a qualquer momento para corresponder ao script final do servidor.</p>
+            <ul class="esb-rules">
+                <li>Cada personagem possui 1 slot gratuito para: Arma, Armadura, Capacete e Shield.</li>
+                <li>Contas VIP Account desbloqueiam automaticamente +1 slot adicional por equipamento, totalizando 2 slots por equipamento.</li>
+                <li>Para liberar 3 slots permanentes no personagem, adquira na Store: Unlocked Stones Sloots.</li>
+                <li>Para obter a primeira Stone nivel 1, drope em Soul War, Gnomprona, Rotten Blood, Livrarias, Epic Hunts, ou compre na Store uma Stone Bag nivel 1, Stone Bag nivel 2, Stone Bag nivel 3.</li>
+                <li>Algumas evolucoes possuem chance de falha; se falhar, o custo e perdido e as Stones permanecem no mesmo nivel.</li>
+            </ul>
         </div>
     </section>
 
     <section class="esb-section">
         <h2 class="esb-title">Stone Evolution (Fusion)</h2>
         <div class="esb-body">
-            <p class="esb-text">Costs and success chance for evolving stones.</p>
+            <p class="esb-text">Custos e probabilidade de sucesso na evolucao de pedras.</p>
             <table class="esb-table">
                 <thead>
                 <tr>
@@ -578,12 +639,12 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                                     $toTitle = !empty($toName) ? $toName : ($meta['element'] . ' Stone');
                                 ?>
                                     <span class="esb-fusion-pair">
-                                        <span class="esb-fusion-item" title="<?= htmlspecialchars($fromTitle, ENT_QUOTES, 'UTF-8') ?>">
-                                            <?= getItemImage($fromItemId) ?>
+                                        <span class="esb-fusion-item">
+                                            <?= esb_item_image($fromItemId, $fromTitle . ' - Nivel ' . (int)$step['from']) ?>
                                         </span>
                                         <span class="esb-fusion-arrow">&rarr;</span>
-                                        <span class="esb-fusion-item" title="<?= htmlspecialchars($toTitle, ENT_QUOTES, 'UTF-8') ?>">
-                                            <?= getItemImage($toItemId) ?>
+                                        <span class="esb-fusion-item">
+                                            <?= esb_item_image($toItemId, $toTitle . ' - Nivel ' . (int)$step['to']) ?>
                                         </span>
                                     </span>
                                 <?php } ?>
@@ -599,22 +660,21 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                             ?>
                             <div class="esb-cost-inline">
                                 <span class="esb-cost-item">
-                                    <?= getItemImage(3043) ?>
+                                    <?= esb_item_image(3043, 'Crystal Coin') ?>
                                     <span class="esb-cost-meta">
                                         <strong><?= htmlspecialchars($step['gold'], ENT_QUOTES, 'UTF-8') ?></strong>
-                                        <span>Crystal Coin</span>
                                     </span>
                                 </span>
                                 <span class="esb-cost-plus">+</span>
                                 <span class="esb-cost-item">
-                                    <?= getItemImage($fromPreviewId) ?>
+                                    <?= esb_item_image($fromPreviewId, 'Stone do nivel ' . (int)$step['from']) ?>
                                     <span class="esb-cost-meta">
                                         <strong>x<?= (int)$step['stone_qty'] ?></strong>
                                     </span>
                                 </span>
                                 <span class="esb-cost-plus">+</span>
                                 <span class="esb-cost-item">
-                                    <?= getItemImage(60581) ?>
+                                    <?= esb_item_image(60581, 'Stone Dust') ?>
                                     <span class="esb-cost-meta">
                                         <strong>x<?= (int)$step['dust_qty'] ?></strong>
                                     </span>
@@ -632,7 +692,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
     <section class="esb-section">
         <h2 class="esb-title">Conversion</h2>
         <div class="esb-body">
-            <p class="esb-text">Convert Bag of Stone into Stone Dust using Crystal Coins.</p>
+            <p class="esb-text">Converta Bag of Stone em Stone Dust.</p>
             <table class="esb-table">
                 <thead>
                 <tr>
@@ -648,10 +708,9 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                         <td>
                             <div class="esb-cost-inline">
                                 <span class="esb-cost-item">
-                                    <?= getItemImage((int)$row['bag_id']) ?>
+                                    <?= esb_item_image((int)$row['bag_id'], 'Bag of Stone') ?>
                                     <span class="esb-cost-meta">
                                         <strong>x1</strong>
-                                        <span><?= (int)$row['bag_id'] ?></span>
                                     </span>
                                 </span>
                             </div>
@@ -659,10 +718,9 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                         <td>
                             <div class="esb-cost-inline">
                                 <span class="esb-cost-item">
-                                    <?= getItemImage(3043) ?>
+                                    <?= esb_item_image(3043, 'Crystal Coin') ?>
                                     <span class="esb-cost-meta">
                                         <strong><?= htmlspecialchars($row['coin_cost'], ENT_QUOTES, 'UTF-8') ?></strong>
-                                        <span>Crystal Coin (3043)</span>
                                     </span>
                                 </span>
                             </div>
@@ -670,10 +728,9 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                         <td>
                             <div class="esb-cost-inline">
                                 <span class="esb-cost-item">
-                                    <?= getItemImage(60581) ?>
+                                    <?= esb_item_image(60581, 'Stone Dust') ?>
                                     <span class="esb-cost-meta">
                                         <strong>x<?= (int)$row['dust_qty'] ?></strong>
-                                        <span>60581</span>
                                     </span>
                                 </span>
                             </div>
@@ -683,7 +740,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                 <?php } ?>
                 </tbody>
             </table>
-            <p class="esb-note"><strong>Flow:</strong> Stone Dust is generated by transforming Bag of Stone + cost, and the resulting item is sent directly to <strong>Store Inbox</strong>.</p>
+            <p class="esb-note"><strong>Fluxo:</strong> Stone Dust e gerada ao transformar Bag of Stone + custo, e o resultado e enviado direto para o <strong>Store Inbox</strong>.</p>
         </div>
     </section>
 
@@ -691,6 +748,10 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
 
 <script>
 (function() {
+    if (window.Tipped && typeof window.Tipped.create === 'function') {
+        window.Tipped.create('.item_image');
+    }
+
     function setupLevelTabs(groupKey) {
         var buttons = document.querySelectorAll('[data-level-btn="' + groupKey + '"]');
         var tables = document.querySelectorAll('[data-level-table="' + groupKey + '"]');
