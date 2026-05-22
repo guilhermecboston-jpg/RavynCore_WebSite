@@ -58,7 +58,7 @@ foreach ($groupList as $id => $group) {
                 'body' => $member->getLookBody(),
                 'legs' => $member->getLookLegs(),
                 'feet' => $member->getLookFeet(),
-                'direction' => 0,
+                'direction' => 3,
             ]) : null,
             'status' => $config['team_display_status'] ? $member->isOnline() : null,
             'link' => getPlayerLink($member->getName()),
@@ -78,3 +78,4 @@ $twig->display('team.html.twig', array(
     'groupmember' => $groupMember
 ));
 ?>
+

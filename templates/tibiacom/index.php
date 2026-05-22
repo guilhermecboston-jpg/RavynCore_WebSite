@@ -172,7 +172,7 @@ foreach ($topPlayers as &$player) {
             'body' => (int)$player['lookbody'],
             'legs' => (int)$player['looklegs'],
             'feet' => (int)$player['lookfeet'],
-            'direction' => 0,
+            'direction' => 3,
         ]);
         $player['outfit_html'] = '<img class="rc-rank-outfit" src="' . htmlspecialchars($outfitUrl, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($player['name'] . ' outfit', ENT_QUOTES, 'UTF-8') . '">';
     }
@@ -567,3 +567,4 @@ $socialLinks = [
 <?= template_place_holder('body_end'); ?>
 </body>
 </html>
+

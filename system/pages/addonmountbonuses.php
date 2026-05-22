@@ -329,7 +329,7 @@ if (!function_exists('rc_am_outfit_image_url')) {
 					'body' => (int)$colors['body'],
 					'legs' => (int)$colors['legs'],
 					'feet' => (int)$colors['feet'],
-					'direction' => 0,
+					'direction' => 3,
 				]);
 			}
 
@@ -340,7 +340,7 @@ if (!function_exists('rc_am_outfit_image_url')) {
 				'legs' => (int)$colors['legs'],
 				'feet' => (int)$colors['feet'],
 				'mount' => 0,
-				'direction' => 0,
+				'direction' => 3,
 			]);
 		}
 
@@ -352,7 +352,7 @@ if (!function_exists('rc_am_outfit_image_url')) {
 			'legs' => (int)$colors['legs'],
 			'feet' => (int)$colors['feet'],
 			'mount' => (int)$mountId,
-			'direction' => 0,
+			'direction' => 3,
 		]);
 	}
 }
@@ -704,3 +704,4 @@ echo '<section class="rc-st-card">'
 	. 'setTab("outfits");'
 	. '})();</script>'
 	. '</div>';
+

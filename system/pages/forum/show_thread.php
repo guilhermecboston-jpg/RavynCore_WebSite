@@ -55,7 +55,7 @@ foreach ($posts as &$post) {
             'body' => $player->getLookBody(),
             'legs' => $player->getLookLegs(),
             'feet' => $player->getLookFeet(),
-            'direction' => 0,
+            'direction' => 3,
         ]);
     }
 
@@ -103,3 +103,4 @@ $twig->display('forum.show_thread.html.twig', array(
 ));
 
 $twig->display('forum.fullscreen.html.twig');
+

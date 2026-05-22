@@ -10,7 +10,7 @@ foreach($topPlayers as &$player) {
 			'body' => (int)$player['lookbody'],
 			'legs' => (int)$player['looklegs'],
 			'feet' => (int)$player['lookfeet'],
-			'direction' => 0,
+			'direction' => 3,
 		]);
 		$player['outfit_html'] = '<img class="rc-themebox-outfit" src="' . htmlspecialchars($outfitUrl, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($player['name'] . ' outfit', ENT_QUOTES, 'UTF-8') . '">';
 	}
@@ -19,3 +19,4 @@ foreach($topPlayers as &$player) {
 $twig->display('highscores.html.twig', array(
 	'topPlayers' => $topPlayers
 ));
+

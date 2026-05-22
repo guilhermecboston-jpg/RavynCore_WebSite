@@ -390,7 +390,7 @@ if (!$rank_vocation = $_POST['profession'] ?? null) {
                                                         'body' => (int)$player['lookbody'],
                                                         'legs' => (int)$player['looklegs'],
                                                         'feet' => (int)$player['lookfeet'],
-                                                        'direction' => 0,
+                                                        'direction' => 3,
                                                     ]);
                                                     echo '<td><div class="rc-highscores-outfit"><img class="rc-highscores-outfit-canvas" src="' . htmlspecialchars($outfitUrl, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($player['name'] . ' outfit', ENT_QUOTES, 'UTF-8') . '" /></div></td>';
                                                 }
@@ -472,3 +472,4 @@ if (!$rank_vocation = $_POST['profession'] ?? null) {
         </tbody>
     </table>
 </div>
+

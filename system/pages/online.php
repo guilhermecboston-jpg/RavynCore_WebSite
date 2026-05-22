@@ -116,7 +116,7 @@ foreach($playersOnline as $player){
 			'body' => (int)$player['lookbody'],
 			'legs' => (int)$player['looklegs'],
 			'feet' => (int)$player['lookfeet'],
-			'direction' => 0,
+			'direction' => 3,
 		]) : null
 	);
 
@@ -156,3 +156,4 @@ $twig->display('online.html.twig', array(
 
 //search bar
 $twig->display('online.form.html.twig');
+

@@ -24,7 +24,7 @@ if (empty($race)) {
 		'legs' => (int)$monsterlegs,
 		'feet' => (int)$monsterfeet,
 		'mount' => (int)$monstermount,
-		'direction' => 0,
+		'direction' => 3,
 	]);
 
 	echo $twig->render('library/library.html.twig', $replaces);
@@ -41,3 +41,4 @@ $file = 'library/' . $race . '.html.twig';
 if (file_exists(SYSTEM . 'templates/' . $file)) {
 	echo $twig->render($file);
 }
+

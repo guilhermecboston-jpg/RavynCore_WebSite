@@ -156,7 +156,7 @@ if ($player->isLoaded() && !$player->isDeleted()) {
             'body' => $player->getLookBody(),
             'legs' => $player->getLookLegs(),
             'feet' => $player->getLookFeet(),
-            'direction' => 0,
+            'direction' => 3,
         ]);
 
     $flag = '';
@@ -583,7 +583,7 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
                         'body' => $player->getLookBody(),
                         'legs' => $player->getLookLegs(),
                         'feet' => $player->getLookFeet(),
-                        'direction' => 0,
+                        'direction' => 3,
                     ])
                 ];
             }
@@ -627,7 +627,7 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
                         'body' => $player->getLookBody(),
                         'legs' => $player->getLookLegs(),
                         'feet' => $player->getLookFeet(),
-                        'direction' => 0,
+                        'direction' => 3,
                     ])
                 ];
             }
@@ -750,3 +750,4 @@ WHERE killers.death_id = '" . $death['id'] . "' ORDER BY killers.final_hit DESC,
 
 if (!empty($search_errors))
     $twig->display('error_box.html.twig', array('errors' => $search_errors));
+
