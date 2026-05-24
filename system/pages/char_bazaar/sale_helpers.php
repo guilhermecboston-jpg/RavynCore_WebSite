@@ -828,10 +828,6 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'wheel_points_free',
         ], 0);
 
-        if ($availablePromotionPoints <= 0 && $wheelPoints > 0) {
-            $availablePromotionPoints = $wheelPoints;
-        }
-
         $storeInboxTables = [];
         foreach ([
             'player_storeinboxitems',
@@ -842,6 +838,7 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'player_store_inbox_items',
             'player_store_inbox',
             'player_storeinbox_item',
+            'player_rewards',
         ] as $tableName) {
             if (cbz_has_table($db, $tableName)) {
                 $storeInboxTables[] = $tableName;
@@ -872,7 +869,7 @@ if (!function_exists('cbz_get_character_sale_data')) {
         if ($includeItemSummary) {
             $inventoryRows = cbz_get_backpack_item_bucket_rows($db, $playerId);
             $depotRows = cbz_get_item_bucket_rows_multi($db, ['player_depotitems'], $playerId);
-            $supplyStashRows = cbz_get_item_bucket_rows_multi($db, ['player_supplystash'], $playerId);
+            $supplyStashRows = cbz_get_item_bucket_rows_multi($db, ['player_supplystash', 'player_stash'], $playerId);
             $inboxRows = cbz_get_item_bucket_rows_multi($db, ['player_inboxitems'], $playerId);
             $storeInboxRows = cbz_get_item_bucket_rows_multi($db, $storeInboxTables, $playerId);
             if (!$storeInboxRows && $inboxRows) {
@@ -941,6 +938,38 @@ if (!function_exists('cbz_get_character_sale_data')) {
 
         if ($availablePromotionPoints <= 0 && isset($storageValues[95124]) && (int)$storageValues[95124] > 0) {
             $availablePromotionPoints = (int)$storageValues[95124];
+        }
+
+        if (cbz_has_table($db, 'player_wheeldata')) {
+            $wheelPlayerCol = cbz_find_first_column($db, 'player_wheeldata', ['player_id', 'playerid']);
+            if ($wheelPlayerCol) {
+                if ($availablePromotionPoints <= 0) {
+                    $wheelAvailableCol = cbz_find_first_column($db, 'player_wheeldata', [
+                        'available_promotion_points',
+                        'available_promotions_points',
+                        'available_points',
+                        'free_points',
+                        'points_available',
+                        'available',
+                    ]);
+                    if ($wheelAvailableCol) {
+                        $availablePromotionPoints = (int)(cbz_scalar($db, "SELECT SUM(`{$wheelAvailableCol}`) FROM `player_wheeldata` WHERE `{$wheelPlayerCol}` = {$playerId}") ?? 0);
+                    }
+                }
+
+                if ($wheelPoints <= 0) {
+                    $wheelPointsCol = cbz_find_first_column($db, 'player_wheeldata', [
+                        'wheel_points',
+                        'promotion_points',
+                        'points',
+                        'total_points',
+                        'used_points',
+                    ]);
+                    if ($wheelPointsCol) {
+                        $wheelPoints = (int)(cbz_scalar($db, "SELECT SUM(`{$wheelPointsCol}`) FROM `player_wheeldata` WHERE `{$wheelPlayerCol}` = {$playerId}") ?? 0);
+                    }
+                }
+            }
         }
 
         $promotionInitiateRaw = cbz_player_numeric_value($player, [
@@ -1024,11 +1053,14 @@ if (!function_exists('cbz_get_character_sale_data')) {
 
             $stoneRows = cbz_format_item_amount_rows(array_filter($stoneAmounts), 0);
             $stoneDustTotal = (int)($amountByItem[60581] ?? 0);
+            $ravynCoreTotal = (int)($amountByItem[61869] ?? 0);
 
-            foreach ($amountByItem as $itemId => $amount) {
-                $itemName = function_exists('getItemNameById') ? strtolower((string)getItemNameById((int)$itemId)) : '';
-                if ($itemName !== '' && strpos($itemName, 'ravyncore') !== false) {
-                    $ravynCoreTotal += (int)$amount;
+            if ($ravynCoreTotal <= 0) {
+                foreach ($amountByItem as $itemId => $amount) {
+                    $itemName = function_exists('getItemNameById') ? strtolower((string)getItemNameById((int)$itemId)) : '';
+                    if ($itemName !== '' && strpos($itemName, 'ravyncore') !== false) {
+                        $ravynCoreTotal += (int)$amount;
+                    }
                 }
             }
         }
