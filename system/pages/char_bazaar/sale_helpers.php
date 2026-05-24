@@ -92,6 +92,124 @@ if (!function_exists('cbz_count_bits')) {
     }
 }
 
+if (!function_exists('cbz_row_value')) {
+    function cbz_row_value(array $row, array $candidates, $default = null)
+    {
+        foreach ($candidates as $candidate) {
+            if (array_key_exists($candidate, $row)) {
+                return $row[$candidate];
+            }
+        }
+
+        foreach ($candidates as $candidate) {
+            $candidateLower = strtolower((string)$candidate);
+            foreach ($row as $key => $value) {
+                if (strtolower((string)$key) === $candidateLower) {
+                    return $value;
+                }
+            }
+        }
+
+        return $default;
+    }
+}
+
+if (!function_exists('cbz_parse_tracker_ids')) {
+    function cbz_parse_tracker_ids($rawValue)
+    {
+        if ($rawValue === null) {
+            return [];
+        }
+
+        if (is_resource($rawValue)) {
+            $rawValue = stream_get_contents($rawValue);
+        }
+
+        $rawText = trim((string)$rawValue);
+        if ($rawText === '') {
+            return [];
+        }
+
+        $collectIds = static function ($source, array &$ids) use (&$collectIds) {
+            if (is_array($source)) {
+                foreach ($source as $key => $entry) {
+                    if (is_numeric($key) && !is_array($entry) && !is_object($entry)) {
+                        $numericKey = (int)$key;
+                        $entryEnabled = is_numeric($entry) ? ((int)$entry > 0) : (bool)$entry;
+                        if ($numericKey > 0 && $entryEnabled) {
+                            $ids[$numericKey] = true;
+                        }
+                    }
+
+                    if (is_array($entry) || is_object($entry)) {
+                        $collectIds($entry, $ids);
+                        continue;
+                    }
+
+                    $normalizedKey = strtolower((string)$key);
+                    if (in_array($normalizedKey, ['id', 'race', 'raceid', 'race_id', 'monster_id', 'monsterid', 'boss_id', 'bossid'], true) && is_numeric($entry)) {
+                        $id = (int)$entry;
+                        if ($id > 0) {
+                            $ids[$id] = true;
+                        }
+                    }
+                }
+
+                return;
+            }
+
+            if (is_object($source)) {
+                $collectIds((array)$source, $ids);
+            }
+        };
+
+        $ids = [];
+        $decoded = json_decode($rawText, true);
+        if (json_last_error() === JSON_ERROR_NONE && $decoded !== null) {
+            $collectIds($decoded, $ids);
+            if ($ids) {
+                return array_map('intval', array_keys($ids));
+            }
+        }
+
+        if (preg_match_all('/\d+/', $rawText, $matches)) {
+            foreach ($matches[0] as $value) {
+                $id = (int)$value;
+                if ($id > 0 && $id < 1000000) {
+                    $ids[$id] = true;
+                }
+            }
+        }
+
+        return array_map('intval', array_keys($ids));
+    }
+}
+
+if (!function_exists('cbz_build_collection_rows_from_ids')) {
+    function cbz_build_collection_rows_from_ids($db, array $ids, $fallbackPrefix = 'Entry')
+    {
+        if (!$ids) {
+            return [];
+        }
+
+        $nameMap = cbz_get_collection_name_map($db);
+        $rows = [];
+        foreach (array_values(array_unique(array_map('intval', $ids))) as $id) {
+            if ($id <= 0) {
+                continue;
+            }
+
+            $rows[] = [
+                'id' => $id,
+                'name' => $nameMap[$id] ?? ($fallbackPrefix . ' #' . $id),
+                'progress' => 0,
+            ];
+        }
+
+        return $rows;
+    }
+}
+
 if (!function_exists('cbz_sale_status_label')) {
     function cbz_sale_status_label($status)
     {
@@ -753,22 +871,27 @@ if (!function_exists('cbz_get_character_sale_data')) {
             $mountCount = (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `player_mounts` WHERE `player_id` = {$playerId}") ?? 0);
         }
 
-        $charmPoints = '-';
-        $spentCharmPoints = '-';
-        $majorCharms = '-';
-        $minorCharms = '-';
+        $charmPoints = 0;
+        $spentCharmPoints = 0;
+        $majorCharms = 0;
+        $minorCharms = 0;
+        $trackerIds = [];
         if (cbz_has_table($db, 'player_charms')) {
-            $charms = $db->query("SELECT * FROM `player_charms` WHERE `player_id` = {$playerId} LIMIT 1")->fetch();
-            if ($charms) {
-                $charmPoints = $charms['charm_points'] ?? '-';
-                if (isset($charms['spent_charm_points'])) {
-                    $spentCharmPoints = $charms['spent_charm_points'];
-                }
-                $usedRunes = $charms['UsedRunesBit'] ?? null;
-                if ($usedRunes !== null) {
-                    $unlocked = cbz_count_bits($usedRunes);
-                    $majorCharms = $unlocked;
-                    $minorCharms = $unlocked;
+            $charmsPlayerCol = cbz_find_first_column($db, 'player_charms', ['player_id', 'playerid']);
+            if ($charmsPlayerCol) {
+                $charms = $db->query("SELECT * FROM `player_charms` WHERE `{$charmsPlayerCol}` = {$playerId} LIMIT 1")->fetch();
+                if ($charms) {
+                    $charmPoints = (int)cbz_row_value($charms, ['charm_points', 'charmpoints'], 0);
+                    $spentCharmPoints = (int)cbz_row_value($charms, ['spent_charm_points', 'spentcharmpoints'], 0);
+                    $usedRunes = cbz_row_value($charms, ['UsedRunesBit', 'usedRunesBit', 'used_runes_bit', 'used_runes'], 0);
+                    if ($usedRunes !== null) {
+                        $unlocked = cbz_count_bits($usedRunes);
+                        $majorCharms = $unlocked;
+                        $minorCharms = $unlocked;
+                    }
+
+                    $trackerRaw = cbz_row_value($charms, ['tracker_list', 'trackerlist', 'finished_monsters', 'finishedmonsters'], null);
+                    $trackerIds = cbz_parse_tracker_ids($trackerRaw);
                 }
             }
         }
@@ -800,6 +923,9 @@ if (!function_exists('cbz_get_character_sale_data')) {
         }
 
         $bestiaryList = ($includeCollections && $bestiaryTable) ? cbz_get_collection_rows($db, $bestiaryTable, $playerId, 'Monster') : [];
+        if ($includeCollections && !$bestiaryList && $trackerIds) {
+            $bestiaryList = cbz_build_collection_rows_from_ids($db, $trackerIds, 'Monster');
+        }
         $bosstiaryList = ($includeCollections && $bosstiaryTable) ? cbz_get_collection_rows($db, $bosstiaryTable, $playerId, 'Boss') : [];
 
         $offenceStats = (int)$player['skill_sword'] + (int)$player['skill_axe'] + (int)$player['skill_club'] + (int)$player['skill_dist'] + (int)$player['maglevel'];
@@ -839,6 +965,10 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'player_store_inbox',
             'player_storeinbox_item',
             'player_rewards',
+            'player_rewarditems',
+            'player_reward_items',
+            'player_storeitems',
+            'player_store_items',
         ] as $tableName) {
             if (cbz_has_table($db, $tableName)) {
                 $storeInboxTables[] = $tableName;
@@ -1016,7 +1146,7 @@ if (!function_exists('cbz_get_character_sale_data')) {
                 $bosstiary = (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `{$bosstiaryTable}` WHERE `{$bosstiaryPlayerCol}` = {$playerId}") ?? 0);
             }
         }
-        $bossPoints = cbz_has_column($db, 'players', 'boss_points') ? (int)$player['boss_points'] : '-';
+        $bossPoints = cbz_has_column($db, 'players', 'boss_points') ? (int)$player['boss_points'] : 0;
 
         $stonesTotal = 0;
         $stoneRows = [];
