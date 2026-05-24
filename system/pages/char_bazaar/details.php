@@ -46,6 +46,9 @@ $equipped = $character['equipped_inventory'] ?? [];
 $addonsList = $character['full_addons_list'] ?? [];
 $mountsList = $character['full_mounts_list'] ?? [];
 $itemSummaryRows = $character['item_summary_rows'] ?? [];
+$bestiaryList = $character['bestiary_list'] ?? [];
+$bosstiaryList = $character['bosstiary_list'] ?? [];
+$stonesRows = $character['stones_rows'] ?? [];
 ?>
 
 <div class="TableContainer rc-cbz-host">
@@ -90,8 +93,7 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                             <div><span>Soul</span><strong><?= isset($character['player']['soul']) ? (int)$character['player']['soul'] : 0 ?></strong></div>
                             <div><span>Blessings</span><strong><?= (int)$character['blessings_count'] ?></strong></div>
                             <div><span>Creation Date</span><strong><?= htmlspecialchars((string)$character['creation_date']) ?></strong></div>
-                            <div><span>Loyalty Title</span><strong><?= htmlspecialchars((string)$character['loyalty_title']) ?></strong></div>
-                            <div><span>Loyalty Points</span><strong><?= number_format((int)$character['loyalty_points'], 0, ',', '.') ?></strong></div>
+                            <div><span>Wheel Points</span><strong><?= number_format((int)$character['wheel_points'], 0, ',', '.') ?></strong></div>
                             <div class="rc-cbz-inline-action"><span>Full Addons</span><strong><?= (int)$character['full_addons_count'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-addons">View</a></strong></div>
                             <div class="rc-cbz-inline-action"><span>Mounts</span><strong><?= (int)$character['mounts_count'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-mounts">View</a></strong></div>
                         </div>
@@ -114,8 +116,7 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                     <div class="rc-cbz-section">
                         <h3>Charms & Bestiary</h3>
                         <div class="rc-cbz-grid-two">
-                            <div><span>Bestiary Points</span><strong><?= htmlspecialchars((string)$character['bestiary_points']) ?></strong></div>
-                            <div><span>Charm Points</span><strong><?= htmlspecialchars((string)$character['charm_points']) ?></strong></div>
+                            <div class="rc-cbz-inline-action"><span>Bestiary Points</span><strong><?= htmlspecialchars((string)$character['bestiary_points']) ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-bestiary">View</a></strong></div>
                             <div><span>Major Charms unlocked</span><strong><?= htmlspecialchars((string)$character['major_charms']) ?></strong></div>
                             <div><span>Minor Charms unlocked</span><strong><?= htmlspecialchars((string)$character['minor_charms']) ?></strong></div>
                         </div>
@@ -146,7 +147,7 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                                             <div class="rc-cbz-item-card">
                                                 <div class="rc-cbz-item-icon"><?= $row['image'] ?></div>
                                                 <div class="rc-cbz-item-meta">
-                                                    <strong>Item #<?= (int)$row['item_id'] ?></strong>
+                                                    <strong><?= htmlspecialchars((string)($row['name'] ?? ('Item #' . (int)$row['item_id']))) ?></strong>
                                                     <small>x<?= (int)$row['amount'] ?></small>
                                                 </div>
                                             </div>
@@ -160,9 +161,9 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                     <div class="rc-cbz-section">
                         <h3>Prey & Bosstiary</h3>
                         <div class="rc-cbz-grid-two">
-                            <div><span>Permanent prey slots</span><strong><?= htmlspecialchars((string)$character['prey_permanent']) ?></strong></div>
+                            <div><span>Permanent 3rd Prey Slots</span><strong><?= htmlspecialchars((string)$character['prey_permanent']) ?></strong></div>
                             <div><span>Prey wildcards</span><strong><?= htmlspecialchars((string)$character['prey_wildcards']) ?></strong></div>
-                            <div><span>Bosstiary</span><strong><?= htmlspecialchars((string)$character['bosstiary']) ?></strong></div>
+                            <div class="rc-cbz-inline-action"><span>Bosstiary</span><strong><?= htmlspecialchars((string)$character['bosstiary']) ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-bosstiary">View</a></strong></div>
                             <div><span>Boss Points</span><strong><?= htmlspecialchars((string)$character['boss_points']) ?></strong></div>
                         </div>
                     </div>
@@ -171,6 +172,16 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                         <h3>Task Board</h3>
                         <div class="rc-cbz-grid-two">
                             <div><span>Task board entries</span><strong><?= htmlspecialchars((string)$character['task_board']) ?></strong></div>
+                        </div>
+                    </div>
+
+                    <div class="rc-cbz-section">
+                        <h3>Elemental Stones System</h3>
+                        <div class="rc-cbz-grid-two">
+                            <div><span>3rd Sloot</span><strong><?= htmlspecialchars((string)$character['third_stone_slot']) ?></strong></div>
+                            <div class="rc-cbz-inline-action"><span>Stones</span><strong><?= (int)$character['stones_total'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-stones">View</a></strong></div>
+                            <div><span>Stone Dust</span><strong><?= number_format((int)$character['stone_dust_total'], 0, ',', '.') ?></strong></div>
+                            <div><span>RavynCore</span><strong><?= number_format((int)$character['ravyncore_total'], 0, ',', '.') ?></strong></div>
                         </div>
                     </div>
 
@@ -241,6 +252,58 @@ $itemSummaryRows = $character['item_summary_rows'] ?? [];
                     <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars($mount['image']) ?>" alt="<?= htmlspecialchars($mount['name']) ?>"></div>
                     <strong><?= htmlspecialchars($mount['name']) ?></strong>
                     <small>Mount #<?= (int)$mount['id'] ?></small>
+                </article>
+            <?php endforeach; endif; ?>
+        </div>
+    </div>
+</div>
+
+<div id="rc-cbz-modal-bestiary" class="rc-cbz-modal" aria-hidden="true">
+    <div class="rc-cbz-modal-card">
+        <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-bestiary">&times;</button>
+        <h4>Bestiary</h4>
+        <div class="rc-cbz-modal-grid">
+            <?php if (!$bestiaryList): ?>
+                <p class="rc-cbz-empty">No bestiary entries found.</p>
+            <?php else: foreach ($bestiaryList as $entry): ?>
+                <article class="rc-cbz-collect-card">
+                    <strong><?= htmlspecialchars((string)$entry['name']) ?></strong>
+                    <small>ID #<?= (int)$entry['id'] ?><?php if ((int)$entry['progress'] > 0): ?> - <?= (int)$entry['progress'] ?><?php endif; ?></small>
+                </article>
+            <?php endforeach; endif; ?>
+        </div>
+    </div>
+</div>
+
+<div id="rc-cbz-modal-bosstiary" class="rc-cbz-modal" aria-hidden="true">
+    <div class="rc-cbz-modal-card">
+        <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-bosstiary">&times;</button>
+        <h4>Bosstiary</h4>
+        <div class="rc-cbz-modal-grid">
+            <?php if (!$bosstiaryList): ?>
+                <p class="rc-cbz-empty">No bosstiary entries found.</p>
+            <?php else: foreach ($bosstiaryList as $entry): ?>
+                <article class="rc-cbz-collect-card">
+                    <strong><?= htmlspecialchars((string)$entry['name']) ?></strong>
+                    <small>ID #<?= (int)$entry['id'] ?><?php if ((int)$entry['progress'] > 0): ?> - <?= (int)$entry['progress'] ?><?php endif; ?></small>
+                </article>
+            <?php endforeach; endif; ?>
+        </div>
+    </div>
+</div>
+
+<div id="rc-cbz-modal-stones" class="rc-cbz-modal" aria-hidden="true">
+    <div class="rc-cbz-modal-card">
+        <button type="button" class="rc-cbz-modal-close" data-close="rc-cbz-modal-stones">&times;</button>
+        <h4>Elemental Stones</h4>
+        <div class="rc-cbz-modal-grid">
+            <?php if (!$stonesRows): ?>
+                <p class="rc-cbz-empty">No stones found in depot, inbox or store inbox.</p>
+            <?php else: foreach ($stonesRows as $row): ?>
+                <article class="rc-cbz-collect-card">
+                    <div class="rc-cbz-collect-image"><?= $row['image'] ?></div>
+                    <strong><?= htmlspecialchars((string)($row['name'] ?? ('Item #' . (int)$row['item_id']))) ?></strong>
+                    <small>x<?= (int)$row['amount'] ?></small>
                 </article>
             <?php endforeach; endif; ?>
         </div>
