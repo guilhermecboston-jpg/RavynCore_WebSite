@@ -108,7 +108,6 @@ if ($selectCharacter > 0) {
                                 <div><span>Soul</span><strong><?= isset($character['player']['soul']) ? (int)$character['player']['soul'] : 0 ?></strong></div>
                                 <div><span>Blessings</span><strong><?= (int)$character['blessings_count'] ?></strong></div>
                                 <div><span>Creation Date</span><strong><?= htmlspecialchars((string)$character['creation_date']) ?></strong></div>
-                                <div><span>Wheel Points</span><strong><?= number_format((int)$character['wheel_points'], 0, ',', '.') ?></strong></div>
                                 <div class="rc-cbz-inline-action"><span>Full Addons</span><strong><?= (int)$character['full_addons_count'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-addons">View</a></strong></div>
                                 <div class="rc-cbz-inline-action"><span>Mounts</span><strong><?= (int)$character['mounts_count'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-mounts">View</a></strong></div>
                             </div>
@@ -125,15 +124,6 @@ if ($selectCharacter > 0) {
                                 <div><span>Magic Level</span><strong><?= (int)$character['player']['maglevel'] ?></strong></div>
                                 <div><span>Shielding</span><strong><?= (int)$character['player']['skill_shielding'] ?></strong></div>
                                 <div><span>Sword</span><strong><?= (int)$character['player']['skill_sword'] ?></strong></div>
-                            </div>
-                        </div>
-
-                        <div class="rc-cbz-section">
-                            <h3>Charms & Bestiary</h3>
-                            <div class="rc-cbz-grid-two">
-                                <div class="rc-cbz-inline-action"><span>Bestiary Points</span><strong><?= htmlspecialchars((string)$character['bestiary_points']) ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-bestiary">View</a></strong></div>
-                                <div><span>Major Charms unlocked</span><strong><?= htmlspecialchars((string)$character['major_charms']) ?></strong></div>
-                                <div><span>Minor Charms unlocked</span><strong><?= htmlspecialchars((string)$character['minor_charms']) ?></strong></div>
                             </div>
                         </div>
 
@@ -174,6 +164,25 @@ if ($selectCharacter > 0) {
                         </div>
 
                         <div class="rc-cbz-section">
+                            <h3>Charms & Bestiary</h3>
+                            <div class="rc-cbz-grid-two">
+                                <div class="rc-cbz-inline-action"><span>Bestiary Points</span><strong><?= htmlspecialchars((string)$character['bestiary_points']) ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-bestiary">View</a></strong></div>
+                                <div><span>Major Charms unlocked</span><strong><?= htmlspecialchars((string)$character['major_charms']) ?></strong></div>
+                                <div><span>Minor Charms unlocked</span><strong><?= htmlspecialchars((string)$character['minor_charms']) ?></strong></div>
+                            </div>
+                        </div>
+
+                        <div class="rc-cbz-section">
+                            <h3>Wheel of Destiny</h3>
+                            <div class="rc-cbz-grid-two">
+                                <div><span>Available Promotions Points</span><strong><?= number_format((int)$character['available_promotion_points'], 0, ',', '.') ?></strong></div>
+                                <div><span>Promotions Points Initiate</span><strong><?= htmlspecialchars((string)$character['promotion_points_initiate']) ?></strong></div>
+                                <div><span>Promotions Points Ascendant</span><strong><?= htmlspecialchars((string)$character['promotion_points_ascendant']) ?></strong></div>
+                                <div><span>Promotions Points Mythic</span><strong><?= htmlspecialchars((string)$character['promotion_points_mythic']) ?></strong></div>
+                            </div>
+                        </div>
+
+                        <div class="rc-cbz-section">
                             <h3>Prey & Bosstiary</h3>
                             <div class="rc-cbz-grid-two">
                                 <div><span>Permanent 3rd Prey Slots</span><strong><?= htmlspecialchars((string)$character['prey_permanent']) ?></strong></div>
@@ -193,7 +202,7 @@ if ($selectCharacter > 0) {
                         <div class="rc-cbz-section">
                             <h3>Elemental Stones System</h3>
                             <div class="rc-cbz-grid-two">
-                                <div><span>3rd Sloot</span><strong><?= htmlspecialchars((string)$character['third_stone_slot']) ?></strong></div>
+                                <div><span>Jewelled Pounch 4o Sloot</span><strong><?= htmlspecialchars((string)$character['jewelled_pounch_4_slot']) ?></strong></div>
                                 <div class="rc-cbz-inline-action"><span>Stones</span><strong><?= (int)$character['stones_total'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-stones">View</a></strong></div>
                                 <div><span>Stone Dust</span><strong><?= number_format((int)$character['stone_dust_total'], 0, ',', '.') ?></strong></div>
                                 <div><span>RavynCore</span><strong><?= number_format((int)$character['ravyncore_total'], 0, ',', '.') ?></strong></div>

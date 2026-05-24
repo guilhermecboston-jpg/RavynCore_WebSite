@@ -246,7 +246,7 @@ if (!function_exists('cbz_get_equipped_inventory')) {
         }
 
         $pidCol = cbz_find_first_column($db, 'player_items', ['pid']);
-        $itemCol = cbz_find_first_column($db, 'player_items', ['itemtype', 'item_id', 'itemid']);
+        $itemCol = cbz_find_first_column($db, 'player_items', ['itemtype', 'itemType', 'item_id', 'itemid', 'itemId']);
         $playerCol = cbz_find_first_column($db, 'player_items', ['player_id', 'playerid']);
         if (!$pidCol || !$itemCol || !$playerCol) {
             return $slots;
@@ -288,8 +288,8 @@ if (!function_exists('cbz_get_item_bucket_rows')) {
         }
 
         $playerCol = cbz_find_first_column($db, $table, ['player_id', 'playerid']);
-        $itemCol = cbz_find_first_column($db, $table, ['itemtype', 'item_id', 'itemid', 'sid']);
-        $amountCol = cbz_find_first_column($db, $table, ['count', 'amount', 'item_count', 'itemcount']);
+        $itemCol = cbz_find_first_column($db, $table, ['itemtype', 'itemType', 'item_id', 'itemid', 'itemId', 'type', 'sid']);
+        $amountCol = cbz_find_first_column($db, $table, ['count', 'amount', 'item_count', 'itemcount', 'quantity']);
         if (!$playerCol || !$itemCol) {
             return $rows;
         }
@@ -432,7 +432,7 @@ if (!function_exists('cbz_get_backpack_item_bucket_rows')) {
         $itemCol = cbz_find_first_column($db, 'player_items', ['itemtype', 'item_id', 'itemid']);
         $pidCol = cbz_find_first_column($db, 'player_items', ['pid']);
         $sidCol = cbz_find_first_column($db, 'player_items', ['sid', 'serial']);
-        $amountCol = cbz_find_first_column($db, 'player_items', ['count', 'amount', 'item_count', 'itemcount']);
+        $amountCol = cbz_find_first_column($db, 'player_items', ['count', 'amount', 'item_count', 'itemcount', 'quantity']);
         if (!$playerCol || !$itemCol || !$pidCol || !$sidCol) {
             return [];
         }
@@ -568,8 +568,8 @@ if (!function_exists('cbz_get_collection_rows')) {
         }
 
         $playerCol = cbz_find_first_column($db, $table, ['player_id', 'playerid']);
-        $idCol = cbz_find_first_column($db, $table, ['monster_id', 'raceid', 'race_id', 'classid', 'class_id', 'creature_id', 'boss_id', 'bossid', 'id']);
-        $progressCol = cbz_find_first_column($db, $table, ['kills', 'kill_count', 'killcount', 'amount', 'progress', 'points', 'stage']);
+        $idCol = cbz_find_first_column($db, $table, ['monster_id', 'monster', 'raceid', 'race_id', 'race', 'classid', 'class_id', 'creature_id', 'creature', 'boss_id', 'bossid', 'boss', 'id']);
+        $progressCol = cbz_find_first_column($db, $table, ['kills', 'kill_count', 'killcount', 'amount', 'progress', 'points', 'stage', 'value']);
         $completedCol = cbz_find_first_column($db, $table, ['completed', 'is_completed', 'done', 'finished', 'status']);
         if (!$playerCol || !$idCol) {
             return [];
@@ -604,12 +604,12 @@ if (!function_exists('cbz_get_collection_rows')) {
                 continue;
             }
 
+            $progress = (int)($row['progress'] ?? 0);
             $completed = $row['completed'];
-            if ($completed !== null && is_numeric($completed) && (int)$completed <= 0) {
+            if ($completed !== null && is_numeric($completed) && (int)$completed <= 0 && $progress <= 0) {
                 continue;
             }
 
-            $progress = (int)($row['progress'] ?? 0);
             $rows[] = [
                 'id' => $entryId,
                 'name' => $nameMap[$entryId] ?? ($fallbackPrefix . ' #' . $entryId),
@@ -638,6 +638,91 @@ if (!function_exists('cbz_yes_no')) {
     function cbz_yes_no($value)
     {
         return ((int)$value > 0) ? 'Yes' : 'No';
+    }
+}
+
+if (!function_exists('cbz_get_player_storage_map')) {
+    function cbz_get_player_storage_map($db, $playerId, array $keys)
+    {
+        $playerId = (int)$playerId;
+        $result = [];
+        $keys = array_values(array_unique(array_filter(array_map('intval', $keys), function ($key) {
+            return $key !== 0;
+        })));
+
+        if ($playerId <= 0 || !$keys) {
+            return $result;
+        }
+
+        if (!cbz_has_table($db, 'player_storage')) {
+            return $result;
+        }
+
+        $playerCol = cbz_find_first_column($db, 'player_storage', ['player_id', 'playerid']);
+        $keyCol = cbz_find_first_column($db, 'player_storage', ['key', 'storage_key']);
+        $valueCol = cbz_find_first_column($db, 'player_storage', ['value', 'storage_value']);
+        if (!$playerCol || !$keyCol || !$valueCol) {
+            return $result;
+        }
+
+        $sql =
+            'SELECT `' . $keyCol . '` AS `storage_key`, `' . $valueCol . '` AS `storage_value` ' .
+            'FROM `player_storage` ' .
+            'WHERE `' . $playerCol . '` = ' . $playerId . ' AND `' . $keyCol . '` IN (' . implode(',', $keys) . ')';
+        $query = $db->query($sql);
+        if (!$query) {
+            return $result;
+        }
+
+        foreach ($query as $row) {
+            $storageKey = (int)($row['storage_key'] ?? 0);
+            if ($storageKey === 0) {
+                continue;
+            }
+
+            $result[$storageKey] = (int)($row['storage_value'] ?? 0);
+        }
+
+        return $result;
+    }
+}
+
+if (!function_exists('cbz_find_player_table_with_rows')) {
+    function cbz_find_player_table_with_rows($db, array $tables, $playerId)
+    {
+        $playerId = (int)$playerId;
+        if ($playerId <= 0) {
+            return null;
+        }
+
+        foreach ($tables as $table) {
+            if (!cbz_has_table($db, $table)) {
+                continue;
+            }
+
+            $playerCol = cbz_find_first_column($db, $table, ['player_id', 'playerid']);
+            if (!$playerCol) {
+                continue;
+            }
+
+            $count = (int)(cbz_scalar($db, 'SELECT COUNT(*) FROM `' . $table . '` WHERE `' . $playerCol . '` = ' . $playerId) ?? 0);
+            if ($count > 0) {
+                return $table;
+            }
+        }
+
+        foreach ($tables as $table) {
+            if (!cbz_has_table($db, $table)) {
+                continue;
+            }
+
+            $playerCol = cbz_find_first_column($db, $table, ['player_id', 'playerid']);
+            if ($playerCol) {
+                return $table;
+            }
+        }
+
+        return null;
     }
 }
 
@@ -688,25 +773,76 @@ if (!function_exists('cbz_get_character_sale_data')) {
             }
         }
 
-        $bestiaryPoints = '-';
-        if (cbz_has_table($db, 'player_bestiary')) {
-            if (cbz_has_column($db, 'player_bestiary', 'charm_points')) {
-                $bestiaryPoints = (int)(cbz_scalar($db, "SELECT SUM(`charm_points`) FROM `player_bestiary` WHERE `player_id` = {$playerId}") ?? 0);
-            } else {
-                $bestiaryPoints = (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `player_bestiary` WHERE `player_id` = {$playerId}") ?? 0);
+        $bestiaryTables = ['player_bestiary', 'player_bestiaries', 'player_bestiary_kills', 'player_bestiarykills'];
+        $bosstiaryTables = ['player_bosstiary', 'player_bosstiaries', 'player_bosstiary_kills', 'player_bosstiarykills'];
+        $bestiaryTable = cbz_find_player_table_with_rows($db, $bestiaryTables, $playerId);
+        $bosstiaryTable = cbz_find_player_table_with_rows($db, $bosstiaryTables, $playerId);
+
+        $bestiaryPoints = null;
+        if ($bestiaryTable) {
+            $bestiaryPlayerCol = cbz_find_first_column($db, $bestiaryTable, ['player_id', 'playerid']);
+            if ($bestiaryPlayerCol) {
+                if (cbz_has_column($db, $bestiaryTable, 'charm_points')) {
+                    $bestiaryPoints = (int)(cbz_scalar($db, "SELECT SUM(`charm_points`) FROM `{$bestiaryTable}` WHERE `{$bestiaryPlayerCol}` = {$playerId}") ?? 0);
+                } elseif (cbz_has_column($db, $bestiaryTable, 'points')) {
+                    $bestiaryPoints = (int)(cbz_scalar($db, "SELECT SUM(`points`) FROM `{$bestiaryTable}` WHERE `{$bestiaryPlayerCol}` = {$playerId}") ?? 0);
+                } else {
+                    $bestiaryPoints = (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `{$bestiaryTable}` WHERE `{$bestiaryPlayerCol}` = {$playerId}") ?? 0);
+                }
             }
         }
 
-        $bestiaryList = $includeCollections ? cbz_get_collection_rows($db, 'player_bestiary', $playerId, 'Monster') : [];
-        $bosstiaryList = $includeCollections ? cbz_get_collection_rows($db, 'player_bosstiary', $playerId, 'Boss') : [];
+        if ($bestiaryPoints === null && is_numeric($charmPoints)) {
+            $bestiaryPoints = (int)$charmPoints;
+        }
+        if ($bestiaryPoints === null) {
+            $bestiaryPoints = 0;
+        }
+
+        $bestiaryList = ($includeCollections && $bestiaryTable) ? cbz_get_collection_rows($db, $bestiaryTable, $playerId, 'Monster') : [];
+        $bosstiaryList = ($includeCollections && $bosstiaryTable) ? cbz_get_collection_rows($db, $bosstiaryTable, $playerId, 'Boss') : [];
 
         $offenceStats = (int)$player['skill_sword'] + (int)$player['skill_axe'] + (int)$player['skill_club'] + (int)$player['skill_dist'] + (int)$player['maglevel'];
         $defenceStats = (int)$player['skill_shielding'] + (int)$player['skill_fist'];
 
-        $wheelPoints = cbz_player_numeric_value($player, ['wheel_points', 'wheelpoints', 'wheel_point', 'points_wheel', 'wheel'], 0);
+        $wheelPoints = cbz_player_numeric_value($player, [
+            'wheel_points',
+            'wheelpoints',
+            'wheel_point',
+            'points_wheel',
+            'wheel',
+            'wheel_of_destiny_points',
+            'wheelofdestiny_points',
+            'wheel_destiny_points',
+        ], 0);
+        $availablePromotionPoints = cbz_player_numeric_value($player, [
+            'available_promotion_points',
+            'available_promotion_point',
+            'available_promotions_points',
+            'available_promotions_point',
+            'promotion_points',
+            'promotion_point',
+            'wheel_available_points',
+            'wheel_available_point',
+            'wheel_points_available',
+            'wheel_points_free',
+        ], 0);
+
+        if ($availablePromotionPoints <= 0 && $wheelPoints > 0) {
+            $availablePromotionPoints = $wheelPoints;
+        }
 
         $storeInboxTables = [];
-        foreach (['player_storeinboxitems', 'player_storeinbox_items', 'player_storeinbox', 'player_storeinboxitem'] as $tableName) {
+        foreach ([
+            'player_storeinboxitems',
+            'player_storeinbox_items',
+            'player_storeinbox',
+            'player_storeinboxitem',
+            'player_store_inboxitems',
+            'player_store_inbox_items',
+            'player_store_inbox',
+            'player_storeinbox_item',
+        ] as $tableName) {
             if (cbz_has_table($db, $tableName)) {
                 $storeInboxTables[] = $tableName;
             }
@@ -739,6 +875,10 @@ if (!function_exists('cbz_get_character_sale_data')) {
             $supplyStashRows = cbz_get_item_bucket_rows_multi($db, ['player_supplystash'], $playerId);
             $inboxRows = cbz_get_item_bucket_rows_multi($db, ['player_inboxitems'], $playerId);
             $storeInboxRows = cbz_get_item_bucket_rows_multi($db, $storeInboxTables, $playerId);
+            if (!$storeInboxRows && $inboxRows) {
+                // Fallback: some forks persist Store Inbox in inbox-like tables.
+                $storeInboxRows = $inboxRows;
+            }
 
             $itemSummaryRows = [
                 'inventory' => $inventoryRows,
@@ -764,6 +904,10 @@ if (!function_exists('cbz_get_character_sale_data')) {
             $taskBoard = (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `player_taskhunt` WHERE `player_id` = {$playerId}") ?? 0);
         }
 
+        $storageValues = cbz_get_player_storage_map($db, $playerId, [
+            95101, 95102, 95103, 95109, 95110, 95121, 95122, 95123, 95124,
+        ]);
+
         $preyWildcards = cbz_player_numeric_value($player, ['prey_wildcard', 'wildcard', 'prey_wildcards', 'wildcards'], 0);
         $preySlotRaw = cbz_player_numeric_value($player, [
             'third_prey_slot',
@@ -773,15 +917,75 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'prey_slots',
             'prey_slot_count',
             'prey_slot',
+            'prey_slot_unlocked',
+            'permanent_prey_slot',
         ], 0);
         if ($preySlotRaw === 0) {
             $preySlotRaw = cbz_player_numeric_value($player, ['prey_unlocked'], 0);
         }
-        $preyPermanent = cbz_yes_no($preySlotRaw >= 3 ? 1 : $preySlotRaw);
+
+        $preyPermanentRaw = ($preySlotRaw >= 3 || $preySlotRaw === 1 || $preySlotRaw === 2) ? 1 : 0;
+        if ($preyPermanentRaw === 0) {
+            foreach ([95101, 95102, 95103, 95109] as $storageKey) {
+                if (!empty($storageValues[$storageKey]) && (int)$storageValues[$storageKey] > 0) {
+                    $preyPermanentRaw = 1;
+                    break;
+                }
+            }
+        }
+        if ($preyPermanentRaw === 0 && $preyWildcards > 0) {
+            // Fallback for forks where permanent prey unlock is not persisted in player columns.
+            $preyPermanentRaw = 1;
+        }
+        $preyPermanent = cbz_yes_no($preyPermanentRaw);
+
+        if ($availablePromotionPoints <= 0 && isset($storageValues[95124]) && (int)$storageValues[95124] > 0) {
+            $availablePromotionPoints = (int)$storageValues[95124];
+        }
+
+        $promotionInitiateRaw = cbz_player_numeric_value($player, [
+            'promotion_points_initiate',
+            'promotion_point_initiate',
+            'wheel_promotion_initiate',
+            'initiate_promotion_scroll',
+            'promotion_initiate',
+        ], 0);
+        $promotionAscendantRaw = cbz_player_numeric_value($player, [
+            'promotion_points_ascendant',
+            'promotion_point_ascendant',
+            'wheel_promotion_ascendant',
+            'ascendant_promotion_scroll',
+            'promotion_ascendant',
+        ], 0);
+        $promotionMythicRaw = cbz_player_numeric_value($player, [
+            'promotion_points_mythic',
+            'promotion_point_mythic',
+            'wheel_promotion_mythic',
+            'mythic_promotion_scroll',
+            'promotion_mythic',
+        ], 0);
+
+        if ($promotionInitiateRaw <= 0 && isset($storageValues[95121])) {
+            $promotionInitiateRaw = (int)$storageValues[95121];
+        }
+        if ($promotionAscendantRaw <= 0 && isset($storageValues[95122])) {
+            $promotionAscendantRaw = (int)$storageValues[95122];
+        }
+        if ($promotionMythicRaw <= 0 && isset($storageValues[95123])) {
+            $promotionMythicRaw = (int)$storageValues[95123];
+        }
+
+        $promotionInitiate = cbz_yes_no($promotionInitiateRaw);
+        $promotionAscendant = cbz_yes_no($promotionAscendantRaw);
+        $promotionMythic = cbz_yes_no($promotionMythicRaw);
+        $jewelledPounch4Slot = cbz_yes_no((int)($storageValues[95110] ?? 0));
 
         $bosstiary = is_array($bosstiaryList) ? count($bosstiaryList) : 0;
-        if (!$includeCollections && cbz_has_table($db, 'player_bosstiary')) {
-            $bosstiary = (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `player_bosstiary` WHERE `player_id` = {$playerId}") ?? 0);
+        if (!$includeCollections && $bosstiaryTable) {
+            $bosstiaryPlayerCol = cbz_find_first_column($db, $bosstiaryTable, ['player_id', 'playerid']);
+            if ($bosstiaryPlayerCol) {
+                $bosstiary = (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `{$bosstiaryTable}` WHERE `{$bosstiaryPlayerCol}` = {$playerId}") ?? 0);
+            }
         }
         $bossPoints = cbz_has_column($db, 'players', 'boss_points') ? (int)$player['boss_points'] : '-';
 
@@ -854,16 +1058,6 @@ if (!function_exists('cbz_get_character_sale_data')) {
             $blessingsCount = cbz_count_bits((int)$player['blessings']);
         }
 
-        $thirdStoneSlotRaw = cbz_player_numeric_value($player, [
-            'stone_slot_3',
-            'third_stone_slot',
-            'stones_slot_3',
-            'stone_slot3',
-            'stones_slot3',
-            'charm_expansion',
-        ], 0);
-        $thirdStoneSlot = cbz_yes_no($thirdStoneSlotRaw);
-
         return [
             'player' => $player,
             'name' => $player['name'],
@@ -883,6 +1077,10 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'defence_stats' => $defenceStats,
             'offence_stats' => $offenceStats,
             'wheel_points' => $wheelPoints,
+            'available_promotion_points' => $availablePromotionPoints,
+            'promotion_points_initiate' => $promotionInitiate,
+            'promotion_points_ascendant' => $promotionAscendant,
+            'promotion_points_mythic' => $promotionMythic,
             'item_summary' => $summary,
             'item_summary_rows' => $itemSummaryRows,
             'task_board' => $taskBoard,
@@ -894,7 +1092,7 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'bosstiary_list' => $bosstiaryList,
             'creation_date' => $creationDate,
             'blessings_count' => $blessingsCount,
-            'third_stone_slot' => $thirdStoneSlot,
+            'jewelled_pounch_4_slot' => $jewelledPounch4Slot,
             'stones_total' => $stonesTotal,
             'stones_rows' => $stoneRows,
             'stone_dust_total' => $stoneDustTotal,
