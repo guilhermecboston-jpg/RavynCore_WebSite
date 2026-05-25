@@ -1205,7 +1205,15 @@ function log_append($file, $str, array $params = [])
     $str .= print_r($params, true);
   }
 
-  $f = fopen(LOGS . $file, 'ab');
+  if (!is_dir(LOGS)) {
+    @mkdir(LOGS, 0775, true);
+  }
+
+  $f = @fopen(LOGS . $file, 'ab');
+  if ($f === false) {
+    return;
+  }
+
   fwrite($f, '[' . date(DateTime::RFC1123) . '] ' . $str . PHP_EOL);
   fclose($f);
 }
@@ -1950,7 +1958,11 @@ function getAccountLoyaltyPointsBatch(array $accountIds = []): array
     return $pointsByAccount;
   }
 
-  if ($db->hasColumn('accounts', 'loyalty_points') && !empty($filterIds)) {
+  if ($db->hasColumn('accounts', 'loyalty_points')) {
+    if (empty($filterIds)) {
+      return $pointsByAccount;
+    }
+
     try {
       $placeholders = implode(', ', array_fill(0, count($filterIds), '?'));
       $stmt = $db->prepare('SELECT `id`, `loyalty_points` FROM `accounts` WHERE `id` IN (' . $placeholders . ')');
@@ -2309,8 +2321,8 @@ function ravynLoyaltyTitle($loyaltyPoints): string
 function loadStagesData($configFile)
 {
   if (!@file_exists($configFile)) {
-    log_append('error.log', "[loadStagesData] Fatal error: Cannot load stages.lua ($configFile).");
-    throw new RuntimeException("ERROR: Cannot find $configFile file.");
+    log_append('error.log', "[loadStagesData] Warning: Cannot load stages.lua ($configFile).");
+    return [];
   }
 
   $result = [];
