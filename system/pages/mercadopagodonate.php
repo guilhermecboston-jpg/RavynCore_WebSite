@@ -104,6 +104,28 @@ if (stripos($notificationUrl, 'https://') !== 0) {
 
 $payload['auto_return'] = 'approved';
 
+$pmConfig = $config['mercadoPago']['paymentMethods'] ?? [];
+$maxInstallments = (int)($pmConfig['maxInstallments'] ?? 12);
+if ($maxInstallments > 0) {
+	$payload['payment_methods'] = [
+		'installments' => min($maxInstallments, 24),
+	];
+	$excludedTypes = $pmConfig['excludedPaymentTypes'] ?? [];
+	if (is_array($excludedTypes) && count($excludedTypes) > 0) {
+		$payload['payment_methods']['excluded_payment_types'] = array_map(
+			static fn($id) => ['id' => (string)$id],
+			$excludedTypes
+		);
+	}
+	$excludedMethods = $pmConfig['excludedPaymentMethods'] ?? [];
+	if (is_array($excludedMethods) && count($excludedMethods) > 0) {
+		$payload['payment_methods']['excluded_payment_methods'] = array_map(
+			static fn($id) => ['id' => (string)$id],
+			$excludedMethods
+		);
+	}
+}
+
 $ch = curl_init($endpoint);
 curl_setopt_array($ch, [
 	CURLOPT_RETURNTRANSFER => true,

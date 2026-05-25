@@ -26,6 +26,12 @@ $mercadoPagoDefaults = [
 	'doubleCoins' => false,
 	'doubleCoinsStart' => 300,
 	'donationType' => 'coins_transferable', // coins / coins_transferable
+	// Checkout Pro: métodos exibidos dependem da conta MP (Pix exige chave Pix cadastrada).
+	'paymentMethods' => [
+		'maxInstallments' => 12, // habilita parcelas e opção "2 cartões" quando o MP permitir
+		'excludedPaymentTypes' => [], // ex.: ['ticket'] oculta boleto
+		'excludedPaymentMethods' => [], // ex.: ['bolbradesco'] oculta boleto específico
+	],
 	'donates' => [
 		'10' => ['id' => '10', 'value' => 10, 'coins' => 100, 'extra' => 0],
 		'20' => ['id' => '20', 'value' => 20, 'coins' => 200, 'extra' => 0],

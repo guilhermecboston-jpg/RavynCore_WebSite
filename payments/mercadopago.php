@@ -41,9 +41,12 @@ if (!empty($json['data']['id'])) {
 }
 
 if (empty($paymentId)) {
+	log_append('mercadopago_webhook.log', date('Y-m-d H:i:s') . ' webhook ignored: no payment id. raw=' . substr((string)$raw, 0, 500));
 	http_response_code(200);
 	exit;
 }
+
+log_append('mercadopago_webhook.log', date('Y-m-d H:i:s') . ' webhook payment_id=' . $paymentId);
 
 $paymentEndpoint = 'https://api.mercadopago.com/v1/payments/' . urlencode($paymentId);
 $ch = curl_init($paymentEndpoint);
@@ -155,7 +158,20 @@ try {
 	if ((int)$transactionDB['delivered'] === 0 && $paymentStatus === 'approved') {
 		$field = strtolower($config['mercadoPago']['donationType'] ?? 'coins_transferable');
 		$db->exec("UPDATE `accounts` SET {$field} = {$field} + {$coinsAmount} WHERE `id` = {$accountId}");
-		ravynGrantDonationLoyaltyPoints((int)$accountId, (float)$amountBrl);
+		$loyaltyAdded = ravynGrantDonationLoyaltyPoints((int)$accountId, (float)$amountBrl);
+		log_append(
+			'mercadopago_webhook.log',
+			sprintf(
+				'%s DELIVERED account=%d payment=%s coins=%d loyalty=+%d brl=%s method=%s',
+				date('Y-m-d H:i:s'),
+				$accountId,
+				$paymentId,
+				$coinsAmount,
+				$loyaltyAdded,
+				number_format($amountBrl, 2, '.', ''),
+				$paymentMethod
+			)
+		);
 		$updateApproved = "`delivered` = 1, `payment_status` = " . $db->quote($paymentStatus) . ", `request` = " . $db->quote($requestLog) . ", `updated_at` = " . $db->quote($updateAt);
 		if ($hasAmountBrlColumn) {
 			$updateApproved .= ", `amount_brl` = {$amountBrlSql}";
@@ -169,6 +185,10 @@ try {
 		$values2 = "{$accountId}, 0, {$db->quote('Donate - Mercado Pago')}, 3, {$coinsAmount}, {$timestamp}, 0, 0";
 		$db->exec("INSERT INTO `store_history` (`account_id`, `mode`, `description`, `coin_type`, `coin_amount`, `time`, `timestamp`, `coins`) VALUES ({$values2})");
 	} else {
+		log_append(
+			'mercadopago_webhook.log',
+			date('Y-m-d H:i:s') . " status={$paymentStatus} delivered=" . (int)$transactionDB['delivered'] . " account={$accountId} payment={$paymentId}"
+		);
 		$updateDefault = "`payment_status` = " . $db->quote($paymentStatus) . ", `request` = " . $db->quote($requestLog) . ", `updated_at` = " . $db->quote($updateAt);
 		if ($hasAmountBrlColumn && $amountBrl > 0) {
 			$updateDefault .= ", `amount_brl` = {$amountBrlSql}";
