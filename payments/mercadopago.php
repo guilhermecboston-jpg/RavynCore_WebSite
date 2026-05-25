@@ -155,6 +155,7 @@ try {
 	if ((int)$transactionDB['delivered'] === 0 && $paymentStatus === 'approved') {
 		$field = strtolower($config['mercadoPago']['donationType'] ?? 'coins_transferable');
 		$db->exec("UPDATE `accounts` SET {$field} = {$field} + {$coinsAmount} WHERE `id` = {$accountId}");
+		ravynGrantDonationLoyaltyPoints((int)$accountId, (float)$amountBrl);
 		$updateApproved = "`delivered` = 1, `payment_status` = " . $db->quote($paymentStatus) . ", `request` = " . $db->quote($requestLog) . ", `updated_at` = " . $db->quote($updateAt);
 		if ($hasAmountBrlColumn) {
 			$updateApproved .= ", `amount_brl` = {$amountBrlSql}";

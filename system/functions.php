@@ -1696,16 +1696,16 @@ function getAccountLoyaltyTitleTiers(): array
 
   $defaultTiers = [
     7200 => 'Legacy of RavynCore',
-    3600 => 'Supreme of RavynCore',
-    3240 => 'Sage of RavynCore',
-    2880 => 'Guardian of RavynCore',
-    2520 => 'Keeper of RavynCore',
-    2160 => 'Warrior of RavynCore',
-    1800 => 'Squire of RavynCore',
-    1440 => 'Warden of RavynCore',
-    1080 => 'Steward of RavynCore',
-    720 => 'Sentinel of RavynCore',
-    360 => 'Scout of RavynCore',
+    5000 => 'Supreme of RavynCore',
+    4000 => 'Sage of RavynCore',
+    3000 => 'Guardian of RavynCore',
+    2500 => 'Keeper of RavynCore',
+    2000 => 'Warrior of RavynCore',
+    1500 => 'Squire of RavynCore',
+    1000 => 'Warden of RavynCore',
+    600 => 'Steward of RavynCore',
+    300 => 'Sentinel of RavynCore',
+    100 => 'Scout of RavynCore',
   ];
 
   if (!isset($config['ravyncore_loyalty_titles']) || !is_array($config['ravyncore_loyalty_titles'])) {
@@ -1882,6 +1882,26 @@ function getAccountLoyaltyPointsBatch(array $accountIds = []): array
 
   if (!isset($db) || !method_exists($db, 'hasTable') || !method_exists($db, 'hasColumn')) {
     return $pointsByAccount;
+  }
+
+  if ($db->hasColumn('accounts', 'loyalty_points') && !empty($filterIds)) {
+    try {
+      $placeholders = implode(', ', array_fill(0, count($filterIds), '?'));
+      $stmt = $db->prepare('SELECT `id`, `loyalty_points` FROM `accounts` WHERE `id` IN (' . $placeholders . ')');
+      foreach ($filterIds as $index => $filterId) {
+        $stmt->bindValue($index + 1, (int)$filterId, PDO::PARAM_INT);
+      }
+      $stmt->execute();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        $accountId = (int)($row['id'] ?? 0);
+        if ($accountId > 0) {
+          $pointsByAccount[$accountId] = max(0, (int)($row['loyalty_points'] ?? 0));
+        }
+      }
+      return $pointsByAccount;
+    } catch (\Exception $e) {
+      log_append('loyalty_errors.log', date('Y-m-d H:i:s') . ' accounts.loyalty_points read error: ' . $e->getMessage());
+    }
   }
 
   $statuses = getAccountLoyaltyApprovedStatuses();
@@ -2092,6 +2112,48 @@ function getAccountLoyaltyPointsBatch(array $accountIds = []): array
   }
 
   return $result;
+}
+
+/**
+ * Doação aprovada: R$ 1,00 = 1 loyalty point na account (accounts.loyalty_points).
+ * Chamado por PagSeguro / Mercado Pago ao entregar coins.
+ */
+function ravynGrantDonationLoyaltyPoints(int $accountId, float $amountBrl): int
+{
+  global $db, $config;
+
+  $accountId = (int)$accountId;
+  if ($accountId <= 0 || $amountBrl <= 0) {
+    return 0;
+  }
+
+  if (isset($config['ravyn_loyalty_donation_enabled']) && $config['ravyn_loyalty_donation_enabled'] === false) {
+    return 0;
+  }
+
+  if (!isset($db) || !method_exists($db, 'hasColumn') || !$db->hasColumn('accounts', 'loyalty_points')) {
+    return 0;
+  }
+
+  $perReal = 1;
+  if (isset($config['ravyn_loyalty_points_per_real']) && (int)$config['ravyn_loyalty_points_per_real'] > 0) {
+    $perReal = (int)$config['ravyn_loyalty_points_per_real'];
+  }
+
+  $points = (int)floor($amountBrl * $perReal);
+  if ($points <= 0) {
+    return 0;
+  }
+
+  try {
+    $stmt = $db->prepare('UPDATE `accounts` SET `loyalty_points` = `loyalty_points` + ? WHERE `id` = ? LIMIT 1');
+    $stmt->execute([$points, $accountId]);
+    log_append('loyalty_donation.log', date('Y-m-d H:i:s') . " [DONATION LOYALTY] account {$accountId} +{$points} (R$ " . number_format($amountBrl, 2, '.', '') . ')');
+    return $points;
+  } catch (\Exception $e) {
+    log_append('loyalty_errors.log', date('Y-m-d H:i:s') . ' ravynGrantDonationLoyaltyPoints: ' . $e->getMessage());
+    return 0;
+  }
 }
 
 function getAccountLoyaltyPoints($accountId): int

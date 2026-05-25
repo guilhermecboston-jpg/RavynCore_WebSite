@@ -113,6 +113,9 @@ $config = array(
 	'account_mail_unique' => true, // email addresses cannot be duplicated? (one account = one email)
 	'account_premium_days' => 0, // default premium days on new account
 	'account_welcome_coins' => 0, // default coins on new account
+	// RavynCore loyalty: R$ 1 em doação aprovada = 1 ponto em accounts.loyalty_points (PagSeguro / Mercado Pago)
+	'ravyn_loyalty_donation_enabled' => true,
+	'ravyn_loyalty_points_per_real' => 1,
 	'account_welcome_mail' => false, // send welcome email when user registers
 	'account_welcome_mail_show_pass' => false, // send password in welcome email
 	'account_mail_change' => 2, // how many days user need to change email to account - block hackers

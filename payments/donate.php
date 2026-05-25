@@ -130,6 +130,8 @@ if ('post' == strtolower($method)) {
             "UPDATE `accounts` SET {$field} = {$field} + {$coins_amount} WHERE `id` = {$account_id}"
           );
 
+          ravynGrantDonationLoyaltyPoints((int)$account_id, (float)$amountBrl);
+
           $updateParts = [
             '`delivered` = 1',
             '`payment_status` = ' . $db->quote($payment_status),

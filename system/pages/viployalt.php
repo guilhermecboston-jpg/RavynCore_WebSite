@@ -21,16 +21,16 @@ $benefits = [
 $loyaltyTitles = [];
 $titleTiers = function_exists('getAccountLoyaltyTitleTiers') ? getAccountLoyaltyTitleTiers() : [
     7200 => 'Legacy of RavynCore',
-    3600 => 'Supreme of RavynCore',
-    3240 => 'Sage of RavynCore',
-    2880 => 'Guardian of RavynCore',
-    2520 => 'Keeper of RavynCore',
-    2160 => 'Warrior of RavynCore',
-    1800 => 'Squire of RavynCore',
-    1440 => 'Warden of RavynCore',
-    1080 => 'Steward of RavynCore',
-    720 => 'Sentinel of RavynCore',
-    360 => 'Scout of RavynCore',
+    5000 => 'Supreme of RavynCore',
+    4000 => 'Sage of RavynCore',
+    3000 => 'Guardian of RavynCore',
+    2500 => 'Keeper of RavynCore',
+    2000 => 'Warrior of RavynCore',
+    1500 => 'Squire of RavynCore',
+    1000 => 'Warden of RavynCore',
+    600 => 'Steward of RavynCore',
+    300 => 'Sentinel of RavynCore',
+    100 => 'Scout of RavynCore',
 ];
 $titleTiersAsc = $titleTiers;
 ksort($titleTiersAsc, SORT_NUMERIC);
