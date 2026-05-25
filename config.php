@@ -31,6 +31,8 @@ $config = array(
 	 */
 	'env' => 'prod', // 'prod' for production and 'dev' for development
 	'domain' => '', // your website domain, e.g. myserver.org (used for cookies and some links generation)
+	'force_https_urls' => false, // true in config.local.php when the site runs behind nginx/apache with SSL (fixes payment gateway URLs)
+	'public_url' => '', // optional absolute base URL, e.g. https://ravyncore.com/ (overrides auto-detect for Mercado Pago / Stripe)
 
 	'template' => 'tibiacom', // template used by website (kathrine, tibiacom)
 	'template_allow_change' => false, // allow users to choose their own template while browsing website?

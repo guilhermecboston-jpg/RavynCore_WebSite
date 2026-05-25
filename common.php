@@ -121,7 +121,21 @@ if (!IS_CLI) {
         }
     }
 
-    define('SERVER_URL', 'http' . (isset($_SERVER['HTTPS'][0]) && strtolower($_SERVER['HTTPS']) === 'on' ? 's' : '') . '://' . $baseHost);
+    $isHttps = false;
+    if (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off') {
+        $isHttps = true;
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower((string)$_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') {
+        $isHttps = true;
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower((string)$_SERVER['HTTP_X_FORWARDED_SSL']) === 'on') {
+        $isHttps = true;
+    } elseif ((int)($_SERVER['SERVER_PORT'] ?? 0) === 443) {
+        $isHttps = true;
+    }
+    if (isset($config['force_https_urls']) && $config['force_https_urls']) {
+        $isHttps = true;
+    }
+
+    define('SERVER_URL', ($isHttps ? 'https' : 'http') . '://' . $baseHost);
     define('BASE_URL', SERVER_URL . BASE_DIR . '/');
     define('ADMIN_URL', SERVER_URL . BASE_DIR . '/admin/');
 

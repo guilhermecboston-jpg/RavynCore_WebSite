@@ -53,8 +53,10 @@ $isDouble = (bool)($config['mercadoPago']['doubleCoins'] ?? false) && $bought >=
 $coinsAmount = ($isDouble ? $bought * 2 : $bought) + $extra;
 $desc = ($isDouble ? ($bought * 2) : $bought) . ' ' . ($config['mercadoPago']['productName'] ?? 'Coins');
 
-$redirectUrl = BASE_URL . ($config['mercadoPago']['urlRedirect'] ?? '?subtopic=donate&action=final');
-$notificationUrl = rtrim(BASE_URL, '/') . '/payments/mercadopago.php';
+$baseUrl = function_exists('ravynPublicBaseUrl') ? ravynPublicBaseUrl() : BASE_URL;
+$redirectPath = $config['mercadoPago']['urlRedirect'] ?? '?subtopic=donate&action=final';
+$redirectUrl = $baseUrl . ltrim($redirectPath, '/');
+$notificationUrl = rtrim($baseUrl, '/') . '/payments/mercadopago.php';
 $endpoint = 'https://api.mercadopago.com/checkout/preferences';
 
 $payload = [
@@ -73,7 +75,6 @@ $payload = [
 		'pending' => $redirectUrl,
 		'failure' => $redirectUrl,
 	],
-	'auto_return' => 'approved',
 	'metadata' => [
 		'code' => (string)$donateSelected['id'],
 		'coins' => $bought,
@@ -83,6 +84,25 @@ $payload = [
 		'account_id' => $reference,
 	],
 ];
+
+// Mercado Pago exige HTTPS em back_urls e notification_url
+foreach (['success', 'pending', 'failure'] as $backKey) {
+	if (stripos($payload['back_urls'][$backKey], 'https://') !== 0) {
+		log_append(
+			'mercadopago_donate_errors.log',
+			date('Y-m-d H:i:s') . ': back_urls.' . $backKey . ' must use HTTPS: ' . $payload['back_urls'][$backKey]
+		);
+		echo 'Payment URLs must use HTTPS. Set force_https_urls or public_url in config.local.php.';
+		return;
+	}
+}
+if (stripos($notificationUrl, 'https://') !== 0) {
+	log_append('mercadopago_donate_errors.log', date('Y-m-d H:i:s') . ': notification_url must use HTTPS: ' . $notificationUrl);
+	echo 'Payment URLs must use HTTPS. Set force_https_urls or public_url in config.local.php.';
+	return;
+}
+
+$payload['auto_return'] = 'approved';
 
 $ch = curl_init($endpoint);
 curl_setopt_array($ch, [
@@ -102,7 +122,35 @@ $curlError = curl_error($ch);
 curl_close($ch);
 
 if ($response === false || !in_array($httpCode, [200, 201], true)) {
-	log_append('mercadopago_donate_errors.log', date('Y-m-d H:i:s') . ': checkout create error - ' . $curlError . ' - ' . $response);
+	$apiMessage = '';
+	$decoded = is_string($response) ? json_decode($response, true) : null;
+	if (is_array($decoded)) {
+		$apiMessage = $decoded['message'] ?? ($decoded['error'] ?? '');
+		if (!empty($decoded['cause']) && is_array($decoded['cause'])) {
+			$parts = [];
+			foreach ($decoded['cause'] as $cause) {
+				if (is_array($cause)) {
+					$parts[] = ($cause['code'] ?? '') . ' ' . ($cause['description'] ?? '');
+				}
+			}
+			if ($parts) {
+				$apiMessage .= ' | ' . implode('; ', $parts);
+			}
+		}
+	}
+	log_append(
+		'mercadopago_donate_errors.log',
+		sprintf(
+			'%s: HTTP %d curl=%s api=%s urls=%s notify=%s body=%s',
+			date('Y-m-d H:i:s'),
+			$httpCode,
+			$curlError,
+			$apiMessage,
+			$redirectUrl,
+			$notificationUrl,
+			is_string($response) ? $response : ''
+		)
+	);
 	echo 'Error creating Mercado Pago checkout. Please try again in a few moments.';
 	return;
 }

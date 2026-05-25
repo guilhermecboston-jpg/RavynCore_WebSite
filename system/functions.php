@@ -1712,6 +1712,31 @@ function getAccountLoyaltyApprovedStatuses(): array
   ];
 }
 
+/**
+ * Base URL for payment callbacks (Mercado Pago / Stripe require HTTPS).
+ */
+function ravynPublicBaseUrl(): string
+{
+  global $config;
+
+  if (!empty($config['public_url'])) {
+    $url = rtrim((string)$config['public_url'], '/') . '/';
+  } elseif (defined('BASE_URL')) {
+    $url = BASE_URL;
+  } else {
+    $url = '/';
+  }
+
+  if (
+    (!empty($config['force_https_urls']) || ($config['env'] ?? '') === 'prod')
+    && stripos($url, 'http://') === 0
+  ) {
+    $url = 'https' . substr($url, 4);
+  }
+
+  return $url;
+}
+
 function ravynGetLoyaltyServerName(): string
 {
   global $config;

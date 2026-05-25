@@ -6,6 +6,10 @@
  *   $config['mercadoPago']['accessToken']['production'] = 'APP_USR-...';
  *   $config['mercadoPago']['accessToken']['sandbox'] = 'TEST-...';
  *
+ * URLs de retorno precisam ser HTTPS (obrigatório no MP):
+ *   $config['force_https_urls'] = true;
+ *   $config['public_url'] = 'https://ravyncore.com/';
+ *
  * @name      myaac-mercadopago
  * @copyright 2026 MyAAC/RavynCore
  */

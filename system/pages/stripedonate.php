@@ -60,10 +60,11 @@ if ($unitAmount <= 0) {
 	return;
 }
 
+$baseUrl = function_exists('ravynPublicBaseUrl') ? ravynPublicBaseUrl() : BASE_URL;
 $redirectPath = $config['stripe']['urlRedirect'] ?? '?subtopic=donate&action=final';
-$successUrl = BASE_URL . $redirectPath . (strpos($redirectPath, '?') !== false ? '&' : '?') . 'gateway=stripe';
-$cancelUrl = BASE_URL . '?subtopic=donate';
-$notificationUrl = rtrim(BASE_URL, '/') . '/payments/stripe.php';
+$successUrl = $baseUrl . ltrim($redirectPath, '/') . (strpos($redirectPath, '?') !== false ? '&' : '?') . 'gateway=stripe';
+$cancelUrl = $baseUrl . '?subtopic=donate';
+$notificationUrl = rtrim($baseUrl, '/') . '/payments/stripe.php';
 
 $payload = [
 	'mode' => 'payment',
