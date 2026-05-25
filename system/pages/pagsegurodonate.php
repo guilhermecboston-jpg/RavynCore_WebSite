@@ -34,7 +34,7 @@ $paymentRequest->addItem($code, $desc, $qtd, $config['pagSeguro']['value']);
 $paymentRequest->setCurrency("BRL");
 $paymentRequest->setReference($_POST['reference']);
 $paymentRequest->setRedirectUrl(BASE_URL . $config['pagSeguro']['urlRedirect']);
-$paymentRequest->addParameter('notificationURL', "https://YOUR_SITE/payments/donate.php");
+$paymentRequest->addParameter('notificationURL', rtrim(BASE_URL, '/') . '/payments/donate.php');
 
 try {
     $credentials = PagSeguroConfig::getAccountCredentials();

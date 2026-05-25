@@ -1690,29 +1690,99 @@ function getAccountLoyaltyApprovedStatuses(): array
   ];
 }
 
+function ravynGetLoyaltyServerName(): string
+{
+  global $config;
+  if (!empty($config['lua']['serverName'])) {
+    return (string)$config['lua']['serverName'];
+  }
+  return 'RavynCore';
+}
+
+function getRavynCoreLoyaltyTierDefinitions(): array
+{
+  global $config;
+
+  if (isset($config['ravyncore_loyalty_tiers']) && is_array($config['ravyncore_loyalty_tiers']) && count($config['ravyncore_loyalty_tiers']) > 0) {
+    return $config['ravyncore_loyalty_tiers'];
+  }
+
+  return [
+    ['name' => 'Scout', 'points' => 100, 'bonus' => 1],
+    ['name' => 'Sentinel', 'points' => 300, 'bonus' => 2],
+    ['name' => 'Steward', 'points' => 600, 'bonus' => 3],
+    ['name' => 'Warden', 'points' => 1000, 'bonus' => 4],
+    ['name' => 'Squire', 'points' => 1500, 'bonus' => 5],
+    ['name' => 'Warrior', 'points' => 2000, 'bonus' => 7],
+    ['name' => 'Keeper', 'points' => 2500, 'bonus' => 8],
+    ['name' => 'Guardian', 'points' => 3000, 'bonus' => 10],
+    ['name' => 'Sage', 'points' => 4000, 'bonus' => 15],
+    ['name' => 'Supreme', 'points' => 5000, 'bonus' => 20],
+    ['name' => 'Legacy', 'points' => 7200, 'bonus' => 30],
+  ];
+}
+
+/**
+ * Linhas para tabelas do site: título, pontos, bônus skill.
+ */
+function getRavynLoyaltyDisplayTiers(): array
+{
+  $serverName = ravynGetLoyaltyServerName();
+  $rows = [];
+
+  foreach (getRavynCoreLoyaltyTierDefinitions() as $tier) {
+    if (!is_array($tier)) {
+      continue;
+    }
+    $name = trim((string)($tier['name'] ?? ''));
+    $points = (int)($tier['points'] ?? 0);
+    $bonus = (int)($tier['bonus'] ?? 0);
+    if ($name === '' || $points <= 0) {
+      continue;
+    }
+    $title = trim((string)($tier['title'] ?? ''));
+    if ($title === '') {
+      $title = $name . ' of ' . $serverName;
+    }
+    $rows[] = [$title, (string)$points, '+' . $bonus];
+  }
+
+  usort($rows, static function (array $a, array $b): int {
+    return (int)$a[1] <=> (int)$b[1];
+  });
+
+  return $rows;
+}
+
 function getAccountLoyaltyTitleTiers(): array
 {
   global $config;
 
-  $defaultTiers = [
-    7200 => 'Legacy of RavynCore',
-    5000 => 'Supreme of RavynCore',
-    4000 => 'Sage of RavynCore',
-    3000 => 'Guardian of RavynCore',
-    2500 => 'Keeper of RavynCore',
-    2000 => 'Warrior of RavynCore',
-    1500 => 'Squire of RavynCore',
-    1000 => 'Warden of RavynCore',
-    600 => 'Steward of RavynCore',
-    300 => 'Sentinel of RavynCore',
-    100 => 'Scout of RavynCore',
-  ];
-
-  if (!isset($config['ravyncore_loyalty_titles']) || !is_array($config['ravyncore_loyalty_titles'])) {
-    return $defaultTiers;
+  $parsed = [];
+  foreach (getRavynCoreLoyaltyTierDefinitions() as $tier) {
+    if (!is_array($tier)) {
+      continue;
+    }
+    $points = (int)($tier['points'] ?? 0);
+    if ($points <= 0) {
+      continue;
+    }
+    $title = trim((string)($tier['title'] ?? ''));
+    if ($title === '') {
+      $name = trim((string)($tier['name'] ?? ''));
+      if ($name === '') {
+        continue;
+      }
+      $title = $name . ' of ' . ravynGetLoyaltyServerName();
+    }
+    $parsed[$points] = $title;
   }
 
-  $parsed = [];
+  if (!isset($config['ravyncore_loyalty_titles']) || !is_array($config['ravyncore_loyalty_titles'])) {
+    krsort($parsed, SORT_NUMERIC);
+    return $parsed;
+  }
+
   foreach ($config['ravyncore_loyalty_titles'] as $key => $value) {
     if (is_array($value)) {
       $required = isset($value['points']) ? (int)$value['points'] : 0;
@@ -1727,10 +1797,6 @@ function getAccountLoyaltyTitleTiers(): array
     }
 
     $parsed[$required] = $title;
-  }
-
-  if (empty($parsed)) {
-    return $defaultTiers;
   }
 
   krsort($parsed, SORT_NUMERIC);
@@ -2115,8 +2181,49 @@ function getAccountLoyaltyPointsBatch(array $accountIds = []): array
 }
 
 /**
+ * Verifica assinatura do webhook Stripe (Stripe-Signature).
+ */
+function stripeVerifyWebhookSignature(string $payload, string $sigHeader, string $secret, int $tolerance = 300): bool
+{
+  $timestamp = null;
+  $signatures = [];
+
+  foreach (explode(',', $sigHeader) as $part) {
+    $part = trim($part);
+    if (strpos($part, '=') === false) {
+      continue;
+    }
+    [$key, $value] = explode('=', $part, 2);
+    if ($key === 't') {
+      $timestamp = $value;
+    } elseif ($key === 'v1') {
+      $signatures[] = $value;
+    }
+  }
+
+  if ($timestamp === null || empty($signatures)) {
+    return false;
+  }
+
+  if (abs(time() - (int)$timestamp) > $tolerance) {
+    return false;
+  }
+
+  $signedPayload = $timestamp . '.' . $payload;
+  $expected = hash_hmac('sha256', $signedPayload, $secret);
+
+  foreach ($signatures as $signature) {
+    if (hash_equals($expected, $signature)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
  * Doação aprovada: R$ 1,00 = 1 loyalty point na account (accounts.loyalty_points).
- * Chamado por PagSeguro / Mercado Pago ao entregar coins.
+ * Chamado por PagSeguro, Mercado Pago e Stripe ao entregar coins.
  */
 function ravynGrantDonationLoyaltyPoints(int $accountId, float $amountBrl): int
 {

@@ -18,25 +18,7 @@ $benefits = [
     ['Proficiency Bonus', 'Receives an additional 10% experience on weapon proficiency.'],
 ];
 
-$loyaltyTitles = [];
-$titleTiers = function_exists('getAccountLoyaltyTitleTiers') ? getAccountLoyaltyTitleTiers() : [
-    7200 => 'Legacy of RavynCore',
-    5000 => 'Supreme of RavynCore',
-    4000 => 'Sage of RavynCore',
-    3000 => 'Guardian of RavynCore',
-    2500 => 'Keeper of RavynCore',
-    2000 => 'Warrior of RavynCore',
-    1500 => 'Squire of RavynCore',
-    1000 => 'Warden of RavynCore',
-    600 => 'Steward of RavynCore',
-    300 => 'Sentinel of RavynCore',
-    100 => 'Scout of RavynCore',
-];
-$titleTiersAsc = $titleTiers;
-ksort($titleTiersAsc, SORT_NUMERIC);
-foreach ($titleTiersAsc as $requiredPoints => $titleName) {
-    $loyaltyTitles[] = [(string)$titleName, (string)$requiredPoints, '-'];
-}
+$loyaltyTitles = function_exists('getRavynLoyaltyDisplayTiers') ? getRavynLoyaltyDisplayTiers() : [];
 
 $vocationBonuses = [
     ['Knights', 'axe, sword, club and shielding'],
@@ -242,9 +224,9 @@ body.rc-page-viployalt .rc-rich-content .rc-vl-center {
         <div class="rc-vl-body">
             <ul class="rc-vl-note">
                 <li>This bonus is linked to your <em>account</em>, therefore it is a <strong>non-transferable</strong> bonus.</li>
-                <li>By purchasing the <strong>monthly</strong> VIP package in our store, your account will receive <strong>120 loyalty point</strong>.</li>
+                <li>Each <strong>R$ 1.00</strong> in eligible store donations adds <strong>1 loyalty point</strong> to your account (PagSeguro, Mercado Pago or Stripe).</li>
                 <li>All characters on the account receive the skill bonus corresponding to the title.</li>
-                <li>To check your loyalty level, just look at your <em>server log</em> when accessing any character in the game.</li>
+                <li>To check your loyalty level, use the <strong>/loyalty</strong> command in-game or read the <em>server log</em> when logging in.</li>
             </ul>
 
             <table class="rc-vl-table">
@@ -284,10 +266,9 @@ body.rc-page-viployalt .rc-rich-content .rc-vl-center {
             </table>
 
             <p class="rc-vl-footer-note">
-                The point for purchasing a <strong>30-day VIP</strong> in the store is automatically credited to your account, without
-                needing the days to pass like on the global server. Additionally, we have a fixed and progressive bonus up to
-                <strong>+20 skill</strong>. It is an eternal bonus for your account, which is why the cost is <em>progressive</em> -
-                we do not want it to be easily accessible to players since many invest a lot of time in skill training.
+                Loyalty points are credited to your <strong>account</strong> automatically after payment approval — you do not need to wait
+                for days to pass. The skill bonus is <em>progressive</em> and permanent for all characters on the account, up to
+                <strong>+30 skill</strong> at <strong>Legacy of RavynCore</strong> (7200 points). Titles and bonuses are not transferable between accounts.
             </p>
         </div>
     </section>

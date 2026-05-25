@@ -113,9 +113,22 @@ $config = array(
 	'account_mail_unique' => true, // email addresses cannot be duplicated? (one account = one email)
 	'account_premium_days' => 0, // default premium days on new account
 	'account_welcome_coins' => 0, // default coins on new account
-	// RavynCore loyalty: R$ 1 em doação aprovada = 1 ponto em accounts.loyalty_points (PagSeguro / Mercado Pago)
+	// RavynCore loyalty: R$ 1 em doação aprovada = 1 ponto em accounts.loyalty_points
 	'ravyn_loyalty_donation_enabled' => true,
 	'ravyn_loyalty_points_per_real' => 1,
+	'ravyncore_loyalty_tiers' => [
+		['name' => 'Scout', 'points' => 100, 'bonus' => 1],
+		['name' => 'Sentinel', 'points' => 300, 'bonus' => 2],
+		['name' => 'Steward', 'points' => 600, 'bonus' => 3],
+		['name' => 'Warden', 'points' => 1000, 'bonus' => 4],
+		['name' => 'Squire', 'points' => 1500, 'bonus' => 5],
+		['name' => 'Warrior', 'points' => 2000, 'bonus' => 7],
+		['name' => 'Keeper', 'points' => 2500, 'bonus' => 8],
+		['name' => 'Guardian', 'points' => 3000, 'bonus' => 10],
+		['name' => 'Sage', 'points' => 4000, 'bonus' => 15],
+		['name' => 'Supreme', 'points' => 5000, 'bonus' => 20],
+		['name' => 'Legacy', 'points' => 7200, 'bonus' => 30],
+	],
 	'account_welcome_mail' => false, // send welcome email when user registers
 	'account_welcome_mail_show_pass' => false, // send password in welcome email
 	'account_mail_change' => 2, // how many days user need to change email to account - block hackers
