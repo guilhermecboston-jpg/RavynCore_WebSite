@@ -322,6 +322,9 @@ if ($selectCharacter > 0) {
                     <p class="rc-cbz-empty">No bestiary entries found.</p>
                 <?php else: foreach ($bestiaryList as $entry): ?>
                     <article class="rc-cbz-collect-card">
+                        <?php if (!empty($entry['image'])): ?>
+                            <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars((string)$entry['image']) ?>" alt="<?= htmlspecialchars((string)$entry['name']) ?>"></div>
+                        <?php endif; ?>
                         <strong><?= htmlspecialchars((string)$entry['name']) ?></strong>
                         <small>ID #<?= (int)$entry['id'] ?><?php if ((int)$entry['progress'] > 0): ?> - <?= (int)$entry['progress'] ?><?php endif; ?></small>
                     </article>
@@ -339,6 +342,9 @@ if ($selectCharacter > 0) {
                     <p class="rc-cbz-empty">No bosstiary entries found.</p>
                 <?php else: foreach ($bosstiaryList as $entry): ?>
                     <article class="rc-cbz-collect-card">
+                        <?php if (!empty($entry['image'])): ?>
+                            <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars((string)$entry['image']) ?>" alt="<?= htmlspecialchars((string)$entry['name']) ?>"></div>
+                        <?php endif; ?>
                         <strong><?= htmlspecialchars((string)$entry['name']) ?></strong>
                         <small>ID #<?= (int)$entry['id'] ?><?php if ((int)$entry['progress'] > 0): ?> - <?= (int)$entry['progress'] ?><?php endif; ?></small>
                     </article>

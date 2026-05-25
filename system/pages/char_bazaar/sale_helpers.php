@@ -249,10 +249,12 @@ if (!function_exists('cbz_build_collection_rows_from_ids')) {
                 continue;
             }
 
+            $entryName = $nameMap[$id] ?? ($fallbackPrefix . ' #' . $id);
             $rows[] = [
                 'id' => $id,
-                'name' => $nameMap[$id] ?? ($fallbackPrefix . ' #' . $id),
+                'name' => $entryName,
                 'progress' => 0,
+                'image' => cbz_get_library_creature_image($entryName),
             ];
         }
 
@@ -939,6 +941,140 @@ if (!function_exists('cbz_get_item_bucket_rows_multi')) {
     }
 }
 
+if (!function_exists('cbz_merge_item_bucket_row_sets')) {
+    function cbz_merge_item_bucket_row_sets(array $rowSets, $limit = 120)
+    {
+        $amountByItem = [];
+        foreach ($rowSets as $rows) {
+            if (!is_array($rows)) {
+                continue;
+            }
+
+            foreach ($rows as $row) {
+                $itemId = (int)($row['item_id'] ?? 0);
+                $amount = (int)($row['amount'] ?? 0);
+                if ($itemId <= 0 || $amount <= 0) {
+                    continue;
+                }
+
+                if (!isset($amountByItem[$itemId])) {
+                    $amountByItem[$itemId] = 0;
+                }
+                $amountByItem[$itemId] += $amount;
+            }
+        }
+
+        return cbz_format_item_amount_rows($amountByItem, $limit);
+    }
+}
+
+if (!function_exists('cbz_get_player_items_flat_rows')) {
+    function cbz_get_player_items_flat_rows($db, $playerId)
+    {
+        if (!cbz_has_table($db, 'player_items')) {
+            return [];
+        }
+
+        $playerCol = cbz_find_first_column($db, 'player_items', ['player_id', 'playerid']);
+        $itemCol = cbz_find_first_column($db, 'player_items', ['itemtype', 'item_id', 'itemid', 'itemId']);
+        $pidCol = cbz_find_first_column($db, 'player_items', ['pid']);
+        $sidCol = cbz_find_first_column($db, 'player_items', ['sid', 'serial']);
+        $amountCol = cbz_find_first_column($db, 'player_items', ['count', 'amount', 'item_count', 'itemcount', 'quantity']);
+        if (!$playerCol || !$itemCol || !$pidCol || !$sidCol) {
+            return [];
+        }
+
+        $amountSelect = $amountCol ? ('`' . $amountCol . '`') : '1';
+        $query = $db->query(
+            'SELECT `' . $sidCol . '` AS `sid`, `' . $pidCol . '` AS `pid`, `' . $itemCol . '` AS `item_id`, ' . $amountSelect . ' AS `amount` ' .
+            'FROM `player_items` WHERE `' . $playerCol . '` = ' . (int)$playerId
+        );
+        if (!$query) {
+            return [];
+        }
+
+        $rows = [];
+        foreach ($query as $row) {
+            $rows[] = [
+                'sid' => (int)($row['sid'] ?? 0),
+                'pid' => (int)($row['pid'] ?? 0),
+                'item_id' => (int)($row['item_id'] ?? 0),
+                'amount' => (int)($row['amount'] ?? 1),
+            ];
+        }
+
+        return $rows;
+    }
+}
+
+if (!function_exists('cbz_get_player_items_bucket_rows_by_roots')) {
+    function cbz_get_player_items_bucket_rows_by_roots($db, $playerId, array $rootPids, $limit = 120)
+    {
+        $rootPids = array_values(array_unique(array_map('intval', $rootPids)));
+        if (!$rootPids) {
+            return [];
+        }
+
+        $rows = cbz_get_player_items_flat_rows($db, $playerId);
+        if (!$rows) {
+            return [];
+        }
+
+        $childrenByPid = [];
+        $rootNodes = [];
+        foreach ($rows as $row) {
+            $pid = (int)$row['pid'];
+            if (!isset($childrenByPid[$pid])) {
+                $childrenByPid[$pid] = [];
+            }
+            $childrenByPid[$pid][] = $row;
+
+            if (in_array($pid, $rootPids, true)) {
+                $rootNodes[] = $row;
+            }
+        }
+
+        if (!$rootNodes) {
+            return [];
+        }
+
+        $queue = $rootNodes;
+        $visitedSids = [];
+        $amountByItem = [];
+
+        while (!empty($queue)) {
+            $node = array_shift($queue);
+            $sid = (int)($node['sid'] ?? 0);
+            if ($sid > 0) {
+                if (isset($visitedSids[$sid])) {
+                    continue;
+                }
+                $visitedSids[$sid] = true;
+            }
+
+            $itemId = (int)($node['item_id'] ?? 0);
+            $amount = (int)($node['amount'] ?? 1);
+            if ($itemId > 0) {
+                if ($amount <= 0) {
+                    $amount = 1;
+                }
+                if (!isset($amountByItem[$itemId])) {
+                    $amountByItem[$itemId] = 0;
+                }
+                $amountByItem[$itemId] += $amount;
+            }
+
+            if ($sid > 0 && isset($childrenByPid[$sid])) {
+                foreach ($childrenByPid[$sid] as $childRow) {
+                    $queue[] = $childRow;
+                }
+            }
+        }
+
+        return cbz_format_item_amount_rows($amountByItem, $limit);
+    }
+}
+
 if (!function_exists('cbz_collect_amounts_by_item_from_rows')) {
     function cbz_collect_amounts_by_item_from_rows(array $rows)
     {
@@ -1094,8 +1230,180 @@ if (!function_exists('cbz_get_collection_name_map')) {
             }
         }
 
+        if (count($map) < 20) {
+            $luaMap = cbz_get_monster_lua_race_name_map();
+            foreach ($luaMap as $id => $name) {
+                $id = (int)$id;
+                $name = trim((string)$name);
+                if ($id <= 0 || $name === '') {
+                    continue;
+                }
+
+                if (!isset($map[$id])) {
+                    $map[$id] = $name;
+                }
+            }
+        }
+
         $cachedMap = $map;
         return $cachedMap;
+    }
+}
+
+if (!function_exists('cbz_get_monster_lua_search_dirs')) {
+    function cbz_get_monster_lua_search_dirs()
+    {
+        $dirs = [];
+
+        if (function_exists('config')) {
+            $dataPath = trim((string)config('data_path'));
+            if ($dataPath !== '') {
+                $dirs[] = rtrim($dataPath, "/\\") . DIRECTORY_SEPARATOR . 'monster';
+            }
+
+            $serverPath = trim((string)config('server_path'));
+            if ($serverPath !== '') {
+                $serverPath = rtrim($serverPath, "/\\");
+                $dirs[] = $serverPath . DIRECTORY_SEPARATOR . 'data-global' . DIRECTORY_SEPARATOR . 'monster';
+                $dirs[] = $serverPath . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'monster';
+            }
+        }
+
+        $uniqueDirs = [];
+        foreach ($dirs as $dir) {
+            $normalized = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $dir);
+            if ($normalized === '' || isset($uniqueDirs[$normalized])) {
+                continue;
+            }
+            if (!is_dir($normalized) || !is_readable($normalized)) {
+                continue;
+            }
+
+            $uniqueDirs[$normalized] = true;
+        }
+
+        return array_keys($uniqueDirs);
+    }
+}
+
+if (!function_exists('cbz_get_monster_lua_race_name_map')) {
+    function cbz_get_monster_lua_race_name_map()
+    {
+        static $cachedMap = null;
+        if (is_array($cachedMap)) {
+            return $cachedMap;
+        }
+
+        $map = [];
+        $dirs = cbz_get_monster_lua_search_dirs();
+        if (!$dirs) {
+            $cachedMap = $map;
+            return $cachedMap;
+        }
+
+        $namePattern = '/Game\\.createMonsterType\\(\\s*[\'"]([^\'"]+)[\'"]\\s*\\)/i';
+        $racePattern = '/monster\\.raceId\\s*=\\s*(\\d+)/i';
+
+        foreach ($dirs as $dir) {
+            try {
+                $iterator = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS | FilesystemIterator::FOLLOW_SYMLINKS)
+                );
+            } catch (Exception $e) {
+                continue;
+            }
+
+            foreach ($iterator as $fileInfo) {
+                /** @var SplFileInfo $fileInfo */
+                if (!$fileInfo->isFile()) {
+                    continue;
+                }
+                if (strtolower($fileInfo->getExtension()) !== 'lua') {
+                    continue;
+                }
+
+                $content = @file_get_contents($fileInfo->getPathname());
+                if ($content === false || $content === '') {
+                    continue;
+                }
+
+                if (!preg_match($namePattern, $content, $nameMatch)) {
+                    continue;
+                }
+                if (!preg_match($racePattern, $content, $raceMatch)) {
+                    continue;
+                }
+
+                $raceId = (int)($raceMatch[1] ?? 0);
+                $name = trim((string)($nameMatch[1] ?? ''));
+                if ($raceId <= 0 || $name === '') {
+                    continue;
+                }
+
+                if (!isset($map[$raceId])) {
+                    $map[$raceId] = $name;
+                }
+            }
+        }
+
+        $cachedMap = $map;
+        return $cachedMap;
+    }
+}
+
+if (!function_exists('cbz_slugify_name')) {
+    function cbz_slugify_name($name)
+    {
+        $value = (string)$name;
+        $ascii = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+        if ($ascii !== false && $ascii !== '') {
+            $value = $ascii;
+        }
+
+        $value = strtolower($value);
+        $value = preg_replace('/[^a-z0-9]+/', '', $value);
+        return trim((string)$value);
+    }
+}
+
+if (!function_exists('cbz_get_library_creature_image')) {
+    function cbz_get_library_creature_image($name)
+    {
+        static $cache = [];
+        $name = (string)$name;
+        if (isset($cache[$name])) {
+            return $cache[$name];
+        }
+
+        $slug = cbz_slugify_name($name);
+        if ($slug === '') {
+            $cache[$name] = '';
+            return '';
+        }
+
+        $slugCandidates = [$slug];
+        if (substr($slug, -1) === 's' && strlen($slug) > 3) {
+            $slugCandidates[] = substr($slug, 0, -1);
+        }
+        if (substr($slug, -2) === 'es' && strlen($slug) > 4) {
+            $slugCandidates[] = substr($slug, 0, -2);
+        }
+        $slugCandidates = array_values(array_unique($slugCandidates));
+
+        $extCandidates = ['gif', 'png', 'jpg', 'webp'];
+        foreach ($slugCandidates as $slugCandidate) {
+            foreach ($extCandidates as $ext) {
+                $relative = 'images/library/' . $slugCandidate . '.' . $ext;
+                $absolute = BASE . $relative;
+                if (is_file($absolute)) {
+                    $cache[$name] = BASE_URL . str_replace('\\', '/', $relative);
+                    return $cache[$name];
+                }
+            }
+        }
+
+        $cache[$name] = '';
+        return '';
     }
 }
 
@@ -1156,6 +1464,11 @@ if (!function_exists('cbz_get_collection_rows')) {
             ];
         }
 
+        foreach ($rows as &$row) {
+            $row['image'] = cbz_get_library_creature_image((string)($row['name'] ?? ''));
+        }
+        unset($row);
+
         return $rows;
     }
 }
@@ -1177,6 +1490,68 @@ if (!function_exists('cbz_yes_no')) {
     function cbz_yes_no($value)
     {
         return ((int)$value > 0) ? 'Yes' : 'No';
+    }
+}
+
+if (!function_exists('cbz_sum_wheel_slot_blob_points')) {
+    function cbz_sum_wheel_slot_blob_points($rawValue)
+    {
+        if ($rawValue === null) {
+            return 0;
+        }
+        if (is_resource($rawValue)) {
+            $rawValue = stream_get_contents($rawValue);
+        }
+
+        $raw = (string)$rawValue;
+        $length = strlen($raw);
+        if ($length < 3) {
+            return 0;
+        }
+
+        $sum = 0;
+        for ($i = 0; $i + 2 < $length; $i += 3) {
+            $points = ord($raw[$i + 1]) | (ord($raw[$i + 2]) << 8);
+            if ($points > 0) {
+                $sum += $points;
+            }
+        }
+
+        return (int)$sum;
+    }
+}
+
+if (!function_exists('cbz_get_player_wheel_invested_points')) {
+    function cbz_get_player_wheel_invested_points($db, $playerId)
+    {
+        if (!cbz_has_table($db, 'player_wheeldata')) {
+            return 0;
+        }
+
+        $playerCol = cbz_find_first_column($db, 'player_wheeldata', ['player_id', 'playerid']);
+        $slotCol = cbz_find_first_column($db, 'player_wheeldata', ['slot', 'slots', 'data']);
+        if (!$playerCol || !$slotCol) {
+            return 0;
+        }
+
+        try {
+            $stmt = $db->query(
+                'SELECT `' . $slotCol . '` AS `slot_blob` FROM `player_wheeldata` ' .
+                'WHERE `' . $playerCol . '` = ' . (int)$playerId . ' LIMIT 1'
+            );
+            if (!$stmt) {
+                return 0;
+            }
+
+            $row = $stmt->fetch();
+            if (!$row || !array_key_exists('slot_blob', $row)) {
+                return 0;
+            }
+
+            return cbz_sum_wheel_slot_blob_points($row['slot_blob']);
+        } catch (Exception $e) {
+            return 0;
+        }
     }
 }
 
@@ -1427,12 +1802,16 @@ if (!function_exists('cbz_get_character_sale_data')) {
         ];
 
         if ($includeItemSummary) {
-            // Cyclopedia inventory summary uses all carried inventory entries.
-            $inventoryRows = cbz_get_item_bucket_rows_multi($db, ['player_items'], $playerId);
+            $inventoryRows = cbz_get_player_items_bucket_rows_by_roots($db, $playerId, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            if (!$inventoryRows) {
+                $inventoryRows = cbz_get_backpack_item_bucket_rows($db, $playerId);
+            }
             $depotRows = cbz_get_item_bucket_rows_multi($db, ['player_depotitems'], $playerId);
             $supplyStashRows = cbz_get_item_bucket_rows_multi($db, ['player_supplystash', 'player_stash'], $playerId);
             $inboxRows = cbz_get_item_bucket_rows_multi($db, ['player_inboxitems'], $playerId);
-            $storeInboxRows = cbz_get_item_bucket_rows_multi($db, $storeInboxTables, $playerId);
+            $storeInboxDbRows = cbz_get_item_bucket_rows_multi($db, $storeInboxTables, $playerId);
+            $storeInboxSlotRows = cbz_get_player_items_bucket_rows_by_roots($db, $playerId, [11, 12]);
+            $storeInboxRows = cbz_merge_item_bucket_row_sets([$storeInboxDbRows, $storeInboxSlotRows]);
             if (!$storeInboxRows && $inboxRows) {
                 // Fallback: some forks persist Store Inbox in inbox-like tables.
                 $storeInboxRows = $inboxRows;
@@ -1501,6 +1880,7 @@ if (!function_exists('cbz_get_character_sale_data')) {
             $availablePromotionPoints = (int)$storageValues[95124];
         }
 
+        $wheelInvestedPoints = cbz_get_player_wheel_invested_points($db, $playerId);
         if (cbz_has_table($db, 'player_wheeldata')) {
             $wheelPlayerCol = cbz_find_first_column($db, 'player_wheeldata', ['player_id', 'playerid']);
             if ($wheelPlayerCol) {
@@ -1531,6 +1911,9 @@ if (!function_exists('cbz_get_character_sale_data')) {
                     }
                 }
             }
+        }
+        if ($wheelPoints <= 0 && $wheelInvestedPoints > 0) {
+            $wheelPoints = $wheelInvestedPoints;
         }
 
         $promotionInitiateRaw = cbz_player_numeric_value($player, [
@@ -1563,6 +1946,25 @@ if (!function_exists('cbz_get_character_sale_data')) {
         }
         if ($promotionMythicRaw <= 0 && isset($storageValues[95123])) {
             $promotionMythicRaw = (int)$storageValues[95123];
+        }
+
+        $baseWheelPoints = max(0, ((int)$player['level']) - 50);
+        $scrollBonusPoints = 0;
+        if ($promotionInitiateRaw > 0) {
+            $scrollBonusPoints += 3;
+        }
+        if ($promotionAscendantRaw > 0) {
+            $scrollBonusPoints += 5;
+        }
+        if ($promotionMythicRaw > 0) {
+            $scrollBonusPoints += 9;
+        }
+        $estimatedTotalWheelPoints = $baseWheelPoints + $scrollBonusPoints;
+        if ($wheelPoints <= 0 && $estimatedTotalWheelPoints > 0) {
+            $wheelPoints = $estimatedTotalWheelPoints;
+        }
+        if ($availablePromotionPoints <= 0 && $estimatedTotalWheelPoints > 0) {
+            $availablePromotionPoints = max(0, $estimatedTotalWheelPoints - $wheelInvestedPoints);
         }
 
         $promotionInitiate = cbz_yes_no($promotionInitiateRaw);
