@@ -46,6 +46,7 @@ if ($selectCharacter > 0) {
     $bestiaryList = $character['bestiary_list'] ?? [];
     $bosstiaryList = $character['bosstiary_list'] ?? [];
     $stonesRows = $character['stones_rows'] ?? [];
+    $addonMountBonus = $character['addon_mount_bonus'] ?? ['outfits_used' => 0, 'mounts_used' => 0, 'bonus_lines' => []];
     ?>
 
     <div class="rc-cbz-stepper">
@@ -206,6 +207,19 @@ if ($selectCharacter > 0) {
                                 <div class="rc-cbz-inline-action"><span>Stones</span><strong><?= (int)$character['stones_total'] ?> <a href="#" class="rc-bazaar-view-btn rc-cbz-modal-open rc-cbz-inline-btn" data-target="rc-cbz-modal-stones">View</a></strong></div>
                                 <div><span>Stone Dust</span><strong><?= number_format((int)$character['stone_dust_total'], 0, ',', '.') ?></strong></div>
                                 <div><span>RavynCore</span><strong><?= number_format((int)$character['ravyncore_total'], 0, ',', '.') ?></strong></div>
+                            </div>
+                        </div>
+
+                        <div class="rc-cbz-section">
+                            <h3>Addon&Mount Bonuses System</h3>
+                            <div class="rc-cbz-grid-two">
+                                <div><span>Outfits com bonus</span><strong><?= (int)($addonMountBonus['outfits_used'] ?? 0) ?></strong></div>
+                                <div><span>Mounts com bonus</span><strong><?= (int)($addonMountBonus['mounts_used'] ?? 0) ?></strong></div>
+                            </div>
+                            <div class="rc-cbz-bonus-lines">
+                                <?php foreach (($addonMountBonus['bonus_lines'] ?? []) as $line): ?>
+                                    <div class="rc-cbz-bonus-line"><?= htmlspecialchars((string)$line) ?></div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
                     </section>

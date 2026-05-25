@@ -5382,6 +5382,23 @@ body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-empty {
     margin: 4px 0;
 }
 
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-bonus-lines,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-bonus-lines {
+    margin-top: 10px;
+    border: 1px solid rgba(132, 156, 200, 0.24);
+    border-radius: 8px;
+    background: rgba(10, 17, 30, 0.45);
+    padding: 8px 10px;
+}
+
+body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-bonus-line,
+body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-bonus-line {
+    color: #d4e4ff;
+    font-size: 12px;
+    line-height: 1.45;
+    padding: 2px 0;
+}
+
 body.rc-page-createcharacterauction .rc-rich-content .rc-cbz-item-fallback,
 body.rc-page-currentcharactertrades .rc-rich-content .rc-cbz-item-fallback {
     font-size: 11px;
