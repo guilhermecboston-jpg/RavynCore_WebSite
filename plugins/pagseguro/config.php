@@ -10,6 +10,7 @@
  */
 
 $config['pagSeguro'] = [
+    'enabled'           => false, // PagSeguro desativado — use Mercado Pago / Stripe
     'email'             => '', // your pagseguro e-mail
     'environment'       => 'production', // production, sandbox
     'token'             => [
@@ -22,13 +23,7 @@ $config['pagSeguro'] = [
     'doubleCoins'       => false, // should coins be doubled? for example: for 5 coins donated you become 10.
     'doubleCoinsStart'  => 300, // if doubleCoins is activated, what is min value to activate double coins
     'donationType'      => 'coins_transferable', // what should be added to player account? coins/coins_transferable
-    'donates'           => [ // value = value in reais / coins = amount of coins / extra = bonus
-        '10'   => ['id' => '10',   'value'   => 10,   'coins' => 100,   'extra' => 0],
-        '20'   => ['id' => '20',   'value'   => 20,   'coins' => 200,   'extra' => 0],
-        '30'   => ['id' => '30',   'value'   => 30,   'coins' => 300,   'extra' => 30],
-        '40'   => ['id' => '40',   'value'   => 40,   'coins' => 400,   'extra' => 40],
-        '50'   => ['id' => '50',   'value'   => 50,   'coins' => 500,   'extra' => 50],
-    ],
+    'donates'           => [], // desativado — pacotes em mercadopago/stripe config
     'boxes' => [ // if you want to sell boxes in site
         'xxxxx' => [ // put crystalserver box item id
             'id'          => 'xxxxx', // the same id

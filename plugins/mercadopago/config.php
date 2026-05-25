@@ -7,7 +7,7 @@
  */
 
 $config['mercadoPago'] = [
-	'enabled' => false,
+	'enabled' => true,
 	'environment' => 'production', // production, sandbox
 	'accessToken' => [
 		'production' => '',

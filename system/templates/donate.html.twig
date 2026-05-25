@@ -1,38 +1,45 @@
-{% if has_pagseguro %}
+{% if not has_mercado_pago and not has_stripe %}
+  <p>Nenhum método de pagamento disponível no momento.</p>
+{% endif %}
+
+{% if has_mercado_pago %}
 <table width="100%" border="0" cellpadding="4" cellspacing="1">
   <tbody>
   <tr>
-    <td colspan="3" bgcolor="{{ config.vdarkborder }}" class="white"><span
-        class="style4">PagSeguro — Donate to receive your reward!</span></td>
+    <td colspan="3" bgcolor="{{ config.vdarkborder }}" class="white"><span class="style4">Mercado Pago — Donate to receive your reward!</span></td>
   </tr>
   <tr bgcolor="{{ config.vdarkborder }}">
     <td class="white" width="35%"><b>Donation</b></td>
     <td class="white"><b>Reward</b></td>
   </tr>
-  {% set i = 1 %}
-  {% for item in config.pagSeguro.donates %}
-    <tr bgcolor="{{ getStyle(i) }}">
+  {% set m = 1 %}
+  {% for item in config.mercadoPago.donates %}
+    <tr bgcolor="{{ getStyle(m) }}">
       <td>R${{ item.value }}</td>
       <td><img alt src="images/content/bullet.gif">
-        {% if is_double and item.coins >= double_start %} <span
-          style="text-decoration: line-through;">{{ item.coins }}</span> {% if item.extra > 0 %}(+{{ item.extra }} bonus){% endif %}
+        {% if mercado_pago_is_double and item.coins >= mercado_pago_double_start %}
+          <span style="text-decoration: line-through;">{{ item.coins }}</span>
+          {% if item.extra > 0 %}(+{{ item.extra }} bonus){% endif %}
           <strong>{{ item.coins * 2 }}</strong>
-        {% else %} {{ item.coins }} {% if item.extra > 0 %}(+{{ item.extra }} bonus){% endif %} {% endif %}
-        Coins {% if is_double and item.coins >= double_start %}
-          <strong>(double)</strong> {% endif %} {% if item.id == '500' %} (+1 Mega Roulette Coin) {% elseif item.id == '1000' %} (+3 Mega Roulette Coins) {% endif %}
+        {% else %}
+          {{ item.coins }} {% if item.extra > 0 %}(+{{ item.extra }} bonus){% endif %}
+        {% endif %}
+        Coins {% if mercado_pago_is_double and item.coins >= mercado_pago_double_start %}
+          <strong>(double)</strong>
+        {% endif %}
       </td>
     </tr>
-    {% set i = i + 1 %}
+    {% set m = m + 1 %}
   {% endfor %}
   </tbody>
 </table>
 <br/>
-<form target="pagseguro" method="post" action="{{ getLink('pagsegurodonate') }}">
+<form method="post" action="{{ getLink('mercadopagodonate') }}">
   <input type="hidden" name="reference" value="{{ account_logged.getId() }}">
   <table border="0" cellpadding="4" cellspacing="1" width="100%">
     <tbody>
     <tr bgcolor="{{ config.vdarkborder }}" class="white">
-      <th colspan="2"><strong>Choose the number of coins you want to donate</strong></th>
+      <th colspan="2"><strong>Choose the number of coins you want to donate (Mercado Pago)</strong></th>
     </tr>
     <tr bgcolor="{{ config.darkborder }}">
       <td width="15%">Account Name</td>
@@ -42,99 +49,34 @@
       <td width="15%">Coins</td>
       <td>
         <select name="code" required style="width: 250px">
-          {% for item in config.pagSeguro.donates %}
+          {% for item in config.mercadoPago.donates %}
             <option value="{{ item.id }}">R${{ item.value }} ({{ item.coins }}
-              Coins{% if item.extra > 0 %} +{{ item.extra }} bonus{% endif %}){% if is_double and item.coins >= double_start %}(double){% endif %}</option>
+              Coins{% if item.extra > 0 %} +{{ item.extra }} bonus{% endif %}){% if mercado_pago_is_double and item.coins >= mercado_pago_double_start %}(double){% endif %}</option>
           {% endfor %}
         </select>
       </td>
     </tr>
     <tr bgcolor="{{ config.darkborder }}">
       <td colspan="2">
-        <input type="image" src="https://p.simg.uol.com.br/out/pagseguro/i/botoes/carrinhoproprio/btnFinalizar.jpg"
-               name="submit" {% if is_localhost and not config.enablePagseguroLocal %}disabled{% endif %}/>
+        <button type="submit" {% if is_localhost and not enable_donate_local %}disabled{% endif %}{% if not mercado_pago_enabled %} disabled title="Configure access token in plugins/mercadopago/config.php"{% endif %}>Pay with Mercado Pago</button>
+        {% if not mercado_pago_enabled %}
+          <br/><small style="color:#ff6666;">Mercado Pago: set <code>enabled = true</code> and access token in config.</small>
+        {% endif %}
       </td>
     </tr>
     </tbody>
   </table>
 </form>
 <b><span style="color:#ff0000;">OBS:</span></b> Coins and loyalty points (R$ 1 = 1 point) are delivered <b>automatically</b> after
-<u>approved</u> payment by PagSeguro.
-{% endif %}
-
-{% if has_mercado_pago %}
-  <br/><br/>
-  <table width="100%" border="0" cellpadding="4" cellspacing="1">
-    <tbody>
-    <tr>
-      <td colspan="3" bgcolor="{{ config.vdarkborder }}" class="white"><span class="style4">Mercado Pago</span></td>
-    </tr>
-    <tr bgcolor="{{ config.vdarkborder }}">
-      <td class="white" width="35%"><b>Donation</b></td>
-      <td class="white"><b>Reward</b></td>
-    </tr>
-    {% set m = 1 %}
-    {% for item in config.mercadoPago.donates %}
-      <tr bgcolor="{{ getStyle(m) }}">
-        <td>R${{ item.value }}</td>
-        <td><img alt src="images/content/bullet.gif">
-          {% if mercado_pago_is_double and item.coins >= mercado_pago_double_start %}
-            <span style="text-decoration: line-through;">{{ item.coins }}</span>
-            {% if item.extra > 0 %}(+{{ item.extra }} bonus){% endif %}
-            <strong>{{ item.coins * 2 }}</strong>
-          {% else %}
-            {{ item.coins }} {% if item.extra > 0 %}(+{{ item.extra }} bonus){% endif %}
-          {% endif %}
-          Coins {% if mercado_pago_is_double and item.coins >= mercado_pago_double_start %}
-            <strong>(double)</strong>
-          {% endif %}
-        </td>
-      </tr>
-      {% set m = m + 1 %}
-    {% endfor %}
-    </tbody>
-  </table>
-  <br/>
-  <form method="post" action="{{ getLink('mercadopagodonate') }}">
-    <input type="hidden" name="reference" value="{{ account_logged.getId() }}">
-    <table border="0" cellpadding="4" cellspacing="1" width="100%">
-      <tbody>
-      <tr bgcolor="{{ config.vdarkborder }}" class="white">
-        <th colspan="2"><strong>Choose the number of coins you want to donate (Mercado Pago)</strong></th>
-      </tr>
-      <tr bgcolor="{{ config.darkborder }}">
-        <td width="15%">Account Name</td>
-        <td><strong>{{ account_logged.getName() }}</strong></td>
-      </tr>
-      <tr bgcolor="{{ config.darkborder }}">
-        <td width="15%">Coins</td>
-        <td>
-          <select name="code" required style="width: 250px">
-            {% for item in config.mercadoPago.donates %}
-              <option value="{{ item.id }}">R${{ item.value }} ({{ item.coins }}
-                Coins{% if item.extra > 0 %} +{{ item.extra }} bonus{% endif %}){% if mercado_pago_is_double and item.coins >= mercado_pago_double_start %}(double){% endif %}</option>
-            {% endfor %}
-          </select>
-        </td>
-      </tr>
-      <tr bgcolor="{{ config.darkborder }}">
-        <td colspan="2">
-          <button type="submit" {% if is_localhost and not config.enablePagseguroLocal %}disabled{% endif %}>Pay with Mercado Pago</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </form>
-  <b><span style="color:#ff0000;">OBS:</span></b> Coins and loyalty points (R$ 1 = 1 point) are delivered <b>automatically</b> after
-  <u>approved</u> payment by Mercado Pago.
+<u>approved</u> payment by Mercado Pago.
 {% endif %}
 
 {% if has_stripe %}
-  <br/><br/>
+  {% if has_mercado_pago %}<br/><br/>{% endif %}
   <table width="100%" border="0" cellpadding="4" cellspacing="1">
     <tbody>
     <tr>
-      <td colspan="3" bgcolor="{{ config.vdarkborder }}" class="white"><span class="style4">Stripe (card)</span></td>
+      <td colspan="3" bgcolor="{{ config.vdarkborder }}" class="white"><span class="style4">Stripe (card) — Donate to receive your reward!</span></td>
     </tr>
     <tr bgcolor="{{ config.vdarkborder }}">
       <td class="white" width="35%"><b>Donation</b></td>
@@ -186,7 +128,10 @@
       </tr>
       <tr bgcolor="{{ config.darkborder }}">
         <td colspan="2">
-          <button type="submit" {% if is_localhost and not config.enablePagseguroLocal %}disabled{% endif %}>Pay with Stripe</button>
+          <button type="submit" {% if is_localhost and not enable_donate_local %}disabled{% endif %}{% if not stripe_enabled %} disabled title="Configure secret key in plugins/stripe/config.php"{% endif %}>Pay with Stripe</button>
+          {% if not stripe_enabled %}
+            <br/><small style="color:#ff6666;">Stripe: set <code>enabled = true</code> and API keys in config.</small>
+          {% endif %}
         </td>
       </tr>
       </tbody>

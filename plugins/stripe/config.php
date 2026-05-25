@@ -6,7 +6,7 @@
  */
 
 $config['stripe'] = [
-	'enabled' => false,
+	'enabled' => true,
 	'environment' => 'production', // production, sandbox
 	'secretKey' => [
 		'production' => '',
