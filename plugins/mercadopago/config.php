@@ -2,11 +2,15 @@
 /**
  * Mercado Pago payment system gateway.
  *
+ * Credenciais em config.local.php (não sobrescrever):
+ *   $config['mercadoPago']['accessToken']['production'] = 'APP_USR-...';
+ *   $config['mercadoPago']['accessToken']['sandbox'] = 'TEST-...';
+ *
  * @name      myaac-mercadopago
  * @copyright 2026 MyAAC/RavynCore
  */
 
-$config['mercadoPago'] = [
+$mercadoPagoDefaults = [
 	'enabled' => true,
 	'environment' => 'production', // production, sandbox
 	'accessToken' => [
@@ -26,3 +30,8 @@ $config['mercadoPago'] = [
 		'50' => ['id' => '50', 'value' => 50, 'coins' => 500, 'extra' => 50],
 	],
 ];
+
+$config['mercadoPago'] = array_replace_recursive(
+	$mercadoPagoDefaults,
+	isset($config['mercadoPago']) && is_array($config['mercadoPago']) ? $config['mercadoPago'] : []
+);
