@@ -1231,12 +1231,23 @@ function load_config_lua($filename)
   $result = [];
   $config_string = str_replace(["\r\n", "\r"], "\n", file_get_contents($filename));
   $lines = explode("\n", $config_string);
+  $luaTableDepth = 0;
   if (count($lines) > 0) {
     foreach ($lines as $ln => $line) {
       $line = trim($line);
+      if ($line === '' || strpos($line, '--') === 0) {
+        continue;
+      }
+
+      if ($luaTableDepth > 0) {
+        $luaTableDepth += substr_count($line, '{') - substr_count($line, '}');
+        if ($luaTableDepth <= 0) {
+          $luaTableDepth = 0;
+        }
+        continue;
+      }
+
       if (@$line[0] === '{' || @$line[0] === '}') {
-        // arrays are not supported yet
-        // just ignore the error
         continue;
       }
       $tmp_exp = explode('=', $line, 2);
@@ -1266,9 +1277,12 @@ function load_config_lua($filename)
             $result[$key] = (string) substr(substr($value, 1), 0, -1);
           } elseif (in_array($value, ['true', 'false'])) {
             $result[$key] = $value === 'true';
-          } elseif (@$value[0] === '{') {
-            // arrays are not supported yet
-            // just ignore the error
+          } elseif (strpos($value, '{') !== false) {
+            // Lua tables (ex.: loyaltySystem = { ... }) — ignorar bloco
+            $luaTableDepth = substr_count($value, '{') - substr_count($value, '}');
+            if ($luaTableDepth <= 0) {
+              $luaTableDepth = 0;
+            }
             continue;
           } else {
             foreach (
