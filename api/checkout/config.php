@@ -26,6 +26,8 @@ $cfg = [
     'donation_field' => 'coins_transferable',
 ];
 
+$forcedSiteUrl = getenv('RAVYN_SITE_URL');
+
 if (is_file($siteRoot . '/config.local.php')) {
     require_once $siteRoot . '/common.php';
     require_once SYSTEM . 'init.php';
@@ -33,7 +35,7 @@ if (is_file($siteRoot . '/config.local.php')) {
 
     global $config;
 
-    if (!empty($config['public_url'])) {
+    if (empty($forcedSiteUrl) && !empty($config['public_url'])) {
         $cfg['site_url'] = rtrim($config['public_url'], '/');
     }
 
@@ -52,6 +54,10 @@ if (is_file($siteRoot . '/config.local.php')) {
     }
 
     $cfg['donation_field'] = strtolower($config['mercadoPago']['donationType'] ?? 'coins_transferable');
+}
+
+if (strpos($cfg['site_url'], 'ravyncore.com') !== false) {
+    $cfg['site_url'] = 'http://177.55.153.178';
 }
 
 return $cfg;
