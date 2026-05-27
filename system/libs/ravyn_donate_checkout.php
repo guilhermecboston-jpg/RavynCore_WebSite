@@ -162,8 +162,22 @@ function ravynDonateVerifyCpfIdentity(string $cpf, string $fullName, string $bir
     return is_array($data) && !empty($data['valid']);
 }
 
+function ravynDonateNormalizeBirthDate(string $s): string
+{
+    $s = trim($s);
+    if (preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $s)) {
+        return $s;
+    }
+    $digits = preg_replace('/\D/', '', $s);
+    if (strlen($digits) === 8) {
+        return substr($digits, 0, 2) . '/' . substr($digits, 2, 2) . '/' . substr($digits, 4, 4);
+    }
+    return $s;
+}
+
 function ravynDonateValidateBirthDate(string $s): bool
 {
+    $s = ravynDonateNormalizeBirthDate($s);
     if (!preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $s, $m)) {
         return false;
     }
@@ -171,6 +185,22 @@ function ravynDonateValidateBirthDate(string $s): bool
     $mo = (int)$m[2];
     $y = (int)$m[3];
     return checkdate($mo, $d, $y);
+}
+
+function ravynDonateRedirectTo(string $url): void
+{
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+    if (!headers_sent()) {
+        header('Location: ' . $url, true, 302);
+        exit;
+    }
+    $safe = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+    echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url='
+        . $safe . '"></head><body><p>Redirecionando...</p><script>window.location.replace('
+        . json_encode($url) . ');</script></body></html>';
+    exit;
 }
 
 function ravynDonateNewOrderRef(): string
@@ -275,7 +305,26 @@ function ravynDonateDeliverOrder($db, array $order, string $paymentId, string $p
     }
 }
 
-function ravynDonateCreateMercadoPagoCheckout(array $order): ?string
+function ravynDonateMercadoPagoCheckoutError(string $response, int $httpCode, string $curlError = ''): string
+{
+    $msg = 'Não foi possível abrir o Mercado Pago.';
+    $decoded = is_string($response) ? json_decode($response, true) : null;
+    if (is_array($decoded)) {
+        $api = trim((string)($decoded['message'] ?? ($decoded['error'] ?? '')));
+        if ($api !== '') {
+            $msg .= ' ' . $api;
+        }
+    }
+    if (stripos($msg, 'https') === false && $httpCode > 0) {
+        $msg .= ' Verifique payment_public_url com HTTPS no config.local.php.';
+    }
+    if ($curlError !== '') {
+        log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' MP curl: ' . $curlError);
+    }
+    return $msg;
+}
+
+function ravynDonateCreateMercadoPagoCheckout(array $order, ?string &$error = null): ?string
 {
     global $config;
     require_once PLUGINS . 'mercadopago/config.php';
@@ -284,44 +333,69 @@ function ravynDonateCreateMercadoPagoCheckout(array $order): ?string
     $environment = $config['mercadoPago']['environment'] ?? 'production';
     $accessToken = $config['mercadoPago']['accessToken'][$environment] ?? '';
     if ($accessToken === '') {
+        $error = 'Token do Mercado Pago não configurado.';
         return null;
     }
 
     $baseUrl = ravynPublicBaseUrl();
-    $successUrl = $baseUrl . '?subtopic=donate&action=final&gateway=mercadopago&order=' . urlencode($order['order_ref']);
+    $redirectPath = $config['mercadoPago']['urlRedirect'] ?? '?subtopic=donate&action=final';
+    $successUrl = $baseUrl . ltrim($redirectPath, '/') . '&gateway=mercadopago&order=' . urlencode($order['order_ref']);
     $failureUrl = $baseUrl . '?subtopic=donate&order=' . urlencode($order['order_ref']);
     $notificationUrl = rtrim($baseUrl, '/') . '/payments/mercadopago.php';
 
+    $desc = $order['coins'] . ' RavynCore Coins';
     $payload = [
         'items' => [[
-            'id' => $order['package_id'],
-            'title' => $order['coins'] . ' RavynCore Coins',
+            'id' => (string)$order['package_id'],
+            'title' => $desc,
+            'description' => 'Donate: ' . $desc,
             'quantity' => 1,
             'currency_id' => 'BRL',
             'unit_price' => (float)$order['amount_brl'],
         ]],
-        'payer' => [
-            'name' => $order['full_name'],
-            'email' => $order['email'],
-            'identification' => [
-                'type' => $order['region'] === 'BR' ? 'CPF' : 'Otro',
-                'number' => $order['tax_id'],
-            ],
-        ],
         'external_reference' => $order['order_ref'],
-        'notification_url' => $notificationUrl,
         'back_urls' => [
             'success' => $successUrl,
             'pending' => $successUrl,
             'failure' => $failureUrl,
         ],
-        'auto_return' => 'approved',
         'metadata' => [
             'order_ref' => $order['order_ref'],
             'code' => $order['package_id'],
             'account_id' => (string)$order['account_id'],
         ],
     ];
+
+    $payer = ['email' => $order['email']];
+    if (!empty($order['full_name'])) {
+        $payer['name'] = $order['full_name'];
+    }
+    if (!empty($order['tax_id'])) {
+        $payer['identification'] = [
+            'type' => ($order['region'] ?? 'BR') === 'BR' ? 'CPF' : 'Otro',
+            'number' => preg_replace('/\D/', '', (string)$order['tax_id']),
+        ];
+    }
+    $payload['payer'] = $payer;
+
+    $httpsOk = stripos($successUrl, 'https://') === 0 && stripos($notificationUrl, 'https://') === 0;
+    if ($httpsOk) {
+        $payload['notification_url'] = $notificationUrl;
+        $payload['auto_return'] = 'approved';
+    } else {
+        log_append(
+            'ravyn_donate_errors.log',
+            date('Y-m-d H:i:s') . ' MP: URLs sem HTTPS success=' . $successUrl . ' notify=' . $notificationUrl
+        );
+        $error = 'Mercado Pago exige HTTPS. Configure payment_public_url com https:// no config.local.php.';
+        return null;
+    }
+
+    $pmConfig = $config['mercadoPago']['paymentMethods'] ?? [];
+    $maxInstallments = (int)($pmConfig['maxInstallments'] ?? 12);
+    if ($maxInstallments > 0) {
+        $payload['payment_methods'] = ['installments' => min($maxInstallments, 24)];
+    }
 
     $ch = curl_init('https://api.mercadopago.com/checkout/preferences');
     curl_setopt_array($ch, [
@@ -336,17 +410,26 @@ function ravynDonateCreateMercadoPagoCheckout(array $order): ?string
     ]);
     $response = curl_exec($ch);
     $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
     curl_close($ch);
 
     $data = json_decode((string)$response, true);
-    if ($httpCode < 200 || $httpCode >= 300 || empty($data['init_point'])) {
-        log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' MP: ' . (string)$response);
+    $checkoutUrl = null;
+    if ($environment === 'sandbox' && !empty($data['sandbox_init_point'])) {
+        $checkoutUrl = $data['sandbox_init_point'];
+    } elseif (!empty($data['init_point'])) {
+        $checkoutUrl = $data['init_point'];
+    }
+
+    if ($response === false || !in_array($httpCode, [200, 201], true) || empty($checkoutUrl)) {
+        log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' MP HTTP ' . $httpCode . ': ' . (string)$response);
+        $error = ravynDonateMercadoPagoCheckoutError((string)$response, $httpCode, $curlError);
         return null;
     }
-    return $data['init_point'];
+    return $checkoutUrl;
 }
 
-function ravynDonateCreateStripeCheckout(array $order): ?string
+function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null): ?string
 {
     global $config;
     require_once PLUGINS . 'stripe/config.php';
@@ -354,6 +437,7 @@ function ravynDonateCreateStripeCheckout(array $order): ?string
     $environment = $config['stripe']['environment'] ?? 'production';
     $secretKey = $config['stripe']['secretKey'][$environment] ?? '';
     if ($secretKey === '') {
+        $error = 'Chave secreta do Stripe não configurada.';
         return null;
     }
 
@@ -399,8 +483,10 @@ function ravynDonateCreateStripeCheckout(array $order): ?string
     curl_close($ch);
 
     $data = json_decode((string)$response, true);
-    if ($httpCode < 200 || $httpCode >= 300 || empty($data['url'])) {
-        log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' Stripe: ' . (string)$response);
+    if ($response === false || !in_array($httpCode, [200, 201], true) || empty($data['url'])) {
+        log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' Stripe HTTP ' . $httpCode . ': ' . (string)$response);
+        $api = is_array($data) ? trim((string)($data['error']['message'] ?? '')) : '';
+        $error = 'Não foi possível abrir o Stripe.' . ($api !== '' ? ' ' . $api : '');
         return null;
     }
     return $data['url'];

@@ -39,7 +39,7 @@
         <div class="rd-gateways">
           {% if has_mercado_pago %}
           <button type="button" class="rd-gateway-card" data-gateway="mercadopago">
-            <div class="rd-gw-logo"><img class="rd-gw-logo-img" src="images/payments/mercadopago.png" alt="MercadoPago" style="max-height:46px;max-width:140px;width:auto;height:auto;object-fit:contain;display:block;margin:0 auto;" /></div>
+            <div class="rd-gw-logo rd-gw-logo-mp"><img class="rd-gw-logo-img rd-gw-logo-img-mp" src="images/payments/mercadopago.png" alt="MercadoPago" /></div>
             <div class="rd-gw-name">MercadoPago</div>
           </button>
           {% endif %}
@@ -67,10 +67,9 @@
           <label>Nome completo<input type="text" name="full_name" required maxlength="128" /></label>
           <label id="rdLabelCpf">CPF<input type="text" name="cpf" id="rdCpf" placeholder="000.000.000-00" maxlength="18" /></label>
           <label id="rdLabelDoc" style="display:none">Documento<input type="text" name="document" id="rdDocument" maxlength="64" /></label>
-          <label>Data de nascimento<input type="text" name="birth_date" placeholder="DD/MM/AAAA" required maxlength="10" /></label>
+          <label>Data de nascimento<input type="text" name="birth_date" id="rdBirthDate" placeholder="DD/MM/AAAA" required maxlength="10" /></label>
           <label>E-mail<input type="email" name="email" required maxlength="128" /></label>
         </div>
-        <p class="rd-cpf-note"><strong>TODO:</strong> Implementar validação real de CPF via API nacional brasileira.</p>
       </div>
 
       <div class="rd-card-box rd-terms-box">
@@ -103,8 +102,7 @@
         Eu aceito os Termos e Condições
       </label>
 
-      <div class="rd-actions">
-        <button type="button" class="rd-btn rd-btn-secondary" id="rdBtnAcceptTerms">Aceitar termo</button>
+      <div class="rd-actions rd-actions-pay">
         <button type="submit" class="rd-btn rd-btn-primary" id="rdBtnPay" disabled>PAGAR AGORA</button>
       </div>
     </section>

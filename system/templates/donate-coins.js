@@ -19,6 +19,24 @@
     showError('');
   }
 
+  function formatBirthDateInput(raw) {
+    const digits = String(raw || '').replace(/\D/g, '');
+    if (digits.length === 8) {
+      return digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4, 8);
+    }
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(String(raw || '').trim())) {
+      return String(raw).trim();
+    }
+    return String(raw || '').trim();
+  }
+
+  const birthInput = document.getElementById('rdBirthDate');
+  if (birthInput) {
+    birthInput.addEventListener('blur', () => {
+      birthInput.value = formatBirthDateInput(birthInput.value);
+    });
+  }
+
   document.querySelectorAll('.rd-package-card').forEach((btn) => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.rd-package-card').forEach((b) => b.classList.remove('selected'));
@@ -57,18 +75,10 @@
     document.getElementById('rdBtnPay').disabled = !ok;
   });
 
-  const btnAcceptTerms = document.getElementById('rdBtnAcceptTerms');
-  if (btnAcceptTerms) {
-    btnAcceptTerms.addEventListener('click', () => {
-      const checkbox = document.getElementById('rdTermsCheckbox');
-      checkbox.checked = true;
-      document.getElementById('rdTermsAgree').value = '1';
-      document.getElementById('rdBtnPay').disabled = false;
-      showError('');
-    });
-  }
-
   form.addEventListener('submit', (e) => {
+    if (birthInput) {
+      birthInput.value = formatBirthDateInput(birthInput.value);
+    }
     if (!document.getElementById('rdPackageId').value || !document.getElementById('rdGateway').value) {
       e.preventDefault();
       showError('Selecione pacote e método de pagamento.');

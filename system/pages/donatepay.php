@@ -27,7 +27,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 $packageId = trim($_POST['package_id'] ?? '');
 $gateway = trim($_POST['gateway'] ?? '');
 $fullName = trim($_POST['full_name'] ?? '');
-$birthDate = trim($_POST['birth_date'] ?? '');
+$birthDate = ravynDonateNormalizeBirthDate(trim($_POST['birth_date'] ?? ''));
 $region = ($_POST['region'] ?? 'BR') === 'INTL' ? 'INTL' : 'BR';
 $email = trim($_POST['email'] ?? '');
 $termsAgree = ($_POST['terms_agree'] ?? '') === '1';
@@ -125,14 +125,16 @@ if ($gateway === 'pix') {
 }
 
 $checkoutUrl = null;
+$gatewayError = '';
 if ($gateway === 'mercadopago') {
-    $checkoutUrl = ravynDonateCreateMercadoPagoCheckout($order);
+    $checkoutUrl = ravynDonateCreateMercadoPagoCheckout($order, $gatewayError);
 } else {
-    $checkoutUrl = ravynDonateCreateStripeCheckout($order);
+    $checkoutUrl = ravynDonateCreateStripeCheckout($order, $gatewayError);
 }
 
 if (!$checkoutUrl) {
-    ravynDonateBackBox('Donatepay', 'Não foi possível abrir o gateway de pagamento. Tente novamente.');
+    $msg = $gatewayError !== '' ? $gatewayError : 'Não foi possível abrir o gateway de pagamento. Tente novamente.';
+    ravynDonateBackBox('Donatepay', $msg);
     return;
 }
 
@@ -141,5 +143,4 @@ $db->exec(
     . $db->quote($checkoutUrl) . ' WHERE `id` = ' . (int)$order['id']
 );
 
-header('Location: ' . $checkoutUrl);
-exit;
+ravynDonateRedirectTo($checkoutUrl);
