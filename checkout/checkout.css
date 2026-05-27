@@ -1,0 +1,67 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
+.rc-page {
+  max-width: 560px;
+  margin: 2rem auto;
+  padding: 1rem 1.5rem 2rem;
+}
+h1 { font-size: 1.4rem; margin: 0 0 1rem; color: #ffcc66; }
+.steps { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1rem; }
+.steps span {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #555;
+  color: #888;
+}
+.steps span.active { border-color: #aa7722; color: #ffcc66; }
+.steps span.done { color: #8c8; }
+.package {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  background: #333;
+  border: 1px solid #555;
+  cursor: pointer;
+}
+.package.selected { border-color: #aa7722; background: #3a3020; }
+.gateway-row { display: flex; gap: 1rem; margin: 1rem 0; }
+.gateway {
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+  border: 2px solid #555;
+  cursor: pointer;
+}
+.gateway.selected { border-color: #cc9933; }
+.pay-method {
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: #333;
+  border: 1px solid #555;
+  cursor: pointer;
+}
+.pay-method.selected { border-color: #cc9933; }
+label { display: block; margin: 0.5rem 0 0.25rem; color: #aaa; font-size: 0.85rem; }
+input[type="text"], input[type="email"] {
+  width: 100%;
+  padding: 0.5rem;
+  background: #222;
+  border: 1px solid #666;
+  color: #fff;
+}
+.error { color: #f66; min-height: 1.2rem; }
+footer { display: flex; justify-content: space-between; margin-top: 1rem; }
+button {
+  padding: 0.5rem 1.2rem;
+  border: none;
+  cursor: pointer;
+}
+button.primary { background: #5a4a18; color: #ffdd88; }
+button.secondary { background: #444; color: #ccc; }
+.summary { background: #2a2a2a; padding: 1rem; border: 1px solid #555; }
