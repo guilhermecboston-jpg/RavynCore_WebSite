@@ -1,13 +1,12 @@
-<link rel="stylesheet" href="system/templates/donate-coins.css?v=3" />
+<link rel="stylesheet" href="system/templates/donate-coins.css?v=4" />
 
 <div class="rd-donate-wrap">
-  <div class="rd-donate-header">
-    <h1 class="rd-title">Comprar RavynCore Coins</h1>
-    <p class="rd-subtitle">As coins são entregues automaticamente na sua conta após confirmação do pagamento.</p>
-  </div>
+  <a class="rd-fixed-back" href="{{ constant('BASE_URL') }}">Voltar ao Site</a>
 
-  <div class="rd-account-bar">
-    <span>Conta logada:</span> <strong>{{ account_name }}</strong>
+  <div class="rd-donate-header rd-fade-in">
+    <h1 class="rd-title">COMPRAR RAVYNCORE COINS</h1>
+    <p class="rd-subtitle">As coins são entregues automaticamente após a confirmação do pagamento.</p>
+    <div class="rd-account-bar">Conta: <strong>{{ account_name }}</strong></div>
   </div>
 
   <div id="rdError" class="rd-error" style="display:none"></div>
@@ -17,13 +16,14 @@
     <input type="hidden" name="gateway" id="rdGateway" value="" />
     <input type="hidden" name="terms_agree" id="rdTermsAgree" value="0" />
 
-    <section id="rdStepPackages" class="rd-panel active">
+    <section id="rdStepPackages" class="rd-panel active rd-fade-in">
       <h2 class="rd-panel-title">Escolha seu pacote</h2>
       <div class="rd-packages">
         {% for id, pack in packages %}
           <button type="button" class="rd-package-card{% if pack.popular %} popular{% endif %}" data-package="{{ id }}" data-coins="{{ pack.coins }}" data-brl="{{ pack.brl }}">
             {% if pack.popular %}<span class="rd-badge">Popular</span>{% endif %}
-            <div class="rd-coin-icon" aria-hidden="true"><img src="images/donate/icons/coins.png" alt="Coins" /></div>
+            <span class="rd-selected-tag">Selecionado</span>
+            <div class="rd-coin-icon"><img src="images/payments/coins.png" alt="Coins" /></div>
             <div class="rd-coins">{{ pack.label }}</div>
             <div class="rd-price">R$ {{ pack.brl|number_format(0, ',', '.') }}</div>
           </button>
@@ -31,47 +31,46 @@
       </div>
     </section>
 
-    <section id="rdStepGateway" class="rd-panel">
-      <h2 class="rd-panel-title">Selecione o pagamento</h2>
+    <section id="rdStepGateway" class="rd-panel rd-fade-in">
+      <h2 class="rd-panel-title">Selecione o método de pagamento</h2>
       <div class="rd-gateways">
         {% if has_mercado_pago %}
         <button type="button" class="rd-gateway-card" data-gateway="mercadopago">
-          <div class="rd-gw-logo mp"><img src="images/donate/icons/mercadopago.png" alt="Mercado Pago" /></div>
-          <p>Cartão, PIX, saldo e mais</p>
+          <div class="rd-gw-logo"><img src="images/payments/mercadopago.png" alt="MercadoPago" /></div>
+          <div class="rd-gw-name">MercadoPago</div>
         </button>
         {% endif %}
         {% if has_stripe %}
         <button type="button" class="rd-gateway-card" data-gateway="stripe">
-          <div class="rd-gw-logo stripe"><img src="images/donate/icons/stripe.svg" alt="Stripe" /></div>
-          <p>Cartão de crédito / débito</p>
+          <div class="rd-gw-logo"><img src="images/payments/stripe.svg" alt="Stripe" /></div>
+          <div class="rd-gw-name">Stripe</div>
         </button>
         {% endif %}
         <button type="button" class="rd-gateway-card" data-gateway="pix" data-disabled="1">
-          <div class="rd-gw-logo pix"><img src="images/donate/icons/pix.svg" alt="Pix" /></div>
-          <p>Em breve: QR Code dinâmico</p>
-          <small>Pré-configurado para ativação</small>
+          <div class="rd-gw-logo"><img src="images/payments/pix.svg" alt="Pix" /></div>
+          <div class="rd-gw-name">PIX</div>
+          <small class="rd-pix-note">QRCode em breve</small>
         </button>
       </div>
     </section>
 
-    <section id="rdStepForm" class="rd-panel">
+    <section id="rdStepForm" class="rd-panel rd-fade-in">
       <h2 class="rd-panel-title">Dados do Comprador</h2>
-      <div class="rd-card-box">
-      <div class="rd-form-grid">
-        <label class="rd-radio"><input type="radio" name="region" value="BR" checked /> Brasil (CPF)</label>
-        <label class="rd-radio"><input type="radio" name="region" value="INTL" /> Internacional (documento)</label>
-
-        <label>Nome completo<input type="text" name="full_name" required maxlength="128" /></label>
-        <label>Data de nascimento<input type="text" name="birth_date" placeholder="DD/MM/AAAA" required maxlength="10" /></label>
-        <label id="rdLabelCpf">CPF<input type="text" name="cpf" id="rdCpf" placeholder="000.000.000-00" maxlength="18" /></label>
-        <label id="rdLabelDoc" style="display:none">Documento<input type="text" name="document" id="rdDocument" maxlength="64" /></label>
-        <label>E-mail<input type="email" name="email" required maxlength="128" /></label>
-      </div>
-      <p class="rd-cpf-note">Validação de CPF por dígito verificador é aplicada. Integração em base nacional oficial depende de API externa autorizada.</p>
+      <div class="rd-card-box rd-buyer-box">
+        <div class="rd-form-grid">
+          <label class="rd-radio"><input type="radio" name="region" value="BR" checked /> Brasil (CPF)</label>
+          <label class="rd-radio"><input type="radio" name="region" value="INTL" /> Internacional (documento)</label>
+          <label>Nome completo<input type="text" name="full_name" required maxlength="128" /></label>
+          <label id="rdLabelCpf">CPF<input type="text" name="cpf" id="rdCpf" placeholder="000.000.000-00" maxlength="18" /></label>
+          <label id="rdLabelDoc" style="display:none">Documento<input type="text" name="document" id="rdDocument" maxlength="64" /></label>
+          <label>Data de nascimento<input type="text" name="birth_date" placeholder="DD/MM/AAAA" required maxlength="10" /></label>
+          <label>E-mail<input type="email" name="email" required maxlength="128" /></label>
+        </div>
+        <p class="rd-cpf-note"><strong>TODO:</strong> Implementar validação real de CPF via API nacional brasileira.</p>
       </div>
 
       <div class="rd-terms-box rd-card-box">
-        <h3>Termos e Condições (Pagamentos)</h3>
+        <h3>TERMOS E CONDIÇÕES</h3>
         <p class="rd-terms-warn">Se você não concorda com estes termos, não está autorizado a realizar doações/pagamentos.</p>
         <p>Ao realizar uma doação/pagamento, você reconhece e concorda integralmente com estes Termos e Condições.</p>
         <ul>
@@ -91,95 +90,20 @@
           <li>Tentativas de chargeback, disputa ou fraude após o recebimento das recompensas poderão resultar em suspensão permanente da conta e revogação de todos os benefícios associados.</li>
           <li>Reservamo-nos o direito de atualizar ou modificar estes Termos e Condições a qualquer momento, sem aviso prévio.</li>
         </ul>
-        <p class="rd-lgpd">
-          <strong>LGPD:</strong> RavynCore Games declara que segue os princípios e padrões de segurança estabelecidos pela Lei Geral de Proteção de Dados (LGPD – Lei nº 13.709/2018), adotando medidas voltadas à proteção dos dados pessoais, privacidade e segurança das informações de seus usuários.
-        </p>
+        <p class="rd-lgpd">RavynCore Games declara que segue os princípios e padrões de segurança estabelecidos pela Lei Geral de Proteção de Dados (LGPD – Lei nº 13.709/2018), adotando medidas voltadas à proteção dos dados pessoais, privacidade e segurança das informações de seus usuários.</p>
         <p class="rd-terms-version">Versão dos termos: {{ terms_version }}</p>
       </div>
 
       <label class="rd-terms-check">
         <input type="checkbox" id="rdTermsCheckbox" />
-        Li e concordo com os Termos e Condições
+        Eu aceito os Termos e Condições
       </label>
 
       <div class="rd-actions">
-        <button type="submit" class="rd-btn rd-btn-primary" id="rdBtnPay" disabled>Eu aceito — Pagar agora</button>
+        <button type="submit" class="rd-btn rd-btn-primary" id="rdBtnPay" disabled>PAGAR AGORA</button>
       </div>
     </section>
   </form>
 </div>
 
-<script>
-(function () {
-  const form = document.getElementById('rdDonateForm');
-  const err = document.getElementById('rdError');
-  const panels = {
-    packages: document.getElementById('rdStepPackages'),
-    gateway: document.getElementById('rdStepGateway'),
-    form: document.getElementById('rdStepForm'),
-  };
-  let current = 'packages';
-
-  function showError(msg) {
-    err.textContent = msg;
-    err.style.display = msg ? 'block' : 'none';
-  }
-
-  function setStep(step) {
-    current = step;
-    Object.keys(panels).forEach((k) => panels[k].classList.toggle('active', k === step));
-    showError('');
-  }
-
-  document.querySelectorAll('.rd-package-card').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.rd-package-card').forEach((b) => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      document.getElementById('rdPackageId').value = btn.dataset.package;
-      setStep('gateway');
-    });
-  });
-
-  document.querySelectorAll('.rd-gateway-card').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.rd-gateway-card').forEach((b) => b.classList.remove('selected'));
-      if (btn.dataset.disabled === '1') {
-        showError('PIX ainda está em preparação (sem QR Code ativo).');
-        return;
-      }
-      btn.classList.add('selected');
-      const gw = btn.dataset.gateway;
-      document.getElementById('rdGateway').value = gw;
-      setStep('form');
-    });
-  });
-
-  document.querySelectorAll('input[name="region"]').forEach((radio) => {
-    radio.addEventListener('change', () => {
-      const br = document.querySelector('input[name="region"]:checked').value === 'BR';
-      document.getElementById('rdLabelCpf').style.display = br ? '' : 'none';
-      document.getElementById('rdLabelDoc').style.display = br ? 'none' : '';
-      document.getElementById('rdCpf').required = br;
-      document.getElementById('rdDocument').required = !br;
-    });
-  });
-
-  document.getElementById('rdTermsCheckbox').addEventListener('change', (e) => {
-    const ok = e.target.checked;
-    document.getElementById('rdTermsAgree').value = ok ? '1' : '0';
-    document.getElementById('rdBtnPay').disabled = !ok;
-  });
-
-  form.addEventListener('submit', (e) => {
-    if (!document.getElementById('rdPackageId').value || !document.getElementById('rdGateway').value) {
-      e.preventDefault();
-      showError('Complete todas as etapas.');
-      return;
-    }
-    if (document.getElementById('rdTermsAgree').value !== '1') {
-      e.preventDefault();
-      showError('Aceite os Termos e Condições.');
-    }
-  });
-})();
-</script>
+<script src="system/templates/donate-coins.js?v=1"></script>
