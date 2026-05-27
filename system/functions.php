@@ -1715,16 +1715,50 @@ function getAccountLoyaltyApprovedStatuses(): array
 /**
  * Base URL for payment callbacks (Mercado Pago / Stripe require HTTPS).
  */
+function ravynDetectPublicBaseUrl(): string
+{
+  global $config;
+
+  if (!empty($config['payment_public_url'])) {
+    return rtrim((string)$config['payment_public_url'], '/') . '/';
+  }
+
+  $scheme = 'http';
+  if (
+    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443)
+  ) {
+    $scheme = 'https';
+  }
+
+  $host = $_SERVER['HTTP_HOST'] ?? '177.55.153.178';
+  if (stripos($host, 'ravyncore.com') !== false) {
+    $host = '177.55.153.178';
+  }
+
+  return $scheme . '://' . $host . '/';
+}
+
 function ravynPublicBaseUrl(): string
 {
   global $config;
 
-  if (!empty($config['public_url'])) {
-    $url = rtrim((string)$config['public_url'], '/') . '/';
+  if (!empty($config['payment_public_url'])) {
+    $url = rtrim((string)$config['payment_public_url'], '/') . '/';
+  } elseif (!empty($config['public_url'])) {
+    $public = rtrim((string)$config['public_url'], '/');
+    if (stripos($public, 'ravyncore.com') !== false) {
+      $url = ravynDetectPublicBaseUrl();
+    } else {
+      $url = $public . '/';
+    }
   } elseif (defined('BASE_URL')) {
     $url = BASE_URL;
+    if (stripos($url, 'ravyncore.com') !== false) {
+      $url = ravynDetectPublicBaseUrl();
+    }
   } else {
-    $url = '/';
+    $url = ravynDetectPublicBaseUrl();
   }
 
   if (

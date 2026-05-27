@@ -1,0 +1,209 @@
+<link rel="stylesheet" href="{{ constant('BASE_URL') }}system/templates/donate-coins.css?v=1" />
+
+<div class="rd-donate-wrap">
+  <div class="rd-donate-header">
+    <h1 class="rd-title">Comprar RavynCore Coins</h1>
+    <p class="rd-subtitle">As coins são entregues automaticamente na sua conta após confirmação do pagamento.</p>
+  </div>
+
+  <div class="rd-account-bar">
+    <span>Conta logada:</span> <strong>{{ account_name }}</strong>
+  </div>
+
+  <div class="rd-steps">
+    <span class="rd-step active" data-step-label="1">1. Pacotes</span>
+    <span class="rd-step" data-step-label="2">2. Gateway</span>
+    <span class="rd-step" data-step-label="3">3. Dados + Termos</span>
+  </div>
+
+  <div id="rdError" class="rd-error" style="display:none"></div>
+
+  <form id="rdDonateForm" method="post" action="{{ pay_url }}">
+    <input type="hidden" name="package_id" id="rdPackageId" value="" />
+    <input type="hidden" name="gateway" id="rdGateway" value="" />
+    <input type="hidden" name="terms_agree" id="rdTermsAgree" value="0" />
+
+    <!-- STEP 1 -->
+    <section id="rdStepPackages" class="rd-panel active">
+      <h2 class="rd-panel-title">Escolha um pacote</h2>
+      <div class="rd-packages">
+        {% for id, pack in packages %}
+          <button type="button" class="rd-package-card{% if pack.popular %} popular{% endif %}" data-package="{{ id }}" data-coins="{{ pack.coins }}" data-brl="{{ pack.brl }}">
+            {% if pack.popular %}<span class="rd-badge">Popular</span>{% endif %}
+            <div class="rd-coin-icon">RC</div>
+            <div class="rd-coins">{{ pack.label }}</div>
+            <div class="rd-price">R$ {{ pack.brl }}</div>
+          </button>
+        {% endfor %}
+      </div>
+      <div class="rd-actions">
+        <button type="button" class="rd-btn rd-btn-primary" id="rdBtnToGateway" disabled>Continuar</button>
+      </div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section id="rdStepGateway" class="rd-panel">
+      <h2 class="rd-panel-title">Selecione o gateway de pagamento</h2>
+      <div class="rd-gateways">
+        {% if has_mercado_pago %}
+        <button type="button" class="rd-gateway-card" data-gateway="mercadopago">
+          <div class="rd-gw-logo mp">Mercado Pago</div>
+          <p>PIX, cartão, débito CAIXA</p>
+        </button>
+        {% endif %}
+        {% if has_stripe %}
+        <button type="button" class="rd-gateway-card" data-gateway="stripe">
+          <div class="rd-gw-logo stripe">Stripe</div>
+          <p>Cartão internacional</p>
+        </button>
+        {% endif %}
+      </div>
+      <div class="rd-actions">
+        <button type="button" class="rd-btn rd-btn-secondary rd-back" data-back="packages">Voltar</button>
+        <button type="button" class="rd-btn rd-btn-primary" id="rdBtnToForm" disabled>Continuar</button>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section id="rdStepForm" class="rd-panel">
+      <h2 class="rd-panel-title">Dados do comprador</h2>
+      <div class="rd-form-grid">
+        <label class="rd-radio"><input type="radio" name="region" value="BR" checked /> Brasil (CPF)</label>
+        <label class="rd-radio"><input type="radio" name="region" value="INTL" /> Internacional (documento)</label>
+
+        <label>Nome completo<input type="text" name="full_name" required maxlength="128" /></label>
+        <label>Data de nascimento<input type="text" name="birth_date" placeholder="DD/MM/AAAA" required maxlength="10" /></label>
+        <label id="rdLabelCpf">CPF<input type="text" name="cpf" id="rdCpf" placeholder="000.000.000-00" maxlength="18" /></label>
+        <label id="rdLabelDoc" style="display:none">Documento<input type="text" name="document" id="rdDocument" maxlength="64" /></label>
+        <label>E-mail<input type="email" name="email" required maxlength="128" /></label>
+      </div>
+
+      <p class="rd-lgpd">
+        Seus dados são protegidos conforme a <strong>LGPD</strong> (Lei Geral de Proteção de Dados).
+        Utilizamos as informações exclusivamente para processar esta compra. Não compartilhamos com terceiros
+        para fins comerciais.
+      </p>
+
+      <div class="rd-terms-box">
+        <h3>Terms and Conditions (<span id="rdGatewayTermsName">Pagamento</span>)</h3>
+        <p class="rd-terms-warn">If you do not agree with these terms you are not allowed to donate.</p>
+        <p>By making a donation/payment, you acknowledge and agree to these Terms and Conditions in full.</p>
+        <ul>
+          {% for bullet in terms_bullets %}
+            <li>{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+        <p class="rd-terms-version">Versão dos termos: {{ terms_version }}</p>
+      </div>
+
+      <label class="rd-terms-check">
+        <input type="checkbox" id="rdTermsCheckbox" />
+        Li e concordo com os Termos e Condições
+      </label>
+
+      <div class="rd-actions">
+        <button type="button" class="rd-btn rd-btn-secondary rd-back" data-back="gateway">Voltar</button>
+        <button type="submit" class="rd-btn rd-btn-primary" id="rdBtnPay" disabled>I Agree — Pagar agora</button>
+      </div>
+    </section>
+  </form>
+</div>
+
+<script>
+(function () {
+  const form = document.getElementById('rdDonateForm');
+  const err = document.getElementById('rdError');
+  const steps = document.querySelectorAll('.rd-step');
+  const panels = {
+    packages: document.getElementById('rdStepPackages'),
+    gateway: document.getElementById('rdStepGateway'),
+    form: document.getElementById('rdStepForm'),
+  };
+  let current = 'packages';
+
+  function showError(msg) {
+    err.textContent = msg;
+    err.style.display = msg ? 'block' : 'none';
+  }
+
+  function setStep(step) {
+    current = step;
+    Object.keys(panels).forEach((k) => panels[k].classList.toggle('active', k === step));
+    steps.forEach((el, i) => {
+      const map = ['packages', 'gateway', 'form'];
+      const idx = map.indexOf(step);
+      el.classList.toggle('active', i === idx);
+      el.classList.toggle('done', i < idx);
+    });
+    showError('');
+  }
+
+  document.querySelectorAll('.rd-package-card').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.rd-package-card').forEach((b) => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('rdPackageId').value = btn.dataset.package;
+      document.getElementById('rdBtnToGateway').disabled = false;
+    });
+  });
+
+  document.getElementById('rdBtnToGateway').addEventListener('click', () => {
+    if (!document.getElementById('rdPackageId').value) {
+      showError('Selecione um pacote.');
+      return;
+    }
+    setStep('gateway');
+  });
+
+  document.querySelectorAll('.rd-gateway-card').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.rd-gateway-card').forEach((b) => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const gw = btn.dataset.gateway;
+      document.getElementById('rdGateway').value = gw;
+      document.getElementById('rdGatewayTermsName').textContent = gw === 'stripe' ? 'Stripe' : 'Mercado Pago';
+      document.getElementById('rdBtnToForm').disabled = false;
+    });
+  });
+
+  document.getElementById('rdBtnToForm').addEventListener('click', () => {
+    if (!document.getElementById('rdGateway').value) {
+      showError('Selecione Mercado Pago ou Stripe.');
+      return;
+    }
+    setStep('form');
+  });
+
+  document.querySelectorAll('.rd-back').forEach((btn) => {
+    btn.addEventListener('click', () => setStep(btn.dataset.back));
+  });
+
+  document.querySelectorAll('input[name="region"]').forEach((radio) => {
+    radio.addEventListener('change', () => {
+      const br = document.querySelector('input[name="region"]:checked').value === 'BR';
+      document.getElementById('rdLabelCpf').style.display = br ? '' : 'none';
+      document.getElementById('rdLabelDoc').style.display = br ? 'none' : '';
+      document.getElementById('rdCpf').required = br;
+      document.getElementById('rdDocument').required = !br;
+    });
+  });
+
+  document.getElementById('rdTermsCheckbox').addEventListener('change', (e) => {
+    const ok = e.target.checked;
+    document.getElementById('rdTermsAgree').value = ok ? '1' : '0';
+    document.getElementById('rdBtnPay').disabled = !ok;
+  });
+
+  form.addEventListener('submit', (e) => {
+    if (!document.getElementById('rdPackageId').value || !document.getElementById('rdGateway').value) {
+      e.preventDefault();
+      showError('Complete todas as etapas.');
+      return;
+    }
+    if (document.getElementById('rdTermsAgree').value !== '1') {
+      e.preventDefault();
+      showError('Aceite os Termos e Condições.');
+    }
+  });
+})();
+</script>

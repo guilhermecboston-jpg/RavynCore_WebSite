@@ -77,6 +77,19 @@ if (!is_array($payment)) {
 }
 
 $externalReference = (string)($payment['external_reference'] ?? '');
+$paymentStatus = (string)($payment['status'] ?? '');
+
+if (strpos($externalReference, 'RD-') === 0) {
+	require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
+	$order = ravynDonateGetOrderByRef($db, $externalReference);
+	if ($order) {
+		ravynDonateDeliverOrder($db, $order, $paymentId, $paymentStatus, 'mercadopago');
+	}
+	http_response_code(200);
+	echo 'OK';
+	exit;
+}
+
 $accountId = (int)$externalReference;
 if ($accountId <= 0) {
 	http_response_code(200);

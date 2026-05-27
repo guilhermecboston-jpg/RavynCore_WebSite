@@ -69,7 +69,22 @@ if ($sessionId === '' || $paymentStatus !== 'paid') {
 	exit;
 }
 
-$accountId = (int)($session['client_reference_id'] ?? ($session['metadata']['account_id'] ?? 0));
+$clientRef = (string)($session['client_reference_id'] ?? ($session['metadata']['order_ref'] ?? ''));
+if (strpos($clientRef, 'RD-') === 0) {
+	require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
+	$order = ravynDonateGetOrderByRef($db, $clientRef);
+	if ($order) {
+		ravynDonateDeliverOrder($db, $order, $sessionId, 'paid', 'stripe');
+	}
+	http_response_code(200);
+	echo 'OK';
+	exit;
+}
+
+$accountId = (int)$clientRef;
+if ($accountId <= 0) {
+	$accountId = (int)($session['metadata']['account_id'] ?? 0);
+}
 if ($accountId <= 0) {
 	http_response_code(200);
 	exit;

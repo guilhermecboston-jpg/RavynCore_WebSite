@@ -28,11 +28,12 @@ $stripeDefaults = [
 	'doubleCoinsStart' => 300,
 	'donationType' => 'coins_transferable',
 	'donates' => [
-		'10' => ['id' => '10', 'value' => 10, 'coins' => 100, 'extra' => 0],
-		'20' => ['id' => '20', 'value' => 20, 'coins' => 200, 'extra' => 0],
-		'30' => ['id' => '30', 'value' => 30, 'coins' => 300, 'extra' => 30],
-		'40' => ['id' => '40', 'value' => 40, 'coins' => 400, 'extra' => 40],
-		'50' => ['id' => '50', 'value' => 50, 'coins' => 500, 'extra' => 50],
+		'pack_100' => ['id' => 'pack_100', 'value' => 10, 'coins' => 100, 'extra' => 0],
+		'pack_1000' => ['id' => 'pack_1000', 'value' => 100, 'coins' => 1000, 'extra' => 0],
+		'pack_3150' => ['id' => 'pack_3150', 'value' => 300, 'coins' => 3150, 'extra' => 0],
+		'pack_10500' => ['id' => 'pack_10500', 'value' => 1000, 'coins' => 10500, 'extra' => 0],
+		'pack_73500' => ['id' => 'pack_73500', 'value' => 7000, 'coins' => 73500, 'extra' => 0],
+		'pack_135000' => ['id' => 'pack_135000', 'value' => 10000, 'coins' => 135000, 'extra' => 0],
 	],
 ];
 
