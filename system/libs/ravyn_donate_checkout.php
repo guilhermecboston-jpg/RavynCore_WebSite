@@ -117,6 +117,51 @@ function ravynDonateValidateCpf(string $cpf): bool
     return true;
 }
 
+/**
+ * Hook para validação externa de CPF+nome+nascimento.
+ * Para ativar, configure em config.local.php:
+ * $config['cpf_validation_api']['enabled'] = true;
+ * $config['cpf_validation_api']['endpoint'] = 'https://api.exemplo.com/verify';
+ * $config['cpf_validation_api']['token'] = '...';
+ */
+function ravynDonateVerifyCpfIdentity(string $cpf, string $fullName, string $birthDate): bool
+{
+    global $config;
+    $apiCfg = $config['cpf_validation_api'] ?? [];
+    if (empty($apiCfg['enabled'])) {
+        return true;
+    }
+    $endpoint = trim((string)($apiCfg['endpoint'] ?? ''));
+    if ($endpoint === '') {
+        return false;
+    }
+    $payload = [
+        'cpf' => preg_replace('/\D/', '', $cpf),
+        'full_name' => $fullName,
+        'birth_date' => $birthDate,
+    ];
+    $headers = ['Content-Type: application/json'];
+    if (!empty($apiCfg['token'])) {
+        $headers[] = 'Authorization: Bearer ' . $apiCfg['token'];
+    }
+    $ch = curl_init($endpoint);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => $headers,
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_TIMEOUT => 12,
+    ]);
+    $response = curl_exec($ch);
+    $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    if ($httpCode < 200 || $httpCode >= 300 || !is_string($response) || $response === '') {
+        return false;
+    }
+    $data = json_decode($response, true);
+    return is_array($data) && !empty($data['valid']);
+}
+
 function ravynDonateValidateBirthDate(string $s): bool
 {
     if (!preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $s, $m)) {

@@ -4,13 +4,23 @@ defined('MYAAC') or die('Direct access not allowed!');
 
 require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
 
+function ravynDonateBackBox(string $title, string $message): void
+{
+    $back = getLink('donate');
+    echo '<div style="max-width:700px;margin:20px auto;padding:20px;background:#1a2238;border:1px solid #3a4a6a;border-radius:10px;color:#d8e4ff;font-family:Verdana,Arial,sans-serif">';
+    echo '<h2 style="margin:0 0 10px;color:#f0c86a;">' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</h2>';
+    echo '<p style="margin:0 0 14px;">' . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . '</p>';
+    echo '<a href="' . htmlspecialchars($back, ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;padding:10px 16px;background:#c99a3b;color:#1a1205;text-decoration:none;border-radius:6px;font-weight:bold">Voltar para Donate</a>';
+    echo '</div>';
+}
+
 if (!$logged) {
-    echo 'Você precisa estar logado.';
+    ravynDonateBackBox('Login necessário', 'Você precisa estar logado para continuar o pagamento.');
     return;
 }
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
-    header('Location: ' . getLink('donate'));
+    ravynDonateBackBox('Ação inválida', 'Esta página é usada para processar pagamentos. Selecione um pacote e tente novamente.');
     return;
 }
 
@@ -33,7 +43,7 @@ if (!isset($packages[$packageId])) {
     return;
 }
 
-if (!in_array($gateway, ['mercadopago', 'stripe'], true)) {
+if (!in_array($gateway, ['mercadopago', 'stripe', 'pix'], true)) {
     echo 'Gateway inválido.';
     return;
 }
@@ -58,6 +68,10 @@ if ($region === 'BR') {
     $taxId = preg_replace('/\D/', '', $_POST['cpf'] ?? '');
     if (!ravynDonateValidateCpf($taxId)) {
         echo 'CPF inválido.';
+        return;
+    }
+    if (!ravynDonateVerifyCpfIdentity($taxId, $fullName, $birthDate)) {
+        echo 'Não foi possível validar CPF + nome + data de nascimento na base externa configurada.';
         return;
     }
 } else {
@@ -88,6 +102,25 @@ $order = ravynDonateCreateOrder($db, [
 
 if (!$order) {
     echo 'Erro ao registrar pedido.';
+    return;
+}
+
+if ($gateway === 'pix') {
+    $fakePixCode = 'PIX_PLACEHOLDER_' . $order['order_ref'];
+    $db->exec(
+        'UPDATE `ravyn_donate_orders` SET `status` = \'pending\', `gateway_ref` = '
+        . $db->quote($fakePixCode) . ' WHERE `id` = ' . (int)$order['id']
+    );
+    echo '<div style="max-width:520px;margin:20px auto;padding:16px;border:1px solid #3a4a6a;border-radius:12px;background:#1a2238;color:#e2ebff;font-family:Verdana,Arial,sans-serif">';
+    echo '<h2 style="margin:0 0 12px;color:#f0c86a;">Aguardando Pagamento PIX</h2>';
+    echo '<p style="margin:0 0 10px;">PIX ainda não está ativo neste gateway. O fluxo já está preparado para ativar QR Code em seguida.</p>';
+    echo '<div style="padding:12px;background:#0f1524;border:1px solid #425683;border-radius:8px;margin-bottom:10px">';
+    echo '<strong>Pedido:</strong> ' . htmlspecialchars($order['order_ref'], ENT_QUOTES, 'UTF-8') . '<br/>';
+    echo '<strong>Status:</strong> pending<br/>';
+    echo '<strong>Código PIX (placeholder):</strong> ' . htmlspecialchars($fakePixCode, ENT_QUOTES, 'UTF-8');
+    echo '</div>';
+    echo '<a href="' . htmlspecialchars(getLink('donate'), ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;padding:9px 14px;background:#c99a3b;color:#1a1205;text-decoration:none;border-radius:6px;font-weight:bold">Voltar</a>';
+    echo '</div>';
     return;
 }
 

@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{ constant('BASE_URL') }}system/templates/donate-coins.css?v=1" />
+<link rel="stylesheet" href="system/templates/donate-coins.css?v=2" />
 
 <div class="rd-donate-wrap">
   <div class="rd-donate-header">
@@ -10,12 +10,6 @@
     <span>Conta logada:</span> <strong>{{ account_name }}</strong>
   </div>
 
-  <div class="rd-steps">
-    <span class="rd-step active" data-step-label="1">1. Pacotes</span>
-    <span class="rd-step" data-step-label="2">2. Gateway</span>
-    <span class="rd-step" data-step-label="3">3. Dados + Termos</span>
-  </div>
-
   <div id="rdError" class="rd-error" style="display:none"></div>
 
   <form id="rdDonateForm" method="post" action="{{ pay_url }}">
@@ -25,14 +19,25 @@
 
     <!-- STEP 1 -->
     <section id="rdStepPackages" class="rd-panel active">
-      <h2 class="rd-panel-title">Escolha um pacote</h2>
+      <h2 class="rd-panel-title">Escolha seu pacote</h2>
       <div class="rd-packages">
         {% for id, pack in packages %}
           <button type="button" class="rd-package-card{% if pack.popular %} popular{% endif %}" data-package="{{ id }}" data-coins="{{ pack.coins }}" data-brl="{{ pack.brl }}">
             {% if pack.popular %}<span class="rd-badge">Popular</span>{% endif %}
-            <div class="rd-coin-icon">RC</div>
+            <div class="rd-coin-icon" aria-hidden="true">
+              <svg viewBox="0 0 84 54" width="70" height="45">
+                <ellipse cx="22" cy="14" rx="11" ry="6" fill="#f5dc8f"/>
+                <rect x="11" y="14" width="22" height="14" fill="#d6b45b"/>
+                <ellipse cx="22" cy="28" rx="11" ry="6" fill="#caa64f"/>
+                <ellipse cx="40" cy="18" rx="11" ry="6" fill="#f5dc8f"/>
+                <rect x="29" y="18" width="22" height="14" fill="#d6b45b"/>
+                <ellipse cx="40" cy="32" rx="11" ry="6" fill="#caa64f"/>
+                <circle cx="61" cy="23" r="12" fill="#7b4ed6"/>
+                <text x="61" y="27" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">C</text>
+              </svg>
+            </div>
             <div class="rd-coins">{{ pack.label }}</div>
-            <div class="rd-price">R$ {{ pack.brl }}</div>
+            <div class="rd-price">R$ {{ pack.brl|number_format(0, ',', '.') }}</div>
           </button>
         {% endfor %}
       </div>
@@ -43,20 +48,25 @@
 
     <!-- STEP 2 -->
     <section id="rdStepGateway" class="rd-panel">
-      <h2 class="rd-panel-title">Selecione o gateway de pagamento</h2>
+      <h2 class="rd-panel-title">Selecione o pagamento</h2>
       <div class="rd-gateways">
         {% if has_mercado_pago %}
         <button type="button" class="rd-gateway-card" data-gateway="mercadopago">
-          <div class="rd-gw-logo mp">Mercado Pago</div>
-          <p>PIX, cartão, débito CAIXA</p>
+          <div class="rd-gw-logo mp">MercadoPago</div>
+          <p>Cartão, PIX, saldo e mais</p>
         </button>
         {% endif %}
         {% if has_stripe %}
         <button type="button" class="rd-gateway-card" data-gateway="stripe">
           <div class="rd-gw-logo stripe">Stripe</div>
-          <p>Cartão internacional</p>
+          <p>Cartão de crédito / débito</p>
         </button>
         {% endif %}
+        <button type="button" class="rd-gateway-card" data-gateway="pix" data-disabled="1">
+          <div class="rd-gw-logo pix">PIX</div>
+          <p>Em breve: QR Code dinâmico</p>
+          <small>Pré-configurado para ativação</small>
+        </button>
       </div>
       <div class="rd-actions">
         <button type="button" class="rd-btn rd-btn-secondary rd-back" data-back="packages">Voltar</button>
@@ -66,7 +76,8 @@
 
     <!-- STEP 3 -->
     <section id="rdStepForm" class="rd-panel">
-      <h2 class="rd-panel-title">Dados do comprador</h2>
+      <h2 class="rd-panel-title">Dados do Comprador</h2>
+      <div class="rd-card-box">
       <div class="rd-form-grid">
         <label class="rd-radio"><input type="radio" name="region" value="BR" checked /> Brasil (CPF)</label>
         <label class="rd-radio"><input type="radio" name="region" value="INTL" /> Internacional (documento)</label>
@@ -77,22 +88,33 @@
         <label id="rdLabelDoc" style="display:none">Documento<input type="text" name="document" id="rdDocument" maxlength="64" /></label>
         <label>E-mail<input type="email" name="email" required maxlength="128" /></label>
       </div>
+      <p class="rd-cpf-note">Validação de CPF por dígito verificador é aplicada. Integração em base nacional oficial depende de API externa autorizada.</p>
+      </div>
 
-      <p class="rd-lgpd">
-        Seus dados são protegidos conforme a <strong>LGPD</strong> (Lei Geral de Proteção de Dados).
-        Utilizamos as informações exclusivamente para processar esta compra. Não compartilhamos com terceiros
-        para fins comerciais.
-      </p>
-
-      <div class="rd-terms-box">
-        <h3>Terms and Conditions (<span id="rdGatewayTermsName">Pagamento</span>)</h3>
-        <p class="rd-terms-warn">If you do not agree with these terms you are not allowed to donate.</p>
-        <p>By making a donation/payment, you acknowledge and agree to these Terms and Conditions in full.</p>
+      <div class="rd-terms-box rd-card-box">
+        <h3>Termos e Condições (<span id="rdGatewayTermsName">Pagamentos</span>)</h3>
+        <p class="rd-terms-warn">Se você não concorda com estes termos, não está autorizado a realizar doações/pagamentos.</p>
+        <p>Ao realizar uma doação/pagamento, você reconhece e concorda integralmente com estes Termos e Condições.</p>
         <ul>
-          {% for bullet in terms_bullets %}
-            <li>{{ bullet }}</li>
-          {% endfor %}
+          <li>Se você tiver menos de 18 anos, deverá possuir autorização de um responsável legal antes de realizar qualquer doação/pagamento.</li>
+          <li>Você somente poderá realizar doações/pagamentos utilizando fundos que pertençam legalmente a você ou que esteja autorizado a utilizar.</li>
+          <li>Todos os pagamentos são contribuições voluntárias destinadas ao suporte do servidor. Nenhum bem físico será enviado, e nenhum direito de propriedade será transferido.</li>
+          <li>Quaisquer benefícios, recompensas, cargos, moedas virtuais ou itens fornecidos são considerados incentivos bônus e não produtos ou serviços garantidos.</li>
+          <li>Todas as recompensas de doações/pagamentos são entregues automaticamente e, na maioria dos casos, instantaneamente após a confirmação do pagamento.</li>
+          <li>Ao concluir um pagamento, você reconhece que receberá suas recompensas imediatamente e renuncia ao direito de alegar que o produto/serviço não foi entregue.</li>
+          <li>Recompensas de doações/pagamentos poderão ser modificadas, substituídas, atrasadas ou removidas a qualquer momento, sem aviso prévio.</li>
+          <li>O servidor poderá ser resetado, reiniciado, alterado ou sofrer wipe a qualquer momento por motivos operacionais ou de manutenção. Nesses casos, as recompensas poderão ser restauradas a critério da administração, sem garantia obrigatória.</li>
+          <li>Você reconhece que itens digitais, cargos, benefícios ou moedas virtuais podem sofrer alterações, perder valor ou tornar-se indisponíveis ao longo do tempo.</li>
+          <li>Caso recompensas sejam perdidas devido à jogabilidade, bugs, atualizações ou resets do servidor, a restauração não é garantida.</li>
+          <li>Reservamo-nos o direito de suspender ou encerrar contas que violem as regras do servidor, sem direito a reembolso.</li>
+          <li>Todas as doações/pagamentos são finais e não reembolsáveis, salvo quando exigido pela legislação aplicável.</li>
+          <li>Ao concluir um pagamento, você renuncia ao direito de solicitar chargeback, contestação ou disputa de pagamento após o recebimento das recompensas virtuais.</li>
+          <li>Tentativas de chargeback, disputa ou fraude após o recebimento das recompensas poderão resultar em suspensão permanente da conta e revogação de todos os benefícios associados.</li>
+          <li>Reservamo-nos o direito de atualizar ou modificar estes Termos e Condições a qualquer momento, sem aviso prévio.</li>
         </ul>
+        <p class="rd-lgpd">
+          <strong>LGPD:</strong> RavynCore Games declara que segue os princípios e padrões de segurança estabelecidos pela Lei Geral de Proteção de Dados (LGPD – Lei nº 13.709/2018), adotando medidas voltadas à proteção dos dados pessoais, privacidade e segurança das informações de seus usuários.
+        </p>
         <p class="rd-terms-version">Versão dos termos: {{ terms_version }}</p>
       </div>
 
@@ -158,10 +180,14 @@
   document.querySelectorAll('.rd-gateway-card').forEach((btn) => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.rd-gateway-card').forEach((b) => b.classList.remove('selected'));
+      if (btn.dataset.disabled === '1') {
+        showError('PIX ainda está em preparação (sem QR Code ativo).');
+        return;
+      }
       btn.classList.add('selected');
       const gw = btn.dataset.gateway;
       document.getElementById('rdGateway').value = gw;
-      document.getElementById('rdGatewayTermsName').textContent = gw === 'stripe' ? 'Stripe' : 'Mercado Pago';
+      document.getElementById('rdGatewayTermsName').textContent = gw === 'stripe' ? 'Stripe' : (gw === 'pix' ? 'PIX' : 'Mercado Pago');
       document.getElementById('rdBtnToForm').disabled = false;
     });
   });
