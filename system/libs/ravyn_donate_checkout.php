@@ -78,6 +78,50 @@ function ravynDonateGatewayLabel(string $gateway): string
     return $gateway === 'stripe' ? 'Stripe' : 'Mercado Pago';
 }
 
+/**
+ * Resolve Access Token do Mercado Pago (config.local.php ou variável de ambiente).
+ */
+function ravynDonateMercadoPagoAccessToken(): string
+{
+    global $config;
+    if (!isset($config['mercadoPago']) || !is_array($config['mercadoPago'])) {
+        return '';
+    }
+
+    $mp = $config['mercadoPago'];
+    $env = $mp['environment'] ?? 'production';
+    $candidates = [];
+
+    if (isset($mp['accessToken']) && is_array($mp['accessToken'])) {
+        $candidates[] = $mp['accessToken'][$env] ?? '';
+        $candidates[] = $mp['accessToken']['production'] ?? '';
+        $candidates[] = $mp['accessToken']['sandbox'] ?? '';
+    } elseif (isset($mp['accessToken']) && is_string($mp['accessToken'])) {
+        $candidates[] = $mp['accessToken'];
+    }
+
+    foreach (['access_token', 'token', 'production_access_token'] as $legacyKey) {
+        if (!empty($mp[$legacyKey])) {
+            $candidates[] = $mp[$legacyKey];
+        }
+    }
+
+    foreach ([getenv('MP_ACCESS_TOKEN'), getenv('MERCADOPAGO_ACCESS_TOKEN')] as $envToken) {
+        if (is_string($envToken) && $envToken !== '') {
+            $candidates[] = $envToken;
+        }
+    }
+
+    foreach ($candidates as $token) {
+        $token = trim((string)$token);
+        if ($token !== '') {
+            return $token;
+        }
+    }
+
+    return '';
+}
+
 function ravynDonateTermsBullets(): array
 {
     return [
@@ -331,9 +375,11 @@ function ravynDonateCreateMercadoPagoCheckout(array $order, ?string &$error = nu
     ravynDonateSyncGatewayPackages();
 
     $environment = $config['mercadoPago']['environment'] ?? 'production';
-    $accessToken = $config['mercadoPago']['accessToken'][$environment] ?? '';
+    $accessToken = ravynDonateMercadoPagoAccessToken();
     if ($accessToken === '') {
-        $error = 'Token do Mercado Pago não configurado.';
+        $error = 'Token do Mercado Pago não configurado. No servidor, edite config.local.php e defina '
+            . '$config[\'mercadoPago\'][\'accessToken\'][\'production\'] = \'APP_USR-...\'; '
+            . '(credenciais em https://www.mercadopago.com.br/developers/panel/credentials).';
         return null;
     }
 
