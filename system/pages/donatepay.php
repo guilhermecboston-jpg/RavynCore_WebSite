@@ -106,22 +106,30 @@ if (!$order) {
 }
 
 if ($gateway === 'pix') {
-    $fakePixCode = 'PIX_PLACEHOLDER_' . $order['order_ref'];
+    if (!ravynDonatePixEnabled()) {
+        ravynDonateBackBox('Donatepay', 'Pagamento PIX não está habilitado.');
+        return;
+    }
+
+    $pixError = '';
+    $pixData = ravynDonateCreateMercadoPagoPix($order, $pixError);
+    if (!$pixData) {
+        $pixData = ravynDonatePixStaticFallback($order);
+    }
+    if (empty($pixData['qr_code'])) {
+        ravynDonateBackBox('Donatepay', $pixError !== '' ? $pixError : 'Não foi possível gerar o código PIX.');
+        return;
+    }
+
     $db->exec(
-        'UPDATE `ravyn_donate_orders` SET `status` = \'pending\', `gateway_ref` = '
-        . $db->quote($fakePixCode) . ' WHERE `id` = ' . (int)$order['id']
+        'UPDATE `ravyn_donate_orders` SET `status` = \'pending\', `payment_id` = '
+        . $db->quote((string)($pixData['payment_id'] ?? '')) . ', `gateway_ref` = '
+        . $db->quote((string)$pixData['qr_code']) . ', `payment_status` = '
+        . $db->quote((string)($pixData['status'] ?? 'pending'))
+        . ' WHERE `id` = ' . (int)$order['id']
     );
-    echo '<div style="max-width:520px;margin:20px auto;padding:16px;border:1px solid #3a4a6a;border-radius:12px;background:#1a2238;color:#e2ebff;font-family:Verdana,Arial,sans-serif">';
-    echo '<h2 style="margin:0 0 12px;color:#f0c86a;">Aguardando Pagamento PIX</h2>';
-    echo '<p style="margin:0 0 10px;">PIX ainda não está ativo neste gateway. O fluxo já está preparado para ativar QR Code em seguida.</p>';
-    echo '<div style="padding:12px;background:#0f1524;border:1px solid #425683;border-radius:8px;margin-bottom:10px">';
-    echo '<strong>Pedido:</strong> ' . htmlspecialchars($order['order_ref'], ENT_QUOTES, 'UTF-8') . '<br/>';
-    echo '<strong>Status:</strong> pending<br/>';
-    echo '<strong>Código PIX (placeholder):</strong> ' . htmlspecialchars($fakePixCode, ENT_QUOTES, 'UTF-8');
-    echo '</div>';
-    echo '<a href="' . htmlspecialchars(getLink('donate'), ENT_QUOTES, 'UTF-8') . '" style="display:inline-block;padding:9px 14px;background:#c99a3b;color:#1a1205;text-decoration:none;border-radius:6px;font-weight:bold">Voltar</a>';
-    echo '</div>';
-    return;
+
+    ravynDonateRedirectTo(getLink('donatepix') . '&order=' . urlencode($order['order_ref']));
 }
 
 $checkoutUrl = null;

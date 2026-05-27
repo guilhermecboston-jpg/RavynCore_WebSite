@@ -52,6 +52,7 @@ if (empty($action)) {
         'terms_version' => ravynDonateTermsVersion(),
         'has_mercado_pago' => $hasMercadoPago,
         'has_stripe' => $hasStripe,
+        'has_pix' => ravynDonatePixEnabled(),
         'pay_url' => getLink('donatepay'),
         'is_localhost' => $is_localhost,
         'enable_donate_local' => $enableDonateLocal,

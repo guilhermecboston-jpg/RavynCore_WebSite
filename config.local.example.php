@@ -17,6 +17,11 @@ $config['mercadoPago']['environment'] = 'production'; // production | sandbox
 $config['mercadoPago']['accessToken']['production'] = 'APP_USR-COLE_SEU_TOKEN_AQUI';
 $config['mercadoPago']['accessToken']['sandbox'] = 'TEST-COLE_SEU_TOKEN_TESTE_AQUI';
 
+// PIX Mercado Pago (chave + QR estático de fallback)
+$config['ravynDonate']['pix']['enabled'] = true;
+$config['ravynDonate']['pix']['mercadopago_key'] = 'b63bc149-403d-4a76-b836-5ed34ef8ec84';
+$config['ravynDonate']['pix']['qr_image'] = 'images/payments/pix-qrcode-mercadopago.png';
+
 // Stripe (opcional)
 // $config['stripe']['enabled'] = true;
 // $config['stripe']['environment'] = 'production';

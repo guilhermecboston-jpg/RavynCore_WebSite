@@ -122,6 +122,156 @@ function ravynDonateMercadoPagoAccessToken(): string
     return '';
 }
 
+function ravynDonatePixConfig(): array
+{
+    global $config;
+    require_once PLUGINS . 'ravyn_donate/config.php';
+    return is_array($config['ravynDonate']['pix'] ?? null) ? $config['ravynDonate']['pix'] : [];
+}
+
+function ravynDonatePixEnabled(): bool
+{
+    $pix = ravynDonatePixConfig();
+    return !empty($pix['enabled']);
+}
+
+function ravynDonatePixStaticFallback(array $order): array
+{
+    $pix = ravynDonatePixConfig();
+    return [
+        'payment_id' => '',
+        'qr_code' => (string)($pix['static_copy_paste'] ?? ''),
+        'qr_code_base64' => '',
+        'ticket_url' => '',
+        'pix_key' => (string)($pix['mercadopago_key'] ?? ''),
+        'qr_image' => (string)($pix['qr_image'] ?? 'images/payments/pix-qrcode-mercadopago.png'),
+        'source' => 'static',
+    ];
+}
+
+function ravynDonateCreateMercadoPagoPix(array $order, ?string &$error = null): ?array
+{
+    $accessToken = ravynDonateMercadoPagoAccessToken();
+    if ($accessToken === '') {
+        $error = 'Token do Mercado Pago não configurado para gerar PIX.';
+        return null;
+    }
+
+    $baseUrl = ravynPublicBaseUrl();
+    $notificationUrl = rtrim($baseUrl, '/') . '/payments/mercadopago.php';
+    $nameParts = preg_split('/\s+/', trim((string)$order['full_name']), 2);
+    $firstName = $nameParts[0] ?? 'Cliente';
+    $lastName = $nameParts[1] ?? 'RavynCore';
+
+    $payload = [
+        'transaction_amount' => round((float)$order['amount_brl'], 2),
+        'description' => $order['coins'] . ' RavynCore Coins',
+        'payment_method_id' => 'pix',
+        'external_reference' => $order['order_ref'],
+        'payer' => [
+            'email' => $order['email'],
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+        ],
+    ];
+
+    if (stripos($notificationUrl, 'https://') === 0) {
+        $payload['notification_url'] = $notificationUrl;
+    }
+
+    if (!empty($order['tax_id'])) {
+        $payload['payer']['identification'] = [
+            'type' => ($order['region'] ?? 'BR') === 'BR' ? 'CPF' : 'Otro',
+            'number' => preg_replace('/\D/', '', (string)$order['tax_id']),
+        ];
+    }
+
+    $ch = curl_init('https://api.mercadopago.com/v1/payments');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $accessToken,
+            'Content-Type: application/json',
+            'X-Idempotency-Key: ' . $order['order_ref'],
+        ],
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_TIMEOUT => 30,
+    ]);
+    $response = curl_exec($ch);
+    $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    $data = json_decode((string)$response, true);
+    if ($response === false || !in_array($httpCode, [200, 201], true) || !is_array($data)) {
+        log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' PIX HTTP ' . $httpCode . ': ' . (string)$response);
+        $error = 'Não foi possível gerar o PIX no Mercado Pago.';
+        return null;
+    }
+
+    $tx = $data['point_of_interaction']['transaction_data'] ?? [];
+    $qrCode = (string)($tx['qr_code'] ?? '');
+    if ($qrCode === '') {
+        $error = 'Mercado Pago não retornou o código PIX.';
+        return null;
+    }
+
+    $pixCfg = ravynDonatePixConfig();
+    return [
+        'payment_id' => (string)($data['id'] ?? ''),
+        'qr_code' => $qrCode,
+        'qr_code_base64' => (string)($tx['qr_code_base64'] ?? ''),
+        'ticket_url' => (string)($tx['ticket_url'] ?? ''),
+        'pix_key' => (string)($pixCfg['mercadopago_key'] ?? ''),
+        'qr_image' => (string)($pixCfg['qr_image'] ?? ''),
+        'source' => 'mercadopago_api',
+        'status' => (string)($data['status'] ?? 'pending'),
+    ];
+}
+
+function ravynDonateResolvePixForOrder(array $order): array
+{
+    $pixCfg = ravynDonatePixConfig();
+    $qrCode = (string)($order['gateway_ref'] ?? '');
+    $base64 = '';
+    $paymentId = (string)($order['payment_id'] ?? '');
+    $status = (string)($order['payment_status'] ?? $order['status'] ?? 'pending');
+
+    if ($paymentId !== '' && ravynDonateMercadoPagoAccessToken() !== '') {
+        $ch = curl_init('https://api.mercadopago.com/v1/payments/' . urlencode($paymentId));
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . ravynDonateMercadoPagoAccessToken(),
+                'Content-Type: application/json',
+            ],
+            CURLOPT_TIMEOUT => 20,
+        ]);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $data = json_decode((string)$response, true);
+        if (is_array($data)) {
+            $status = (string)($data['status'] ?? $status);
+            $tx = $data['point_of_interaction']['transaction_data'] ?? [];
+            if (!empty($tx['qr_code'])) {
+                $qrCode = (string)$tx['qr_code'];
+            }
+            if (!empty($tx['qr_code_base64'])) {
+                $base64 = (string)$tx['qr_code_base64'];
+            }
+        }
+    }
+
+    return [
+        'payment_id' => $paymentId,
+        'qr_code' => $qrCode,
+        'qr_code_base64' => $base64,
+        'pix_key' => (string)($pixCfg['mercadopago_key'] ?? ''),
+        'qr_image' => (string)($pixCfg['qr_image'] ?? 'images/payments/pix-qrcode-mercadopago.png'),
+        'status' => $status,
+    ];
+}
+
 function ravynDonateTermsBullets(): array
 {
     return [

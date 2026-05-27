@@ -49,10 +49,6 @@
   document.querySelectorAll('.rd-gateway-card').forEach((btn) => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.rd-gateway-card').forEach((b) => b.classList.remove('selected'));
-      if (btn.dataset.disabled === '1') {
-        showError('PIX ainda está em preparação (sem QRCode ativo).');
-        return;
-      }
       btn.classList.add('selected');
       document.getElementById('rdGateway').value = btn.dataset.gateway;
       setStep('form');

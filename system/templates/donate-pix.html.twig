@@ -1,0 +1,67 @@
+<style>
+{% include 'donate-pix.css' %}
+</style>
+
+<div class="rd-pix-wrap">
+  <a class="rd-fixed-back" href="{{ donate_url }}">← Voltar para Donate</a>
+
+  {% if error %}
+    <div class="rd-pix-card rd-pix-error">
+      <h1>Pagamento PIX</h1>
+      <p>{{ error }}</p>
+    </div>
+  {% else %}
+    <header class="rd-pix-header">
+      <h1 class="rd-pix-title">PAGAMENTO PIX</h1>
+      <p class="rd-pix-sub">Escaneie o QR Code ou copie o código abaixo para concluir sua compra.</p>
+    </header>
+
+    <div class="rd-pix-card">
+      <div class="rd-pix-summary">
+        <div><span>Pedido</span><strong>{{ order_ref }}</strong></div>
+        <div><span>Conta</span><strong>{{ account_name }}</strong></div>
+        <div><span>Coins</span><strong>{{ coins|number_format(0, ',', '.') }}</strong></div>
+        <div><span>Valor</span><strong class="rd-pix-amount">R$ {{ amount_brl|number_format(2, ',', '.') }}</strong></div>
+        <div><span>Status</span><strong id="rdPixStatus" class="rd-pix-status-{{ is_paid ? 'paid' : 'pending' }}">{{ is_paid ? 'Pago' : 'Aguardando pagamento' }}</strong></div>
+      </div>
+
+      {% if is_paid %}
+        <p class="rd-pix-paid-msg">Pagamento confirmado! Suas coins serão creditadas em instantes.</p>
+        <div class="rd-pix-actions">
+          <a class="rd-btn rd-btn-primary" href="{{ final_url }}">Continuar</a>
+        </div>
+      {% else %}
+        <div class="rd-pix-qr-box">
+          {% if qr_code_base64 %}
+            <img class="rd-pix-qr" src="data:image/png;base64,{{ qr_code_base64 }}" alt="QR Code PIX" />
+          {% elseif qr_image %}
+            <img class="rd-pix-qr" src="{{ qr_image }}" alt="QR Code PIX" />
+          {% endif %}
+        </div>
+
+        {% if pix_key %}
+          <div class="rd-pix-key">
+            <span>Chave Pix (Mercado Pago)</span>
+            <code id="rdPixKey">{{ pix_key }}</code>
+            <button type="button" class="rd-btn-copy" data-copy-target="rdPixKey">Copiar chave</button>
+          </div>
+        {% endif %}
+
+        <div class="rd-pix-copy">
+          <span>Código Pix Copia e Cola</span>
+          <textarea id="rdPixCode" readonly rows="4">{{ qr_code }}</textarea>
+          <button type="button" class="rd-btn rd-btn-primary rd-btn-copy-main" data-copy-target="rdPixCode">Copiar código PIX</button>
+        </div>
+
+        <p class="rd-pix-hint">Após pagar, a confirmação é automática (pode levar até 2 minutos). Esta página atualiza o status sozinha.</p>
+        <div class="rd-pix-actions">
+          <a class="rd-btn rd-btn-secondary" href="{{ donate_url }}">Voltar</a>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+<script>
+{% include 'donate-pix.js' %}
+</script>
