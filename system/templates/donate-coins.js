@@ -57,6 +57,17 @@
     document.getElementById('rdBtnPay').disabled = !ok;
   });
 
+  const btnAcceptTerms = document.getElementById('rdBtnAcceptTerms');
+  if (btnAcceptTerms) {
+    btnAcceptTerms.addEventListener('click', () => {
+      const checkbox = document.getElementById('rdTermsCheckbox');
+      checkbox.checked = true;
+      document.getElementById('rdTermsAgree').value = '1';
+      document.getElementById('rdBtnPay').disabled = false;
+      showError('');
+    });
+  }
+
   form.addEventListener('submit', (e) => {
     if (!document.getElementById('rdPackageId').value || !document.getElementById('rdGateway').value) {
       e.preventDefault();
