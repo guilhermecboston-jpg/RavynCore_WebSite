@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="system/templates/donate-coins.css?v=2" />
+<link rel="stylesheet" href="system/templates/donate-coins.css?v=3" />
 
 <div class="rd-donate-wrap">
   <div class="rd-donate-header">
@@ -17,64 +17,43 @@
     <input type="hidden" name="gateway" id="rdGateway" value="" />
     <input type="hidden" name="terms_agree" id="rdTermsAgree" value="0" />
 
-    <!-- STEP 1 -->
     <section id="rdStepPackages" class="rd-panel active">
       <h2 class="rd-panel-title">Escolha seu pacote</h2>
       <div class="rd-packages">
         {% for id, pack in packages %}
           <button type="button" class="rd-package-card{% if pack.popular %} popular{% endif %}" data-package="{{ id }}" data-coins="{{ pack.coins }}" data-brl="{{ pack.brl }}">
             {% if pack.popular %}<span class="rd-badge">Popular</span>{% endif %}
-            <div class="rd-coin-icon" aria-hidden="true">
-              <svg viewBox="0 0 84 54" width="70" height="45">
-                <ellipse cx="22" cy="14" rx="11" ry="6" fill="#f5dc8f"/>
-                <rect x="11" y="14" width="22" height="14" fill="#d6b45b"/>
-                <ellipse cx="22" cy="28" rx="11" ry="6" fill="#caa64f"/>
-                <ellipse cx="40" cy="18" rx="11" ry="6" fill="#f5dc8f"/>
-                <rect x="29" y="18" width="22" height="14" fill="#d6b45b"/>
-                <ellipse cx="40" cy="32" rx="11" ry="6" fill="#caa64f"/>
-                <circle cx="61" cy="23" r="12" fill="#7b4ed6"/>
-                <text x="61" y="27" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">C</text>
-              </svg>
-            </div>
+            <div class="rd-coin-icon" aria-hidden="true"><img src="images/donate/icons/coins.png" alt="Coins" /></div>
             <div class="rd-coins">{{ pack.label }}</div>
             <div class="rd-price">R$ {{ pack.brl|number_format(0, ',', '.') }}</div>
           </button>
         {% endfor %}
       </div>
-      <div class="rd-actions">
-        <button type="button" class="rd-btn rd-btn-primary" id="rdBtnToGateway" disabled>Continuar</button>
-      </div>
     </section>
 
-    <!-- STEP 2 -->
     <section id="rdStepGateway" class="rd-panel">
       <h2 class="rd-panel-title">Selecione o pagamento</h2>
       <div class="rd-gateways">
         {% if has_mercado_pago %}
         <button type="button" class="rd-gateway-card" data-gateway="mercadopago">
-          <div class="rd-gw-logo mp">MercadoPago</div>
+          <div class="rd-gw-logo mp"><img src="images/donate/icons/mercadopago.png" alt="Mercado Pago" /></div>
           <p>Cartão, PIX, saldo e mais</p>
         </button>
         {% endif %}
         {% if has_stripe %}
         <button type="button" class="rd-gateway-card" data-gateway="stripe">
-          <div class="rd-gw-logo stripe">Stripe</div>
+          <div class="rd-gw-logo stripe"><img src="images/donate/icons/stripe.svg" alt="Stripe" /></div>
           <p>Cartão de crédito / débito</p>
         </button>
         {% endif %}
         <button type="button" class="rd-gateway-card" data-gateway="pix" data-disabled="1">
-          <div class="rd-gw-logo pix">PIX</div>
+          <div class="rd-gw-logo pix"><img src="images/donate/icons/pix.svg" alt="Pix" /></div>
           <p>Em breve: QR Code dinâmico</p>
           <small>Pré-configurado para ativação</small>
         </button>
       </div>
-      <div class="rd-actions">
-        <button type="button" class="rd-btn rd-btn-secondary rd-back" data-back="packages">Voltar</button>
-        <button type="button" class="rd-btn rd-btn-primary" id="rdBtnToForm" disabled>Continuar</button>
-      </div>
     </section>
 
-    <!-- STEP 3 -->
     <section id="rdStepForm" class="rd-panel">
       <h2 class="rd-panel-title">Dados do Comprador</h2>
       <div class="rd-card-box">
@@ -92,7 +71,7 @@
       </div>
 
       <div class="rd-terms-box rd-card-box">
-        <h3>Termos e Condições (<span id="rdGatewayTermsName">Pagamentos</span>)</h3>
+        <h3>Termos e Condições (Pagamentos)</h3>
         <p class="rd-terms-warn">Se você não concorda com estes termos, não está autorizado a realizar doações/pagamentos.</p>
         <p>Ao realizar uma doação/pagamento, você reconhece e concorda integralmente com estes Termos e Condições.</p>
         <ul>
@@ -124,8 +103,7 @@
       </label>
 
       <div class="rd-actions">
-        <button type="button" class="rd-btn rd-btn-secondary rd-back" data-back="gateway">Voltar</button>
-        <button type="submit" class="rd-btn rd-btn-primary" id="rdBtnPay" disabled>I Agree — Pagar agora</button>
+        <button type="submit" class="rd-btn rd-btn-primary" id="rdBtnPay" disabled>Eu aceito — Pagar agora</button>
       </div>
     </section>
   </form>
@@ -135,7 +113,6 @@
 (function () {
   const form = document.getElementById('rdDonateForm');
   const err = document.getElementById('rdError');
-  const steps = document.querySelectorAll('.rd-step');
   const panels = {
     packages: document.getElementById('rdStepPackages'),
     gateway: document.getElementById('rdStepGateway'),
@@ -151,12 +128,6 @@
   function setStep(step) {
     current = step;
     Object.keys(panels).forEach((k) => panels[k].classList.toggle('active', k === step));
-    steps.forEach((el, i) => {
-      const map = ['packages', 'gateway', 'form'];
-      const idx = map.indexOf(step);
-      el.classList.toggle('active', i === idx);
-      el.classList.toggle('done', i < idx);
-    });
     showError('');
   }
 
@@ -165,16 +136,8 @@
       document.querySelectorAll('.rd-package-card').forEach((b) => b.classList.remove('selected'));
       btn.classList.add('selected');
       document.getElementById('rdPackageId').value = btn.dataset.package;
-      document.getElementById('rdBtnToGateway').disabled = false;
+      setStep('gateway');
     });
-  });
-
-  document.getElementById('rdBtnToGateway').addEventListener('click', () => {
-    if (!document.getElementById('rdPackageId').value) {
-      showError('Selecione um pacote.');
-      return;
-    }
-    setStep('gateway');
   });
 
   document.querySelectorAll('.rd-gateway-card').forEach((btn) => {
@@ -187,21 +150,8 @@
       btn.classList.add('selected');
       const gw = btn.dataset.gateway;
       document.getElementById('rdGateway').value = gw;
-      document.getElementById('rdGatewayTermsName').textContent = gw === 'stripe' ? 'Stripe' : (gw === 'pix' ? 'PIX' : 'Mercado Pago');
-      document.getElementById('rdBtnToForm').disabled = false;
+      setStep('form');
     });
-  });
-
-  document.getElementById('rdBtnToForm').addEventListener('click', () => {
-    if (!document.getElementById('rdGateway').value) {
-      showError('Selecione Mercado Pago ou Stripe.');
-      return;
-    }
-    setStep('form');
-  });
-
-  document.querySelectorAll('.rd-back').forEach((btn) => {
-    btn.addEventListener('click', () => setStep(btn.dataset.back));
   });
 
   document.querySelectorAll('input[name="region"]').forEach((radio) => {

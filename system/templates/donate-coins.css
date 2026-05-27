@@ -1,8 +1,8 @@
 .rd-donate-wrap {
-  max-width: 980px;
+  max-width: 1040px;
   margin: 0 auto 30px;
   padding: 22px;
-  background: #f2e9d5;
+  background: linear-gradient(180deg, #f7edd7 0%, #efe2c6 100%);
   border: 1px solid #6e5b37;
   border-radius: 12px;
   color: #231d11;
@@ -50,11 +50,12 @@
   margin: 0 0 12px;
   font-size: 18px;
   font-weight: 700;
+  text-align: center;
 }
 
 .rd-packages {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 14px;
 }
 
@@ -62,8 +63,8 @@
   position: relative;
   background: #efe5cf;
   border: 2px solid #9f8b66;
-  border-radius: 10px;
-  padding: 14px 10px;
+  border-radius: 14px;
+  padding: 16px 12px;
   cursor: pointer;
   color: inherit;
   text-align: center;
@@ -82,6 +83,7 @@
   box-shadow: 0 12px 26px rgba(0, 0, 0, .22);
   transform: translateY(-8px) scale(1.04);
   z-index: 2;
+  background: linear-gradient(180deg, #fff3d8 0%, #f3dfb4 100%);
 }
 
 .rd-package-card.popular {
@@ -109,6 +111,12 @@
   animation: rdFloat 2.8s ease-in-out infinite;
 }
 
+.rd-coin-icon img {
+  max-width: 76px;
+  max-height: 48px;
+  object-fit: contain;
+}
+
 .rd-package-card:hover .rd-coin-icon {
   animation-duration: 1.4s;
 }
@@ -133,14 +141,16 @@
 
 .rd-gateways {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 12px;
+  max-width: 840px;
+  margin: 0 auto;
 }
 
 .rd-gateway-card {
   background: #efe5cf;
   border: 2px solid #9f8b66;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 16px;
   cursor: pointer;
   color: inherit;
@@ -157,6 +167,7 @@
 .rd-gateway-card.selected {
   border-color: #d07f00;
   transform: translateY(-4px) scale(1.02);
+  background: linear-gradient(180deg, #fff3d8 0%, #f3dfb4 100%);
 }
 
 .rd-gateway-card[data-disabled="1"] {
@@ -164,9 +175,18 @@
 }
 
 .rd-gw-logo {
-  font-size: 26px;
-  font-weight: bold;
-  margin-bottom: 8px;
+  margin: 0 auto 8px;
+  width: 170px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rd-gw-logo img {
+  max-width: 160px;
+  max-height: 48px;
+  object-fit: contain;
 }
 
 .rd-gw-logo.mp {
@@ -182,7 +202,7 @@
 }
 
 .rd-card-box {
-  max-width: 760px;
+  max-width: 700px;
   margin: 0 auto 14px;
   padding: 14px;
   background: #f5ecd8;
@@ -227,7 +247,7 @@
 }
 
 .rd-terms-box {
-  max-height: 220px;
+  max-height: 200px;
   overflow-y: auto;
   background: #fffaf0;
   border: 1px solid #a48d66;
@@ -251,7 +271,7 @@
 
 .rd-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 10px;
 }
 
