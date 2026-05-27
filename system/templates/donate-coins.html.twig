@@ -1,4 +1,6 @@
-<link rel="stylesheet" href="system/templates/donate-coins.css?v=6" />
+<style>
+{% include 'donate-coins.css' %}
+</style>
 
 <div class="rd-donate-wrap">
   <a class="rd-fixed-back" href="{{ constant('BASE_URL') }}">← Voltar ao Site</a>
@@ -37,18 +39,18 @@
         <div class="rd-gateways">
           {% if has_mercado_pago %}
           <button type="button" class="rd-gateway-card" data-gateway="mercadopago">
-            <div class="rd-gw-logo"><img class="rd-gw-logo-img" src="images/payments/mercadopago.png" alt="MercadoPago" /></div>
+            <div class="rd-gw-logo"><img class="rd-gw-logo-img" src="images/payments/mercadopago.png" alt="MercadoPago" style="max-height:46px;max-width:140px;width:auto;height:auto;object-fit:contain;display:block;margin:0 auto;" /></div>
             <div class="rd-gw-name">MercadoPago</div>
           </button>
           {% endif %}
           {% if has_stripe %}
           <button type="button" class="rd-gateway-card" data-gateway="stripe">
-            <div class="rd-gw-logo"><img class="rd-gw-logo-img" src="images/payments/stripe.svg" alt="Stripe" /></div>
+            <div class="rd-gw-logo"><img class="rd-gw-logo-img" src="images/payments/stripe.svg" alt="Stripe" style="max-height:46px;max-width:140px;width:auto;height:auto;object-fit:contain;display:block;margin:0 auto;" /></div>
             <div class="rd-gw-name">Stripe</div>
           </button>
           {% endif %}
           <button type="button" class="rd-gateway-card" data-gateway="pix" data-disabled="1">
-            <div class="rd-gw-logo"><img class="rd-gw-logo-img" src="images/payments/pix.svg" alt="Pix" /></div>
+            <div class="rd-gw-logo"><img class="rd-gw-logo-img" src="images/payments/pix.svg" alt="Pix" style="max-height:46px;max-width:140px;width:auto;height:auto;object-fit:contain;display:block;margin:0 auto;" /></div>
             <div class="rd-gw-name">PIX</div>
             <small class="rd-pix-note">QRCode em breve</small>
           </button>
@@ -109,4 +111,6 @@
   </form>
 </div>
 
-<script src="system/templates/donate-coins.js?v=3"></script>
+<script>
+{% include 'donate-coins.js' %}
+</script>
