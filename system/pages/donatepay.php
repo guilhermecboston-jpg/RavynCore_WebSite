@@ -33,33 +33,33 @@ $email = trim($_POST['email'] ?? '');
 $termsAgree = ($_POST['terms_agree'] ?? '') === '1';
 
 if (!$termsAgree) {
-    echo 'Você precisa aceitar os Termos e Condições.';
+    ravynDonateBackBox('Donatepay', 'Você precisa aceitar os Termos e Condições.');
     return;
 }
 
 $packages = ravynDonatePackages();
 if (!isset($packages[$packageId])) {
-    echo 'Pacote inválido.';
+    ravynDonateBackBox('Donatepay', 'Pacote inválido.');
     return;
 }
 
 if (!in_array($gateway, ['mercadopago', 'stripe', 'pix'], true)) {
-    echo 'Gateway inválido.';
+    ravynDonateBackBox('Donatepay', 'Gateway inválido.');
     return;
 }
 
 if (strlen($fullName) < 3) {
-    echo 'Informe o nome completo.';
+    ravynDonateBackBox('Donatepay', 'Informe o nome completo.');
     return;
 }
 
 if (!ravynDonateValidateBirthDate($birthDate)) {
-    echo 'Data de nascimento inválida (use DD/MM/AAAA).';
+    ravynDonateBackBox('Donatepay', 'Data de nascimento inválida (use DD/MM/AAAA).');
     return;
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    echo 'E-mail inválido.';
+    ravynDonateBackBox('Donatepay', 'E-mail inválido.');
     return;
 }
 
@@ -67,17 +67,17 @@ $taxId = '';
 if ($region === 'BR') {
     $taxId = preg_replace('/\D/', '', $_POST['cpf'] ?? '');
     if (!ravynDonateValidateCpf($taxId)) {
-        echo 'CPF inválido.';
+        ravynDonateBackBox('Donatepay', 'CPF inválido.');
         return;
     }
     if (!ravynDonateVerifyCpfIdentity($taxId, $fullName, $birthDate)) {
-        echo 'Não foi possível validar CPF + nome + data de nascimento na base externa configurada.';
+        ravynDonateBackBox('Donatepay', 'Não foi possível validar CPF + nome + data de nascimento na base externa configurada.');
         return;
     }
 } else {
     $taxId = trim($_POST['document'] ?? '');
     if (strlen($taxId) < 4) {
-        echo 'Documento inválido.';
+        ravynDonateBackBox('Donatepay', 'Documento inválido.');
         return;
     }
 }
@@ -101,7 +101,7 @@ $order = ravynDonateCreateOrder($db, [
 ]);
 
 if (!$order) {
-    echo 'Erro ao registrar pedido.';
+    ravynDonateBackBox('Donatepay', 'Erro ao registrar pedido.');
     return;
 }
 
@@ -132,7 +132,7 @@ if ($gateway === 'mercadopago') {
 }
 
 if (!$checkoutUrl) {
-    echo 'Não foi possível abrir o gateway de pagamento. Tente novamente.';
+    ravynDonateBackBox('Donatepay', 'Não foi possível abrir o gateway de pagamento. Tente novamente.');
     return;
 }
 
