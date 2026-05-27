@@ -9,6 +9,9 @@
     form: document.getElementById('rdStepForm'),
   };
 
+  const pixModal = document.getElementById('rdPixModal');
+  const payBtn = document.getElementById('rdBtnPay');
+
   function showError(msg) {
     err.textContent = msg;
     err.style.display = msg ? 'block' : 'none';
@@ -68,10 +71,69 @@
   document.getElementById('rdTermsCheckbox').addEventListener('change', (e) => {
     const ok = e.target.checked;
     document.getElementById('rdTermsAgree').value = ok ? '1' : '0';
-    document.getElementById('rdBtnPay').disabled = !ok;
+    payBtn.disabled = !ok;
   });
 
-  form.addEventListener('submit', (e) => {
+  function openPixModal(data) {
+    document.getElementById('rdPixOrderRef').textContent = data.order_ref || '—';
+    document.getElementById('rdPixCoins').textContent = data.coins != null ? String(data.coins) : '—';
+    document.getElementById('rdPixAmount').textContent = data.amount_label || '—';
+
+    const qrImg = document.getElementById('rdPixQrImg');
+    if (data.qr_code_base64) {
+      qrImg.src = 'data:image/png;base64,' + data.qr_code_base64;
+    } else if (data.qr_image) {
+      qrImg.src = data.qr_image;
+    } else {
+      qrImg.removeAttribute('src');
+    }
+
+    const keyWrap = document.getElementById('rdPixKeyWrap');
+    const keyText = document.getElementById('rdPixKeyText');
+    if (data.pix_key) {
+      keyWrap.hidden = false;
+      keyText.textContent = data.pix_key;
+    } else {
+      keyWrap.hidden = true;
+    }
+
+    document.getElementById('rdPixCodeText').value = data.qr_code || '';
+
+    pixModal.hidden = false;
+    pixModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePixModal() {
+    pixModal.hidden = true;
+    pixModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-close-pix-modal]').forEach((el) => {
+    el.addEventListener('click', closePixModal);
+  });
+
+  document.querySelectorAll('.rd-pix-copy-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-copy');
+      const el = document.getElementById(targetId);
+      if (!el) return;
+      const text = el.value !== undefined ? el.value : el.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const old = btn.textContent;
+        btn.textContent = 'Copiado!';
+        setTimeout(() => { btn.textContent = old; }, 1500);
+      }).catch(() => {
+        if (el.select) {
+          el.select();
+          document.execCommand('copy');
+        }
+      });
+    });
+  });
+
+  form.addEventListener('submit', async (e) => {
     if (birthInput) {
       birthInput.value = formatBirthDateInput(birthInput.value);
     }
@@ -83,6 +145,40 @@
     if (document.getElementById('rdTermsAgree').value !== '1') {
       e.preventDefault();
       showError('Você precisa aceitar os termos para pagar.');
+      return;
+    }
+
+    const gateway = document.getElementById('rdGateway').value;
+    if (gateway !== 'pix') {
+      return;
+    }
+
+    e.preventDefault();
+    showError('');
+    payBtn.classList.add('rd-btn-pay-loading');
+    payBtn.disabled = true;
+
+    const fd = new FormData(form);
+    fd.append('response_format', 'json');
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: fd,
+        credentials: 'same-origin',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        showError(data.error || 'Não foi possível gerar o PIX.');
+        return;
+      }
+      openPixModal(data);
+    } catch (ex) {
+      showError('Erro ao processar PIX. Tente novamente.');
+    } finally {
+      payBtn.classList.remove('rd-btn-pay-loading');
+      payBtn.disabled = document.getElementById('rdTermsAgree').value !== '1';
     }
   });
 })();

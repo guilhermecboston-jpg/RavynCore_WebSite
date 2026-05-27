@@ -109,6 +109,34 @@
       </div>
     </section>
   </form>
+
+  <div id="rdPixModal" class="rd-pix-modal" hidden aria-hidden="true">
+    <div class="rd-pix-modal-backdrop" data-close-pix-modal></div>
+    <div class="rd-pix-modal-panel" role="dialog" aria-labelledby="rdPixModalTitle">
+      <button type="button" class="rd-pix-modal-close" data-close-pix-modal aria-label="Fechar">&times;</button>
+      <h2 id="rdPixModalTitle" class="rd-pix-modal-title">Pagamento PIX</h2>
+      <p class="rd-pix-modal-sub">Escaneie o QR Code ou copie o código abaixo.</p>
+      <div class="rd-pix-modal-summary">
+        <div><span>Pedido</span><strong id="rdPixOrderRef">—</strong></div>
+        <div><span>Coins</span><strong id="rdPixCoins">—</strong></div>
+        <div><span>Valor</span><strong id="rdPixAmount" class="rd-pix-modal-amount">—</strong></div>
+      </div>
+      <div class="rd-pix-modal-qr-wrap">
+        <img id="rdPixQrImg" class="rd-pix-modal-qr" src="" alt="QR Code PIX" />
+      </div>
+      <div class="rd-pix-modal-key-wrap" id="rdPixKeyWrap" hidden>
+        <span>Chave Pix (Mercado Pago)</span>
+        <code id="rdPixKeyText"></code>
+        <button type="button" class="rd-btn rd-btn-secondary rd-pix-copy-btn" data-copy="rdPixKeyText">Copiar chave</button>
+      </div>
+      <div class="rd-pix-modal-code-wrap">
+        <span>Código Pix Copia e Cola</span>
+        <textarea id="rdPixCodeText" readonly rows="4"></textarea>
+        <button type="button" class="rd-btn rd-btn-primary rd-pix-copy-btn" data-copy="rdPixCodeText">Copiar código PIX</button>
+      </div>
+      <p class="rd-pix-modal-hint">Após pagar, a confirmação é automática (até 2 minutos).</p>
+    </div>
+  </div>
 </div>
 
 <script>

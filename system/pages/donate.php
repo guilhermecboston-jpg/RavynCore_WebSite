@@ -9,8 +9,7 @@ $hasStripe = false;
 
 if (file_exists(PLUGINS . 'mercadopago/config.php')) {
     require_once PLUGINS . 'mercadopago/config.php';
-    $hasMercadoPago = ($config['mercadoPago']['enabled'] ?? false)
-        && ravynDonateMercadoPagoAccessToken() !== '';
+    $hasMercadoPago = (bool)($config['mercadoPago']['enabled'] ?? false);
 }
 
 if (file_exists(PLUGINS . 'stripe/config.php')) {
@@ -20,7 +19,7 @@ if (file_exists(PLUGINS . 'stripe/config.php')) {
 
 ravynDonateSyncGatewayPackages();
 
-if (!$hasMercadoPago && !$hasStripe) {
+if (!$hasMercadoPago && !$hasStripe && !ravynDonatePixEnabled()) {
     echo 'Nenhum gateway de doação configurado.';
     return;
 }

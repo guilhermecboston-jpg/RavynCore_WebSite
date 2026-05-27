@@ -6,6 +6,9 @@ require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
 
 function ravynDonateBackBox(string $title, string $message): void
 {
+    if (ravynDonateWantsJson()) {
+        ravynDonateJsonResponse(['ok' => false, 'error' => $message], 400);
+    }
     $back = getLink('donate');
     echo '<div style="max-width:700px;margin:20px auto;padding:20px;background:#1a2238;border:1px solid #3a4a6a;border-radius:10px;color:#d8e4ff;font-family:Verdana,Arial,sans-serif">';
     echo '<h2 style="margin:0 0 10px;color:#f0c86a;">' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '</h2>';
@@ -23,6 +26,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     ravynDonateBackBox('Ação inválida', 'Esta página é usada para processar pagamentos. Selecione um pacote e tente novamente.');
     return;
 }
+
+ravynDonateEnsureSchema($db);
 
 $packageId = trim($_POST['package_id'] ?? '');
 $gateway = trim($_POST['gateway'] ?? '');
@@ -121,15 +126,33 @@ if ($gateway === 'pix') {
         return;
     }
 
-    $db->exec(
-        'UPDATE `ravyn_donate_orders` SET `status` = \'pending\', `payment_id` = '
-        . $db->quote((string)($pixData['payment_id'] ?? '')) . ', `gateway_ref` = '
-        . $db->quote((string)$pixData['qr_code']) . ', `payment_status` = '
-        . $db->quote((string)($pixData['status'] ?? 'pending'))
-        . ' WHERE `id` = ' . (int)$order['id']
-    );
+    try {
+        $db->exec(
+            'UPDATE `ravyn_donate_orders` SET `status` = \'pending\', `payment_id` = '
+            . $db->quote((string)($pixData['payment_id'] ?? '')) . ', `gateway_ref` = '
+            . $db->quote((string)$pixData['qr_code']) . ', `payment_status` = '
+            . $db->quote((string)($pixData['status'] ?? 'pending'))
+            . ' WHERE `id` = ' . (int)$order['id']
+        );
+    } catch (Throwable $e) {
+        log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' pix update: ' . $e->getMessage());
+        ravynDonateBackBox('Donatepay', 'Erro ao salvar dados do PIX. Tente novamente.');
+        return;
+    }
 
-    ravynDonateRedirectTo(getLink('donatepix') . '&order=' . urlencode($order['order_ref']));
+    ravynDonateJsonResponse([
+        'ok' => true,
+        'type' => 'pix',
+        'order_ref' => $order['order_ref'],
+        'coins' => (int)$order['coins'],
+        'amount_brl' => (float)$order['amount_brl'],
+        'amount_label' => 'R$ ' . number_format((float)$order['amount_brl'], 2, ',', '.'),
+        'qr_code' => (string)$pixData['qr_code'],
+        'qr_code_base64' => (string)($pixData['qr_code_base64'] ?? ''),
+        'pix_key' => (string)($pixData['pix_key'] ?? ''),
+        'qr_image' => (string)($pixData['qr_image'] ?? 'images/payments/pix-qrcode-mercadopago.png'),
+        'payment_status' => (string)($pixData['status'] ?? 'pending'),
+    ]);
 }
 
 $checkoutUrl = null;

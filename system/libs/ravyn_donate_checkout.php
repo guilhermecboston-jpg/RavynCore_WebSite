@@ -45,7 +45,7 @@ function ravynDonateEnsureSchema($db): void
         `terms_ip` VARCHAR(45) DEFAULT NULL,
         `terms_user_agent` VARCHAR(255) DEFAULT NULL,
         `status` ENUM('pending','redirected','paid','failed','cancelled') NOT NULL DEFAULT 'pending',
-        `gateway_ref` VARCHAR(128) DEFAULT NULL,
+        `gateway_ref` TEXT DEFAULT NULL,
         `payment_id` VARCHAR(64) DEFAULT NULL,
         `payment_status` VARCHAR(32) DEFAULT NULL,
         `delivered` TINYINT(1) NOT NULL DEFAULT 0,
@@ -57,6 +57,44 @@ function ravynDonateEnsureSchema($db): void
         KEY `account_id` (`account_id`),
         KEY `payment_id` (`payment_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    ravynDonateMigrateSchema($db);
+}
+
+function ravynDonateMigrateSchema($db): void
+{
+    if (!$db->hasTable('ravyn_donate_orders')) {
+        return;
+    }
+    try {
+        if ($db->hasColumn('ravyn_donate_orders', 'gateway_ref')) {
+            $db->exec('ALTER TABLE `ravyn_donate_orders` MODIFY `gateway_ref` TEXT NULL');
+        }
+        if (!$db->hasColumn('ravyn_donate_orders', 'payment_status')) {
+            $db->exec('ALTER TABLE `ravyn_donate_orders` ADD `payment_status` VARCHAR(32) NULL DEFAULT NULL AFTER `payment_id`');
+        }
+    } catch (Throwable $e) {
+        log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' migrate: ' . $e->getMessage());
+    }
+}
+
+function ravynDonateWantsJson(): bool
+{
+    if (isset($_POST['response_format']) && $_POST['response_format'] === 'json') {
+        return true;
+    }
+    $xhr = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
+    return strtolower($xhr) === 'xmlhttprequest';
+}
+
+function ravynDonateJsonResponse(array $data, int $code = 200): void
+{
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+    http_response_code($code);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
 function ravynDonatePackages(): array
