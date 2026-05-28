@@ -7,7 +7,7 @@ $cfg['blowfish_secret'] = 'ravyncore_pma_cookie_secret_2026_change_me';
 
 $i = 0;
 $i++;
-$cfg['Servers'][$i]['host'] = 'localhost';
+$cfg['Servers'][$i]['host'] = '127.0.0.1';
 $cfg['Servers'][$i]['port'] = '3306';
 $cfg['Servers'][$i]['auth_type'] = 'cookie';
 $cfg['Servers'][$i]['AllowNoPassword'] = false;
