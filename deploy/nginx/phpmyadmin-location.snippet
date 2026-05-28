@@ -1,9 +1,4 @@
-# Paste inside the HTTPS server { } block in /etc/nginx/sites-available/ravyncore
-# Requires: apt install phpmyadmin (files under /usr/share/phpmyadmin/)
-
-location = /phpmyadmin {
-    return 301 /phpmyadmin/;
-}
+# Paste inside server { } in /etc/nginx/sites-available/ravyncore
 
 location /phpmyadmin {
     alias /usr/share/phpmyadmin/;
@@ -14,8 +9,6 @@ location /phpmyadmin {
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:/run/php/php8.2-fpm.sock;
         fastcgi_param SCRIPT_FILENAME $request_filename;
-        fastcgi_param HTTPS on;
-        fastcgi_param HTTP_X_FORWARDED_PROTO https;
         include fastcgi_params;
     }
 

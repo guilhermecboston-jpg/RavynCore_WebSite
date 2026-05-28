@@ -1,3 +1,10 @@
+# Copy to server:
+#   sudo cp deploy/nginx/sites-available/ravyncore /etc/nginx/sites-available/ravyncore
+#   sudo ln -sf /etc/nginx/sites-available/ravyncore /etc/nginx/sites-enabled/ravyncore
+#   sudo nginx -t && sudo systemctl reload nginx
+#
+# Requires: sudo apt install phpmyadmin
+
 server {
     listen 80;
     listen [::]:80;
@@ -13,17 +20,14 @@ server {
     root /var/www/html;
     index index.php index.html;
 
-    # Use your origin certificate paths
     ssl_certificate /etc/letsencrypt/live/ravyncore.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/ravyncore.com/privkey.pem;
 
-    # Cloudflare TLS hardening
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_prefer_server_ciphers off;
     ssl_session_cache shared:SSL:10m;
     ssl_session_timeout 10m;
 
-    # Real client IP from Cloudflare
     real_ip_header CF-Connecting-IP;
     set_real_ip_from 173.245.48.0/20;
     set_real_ip_from 103.21.244.0/22;
