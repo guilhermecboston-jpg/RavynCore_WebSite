@@ -17,3 +17,11 @@ $config['outfits_xml_path'] = '/home/RavynCore/data/XML/outfits.xml';
 $config['mounts_xml_path'] = '/home/RavynCore/data/XML/mounts.xml';
 
 $config['highscores_ids_hidden'] = array(1, 2, 3, 4, 5, 6);
+$config['public_url'] = 'http://177.55.153.178/';
+$config['payment_public_url'] = 'http://177.55.153.178/';
+$config['force_https_urls'] = false;
+
+$config['mercadoPago']['enabled'] = true;
+$config['mercadoPago']['environment'] = getenv('MP_ENV') ?: 'production';
+$config['mercadoPago']['accessToken']['production'] = getenv('MP_ACCESS_TOKEN') ?: '';
+$config['mercadoPago']['accessToken']['sandbox'] = getenv('MP_ACCESS_TOKEN_SANDBOX') ?: '';
