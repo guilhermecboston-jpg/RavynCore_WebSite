@@ -1155,15 +1155,16 @@ function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null, ?
         ]],
     ];
 
+    // Stripe API v1 exige application/x-www-form-urlencoded (não JSON)
     $ch = curl_init('https://api.stripe.com/v1/checkout/sessions');
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => [
             'Authorization: Bearer ' . $secretKey,
-            'Content-Type: application/json',
+            'Content-Type: application/x-www-form-urlencoded',
         ],
-        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_POSTFIELDS => http_build_query($payload),
         CURLOPT_TIMEOUT => 30,
     ]);
     $response = curl_exec($ch);

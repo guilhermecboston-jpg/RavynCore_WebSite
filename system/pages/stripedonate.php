@@ -104,8 +104,8 @@ curl_setopt_array($ch, [
 	CURLOPT_RETURNTRANSFER => true,
 	CURLOPT_POST => true,
 	CURLOPT_USERPWD => $secretKey . ':',
-	CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-	CURLOPT_POSTFIELDS => json_encode($payload),
+	CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],
+	CURLOPT_POSTFIELDS => http_build_query($payload),
 	CURLOPT_TIMEOUT => 30,
 ]);
 
