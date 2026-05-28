@@ -1,5 +1,5 @@
 <?php
-global $config, $twig, $logged, $account_logged;
+global $config, $twig, $logged, $account_logged, $db;
 defined('MYAAC') or die('Direct access not allowed!');
 
 require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
@@ -67,25 +67,30 @@ if (empty($action)) {
     $loyaltyPoints = 0;
     $uiState = 'processing';
 
-    if ($logged && $orderRef !== '' && strncmp($orderRef, 'RD-', 3) === 0) {
-        ravynDonateEnsureSchema($db);
-        $order = ravynDonateGetOrderByRef($db, $orderRef);
-        if ($order && (int)$order['account_id'] === (int)$account_logged->getId()) {
-            if ($gateway === 'stripe' || ($order['gateway'] ?? '') === 'stripe') {
-                $sync = ravynDonateSyncStripeOrderStatus($db, $order, $sessionId);
-            } elseif (($order['gateway'] ?? '') === 'pix') {
-                $sync = ravynDonateSyncPixOrderStatus($db, $order);
-            } else {
-                $sync = [
-                    'coins' => (int)$order['coins'],
-                    'loyalty_points' => ravynDonateOrderLoyaltyPoints($order),
-                    'ui_state' => (int)($order['delivered'] ?? 0) === 1 ? 'approved' : 'processing',
-                ];
+    if ($logged && $orderRef !== '' && strncmp($orderRef, 'RD-', 3) === 0 && isset($db)) {
+        try {
+            ravynDonateEnsureSchema($db);
+            $order = ravynDonateGetOrderByRef($db, $orderRef);
+            if ($order && (int)$order['account_id'] === (int)$account_logged->getId()) {
+                if ($gateway === 'stripe' || ($order['gateway'] ?? '') === 'stripe') {
+                    $sync = ravynDonateSyncStripeOrderStatus($db, $order, $sessionId);
+                } elseif (($order['gateway'] ?? '') === 'pix') {
+                    $sync = ravynDonateSyncPixOrderStatus($db, $order);
+                } else {
+                    $sync = [
+                        'coins' => (int)$order['coins'],
+                        'loyalty_points' => ravynDonateOrderLoyaltyPoints($order),
+                        'ui_state' => (int)($order['delivered'] ?? 0) === 1 ? 'approved' : 'processing',
+                    ];
+                }
+                $coins = (int)($sync['coins'] ?? 0);
+                $loyaltyPoints = (int)($sync['loyalty_points'] ?? 0);
+                $uiState = (string)($sync['ui_state'] ?? 'processing');
+                $order = ravynDonateGetOrderByRef($db, $orderRef) ?: $order;
             }
-            $coins = (int)($sync['coins'] ?? 0);
-            $loyaltyPoints = (int)($sync['loyalty_points'] ?? 0);
-            $uiState = (string)($sync['ui_state'] ?? 'processing');
-            $order = ravynDonateGetOrderByRef($db, $orderRef) ?: $order;
+        } catch (Throwable $e) {
+            log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' donate final: ' . $e->getMessage());
+            $uiState = 'processing';
         }
     }
 

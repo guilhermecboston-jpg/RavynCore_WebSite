@@ -860,8 +860,13 @@ function ravynDonateDeliverOrder($db, array $order, string $paymentId, string $p
     global $config;
     $accountId = (int)$order['account_id'];
     $coins = (int)$order['coins'];
-    $field = strtolower($config['mercadoPago']['donationType'] ?? 'coins_transferable');
-    $field = preg_replace('/[^a-z_]/', '', $field);
+    $donationType = 'coins_transferable';
+    if ($gateway === 'stripe') {
+        $donationType = $config['stripe']['donationType'] ?? $donationType;
+    } else {
+        $donationType = $config['mercadoPago']['donationType'] ?? $donationType;
+    }
+    $field = preg_replace('/[^a-z_]/', '', strtolower((string)$donationType));
     if ($field === '' || !$db->hasColumn('accounts', $field)) {
         $field = 'coins_transferable';
     }
