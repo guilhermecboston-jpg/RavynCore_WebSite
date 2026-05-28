@@ -350,6 +350,25 @@ function ravynDonateSyncPixOrderStatus($db, array $order): array
     $orderStatus = (string)($order['status'] ?? 'pending');
     $paymentId = trim((string)($order['payment_id'] ?? ''));
 
+    if ($paymentId === '' && ravynDonateMercadoPagoAccessToken() !== '' && in_array(strtolower($orderStatus), ['pending', 'redirected'], true)) {
+        $matched = ravynDonateFindUnlinkedApprovedPixPaymentForOrder($db, $order);
+        if (is_array($matched)) {
+            $paymentId = (string)($matched['payment_id'] ?? '');
+            $paymentStatus = (string)($matched['payment_status'] ?? 'approved');
+            if ($paymentId !== '') {
+                $db->exec(
+                    'UPDATE `ravyn_donate_orders` SET `payment_id` = ' . $db->quote($paymentId)
+                    . ', `payment_status` = ' . $db->quote($paymentStatus)
+                    . ' WHERE `id` = ' . (int)$order['id']
+                );
+                $order['payment_id'] = $paymentId;
+                $order['payment_status'] = $paymentStatus;
+                ravynDonateDeliverOrder($db, $order, $paymentId, $paymentStatus, 'mercadopago');
+                $orderStatus = 'paid';
+            }
+        }
+    }
+
     if ($paymentId !== '' && ravynDonateMercadoPagoAccessToken() !== '') {
         $ch = curl_init('https://api.mercadopago.com/v1/payments/' . urlencode($paymentId));
         curl_setopt_array($ch, [
@@ -402,6 +421,89 @@ function ravynDonateSyncPixOrderStatus($db, array $order): array
         'ui_state' => ravynDonatePixUiState((string)$paymentStatus, (string)$orderStatus),
         'redirect_delay_seconds' => max(5, (int)($pixCfg['final_delay_seconds'] ?? 10)),
     ];
+}
+
+function ravynDonateFindUnlinkedApprovedPixPaymentForOrder($db, array $order): ?array
+{
+    $accessToken = ravynDonateMercadoPagoAccessToken();
+    if ($accessToken === '') {
+        return null;
+    }
+
+    $createdAt = strtotime((string)($order['created_at'] ?? 'now'));
+    if ($createdAt <= 0) {
+        $createdAt = time() - 3600;
+    }
+
+    $begin = gmdate('Y-m-d\\TH:i:s\\Z', max(0, $createdAt - 300));
+    $end = gmdate('Y-m-d\\TH:i:s\\Z', time() + 60);
+    $amount = (float)($order['amount_brl'] ?? 0);
+    if ($amount <= 0) {
+        return null;
+    }
+
+    $endpoint = 'https://api.mercadopago.com/v1/payments/search'
+        . '?sort=date_created&criteria=desc&status=approved&limit=50'
+        . '&begin_date=' . rawurlencode($begin)
+        . '&end_date=' . rawurlencode($end);
+
+    $ch = curl_init($endpoint);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $accessToken,
+            'Content-Type: application/json',
+        ],
+        CURLOPT_TIMEOUT => 20,
+    ]);
+    $response = curl_exec($ch);
+    $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    if ($response === false || $httpCode < 200 || $httpCode >= 300) {
+        return null;
+    }
+
+    $data = json_decode((string)$response, true);
+    if (!is_array($data) || !is_array($data['results'] ?? null)) {
+        return null;
+    }
+
+    foreach ($data['results'] as $payment) {
+        if (!is_array($payment)) {
+            continue;
+        }
+        $pid = (string)($payment['id'] ?? '');
+        if ($pid === '') {
+            continue;
+        }
+        $method = strtolower((string)($payment['payment_method_id'] ?? ''));
+        if ($method !== 'pix') {
+            continue;
+        }
+        $status = strtolower((string)($payment['status'] ?? ''));
+        if ($status !== 'approved') {
+            continue;
+        }
+        $pAmount = (float)($payment['transaction_amount'] ?? 0);
+        if (abs($pAmount - $amount) > 0.00001) {
+            continue;
+        }
+
+        $exists = $db->query(
+            'SELECT `id` FROM `ravyn_donate_orders` WHERE `payment_id` = ' . $db->quote($pid)
+            . ' AND `id` != ' . (int)$order['id'] . ' LIMIT 1'
+        )->fetch();
+        if ($exists) {
+            continue;
+        }
+
+        return [
+            'payment_id' => $pid,
+            'payment_status' => $status,
+        ];
+    }
+
+    return null;
 }
 
 function ravynDonateTermsBullets(): array
