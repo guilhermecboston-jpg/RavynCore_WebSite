@@ -111,51 +111,33 @@ if (file_exists(BASE . 'config.local.php') && !defined('MYAAC_INSTALL')) {
 }
 
 if (!IS_CLI) {
-    $configuredPublicUrl = '';
-    if (!empty($config['public_url'])) {
-        $configuredPublicUrl = trim((string)$config['public_url']);
-    } elseif (!empty($config['payment_public_url'])) {
-        $configuredPublicUrl = trim((string)$config['payment_public_url']);
-    }
-
-    if ($configuredPublicUrl !== '') {
-        $configuredPublicUrl = rtrim($configuredPublicUrl, '/') . '/';
-        $parsed = parse_url($configuredPublicUrl);
-        $scheme = $parsed['scheme'] ?? 'http';
-        $host = $parsed['host'] ?? ($_SERVER['HTTP_HOST'] ?? '127.0.0.1');
-        $port = isset($parsed['port']) ? ':' . (int)$parsed['port'] : '';
-        define('SERVER_URL', $scheme . '://' . $host . $port);
-        define('BASE_URL', $configuredPublicUrl);
-        define('ADMIN_URL', rtrim($configuredPublicUrl, '/') . '/admin/');
+    if (isset($_SERVER['HTTP_HOST'][0])) {
+        $baseHost = $_SERVER['HTTP_HOST'];
     } else {
-        if (isset($_SERVER['HTTP_HOST'][0])) {
-            $baseHost = $_SERVER['HTTP_HOST'];
+        if (isset($_SERVER['SERVER_NAME'][0])) {
+            $baseHost = $_SERVER['SERVER_NAME'];
         } else {
-            if (isset($_SERVER['SERVER_NAME'][0])) {
-                $baseHost = $_SERVER['SERVER_NAME'];
-            } else {
-                $baseHost = $_SERVER['SERVER_ADDR'];
-            }
+            $baseHost = $_SERVER['SERVER_ADDR'];
         }
-
-        $isHttps = false;
-        if (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off') {
-            $isHttps = true;
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower((string)$_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') {
-            $isHttps = true;
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower((string)$_SERVER['HTTP_X_FORWARDED_SSL']) === 'on') {
-            $isHttps = true;
-        } elseif ((int)($_SERVER['SERVER_PORT'] ?? 0) === 443) {
-            $isHttps = true;
-        }
-        if (isset($config['force_https_urls']) && $config['force_https_urls']) {
-            $isHttps = true;
-        }
-
-        define('SERVER_URL', ($isHttps ? 'https' : 'http') . '://' . $baseHost);
-        define('BASE_URL', SERVER_URL . BASE_DIR . '/');
-        define('ADMIN_URL', SERVER_URL . BASE_DIR . '/admin/');
     }
+
+    $isHttps = false;
+    if (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off') {
+        $isHttps = true;
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower((string)$_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https') {
+        $isHttps = true;
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower((string)$_SERVER['HTTP_X_FORWARDED_SSL']) === 'on') {
+        $isHttps = true;
+    } elseif ((int)($_SERVER['SERVER_PORT'] ?? 0) === 443) {
+        $isHttps = true;
+    }
+    if (isset($config['force_https_urls']) && $config['force_https_urls']) {
+        $isHttps = true;
+    }
+
+    define('SERVER_URL', ($isHttps ? 'https' : 'http') . '://' . $baseHost);
+    define('BASE_URL', SERVER_URL . BASE_DIR . '/');
+    define('ADMIN_URL', SERVER_URL . BASE_DIR . '/admin/');
 
     //define('CURRENT_URL', BASE_URL . $_SERVER['REQUEST_URI']);
 
