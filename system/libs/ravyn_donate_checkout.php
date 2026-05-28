@@ -195,6 +195,31 @@ function ravynDonateStripeEnabled(): bool
     return ravynDonateStripeSecretKey() !== '';
 }
 
+/**
+ * Exibir card Stripe na página donate (independente de secretKey configurada).
+ */
+function ravynDonateStripeVisible(): bool
+{
+    global $config;
+
+    require_once PLUGINS . 'ravyn_donate/config.php';
+    if (!($config['ravynDonate']['stripe_visible'] ?? true)) {
+        return false;
+    }
+
+    if (!file_exists(PLUGINS . 'stripe/config.php')) {
+        return false;
+    }
+
+    require_once PLUGINS . 'stripe/config.php';
+
+    if (array_key_exists('enabled', $config['stripe'] ?? []) && !($config['stripe']['enabled'])) {
+        return false;
+    }
+
+    return true;
+}
+
 function ravynDonatePixConfig(): array
 {
     global $config;

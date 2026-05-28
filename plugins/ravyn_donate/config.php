@@ -6,6 +6,7 @@ defined('MYAAC') or die('Direct access not allowed!');
 
 $ravynDonateDefaults = [
     'terms_version' => '2026-05-27',
+    'stripe_visible' => true,
     'pix' => [
         'enabled' => true,
         'mercadopago_key' => 'b63bc149-403d-4a76-b836-5ed34ef8ec84',

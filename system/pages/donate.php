@@ -13,10 +13,7 @@ if (file_exists(PLUGINS . 'mercadopago/config.php')) {
     $hasMercadoPago = (bool)($config['mercadoPago']['enabled'] ?? false) && ravynDonateMercadoPagoAccessToken() !== '';
 }
 
-if (file_exists(PLUGINS . 'stripe/config.php')) {
-    require_once PLUGINS . 'stripe/config.php';
-    $hasStripe = (bool)($config['stripe']['enabled'] ?? false);
-}
+$hasStripe = ravynDonateStripeVisible();
 $stripeReady = ravynDonateStripeEnabled();
 
 ravynDonateSyncGatewayPackages();
