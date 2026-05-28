@@ -46,7 +46,7 @@ function ravynDonateEnsureSchema($db): void
         `terms_user_agent` VARCHAR(255) DEFAULT NULL,
         `status` ENUM('pending','redirected','paid','failed','cancelled') NOT NULL DEFAULT 'pending',
         `gateway_ref` TEXT DEFAULT NULL,
-        `payment_id` VARCHAR(64) DEFAULT NULL,
+        `payment_id` VARCHAR(255) DEFAULT NULL,
         `payment_status` VARCHAR(32) DEFAULT NULL,
         `delivered` TINYINT(1) NOT NULL DEFAULT 0,
         `request_log` MEDIUMTEXT NULL,
@@ -72,6 +72,8 @@ function ravynDonateMigrateSchema($db): void
         if (!$db->hasColumn('ravyn_donate_orders', 'payment_status')) {
             $db->exec('ALTER TABLE `ravyn_donate_orders` ADD `payment_status` VARCHAR(32) NULL DEFAULT NULL AFTER `payment_id`');
         }
+        // Stripe session id (cs_live_...) excede VARCHAR(64)
+        $db->exec('ALTER TABLE `ravyn_donate_orders` MODIFY `payment_id` VARCHAR(255) NULL DEFAULT NULL');
     } catch (Throwable $e) {
         log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' migrate: ' . $e->getMessage());
     }

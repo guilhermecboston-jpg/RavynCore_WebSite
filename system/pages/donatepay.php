@@ -182,11 +182,17 @@ if (!$checkoutUrl) {
     return;
 }
 
-$paymentIdSql = $stripeSessionId !== '' ? $db->quote($stripeSessionId) : 'NULL';
-$db->exec(
-    'UPDATE `ravyn_donate_orders` SET `status` = \'redirected\', `gateway_ref` = '
-    . $db->quote($checkoutUrl) . ', `payment_id` = ' . $paymentIdSql
-    . ' WHERE `id` = ' . (int)$order['id']
-);
+try {
+    $paymentIdSql = $stripeSessionId !== '' ? $db->quote($stripeSessionId) : 'NULL';
+    $db->exec(
+        'UPDATE `ravyn_donate_orders` SET `status` = \'redirected\', `gateway_ref` = '
+        . $db->quote($checkoutUrl) . ', `payment_id` = ' . $paymentIdSql
+        . ' WHERE `id` = ' . (int)$order['id']
+    );
+} catch (Throwable $e) {
+    log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' donatepay update: ' . $e->getMessage());
+    ravynDonateBackBox('Donatepay', 'Erro ao salvar pedido. Execute no servidor: mysql ... < deploy/migrate-donate-payment-id.sql');
+    return;
+}
 
 ravynDonateRedirectTo($checkoutUrl);
