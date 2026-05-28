@@ -1,0 +1,8 @@
+<?php
+/**
+ * Copie para config/ravyncore.stripe.local.php (não vai no git).
+ * Stripe Dashboard → Webhooks → Reveal signing secret
+ */
+defined('MYAAC') or die('Direct access not allowed!');
+
+$config['stripe']['webhookSecret']['production'] = 'whsec_COLE_DO_DASHBOARD';

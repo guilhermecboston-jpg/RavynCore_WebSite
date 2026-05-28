@@ -1,5 +1,6 @@
 .env
 config.local.php
+config/ravyncore.stripe.local.php
 node_modules/
 vendor/
 storage/logs/*

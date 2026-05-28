@@ -114,6 +114,10 @@ if (file_exists(BASE . 'config/ravyncore.stripe.php') && !defined('MYAAC_INSTALL
     require BASE . 'config/ravyncore.stripe.php';
 }
 
+if (file_exists(BASE . 'config/ravyncore.stripe.local.php') && !defined('MYAAC_INSTALL')) {
+    require BASE . 'config/ravyncore.stripe.local.php';
+}
+
 if (!IS_CLI) {
     if (isset($_SERVER['HTTP_HOST'][0])) {
         $baseHost = $_SERVER['HTTP_HOST'];

@@ -40,6 +40,8 @@ if ($wh === '') {
     echo "  → php deploy/set-stripe-webhook-secret.php whsec_...  (Stripe → Webhooks → Reveal secret)\n";
 } elseif (!str_starts_with($wh, 'whsec_')) {
     echo "webhookSecret[production]: inválido (deve começar com whsec_, não sk_)\n";
+} elseif (strlen($wh) < 32 || preg_match('/(COLE|AQUI|VALOR_REAL|EXEMPLO)/i', $wh)) {
+    echo "webhookSecret[production]: placeholder inválido — use o whsec_ real do Dashboard\n";
 } else {
     echo "webhookSecret[production]: " . mask_key($wh) . " ok\n";
 }

@@ -54,7 +54,16 @@ Copie o **Signing secret** (`whsec_...`) e grave no VPS:
 php deploy/set-stripe-webhook-secret.php whsec_VALOR_REAL_DO_DASHBOARD
 ```
 
-(Não use `whsec_COLE_AQUI...` — só o secret revelado no Stripe.)
+Grava em `config/ravyncore.stripe.local.php` (não é apagado no `git pull`).
+
+Nginx (evita HTTP 301 no webhook):
+
+```bash
+sudo cp /var/www/html/deploy/nginx/sites-available/ravyncore /etc/nginx/sites-available/ravyncore
+sudo nginx -t && sudo systemctl reload nginx
+curl -s -o /dev/null -w "%{http_code}\n" https://ravyncore.com/webhook/stripe
+# esperado: 400 (GET sem assinatura Stripe) — não 301
+```
 
 ## 3. Deploy
 
