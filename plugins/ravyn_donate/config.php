@@ -9,13 +9,14 @@ $ravynDonateDefaults = [
     'pix' => [
         'enabled' => true,
         'mercadopago_key' => 'b63bc149-403d-4a76-b836-5ed34ef8ec84',
-        'qr_image' => 'images/payments/qr-code10.png',
+        'qr_image' => 'images/payments/qr-code001.png',
         'timeout_seconds' => 600,
         'final_delay_seconds' => 10,
         // Fallback estático (se API MP falhar) — idealmente um BR Code por valor
-        'static_copy_paste' => '00020101021126330014br.gov.bcb.pix011142247700837520400005303986540510.005802BR5925GUILHERME COSTA FERREIRA 6009SAO PAULO622905251KSQ3511Y9Y978VTFEJBQ6MNW63047710',
+        'static_copy_paste' => '00020101021126330014br.gov.bcb.pix01114224770083752040000530398654040.015802BR5925GUILHERME COSTA FERREIRA 6009SAO PAULO622905251KSQ3W6M2W11DTW08YPVQG9EW63049B4B',
     ],
     'packages' => [
+        'pack_1000_test' => ['coins' => 1000, 'brl' => 0.01, 'label' => '1.000 Coins (Teste R$ 0,01)', 'popular' => true],
         'pack_100' => ['coins' => 100, 'brl' => 10, 'label' => '100 Coins', 'popular' => false],
         'pack_1000' => ['coins' => 1000, 'brl' => 100, 'label' => '1.000 Coins', 'popular' => false],
         'pack_3150' => ['coins' => 3150, 'brl' => 300, 'label' => '3.150 Coins', 'popular' => true],
