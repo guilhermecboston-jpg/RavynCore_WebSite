@@ -158,7 +158,8 @@
   async function pollPixStatus(statusUrl) {
     if (!statusUrl) return;
     try {
-      const res = await fetch(statusUrl, {
+      const pollUrl = statusUrl + (statusUrl.indexOf('?') >= 0 ? '&' : '?') + '_ts=' + Date.now();
+      const res = await fetch(pollUrl, {
         credentials: 'same-origin',
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
         cache: 'no-store',

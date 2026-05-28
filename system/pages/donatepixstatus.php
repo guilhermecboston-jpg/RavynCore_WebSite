@@ -8,6 +8,10 @@ if (!$logged) {
     ravynDonateJsonResponse(['ok' => false, 'error' => 'Login necessário.'], 401);
 }
 
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 $orderRef = trim((string)($_GET['order'] ?? ''));
 if ($orderRef === '') {
     ravynDonateJsonResponse(['ok' => false, 'error' => 'Pedido não informado.'], 400);
