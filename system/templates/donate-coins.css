@@ -527,6 +527,17 @@
   font-size: 12px;
 }
 
+.rd-pix-modal.rd-pix-approved .rd-pix-status-box {
+  border-color: #3ecf7a;
+  box-shadow: 0 0 24px rgba(62, 207, 122, 0.25);
+  background: linear-gradient(135deg, rgba(20, 52, 36, 0.9), rgba(16, 28, 48, 0.92));
+}
+
+.rd-pix-modal.rd-pix-approved .rd-pix-status-title {
+  color: #7dffb0;
+  font-size: 1.15rem;
+}
+
 .rd-pix-modal-code-wrap span {
   display: block;
   margin-bottom: 6px;

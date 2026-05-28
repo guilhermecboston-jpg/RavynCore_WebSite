@@ -362,6 +362,27 @@ function ravynDonatePixUiState(string $paymentStatus, string $orderStatus): stri
     return 'pending';
 }
 
+function ravynDonateOrderLoyaltyPoints(array $order): int
+{
+    global $config;
+
+    $amountBrl = (float)($order['amount_brl'] ?? 0);
+    if ($amountBrl <= 0) {
+        return 0;
+    }
+
+    if (isset($config['ravyn_loyalty_donation_enabled']) && $config['ravyn_loyalty_donation_enabled'] === false) {
+        return 0;
+    }
+
+    $perReal = 1;
+    if (isset($config['ravyn_loyalty_points_per_real']) && (int)$config['ravyn_loyalty_points_per_real'] > 0) {
+        $perReal = (int)$config['ravyn_loyalty_points_per_real'];
+    }
+
+    return (int)floor($amountBrl * $perReal);
+}
+
 function ravynDonateSyncPixOrderStatus($db, array $order): array
 {
     $pixCfg = ravynDonatePixConfig();
@@ -426,7 +447,8 @@ function ravynDonateSyncPixOrderStatus($db, array $order): array
     $expiresAt = $createdAt + $timeoutSeconds;
     $remaining = max(0, $expiresAt - time());
 
-    if ($remaining <= 0 && in_array(strtolower($orderStatus), ['pending', 'redirected'], true)) {
+    $deliveredFlag = (int)($order['delivered'] ?? 0);
+    if ($remaining <= 0 && $deliveredFlag !== 1 && in_array(strtolower($orderStatus), ['pending', 'redirected'], true)) {
         $orderStatus = 'cancelled';
         $paymentStatus = $paymentStatus !== '' ? $paymentStatus : 'cancelled';
         $db->exec(
@@ -435,11 +457,35 @@ function ravynDonateSyncPixOrderStatus($db, array $order): array
         );
     }
 
+    $fresh = ravynDonateGetOrderByRef($db, (string)$order['order_ref']);
+    if (is_array($fresh)) {
+        $order = $fresh;
+        $orderStatus = strtolower((string)($order['status'] ?? $orderStatus));
+        $paymentStatus = strtolower((string)($order['payment_status'] ?? $paymentStatus));
+        $deliveredFlag = (int)($order['delivered'] ?? 0);
+    }
+
+    if ($deliveredFlag === 1) {
+        $orderStatus = 'paid';
+        if ($paymentStatus === '' || $paymentStatus === 'pending') {
+            $paymentStatus = 'approved';
+        }
+    }
+
+    $uiState = ravynDonatePixUiState((string)$paymentStatus, (string)$orderStatus);
+    if ($deliveredFlag === 1) {
+        $uiState = 'approved';
+    }
+
     return [
         'order_status' => strtolower($orderStatus),
         'payment_status' => strtolower((string)$paymentStatus),
         'remaining_seconds' => $remaining,
-        'ui_state' => ravynDonatePixUiState((string)$paymentStatus, (string)$orderStatus),
+        'ui_state' => $uiState,
+        'delivered' => $deliveredFlag,
+        'coins' => (int)($order['coins'] ?? 0),
+        'loyalty_points' => ravynDonateOrderLoyaltyPoints($order),
+        'amount_brl' => (float)($order['amount_brl'] ?? 0),
         'redirect_delay_seconds' => max(5, (int)($pixCfg['final_delay_seconds'] ?? 10)),
     ];
 }

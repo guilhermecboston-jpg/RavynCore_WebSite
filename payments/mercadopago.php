@@ -83,6 +83,16 @@ if (strpos($externalReference, 'RD-') === 0) {
 	require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
 	$order = ravynDonateGetOrderByRef($db, $externalReference);
 	if ($order) {
+		try {
+			$db->exec(
+				'UPDATE `ravyn_donate_orders` SET `payment_id` = ' . $db->quote($paymentId)
+				. ', `payment_status` = ' . $db->quote($paymentStatus)
+				. ' WHERE `id` = ' . (int)$order['id']
+			);
+		} catch (Throwable $e) {
+			log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' webhook pix update: ' . $e->getMessage());
+		}
+		$order = ravynDonateGetOrderByRef($db, $externalReference) ?: $order;
 		ravynDonateDeliverOrder($db, $order, $paymentId, $paymentStatus, 'mercadopago');
 	}
 	http_response_code(200);

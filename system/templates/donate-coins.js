@@ -76,6 +76,7 @@
 
   let pixPollTimer = null;
   let pixFinalTimer = null;
+  let pixModalData = { coins: 0, loyalty_points: 0 };
 
   function stopPixTimers() {
     if (pixPollTimer) {
@@ -113,19 +114,45 @@
     }, 1000);
   }
 
+  function formatPixNumber(value) {
+    const n = Number(value || 0);
+    return n.toLocaleString('pt-BR');
+  }
+
+  function setPixApprovedLayout(enabled) {
+    if (!pixModal) return;
+    pixModal.classList.toggle('rd-pix-approved', !!enabled);
+    const qrWrap = document.querySelector('.rd-pix-modal-qr-wrap');
+    const codeWrap = document.querySelector('.rd-pix-modal-code-wrap');
+    const hint = document.querySelector('.rd-pix-modal-hint');
+    if (qrWrap) qrWrap.hidden = !!enabled;
+    if (codeWrap) codeWrap.hidden = !!enabled;
+    if (hint) hint.hidden = !!enabled;
+  }
+
   function applyPixState(payload) {
     const uiState = String(payload.ui_state || 'pending');
     const delaySeconds = Number(payload.redirect_delay_seconds || 10);
+    if (payload.coins != null) {
+      pixModalData.coins = Number(payload.coins);
+    }
+    if (payload.loyalty_points != null) {
+      pixModalData.loyalty_points = Number(payload.loyalty_points);
+    }
     if (uiState === 'approved') {
+      const coins = formatPixNumber(pixModalData.coins);
+      const loyalty = formatPixNumber(pixModalData.loyalty_points);
+      setPixApprovedLayout(true);
       setPixStatus(
         '✅',
-        'Pagamento Aprovado',
-        'Seus RavynCore Coins estarão disponíveis em sua account.'
+        'Pagamento APROVADO!',
+        'Obrigado! Adicionado em sua account: ' + coins + ' RavynCore Coins e ' + loyalty + ' Loyalty Points.'
       );
       stopPixTimers();
       startFinalRedirect(delaySeconds, payload.account_manage_url || '/?account/manage');
       return;
     }
+    setPixApprovedLayout(false);
     if (uiState === 'rejected') {
       setPixStatus(
         '❌',
@@ -179,12 +206,14 @@
     pollPixStatus(statusUrl);
     pixPollTimer = setInterval(() => {
       pollPixStatus(statusUrl);
-    }, 5000);
+    }, 3000);
   }
 
   function openPixModal(data) {
+    pixModalData.coins = Number(data.coins || 0);
+    pixModalData.loyalty_points = Number(data.loyalty_points || 0);
     document.getElementById('rdPixOrderRef').textContent = data.order_ref || '—';
-    document.getElementById('rdPixCoins').textContent = data.coins != null ? String(data.coins) : '—';
+    document.getElementById('rdPixCoins').textContent = data.coins != null ? formatPixNumber(data.coins) : '—';
     document.getElementById('rdPixAmount').textContent = data.amount_label || '—';
 
     const qrImg = document.getElementById('rdPixQrImg');
@@ -198,6 +227,7 @@
 
     document.getElementById('rdPixCodeText').value = data.qr_code || '';
 
+    setPixApprovedLayout(false);
     pixModal.hidden = false;
     pixModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -207,6 +237,7 @@
 
   function closePixModal() {
     stopPixTimers();
+    setPixApprovedLayout(false);
     pixModal.hidden = true;
     pixModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';

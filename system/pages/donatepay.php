@@ -150,7 +150,8 @@ if ($gateway === 'pix') {
         'qr_code_base64' => (string)($pixData['qr_code_base64'] ?? ''),
         'qr_image' => (string)($pixData['qr_image'] ?? 'images/payments/pix-qrcode-mercadopago.png'),
         'payment_status' => (string)($pixData['status'] ?? 'pending'),
-        'status_url' => getLink('donatepixstatus') . '&order=' . urlencode((string)$order['order_ref']),
+        'status_url' => BASE_URL . '?subtopic=donatepixstatus&order=' . urlencode((string)$order['order_ref']),
+        'loyalty_points' => ravynDonateOrderLoyaltyPoints($order),
     ]);
 }
 
