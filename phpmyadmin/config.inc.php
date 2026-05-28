@@ -11,8 +11,11 @@ $cfg['Servers'][$i]['host'] = 'localhost';
 $cfg['Servers'][$i]['port'] = '3306';
 $cfg['Servers'][$i]['auth_type'] = 'cookie';
 $cfg['Servers'][$i]['AllowNoPassword'] = false;
+$cfg['Servers'][$i]['extension'] = 'mysqli';
 $cfg['Servers'][$i]['compress'] = false;
 
 $cfg['LoginCookieValidity'] = 3600;
+$cfg['LoginCookieStore'] = 0;
+$cfg['ForceSSL'] = true;
 $cfg['ShowPhpInfo'] = true;
 $cfg['SendErrorReports'] = 'never';
