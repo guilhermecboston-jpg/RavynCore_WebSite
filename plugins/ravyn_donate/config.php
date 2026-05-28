@@ -13,7 +13,7 @@ $ravynDonateDefaults = [
         'timeout_seconds' => 600,
         'final_delay_seconds' => 10,
         // Fallback estático (se API MP falhar) — idealmente um BR Code por valor
-        'static_copy_paste' => '00020101021126330014br.gov.bcb.pix01114224770083752040000530398654040.015802BR5925GUILHERME COSTA FERREIRA 6009SAO PAULO622905251KSQ3W6M2W11DTW08YPVQG9EW63049B4B',
+        'static_copy_paste' => '00020126580014br.gov.bcb.pix0136b63bc149-403d-4a76-b836-5ed34ef8ec8452040000530398654040.015802BR5924Guilherme Costa Ferreira6009Sao Paulo62240520daqr3426207160375087630480A3',
     ],
     'packages' => [
         'pack_1000_test' => ['coins' => 1000, 'brl' => 0.01, 'label' => '1.000 Coins (Teste R$ 0,01)', 'popular' => true],
