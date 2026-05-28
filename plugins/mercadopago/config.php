@@ -22,6 +22,8 @@ $mercadoPagoDefaults = [
 		'sandbox' => '',
 	],
 	'urlRedirect' => '?subtopic=donate&action=final',
+	// pro = Checkout Pro (redirect mercadopago.com.br). pix_api = gera PIX na API e mostra QR no site.
+	'checkoutMode' => 'pro',
 	'productName' => 'My Coins',
 	'doubleCoins' => false,
 	'doubleCoinsStart' => 300,

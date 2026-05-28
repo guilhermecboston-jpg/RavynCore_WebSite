@@ -990,21 +990,13 @@ function ravynDonateCreateMercadoPagoCheckout(array $order, ?string &$error = nu
     if (!function_exists('ravynPublicBaseUrl')) {
         require_once SYSTEM . 'functions.php';
     }
-    $baseUrl = rtrim(ravynPublicBaseUrl(), '/') . '/';
+    $baseUrl = ravynPublicBaseUrl();
     $redirectPath = $config['mercadoPago']['urlRedirect'] ?? '?subtopic=donate&action=final';
-    $successUrl = ravynDonateAppendQueryParams(
+    $redirectUrl = ravynDonateAppendQueryParams(
         $baseUrl . ltrim($redirectPath, '/'),
         ['gateway' => 'mercadopago', 'order' => (string)$order['order_ref']]
     );
-    $failureUrl = ravynDonateAppendQueryParams(
-        $baseUrl . ltrim('?subtopic=donate', '/'),
-        ['order' => (string)$order['order_ref']]
-    );
-    $pendingUrl = ravynDonateAppendQueryParams(
-        $baseUrl . ltrim($redirectPath, '/'),
-        ['gateway' => 'mercadopago', 'order' => (string)$order['order_ref'], 'status' => 'pending']
-    );
-    $notificationUrl = $baseUrl . 'payments/mercadopago.php';
+    $notificationUrl = rtrim($baseUrl, '/') . '/payments/mercadopago.php';
 
     $amount = round((float)$order['amount_brl'], 2);
     if ($amount < 0.5) {
@@ -1013,38 +1005,33 @@ function ravynDonateCreateMercadoPagoCheckout(array $order, ?string &$error = nu
     }
 
     $desc = (int)$order['coins'] . ' RavynCore Coins';
+    // Payload alinhado a mercadopagodonate.php (sem payer: o MP coleta dados do comprador logado).
     $payload = [
         'items' => [[
             'id' => (string)$order['package_id'],
             'title' => $desc,
-            'description' => 'RavynCore Donate ' . (string)$order['order_ref'],
-            'category_id' => 'others',
+            'description' => 'Donate: ' . $desc,
             'quantity' => 1,
             'currency_id' => 'BRL',
             'unit_price' => $amount,
         ]],
         'external_reference' => (string)$order['order_ref'],
-        'statement_descriptor' => 'RAVYNCORE',
-        'payer' => ravynDonateBuildMercadoPagoPayer($order, true),
+        'notification_url' => $notificationUrl,
         'back_urls' => [
-            'success' => $successUrl,
-            'pending' => $pendingUrl,
-            'failure' => $failureUrl,
+            'success' => $redirectUrl,
+            'pending' => $redirectUrl,
+            'failure' => $redirectUrl,
         ],
         'metadata' => [
             'order_ref' => (string)$order['order_ref'],
             'code' => (string)$order['package_id'],
             'account_id' => (string)$order['account_id'],
         ],
-        'expires' => true,
-        'expiration_date_from' => gmdate('Y-m-d\TH:i:s.000\Z'),
-        'expiration_date_to' => gmdate('Y-m-d\TH:i:s.000\Z', time() + 86400),
     ];
 
-    $httpsOk = stripos($successUrl, 'https://') === 0 && stripos($notificationUrl, 'https://') === 0;
+    $httpsOk = stripos($redirectUrl, 'https://') === 0 && stripos($notificationUrl, 'https://') === 0;
     if ($httpsOk) {
-        $payload['notification_url'] = $notificationUrl;
-        // auto_return desativado: com URLs complexas o MP deixa "Pagar"/"Criar Pix" cinza
+        $payload['auto_return'] = 'approved';
     } else {
         log_append(
             'ravyn_donate_errors.log',
@@ -1059,13 +1046,19 @@ function ravynDonateCreateMercadoPagoCheckout(array $order, ?string &$error = nu
     if ($maxInstallments > 0) {
         $payload['payment_methods'] = [
             'installments' => min($maxInstallments, 24),
-            'default_installments' => 1,
         ];
         $excludedTypes = $pmConfig['excludedPaymentTypes'] ?? [];
         if (is_array($excludedTypes) && $excludedTypes !== []) {
             $payload['payment_methods']['excluded_payment_types'] = array_map(
                 static fn($id) => ['id' => (string)$id],
                 $excludedTypes
+            );
+        }
+        $excludedMethods = $pmConfig['excludedPaymentMethods'] ?? [];
+        if (is_array($excludedMethods) && $excludedMethods !== []) {
+            $payload['payment_methods']['excluded_payment_methods'] = array_map(
+                static fn($id) => ['id' => (string)$id],
+                $excludedMethods
             );
         }
     }

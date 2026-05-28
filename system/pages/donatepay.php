@@ -171,6 +171,48 @@ $checkoutUrl = null;
 $gatewayError = '';
 $stripeSessionId = '';
 if ($gateway === 'mercadopago') {
+    $mpMode = strtolower((string)($config['mercadoPago']['checkoutMode'] ?? 'pro'));
+    if ($mpMode === 'pix_api') {
+        if (!ravynDonatePixEnabled()) {
+            ravynDonateBackBox('Donatepay', 'PIX via API não está habilitado.');
+            return;
+        }
+        $pixError = '';
+        $pixData = ravynDonateCreateMercadoPagoPix($order, $pixError);
+        if (!$pixData || empty($pixData['payment_id']) || empty($pixData['qr_code'])) {
+            ravynDonateBackBox('Donatepay', $pixError !== '' ? $pixError : 'Não foi possível gerar o PIX.');
+            return;
+        }
+        try {
+            $db->exec(
+                'UPDATE `ravyn_donate_orders` SET `status` = \'pending\', `payment_id` = '
+                . $db->quote((string)$pixData['payment_id']) . ', `gateway_ref` = '
+                . $db->quote((string)$pixData['qr_code']) . ', `payment_status` = '
+                . $db->quote((string)($pixData['status'] ?? 'pending'))
+                . ' WHERE `id` = ' . (int)$order['id']
+            );
+        } catch (Throwable $e) {
+            log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' donatepay MP pix: ' . $e->getMessage());
+            ravynDonateBackBox('Donatepay', 'Erro ao salvar dados do PIX.');
+            return;
+        }
+        ravynDonateJsonResponse([
+            'ok' => true,
+            'type' => 'pix',
+            'order_ref' => $order['order_ref'],
+            'coins' => (int)$order['coins'],
+            'amount_brl' => (float)$order['amount_brl'],
+            'amount_label' => 'R$ ' . number_format((float)$order['amount_brl'], 2, ',', '.'),
+            'qr_code' => (string)$pixData['qr_code'],
+            'qr_code_base64' => (string)($pixData['qr_code_base64'] ?? ''),
+            'qr_image' => (string)($pixData['qr_image'] ?? 'images/payments/pix-qrcode-mercadopago.png'),
+            'payment_status' => (string)($pixData['status'] ?? 'pending'),
+            'status_url' => BASE_URL . '?subtopic=donatepixstatus&order=' . urlencode((string)$order['order_ref']),
+            'loyalty_points' => ravynDonateOrderLoyaltyPoints($order),
+            'success_display_seconds' => max(8, (int)(ravynDonatePixConfig()['success_display_seconds'] ?? 12)),
+            'redirect_delay_seconds' => max(8, (int)(ravynDonatePixConfig()['final_delay_seconds'] ?? 15)),
+        ]);
+    }
     $checkoutUrl = ravynDonateCreateMercadoPagoCheckout($order, $gatewayError);
 } else {
     $checkoutUrl = ravynDonateCreateStripeCheckout($order, $gatewayError, $stripeSessionId);
