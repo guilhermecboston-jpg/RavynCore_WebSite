@@ -22,6 +22,6 @@ $config['payment_public_url'] = 'https://ravyncore.com/';
 $config['force_https_urls'] = true;
 
 $config['mercadoPago']['enabled'] = true;
-$config['mercadoPago']['environment'] = getenv('MP_ENV') ?: 'production';
-$config['mercadoPago']['accessToken']['production'] = getenv('MP_ACCESS_TOKEN') ?: '';
-$config['mercadoPago']['accessToken']['sandbox'] = getenv('MP_ACCESS_TOKEN_SANDBOX') ?: '';
+$config['mercadoPago']['environment'] = 'production';
+$config['mercadoPago']['accessToken']['production'] = 'APP_USR-7756247734214510-052511-9d6f6c6cbb05a2a7bbf62f477e231ecf-3425963154';
+$config['mercadoPago']['accessToken']['sandbox'] = '';
