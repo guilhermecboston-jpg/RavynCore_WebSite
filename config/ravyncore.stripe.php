@@ -27,6 +27,7 @@ $config['stripe']['publishableKey']['production'] = ravyncore_cfg_b64(
     'cGtfbGl2ZV81MVRTQUM5QzE1elZiUG0xa0pFQkxsRzlPd3JBTWVFV0R5YmhvdGJYcVVzMUdZM3FWZWtORjRKck83Z21ZQWxLRzhLbUdEQldPeEJpNFJ1R1FYQVdKSWd2WjAwSFFLSGdPWUk='
 );
 $config['stripe']['publishableKey']['sandbox'] = '';
-// Cole whsec_ do Stripe Dashboard → Webhooks → Reveal secret (endpoint ravyncore.com/webhook/stripe)
-$config['stripe']['webhookSecret']['production'] = '';
+$config['stripe']['webhookSecret']['production'] = ravyncore_cfg_b64(
+    'd2hzZWNfVnBpQXU5a2hCSzRRdUhvaVpiNGoxNnpwUDFTV0lCMFQ='
+);
 $config['stripe']['webhookSecret']['sandbox'] = '';
