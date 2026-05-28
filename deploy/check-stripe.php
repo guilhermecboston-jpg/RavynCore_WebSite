@@ -14,6 +14,7 @@ $prod = trim((string)($stripe['secretKey']['production'] ?? ''));
 $sandbox = trim((string)($stripe['secretKey']['sandbox'] ?? ''));
 $active = ravynDonateStripeSecretKey();
 $problem = ravynDonateStripeSecretKeyProblem($active);
+$prefix = $active !== '' ? substr($active, 0, 8) : '(vazio)';
 
 function mask_key(string $key): string
 {
@@ -30,8 +31,11 @@ function mask_key(string $key): string
 echo "environment: {$env}\n";
 echo "secretKey[production]: " . mask_key($prod) . "\n";
 echo "secretKey[sandbox]:    " . mask_key($sandbox) . "\n";
-echo "chave usada pelo donate: " . mask_key($active) . "\n";
+echo "chave usada pelo donate: " . mask_key($active) . " prefixo={$prefix}\n";
 echo "ok: " . ($problem === '' ? 'SIM' : 'NÃO — ' . $problem) . "\n";
+
+$wh = trim((string)($stripe['webhookSecret']['production'] ?? ''));
+echo "webhookSecret[production]: " . ($wh === '' ? '(vazio — cole whsec_ do Stripe)' : mask_key($wh)) . "\n";
 
 $envVar = getenv('STRIPE_SECRET_KEY');
 if ($envVar !== false && $envVar !== '') {

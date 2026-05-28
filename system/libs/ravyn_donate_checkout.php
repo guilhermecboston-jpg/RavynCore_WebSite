@@ -160,6 +160,24 @@ function ravynDonateMercadoPagoAccessToken(): string
     return '';
 }
 
+function ravynDonateNormalizeStripeSecretKey(string $key): string
+{
+    $key = trim($key);
+    if ($key === '') {
+        return '';
+    }
+
+    $key = preg_replace('/^\xEF\xBB\xBF/', '', $key) ?? $key;
+    if (
+        (str_starts_with($key, '"') && str_ends_with($key, '"'))
+        || (str_starts_with($key, "'") && str_ends_with($key, "'"))
+    ) {
+        $key = substr($key, 1, -1);
+    }
+
+    return preg_replace('/\s+/', '', trim($key)) ?? trim($key);
+}
+
 function ravynDonateStripeSecretKey(): string
 {
     global $config;
@@ -177,10 +195,10 @@ function ravynDonateStripeSecretKey(): string
         $env = 'production';
     }
 
-    $key = trim((string)($stripe['secretKey'][$env] ?? ''));
+    $key = ravynDonateNormalizeStripeSecretKey((string)($stripe['secretKey'][$env] ?? ''));
     // Só usa production como fallback quando o ambiente ativo é sandbox e está vazio
     if ($key === '' && $env === 'sandbox') {
-        $key = trim((string)($stripe['secretKey']['production'] ?? ''));
+        $key = ravynDonateNormalizeStripeSecretKey((string)($stripe['secretKey']['production'] ?? ''));
     }
 
     return $key;
@@ -193,18 +211,24 @@ function ravynDonateStripeEnabled(): bool
 
 function ravynDonateStripeSecretKeyProblem(?string $key = null): string
 {
-    $key = trim($key ?? ravynDonateStripeSecretKey());
+    $key = ravynDonateNormalizeStripeSecretKey($key ?? ravynDonateStripeSecretKey());
     if ($key === '') {
         return 'Defina secretKey em config.local.php (Secret key sk_live_... no painel Stripe).';
     }
     if (str_starts_with($key, 'pk_')) {
         return 'Você colocou a Publishable key (pk_...) em secretKey. Use a Secret key (sk_live_...).';
     }
+    if (str_starts_with($key, 'whsec_')) {
+        return 'whsec_ é o Webhook signing secret. Coloque em webhookSecret, não em secretKey.';
+    }
     if (preg_match('/(AQUI|COLE_|SUA_CHAVE|\.\.\.)/i', $key)) {
         return 'secretKey ainda é texto de exemplo. Cole a Secret key real do Stripe Dashboard.';
     }
-    if (!preg_match('/^sk_(live|test)_[A-Za-z0-9]+$/', $key)) {
-        return 'secretKey inválida: deve começar com sk_live_ ou sk_test_ (sem espaços).';
+    if (!preg_match('/^sk_(live|test)_/', $key) && !preg_match('/^rk_(live|test)_/', $key)) {
+        return 'secretKey inválida: copie a Secret key (sk_live_...) em Developers → API keys.';
+    }
+    if (strlen($key) < 24) {
+        return 'secretKey incompleta (cópia truncada?). Cole a chave inteira do Stripe.';
     }
 
     return '';

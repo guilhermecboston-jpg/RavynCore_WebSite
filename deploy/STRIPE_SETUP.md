@@ -45,10 +45,10 @@ No [Stripe Workbench → Webhooks](https://dashboard.stripe.com/workbench/webhoo
 
 | Campo | Valor |
 |--------|--------|
-| Endpoint URL | `https://ravyncore.com/payments/stripe.php` |
+| Endpoint URL | `https://ravyncore.com/webhook/stripe` ou `https://ravyncore.com/payments/stripe.php` |
 | Eventos | `checkout.session.completed` |
 
-Copie o **Signing secret** (`whsec_...`) para `webhookSecret` no `config.local.php`.
+Copie o **Signing secret** (`whsec_...`) para `webhookSecret['production']` no `config.local.php` (não coloque `whsec_` em `secretKey`).
 
 ## 3. Deploy
 
