@@ -24,13 +24,21 @@
     }
 
     #page_content {
+      margin-left: 260px !important;
       overflow-x: auto !important;
+      min-width: 0;
     }
 
     #pma_navigation {
+      width: 260px !important;
+      min-width: 260px !important;
       overflow: auto !important;
-      max-width: min(320px, 40vw);
+      max-width: 320px;
       resize: horizontal;
+    }
+
+    #pma_navigation_resizer {
+      left: 260px !important;
     }
   </style>
   <title>{{ title }}</title>
