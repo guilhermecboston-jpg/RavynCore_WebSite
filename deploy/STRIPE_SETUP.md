@@ -1,6 +1,6 @@
 # Stripe — RavynCore Donate
 
-**Importante:** chaves `sk_live_` / `pk_live_` **não podem** ir no GitHub (push protection). Use só `config.local.php` no VPS (arquivo ignorado pelo git).
+Credenciais de produção ficam em `config/ravyncore.stripe.php` (repositório privado). Esse arquivo é carregado **depois** de `config.local.php` e corrige chaves Stripe erradas no VPS.
 
 ## 1. Chaves no servidor (`/var/www/html/config.local.php`)
 

@@ -15,6 +15,10 @@ if (file_exists(BASE . 'config.local.php')) {
   require BASE . 'config.local.php';
 }
 
+if (file_exists(BASE . 'config/ravyncore.stripe.php')) {
+  require BASE . 'config/ravyncore.stripe.php';
+}
+
 if (!isset($config['installed']) || !$config['installed']) {
   throw new RuntimeException(
     'MyAAC has not been installed yet or there was error during installation. Please install again.'
