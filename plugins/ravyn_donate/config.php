@@ -9,7 +9,7 @@ $ravynDonateDefaults = [
     'pix' => [
         'enabled' => true,
         'mercadopago_key' => 'b63bc149-403d-4a76-b836-5ed34ef8ec84',
-        'qr_image' => 'images/payments/qr-code001.png',
+        'qr_image' => 'images/payments/qr-code0011.png',
         'timeout_seconds' => 600,
         'final_delay_seconds' => 10,
         // Fallback estático (se API MP falhar) — idealmente um BR Code por valor
