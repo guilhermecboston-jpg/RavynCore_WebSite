@@ -1,24 +1,39 @@
 #!/bin/bash
 # Uso no VPS: bash deploy/server-git-pull.sh
+# Preserva config.local.php (credenciais) fora do controle do git.
 set -e
 cd /var/www/html
 
 BACKUP="/root/config.local.php.backup-$(date +%F-%H%M%S)"
+CONFIG_SAFE="/root/config.local.php.deploy-safe"
+
 if [ -f config.local.php ]; then
-  cp config.local.php "$BACKUP"
+  cp -a config.local.php "$BACKUP"
+  cp -a config.local.php "$CONFIG_SAFE"
   echo "Backup: $BACKUP"
 fi
 
-# Impede conflito: config.local.php fica só no servidor
-git update-index --assume-unchanged config.local.php 2>/dev/null || true
-git stash push -m "vps-config-local-$(date +%F)" -- config.local.php 2>/dev/null || true
+# Estado quebrado (stash pop / merge antigo em config.local.php)
+git merge --abort 2>/dev/null || true
+git rebase --abort 2>/dev/null || true
+git cherry-pick --abort 2>/dev/null || true
+git stash clear 2>/dev/null || true
 
-git pull origin main
+# Tira config.local do índice git (versões antigas ainda rastreavam o arquivo)
+git rm --cached -f config.local.php 2>/dev/null || true
 
-git stash pop 2>/dev/null || true
-git update-index --no-assume-unchanged config.local.php 2>/dev/null || true
+git fetch origin main
+git reset --hard origin/main
 
-# Aviso se Stripe estiver sem secretKey (não altera config.local.php automaticamente)
+# Restaura credenciais do servidor
+if [ -f "$CONFIG_SAFE" ]; then
+  cp -a "$CONFIG_SAFE" config.local.php
+  echo "config.local.php restaurado do servidor."
+elif [ -f "$BACKUP" ]; then
+  cp -a "$BACKUP" config.local.php
+  echo "config.local.php restaurado do backup."
+fi
+
 if [ -f config.local.php ] && ! grep -qE "secretKey.*production.*sk_(live|test)_" config.local.php; then
   echo "AVISO: Stripe secretKey não encontrada em config.local.php — veja deploy/STRIPE_SETUP.md"
 fi
@@ -26,4 +41,4 @@ fi
 php system/bin/clear_cache.php 2>/dev/null || true
 rm -rf system/cache/twig/* 2>/dev/null || true
 systemctl restart php8.2-fpm 2>/dev/null || true
-echo "Deploy concluído."
+echo "Deploy concluído. Commit: $(git rev-parse --short HEAD)"

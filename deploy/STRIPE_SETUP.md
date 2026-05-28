@@ -25,6 +25,13 @@ Pull seguro (preserva `config.local.php`):
 bash deploy/server-git-pull.sh
 ```
 
+Se o pull falhar com `config.local.php: needs merge`:
+
+```bash
+bash deploy/vps-unstick-git.sh
+bash deploy/server-git-pull.sh
+```
+
 ## 2. Webhook
 
 No [Stripe Workbench → Webhooks](https://dashboard.stripe.com/workbench/webhooks):
