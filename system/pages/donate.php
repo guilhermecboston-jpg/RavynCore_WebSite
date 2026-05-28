@@ -9,12 +9,12 @@ $hasStripe = false;
 
 if (file_exists(PLUGINS . 'mercadopago/config.php')) {
     require_once PLUGINS . 'mercadopago/config.php';
-    $hasMercadoPago = (bool)($config['mercadoPago']['enabled'] ?? false);
+    $hasMercadoPago = (bool)($config['mercadoPago']['enabled'] ?? false) && ravynDonateMercadoPagoAccessToken() !== '';
 }
 
 if (file_exists(PLUGINS . 'stripe/config.php')) {
     require_once PLUGINS . 'stripe/config.php';
-    $hasStripe = ($config['stripe']['enabled'] ?? false);
+    $hasStripe = ravynDonateStripeEnabled();
 }
 
 ravynDonateSyncGatewayPackages();
@@ -58,9 +58,54 @@ if (empty($action)) {
         'payment_base_url' => ravynPublicBaseUrl(),
     ]);
 } elseif ($action === 'final') {
-    $orderRef = $_GET['order'] ?? '';
+    $orderRef = trim((string)($_GET['order'] ?? ''));
+    $gateway = trim((string)($_GET['gateway'] ?? ''));
+    $sessionId = trim((string)($_GET['session_id'] ?? ''));
+
+    $order = null;
+    $coins = 0;
+    $loyaltyPoints = 0;
+    $uiState = 'processing';
+
+    if ($logged && $orderRef !== '' && strncmp($orderRef, 'RD-', 3) === 0) {
+        ravynDonateEnsureSchema($db);
+        $order = ravynDonateGetOrderByRef($db, $orderRef);
+        if ($order && (int)$order['account_id'] === (int)$account_logged->getId()) {
+            if ($gateway === 'stripe' || ($order['gateway'] ?? '') === 'stripe') {
+                $sync = ravynDonateSyncStripeOrderStatus($db, $order, $sessionId);
+            } elseif (($order['gateway'] ?? '') === 'pix') {
+                $sync = ravynDonateSyncPixOrderStatus($db, $order);
+            } else {
+                $sync = [
+                    'coins' => (int)$order['coins'],
+                    'loyalty_points' => ravynDonateOrderLoyaltyPoints($order),
+                    'ui_state' => (int)($order['delivered'] ?? 0) === 1 ? 'approved' : 'processing',
+                ];
+            }
+            $coins = (int)($sync['coins'] ?? 0);
+            $loyaltyPoints = (int)($sync['loyalty_points'] ?? 0);
+            $uiState = (string)($sync['ui_state'] ?? 'processing');
+            $order = ravynDonateGetOrderByRef($db, $orderRef) ?: $order;
+        }
+    }
+
+    $statusUrl = '';
+    if ($order && $gateway === 'stripe') {
+        $statusUrl = BASE_URL . '?subtopic=donatestripstatus&order=' . urlencode($orderRef);
+        if ($sessionId !== '') {
+            $statusUrl .= '&session_id=' . urlencode($sessionId);
+        }
+    }
+
     echo $twig->render('donate-final.html.twig', [
         'order_ref' => htmlspecialchars($orderRef, ENT_QUOTES, 'UTF-8'),
-        'gateway' => htmlspecialchars($_GET['gateway'] ?? '', ENT_QUOTES, 'UTF-8'),
+        'gateway' => htmlspecialchars($gateway, ENT_QUOTES, 'UTF-8'),
+        'session_id' => htmlspecialchars($sessionId, ENT_QUOTES, 'UTF-8'),
+        'status_url' => $statusUrl,
+        'ui_state' => $uiState,
+        'coins' => $coins,
+        'loyalty_points' => $loyaltyPoints,
+        'account_manage_url' => getLink('account/manage'),
+        'donate_url' => getLink('donate'),
     ]);
 }

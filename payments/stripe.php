@@ -74,6 +74,16 @@ if (strpos($clientRef, 'RD-') === 0) {
 	require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
 	$order = ravynDonateGetOrderByRef($db, $clientRef);
 	if ($order) {
+		try {
+			$db->exec(
+				'UPDATE `ravyn_donate_orders` SET `payment_id` = ' . $db->quote($sessionId)
+				. ', `payment_status` = ' . $db->quote($paymentStatus)
+				. ' WHERE `id` = ' . (int)$order['id']
+			);
+		} catch (Throwable $e) {
+			log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' stripe webhook update: ' . $e->getMessage());
+		}
+		$order = ravynDonateGetOrderByRef($db, $clientRef) ?: $order;
 		ravynDonateDeliverOrder($db, $order, $sessionId, 'paid', 'stripe');
 	}
 	http_response_code(200);

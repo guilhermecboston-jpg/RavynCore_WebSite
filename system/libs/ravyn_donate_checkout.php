@@ -160,6 +160,41 @@ function ravynDonateMercadoPagoAccessToken(): string
     return '';
 }
 
+function ravynDonateStripeSecretKey(): string
+{
+    global $config;
+    if (!isset($config['stripe']) || !is_array($config['stripe'])) {
+        return '';
+    }
+
+    $stripe = $config['stripe'];
+    if (!($stripe['enabled'] ?? false)) {
+        return '';
+    }
+
+    $env = $stripe['environment'] ?? 'production';
+    $candidates = [
+        $stripe['secretKey'][$env] ?? '',
+        $stripe['secretKey']['production'] ?? '',
+        $stripe['secretKey']['sandbox'] ?? '',
+        getenv('STRIPE_SECRET_KEY') ?: '',
+    ];
+
+    foreach ($candidates as $key) {
+        $key = trim((string)$key);
+        if ($key !== '') {
+            return $key;
+        }
+    }
+
+    return '';
+}
+
+function ravynDonateStripeEnabled(): bool
+{
+    return ravynDonateStripeSecretKey() !== '';
+}
+
 function ravynDonatePixConfig(): array
 {
     global $config;
@@ -927,32 +962,119 @@ function ravynDonateCreateMercadoPagoCheckout(array $order, ?string &$error = nu
     return $checkoutUrl;
 }
 
-function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null): ?string
+function ravynDonateSyncStripeOrderStatus($db, array $order, string $sessionId = ''): array
 {
-    global $config;
-    require_once PLUGINS . 'stripe/config.php';
+    $sessionId = trim($sessionId);
+    if ($sessionId === '') {
+        $sessionId = trim((string)($order['payment_id'] ?? ''));
+    }
 
-    $environment = $config['stripe']['environment'] ?? 'production';
-    $secretKey = $config['stripe']['secretKey'][$environment] ?? '';
+    $orderStatus = strtolower((string)($order['status'] ?? 'pending'));
+    $paymentStatus = strtolower((string)($order['payment_status'] ?? 'pending'));
+    $deliveredFlag = (int)($order['delivered'] ?? 0);
+
+    $secretKey = ravynDonateStripeSecretKey();
+    if ($sessionId !== '' && $secretKey !== '' && str_starts_with($sessionId, 'cs_')) {
+        $ch = curl_init('https://api.stripe.com/v1/checkout/sessions/' . urlencode($sessionId));
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $secretKey,
+            ],
+            CURLOPT_TIMEOUT => 25,
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $data = json_decode((string)$response, true);
+        if (is_array($data) && in_array($httpCode, [200, 201], true)) {
+            $paymentStatus = strtolower((string)($data['payment_status'] ?? $paymentStatus));
+            if ($paymentStatus === 'paid' || $paymentStatus === 'no_payment_required') {
+                $orderStatus = 'paid';
+                if ($deliveredFlag !== 1) {
+                    ravynDonateDeliverOrder($db, $order, $sessionId, 'paid', 'stripe');
+                } else {
+                    $db->exec(
+                        'UPDATE `ravyn_donate_orders` SET `status` = \'paid\', `payment_status` = '
+                        . $db->quote($paymentStatus) . ', `payment_id` = ' . $db->quote($sessionId)
+                        . ' WHERE `id` = ' . (int)$order['id']
+                    );
+                }
+            } elseif (in_array($paymentStatus, ['unpaid', 'open'], true)) {
+                $orderStatus = in_array($orderStatus, ['paid'], true) ? $orderStatus : 'redirected';
+            } else {
+                $db->exec(
+                    'UPDATE `ravyn_donate_orders` SET `payment_status` = ' . $db->quote($paymentStatus)
+                    . ', `payment_id` = ' . $db->quote($sessionId)
+                    . ' WHERE `id` = ' . (int)$order['id']
+                );
+            }
+        }
+    }
+
+    $fresh = ravynDonateGetOrderByRef($db, (string)$order['order_ref']);
+    if (is_array($fresh)) {
+        $order = $fresh;
+        $orderStatus = strtolower((string)($order['status'] ?? $orderStatus));
+        $paymentStatus = strtolower((string)($order['payment_status'] ?? $paymentStatus));
+        $deliveredFlag = (int)($order['delivered'] ?? 0);
+    }
+
+    if ($deliveredFlag === 1) {
+        $orderStatus = 'paid';
+        if ($paymentStatus === '' || $paymentStatus === 'pending') {
+            $paymentStatus = 'paid';
+        }
+    }
+
+    $uiState = ravynDonatePixUiState($paymentStatus, $orderStatus);
+    if ($deliveredFlag === 1) {
+        $uiState = 'approved';
+    }
+
+    return [
+        'order_status' => $orderStatus,
+        'payment_status' => $paymentStatus,
+        'ui_state' => $uiState,
+        'delivered' => $deliveredFlag,
+        'coins' => (int)($order['coins'] ?? 0),
+        'loyalty_points' => ravynDonateOrderLoyaltyPoints($order),
+        'amount_brl' => (float)($order['amount_brl'] ?? 0),
+        'session_id' => $sessionId,
+    ];
+}
+
+function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null, ?string &$sessionId = null): ?string
+{
+    $secretKey = ravynDonateStripeSecretKey();
     if ($secretKey === '') {
-        $error = 'Chave secreta do Stripe não configurada.';
+        $error = 'Stripe não configurado. Defina secretKey em config.local.php (sk_live_... ou sk_test_...).';
         return null;
     }
 
     $baseUrl = ravynPublicBaseUrl();
-    $successUrl = $baseUrl . '?subtopic=donate&action=final&gateway=stripe&order=' . urlencode($order['order_ref']);
+    $successUrl = $baseUrl . '?subtopic=donate&action=final&gateway=stripe&order='
+        . urlencode((string)$order['order_ref']) . '&session_id={CHECKOUT_SESSION_ID}';
     $cancelUrl = $baseUrl . '?subtopic=donate';
 
     $unitAmount = (int)round((float)$order['amount_brl'] * 100);
+    if ($unitAmount < 50) {
+        $error = 'Valor mínimo para Stripe é R$ 0,50.';
+        return null;
+    }
+
     $payload = [
         'mode' => 'payment',
         'success_url' => $successUrl,
         'cancel_url' => $cancelUrl,
-        'client_reference_id' => $order['order_ref'],
-        'customer_email' => $order['email'],
+        'client_reference_id' => (string)$order['order_ref'],
+        'customer_email' => (string)$order['email'],
+        'locale' => 'pt-BR',
+        'payment_method_types' => ['card'],
         'metadata' => [
-            'order_ref' => $order['order_ref'],
-            'code' => $order['package_id'],
+            'order_ref' => (string)$order['order_ref'],
+            'code' => (string)$order['package_id'],
             'account_id' => (string)$order['account_id'],
         ],
         'line_items' => [[
@@ -961,7 +1083,8 @@ function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null): 
                 'currency' => 'brl',
                 'unit_amount' => $unitAmount,
                 'product_data' => [
-                    'name' => $order['coins'] . ' RavynCore Coins',
+                    'name' => (int)$order['coins'] . ' RavynCore Coins',
+                    'description' => 'Doação RavynCore — pedido ' . (string)$order['order_ref'],
                 ],
             ],
         ]],
@@ -971,8 +1094,10 @@ function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null): 
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
-        CURLOPT_USERPWD => $secretKey . ':',
-        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . $secretKey,
+            'Content-Type: application/json',
+        ],
         CURLOPT_POSTFIELDS => json_encode($payload),
         CURLOPT_TIMEOUT => 30,
     ]);
@@ -987,5 +1112,7 @@ function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null): 
         $error = 'Não foi possível abrir o Stripe.' . ($api !== '' ? ' ' . $api : '');
         return null;
     }
-    return $data['url'];
+
+    $sessionId = (string)($data['id'] ?? '');
+    return (string)$data['url'];
 }

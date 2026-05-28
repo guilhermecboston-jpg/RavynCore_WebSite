@@ -1,26 +1,115 @@
-<br/><br/><br/><br/>
-<center>
-  Thank you for your donation!<br/>
-  When our systems confirm your donation will be automatically added points in your account as a thank you.<br/>
-  Continue contributing to our server reporting bugs in the forum.
-  <br/><br/>
-  Have fun!
-  <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-  <div class="BigButton">
-    <table width="100%">
-      <tr>
-        <td>
-          <table border="0" cellspacing="0" cellpadding="0">
-            <form action="{{ getLink('account/manage') }}" method="post">
-              <tr>
-                <td style="border:0px;">
-                  {{ include('buttons.back.html.twig') }}
-                </td>
-              </tr>
-            </form>
-          </table>
-        </td>
-      </tr>
-    </table>
+<style>
+{% include 'donate-final.css' %}
+</style>
+
+<div class="rd-final-wrap">
+  <div class="rd-final-card" id="rdFinalCard">
+    <div class="rd-final-icon" id="rdFinalIcon">{% if ui_state == 'approved' %}✅{% elseif ui_state == 'rejected' %}❌{% else %}🔄{% endif %}</div>
+    <h1 class="rd-final-title" id="rdFinalTitle">
+      {% if ui_state == 'approved' %}Pagamento APROVADO!{% elseif ui_state == 'rejected' %}Pagamento não confirmado{% else %}Confirmando pagamento...{% endif %}
+    </h1>
+    <p class="rd-final-message" id="rdFinalMessage">
+      {% if ui_state == 'approved' %}
+        Obrigado! Adicionado em sua account: {{ coins|number_format(0, ',', '.') }} RavynCore Coins e {{ loyalty_points|number_format(0, ',', '.') }} Loyalty Points.
+      {% elseif ui_state == 'rejected' %}
+        Não foi possível confirmar o pagamento. Se já pagou, aguarde alguns minutos ou entre em contato com o suporte.
+      {% else %}
+        Aguarde enquanto confirmamos seu pagamento com o gateway...
+      {% endif %}
+    </p>
+    <p class="rd-final-order">Pedido: <strong>{{ order_ref }}</strong>{% if gateway %} · {{ gateway|upper }}{% endif %}</p>
+    <p class="rd-final-redirect" id="rdFinalRedirect"></p>
+    <div class="rd-final-actions">
+      <a class="rd-final-btn" href="{{ account_manage_url }}">Minha conta</a>
+      <a class="rd-final-btn rd-final-btn-secondary" href="{{ donate_url }}">Nova doação</a>
+    </div>
   </div>
-</center>
+</div>
+
+<script>
+(function () {
+  const statusUrl = {{ status_url|default('')|json_encode|raw }};
+  const initialState = {{ ui_state|default('processing')|json_encode|raw }};
+  const initialCoins = {{ coins|default(0) }};
+  const initialLoyalty = {{ loyalty_points|default(0) }};
+  const accountUrl = {{ account_manage_url|json_encode|raw }};
+
+  const iconEl = document.getElementById('rdFinalIcon');
+  const titleEl = document.getElementById('rdFinalTitle');
+  const messageEl = document.getElementById('rdFinalMessage');
+  const redirectEl = document.getElementById('rdFinalRedirect');
+  const cardEl = document.getElementById('rdFinalCard');
+
+  function formatNum(n) {
+    return Number(n || 0).toLocaleString('pt-BR');
+  }
+
+  function showApproved(coins, loyalty) {
+    cardEl.classList.add('rd-final-approved');
+    iconEl.textContent = '✅';
+    titleEl.textContent = 'Pagamento APROVADO!';
+    messageEl.textContent = 'Obrigado! Adicionado em sua account: ' + formatNum(coins)
+      + ' RavynCore Coins e ' + formatNum(loyalty) + ' Loyalty Points.';
+  }
+
+  function showProcessing() {
+    cardEl.classList.remove('rd-final-approved');
+    iconEl.textContent = '🔄';
+    titleEl.textContent = 'Confirmando pagamento...';
+    messageEl.textContent = 'Aguarde enquanto confirmamos seu pagamento com o gateway...';
+  }
+
+  let redirectTimer = null;
+  function scheduleRedirect(seconds) {
+    let left = Math.max(5, Number(seconds || 12));
+    redirectEl.textContent = 'Redirecionando para sua conta em ' + left + 's...';
+    redirectTimer = setInterval(function () {
+      left -= 1;
+      if (left <= 0) {
+        clearInterval(redirectTimer);
+        window.location.href = accountUrl;
+        return;
+      }
+      redirectEl.textContent = 'Redirecionando para sua conta em ' + left + 's...';
+    }, 1000);
+  }
+
+  async function poll() {
+    if (!statusUrl) return;
+    try {
+      const url = statusUrl + (statusUrl.indexOf('?') >= 0 ? '&' : '?') + '_ts=' + Date.now();
+      const res = await fetch(url, {
+        credentials: 'same-origin',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        cache: 'no-store',
+      });
+      const data = await res.json();
+      if (!data || !data.ok) return;
+      if (data.ui_state === 'approved' || Number(data.delivered) === 1 || data.order_status === 'paid') {
+        showApproved(data.coins ?? initialCoins, data.loyalty_points ?? initialLoyalty);
+        if (!redirectTimer) scheduleRedirect(12);
+        return true;
+      }
+      if (data.ui_state === 'rejected') {
+        iconEl.textContent = '❌';
+        titleEl.textContent = 'Pagamento não confirmado';
+        messageEl.textContent = 'Não foi possível confirmar o pagamento.';
+        return true;
+      }
+    } catch (e) { /* ignore */ }
+    return false;
+  }
+
+  if (initialState === 'approved') {
+    showApproved(initialCoins, initialLoyalty);
+    scheduleRedirect(12);
+  } else if (statusUrl) {
+    poll();
+    const timer = setInterval(async function () {
+      const done = await poll();
+      if (done) clearInterval(timer);
+    }, 3000);
+    setTimeout(function () { clearInterval(timer); }, 120000);
+  }
+})();
+</script>

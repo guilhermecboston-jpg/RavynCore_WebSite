@@ -53,6 +53,16 @@ if (!in_array($gateway, ['mercadopago', 'stripe', 'pix'], true)) {
     return;
 }
 
+if ($gateway === 'mercadopago' && ravynDonateMercadoPagoAccessToken() === '') {
+    ravynDonateBackBox('Donatepay', 'Mercado Pago não configurado. Defina accessToken em config.local.php.');
+    return;
+}
+
+if ($gateway === 'stripe' && !ravynDonateStripeEnabled()) {
+    ravynDonateBackBox('Donatepay', 'Stripe não configurado. Defina secretKey em config.local.php.');
+    return;
+}
+
 if (strlen($fullName) < 3) {
     ravynDonateBackBox('Donatepay', 'Informe o nome completo.');
     return;
@@ -159,10 +169,11 @@ if ($gateway === 'pix') {
 
 $checkoutUrl = null;
 $gatewayError = '';
+$stripeSessionId = '';
 if ($gateway === 'mercadopago') {
     $checkoutUrl = ravynDonateCreateMercadoPagoCheckout($order, $gatewayError);
 } else {
-    $checkoutUrl = ravynDonateCreateStripeCheckout($order, $gatewayError);
+    $checkoutUrl = ravynDonateCreateStripeCheckout($order, $gatewayError, $stripeSessionId);
 }
 
 if (!$checkoutUrl) {
@@ -171,9 +182,11 @@ if (!$checkoutUrl) {
     return;
 }
 
+$paymentIdSql = $stripeSessionId !== '' ? $db->quote($stripeSessionId) : 'NULL';
 $db->exec(
     'UPDATE `ravyn_donate_orders` SET `status` = \'redirected\', `gateway_ref` = '
-    . $db->quote($checkoutUrl) . ' WHERE `id` = ' . (int)$order['id']
+    . $db->quote($checkoutUrl) . ', `payment_id` = ' . $paymentIdSql
+    . ' WHERE `id` = ' . (int)$order['id']
 );
 
 ravynDonateRedirectTo($checkoutUrl);

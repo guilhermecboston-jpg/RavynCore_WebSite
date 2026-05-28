@@ -1,0 +1,45 @@
+<?php
+global $logged, $account_logged, $db;
+defined('MYAAC') or die('Direct access not allowed!');
+
+require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
+
+if (!$logged) {
+    ravynDonateJsonResponse(['ok' => false, 'error' => 'Login necessário.'], 401);
+}
+
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+
+$orderRef = trim((string)($_GET['order'] ?? ''));
+$sessionId = trim((string)($_GET['session_id'] ?? ''));
+
+if ($orderRef === '') {
+    ravynDonateJsonResponse(['ok' => false, 'error' => 'Pedido não informado.'], 400);
+}
+
+$order = ravynDonateGetOrderByRef($db, $orderRef);
+if (!$order || (int)$order['account_id'] !== (int)$account_logged->getId()) {
+    ravynDonateJsonResponse(['ok' => false, 'error' => 'Pedido inválido.'], 404);
+}
+
+if (($order['gateway'] ?? '') !== 'stripe') {
+    ravynDonateJsonResponse(['ok' => false, 'error' => 'Pedido não é Stripe.'], 400);
+}
+
+$sync = ravynDonateSyncStripeOrderStatus($db, $order, $sessionId);
+
+ravynDonateJsonResponse([
+    'ok' => true,
+    'order_ref' => $order['order_ref'],
+    'order_status' => $sync['order_status'],
+    'payment_status' => $sync['payment_status'],
+    'ui_state' => $sync['ui_state'],
+    'delivered' => (int)($sync['delivered'] ?? 0),
+    'coins' => (int)($sync['coins'] ?? 0),
+    'loyalty_points' => (int)($sync['loyalty_points'] ?? 0),
+    'amount_brl' => (float)($sync['amount_brl'] ?? 0),
+    'account_manage_url' => getLink('account/manage'),
+    'donate_url' => getLink('donate'),
+]);
