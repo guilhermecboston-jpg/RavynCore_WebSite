@@ -6,6 +6,7 @@ require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
 
 $hasMercadoPago = false;
 $hasStripe = false;
+$stripeReady = false;
 
 if (file_exists(PLUGINS . 'mercadopago/config.php')) {
     require_once PLUGINS . 'mercadopago/config.php';
@@ -14,8 +15,9 @@ if (file_exists(PLUGINS . 'mercadopago/config.php')) {
 
 if (file_exists(PLUGINS . 'stripe/config.php')) {
     require_once PLUGINS . 'stripe/config.php';
-    $hasStripe = ravynDonateStripeEnabled();
+    $hasStripe = (bool)($config['stripe']['enabled'] ?? false);
 }
+$stripeReady = ravynDonateStripeEnabled();
 
 ravynDonateSyncGatewayPackages();
 
@@ -51,6 +53,7 @@ if (empty($action)) {
         'terms_version' => ravynDonateTermsVersion(),
         'has_mercado_pago' => $hasMercadoPago,
         'has_stripe' => $hasStripe,
+        'stripe_ready' => $stripeReady,
         'has_pix' => ravynDonatePixEnabled(),
         'pay_url' => getLink('donatepay'),
         'is_localhost' => $is_localhost,

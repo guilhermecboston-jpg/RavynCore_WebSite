@@ -51,6 +51,10 @@
 
   document.querySelectorAll('.rd-gateway-card').forEach((btn) => {
     btn.addEventListener('click', () => {
+      if (btn.classList.contains('rd-gateway-card-disabled')) {
+        showError('Stripe não está configurado no servidor. Adicione secretKey em config.local.php.');
+        return;
+      }
       document.querySelectorAll('.rd-gateway-card').forEach((b) => b.classList.remove('selected'));
       btn.classList.add('selected');
       document.getElementById('rdGateway').value = btn.dataset.gateway;

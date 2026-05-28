@@ -25,3 +25,10 @@ $config['mercadoPago']['enabled'] = true;
 $config['mercadoPago']['environment'] = 'production';
 $config['mercadoPago']['accessToken']['production'] = 'APP_USR-7756247734214510-052511-9d6f6c6cbb05a2a7bbf62f477e231ecf-3425963154';
 $config['mercadoPago']['accessToken']['sandbox'] = '';
+
+$config['stripe']['enabled'] = true;
+$config['stripe']['environment'] = 'production';
+$config['stripe']['secretKey']['production'] = '';
+$config['stripe']['secretKey']['sandbox'] = '';
+$config['stripe']['webhookSecret']['production'] = '';
+$config['stripe']['webhookSecret']['sandbox'] = '';

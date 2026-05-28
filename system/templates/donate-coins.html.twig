@@ -13,7 +13,7 @@
 
   <div id="rdError" class="rd-error" style="display:none"></div>
 
-  <form id="rdDonateForm" method="post" action="{{ pay_url }}">
+  <form id="rdDonateForm" method="post" action="{{ pay_url }}" data-stripe-ready="{{ stripe_ready ? '1' : '0' }}">
     <input type="hidden" name="package_id" id="rdPackageId" value="" />
     <input type="hidden" name="gateway" id="rdGateway" value="" />
     <input type="hidden" name="terms_agree" id="rdTermsAgree" value="0" />
@@ -44,9 +44,10 @@
           </button>
           {% endif %}
           {% if has_stripe %}
-          <button type="button" class="rd-gateway-card" data-gateway="stripe">
+          <button type="button" class="rd-gateway-card{% if not stripe_ready %} rd-gateway-card-disabled{% endif %}" data-gateway="stripe"{% if not stripe_ready %} title="Stripe: configure secretKey em config.local.php"{% endif %}>
             <div class="rd-gw-logo"><img class="rd-gw-logo-img" src="images/payments/stripe.svg" alt="Stripe" style="max-height:46px;max-width:140px;width:auto;height:auto;object-fit:contain;display:block;margin:0 auto;" /></div>
             <div class="rd-gw-name">Stripe</div>
+            <div class="rd-gw-sub">Cartão internacional</div>
           </button>
           {% endif %}
           {% if has_pix %}

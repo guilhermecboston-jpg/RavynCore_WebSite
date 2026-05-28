@@ -198,6 +198,22 @@
 
 .rd-gateway-card[data-disabled="1"] { opacity: .76; }
 
+.rd-gateway-card-disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+.rd-gateway-card-disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.rd-gw-sub {
+  font-size: 11px;
+  color: #9aabd4;
+  margin-top: 4px;
+}
+
 .rd-gw-logo {
   height: 58px;
   display: flex;
