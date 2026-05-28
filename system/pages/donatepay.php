@@ -118,9 +118,11 @@ if ($gateway === 'pix') {
 
     $pixError = '';
     $pixData = ravynDonateCreateMercadoPagoPix($order, $pixError);
-    if (!$pixData || empty($pixData['payment_id']) || empty($pixData['qr_code'])) {
-        $msg = $pixError !== '' ? $pixError : 'Não foi possível gerar PIX vinculado ao pedido.';
-        $msg .= ' Tente novamente em alguns segundos.';
+    if (!$pixData || empty($pixData['qr_code'])) {
+        $pixData = ravynDonatePixStaticFallback($order);
+    }
+    if (empty($pixData['qr_code'])) {
+        $msg = $pixError !== '' ? $pixError : 'Não foi possível gerar o código PIX.';
         ravynDonateBackBox('Donatepay', $msg);
         return;
     }
