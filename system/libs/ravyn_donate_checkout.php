@@ -201,8 +201,14 @@ function ravynDonateCreateMercadoPagoPix(array $order, ?string &$error = null): 
     $firstName = $nameParts[0] ?? 'Cliente';
     $lastName = $nameParts[1] ?? 'RavynCore';
 
+    $amount = round((float)$order['amount_brl'], 2);
+    if ($amount < 0.5) {
+        $error = 'Valor mínimo do PIX no Mercado Pago é R$ 0,50. Ajuste o pacote de teste para R$ 0,50 ou mais.';
+        return null;
+    }
+
     $payload = [
-        'transaction_amount' => round((float)$order['amount_brl'], 2),
+        'transaction_amount' => $amount,
         'description' => $order['coins'] . ' RavynCore Coins',
         'payment_method_id' => 'pix',
         'external_reference' => $order['order_ref'],
@@ -243,7 +249,22 @@ function ravynDonateCreateMercadoPagoPix(array $order, ?string &$error = null): 
     $data = json_decode((string)$response, true);
     if ($response === false || !in_array($httpCode, [200, 201], true) || !is_array($data)) {
         log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' PIX HTTP ' . $httpCode . ': ' . (string)$response);
-        $error = 'Não foi possível gerar o PIX no Mercado Pago.';
+        $apiMessage = '';
+        if (is_array($data)) {
+            $apiMessage = trim((string)($data['message'] ?? ($data['error'] ?? '')));
+            if (!empty($data['cause']) && is_array($data['cause'])) {
+                $parts = [];
+                foreach ($data['cause'] as $cause) {
+                    if (is_array($cause)) {
+                        $parts[] = trim((string)(($cause['code'] ?? '') . ' ' . ($cause['description'] ?? '')));
+                    }
+                }
+                if (!empty($parts)) {
+                    $apiMessage .= ($apiMessage !== '' ? ' | ' : '') . implode('; ', $parts);
+                }
+            }
+        }
+        $error = 'Não foi possível gerar o PIX no Mercado Pago.' . ($apiMessage !== '' ? ' ' . $apiMessage : '');
         return null;
     }
 

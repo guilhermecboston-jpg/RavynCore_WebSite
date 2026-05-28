@@ -16,7 +16,7 @@ $ravynDonateDefaults = [
         'static_copy_paste' => '00020126580014br.gov.bcb.pix0136b63bc149-403d-4a76-b836-5ed34ef8ec8452040000530398654040.015802BR5924Guilherme Costa Ferreira6009Sao Paulo62240520daqr3426207160375087630480A3',
     ],
     'packages' => [
-        'pack_1000_test' => ['coins' => 1000, 'brl' => 0.01, 'label' => '1.000 Coins (Teste R$ 0,01)', 'popular' => true],
+        'pack_1000_test' => ['coins' => 1000, 'brl' => 1.00, 'label' => '1.000 Coins (Teste R$ 1,00)', 'popular' => true],
         'pack_100' => ['coins' => 100, 'brl' => 10, 'label' => '100 Coins', 'popular' => false],
         'pack_1000' => ['coins' => 1000, 'brl' => 100, 'label' => '1.000 Coins', 'popular' => false],
         'pack_3150' => ['coins' => 3150, 'brl' => 300, 'label' => '3.150 Coins', 'popular' => true],
