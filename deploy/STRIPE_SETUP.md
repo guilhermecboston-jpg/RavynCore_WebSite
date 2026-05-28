@@ -74,6 +74,23 @@ echo 'ready=' . (ravynDonateStripeEnabled() ? 'yes' : 'no') . PHP_EOL;
 - `visible=yes` → card Stripe na página
 - `ready=yes` → pagamento funciona
 
+## 6. Diagnóstico no VPS
+
+```bash
+cd /var/www/html
+php deploy/check-stripe.php
+```
+
+Deve mostrar `chave usada` começando com `sk_live` e `ok: SIM`.
+
+Se aparecer outro prefixo (`zwlt`, `pk_`, `AQUI`):
+
+1. `nano config.local.php` — confira `environment` = `production`
+2. Apague lixo em `secretKey['sandbox']` (deixe `''`)
+3. Cole a **Secret key** só em `secretKey['production']`
+4. `grep STRIPE /etc/php/8.2/fpm/pool.d/*.conf` — remova `env[STRIPE_SECRET_KEY]` se existir valor errado
+5. `systemctl restart php8.2-fpm`
+
 ## 5. Teste cartão (sandbox)
 
 Número: `4242 4242 4242 4242` — qualquer validade/CVC.

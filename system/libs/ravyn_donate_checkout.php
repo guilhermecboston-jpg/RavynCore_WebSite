@@ -172,22 +172,18 @@ function ravynDonateStripeSecretKey(): string
         return '';
     }
 
-    $env = $stripe['environment'] ?? 'production';
-    $candidates = [
-        $stripe['secretKey'][$env] ?? '',
-        $stripe['secretKey']['production'] ?? '',
-        $stripe['secretKey']['sandbox'] ?? '',
-        getenv('STRIPE_SECRET_KEY') ?: '',
-    ];
-
-    foreach ($candidates as $key) {
-        $key = trim((string)$key);
-        if ($key !== '') {
-            return $key;
-        }
+    $env = (string)($stripe['environment'] ?? 'production');
+    if (!in_array($env, ['production', 'sandbox'], true)) {
+        $env = 'production';
     }
 
-    return '';
+    $key = trim((string)($stripe['secretKey'][$env] ?? ''));
+    // Só usa production como fallback quando o ambiente ativo é sandbox e está vazio
+    if ($key === '' && $env === 'sandbox') {
+        $key = trim((string)($stripe['secretKey']['production'] ?? ''));
+    }
+
+    return $key;
 }
 
 function ravynDonateStripeEnabled(): bool
@@ -1154,7 +1150,14 @@ function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null, ?
     if ($response === false || !in_array($httpCode, [200, 201], true) || empty($data['url'])) {
         log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' Stripe HTTP ' . $httpCode . ': ' . (string)$response);
         $api = is_array($data) ? trim((string)($data['error']['message'] ?? '')) : '';
-        $error = 'Não foi possível abrir o Stripe.' . ($api !== '' ? ' ' . $api : '');
+        $keyHint = substr($secretKey, 0, 7) . '…' . substr($secretKey, -4);
+        log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' Stripe key used prefix/suffix: ' . $keyHint);
+        if (stripos($api, 'Invalid API Key') !== false) {
+            $error = 'Stripe recusou a Secret key. No VPS, em config.local.php use sk_live_... em secretKey[production], '
+                . 'environment=production, e remova chaves antigas em secretKey[sandbox]. Veja: bash deploy/check-stripe.php';
+        } else {
+            $error = 'Não foi possível abrir o Stripe.' . ($api !== '' ? ' ' . $api : '');
+        }
         return null;
     }
 
