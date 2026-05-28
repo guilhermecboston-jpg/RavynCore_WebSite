@@ -124,10 +124,12 @@
       <div class="rd-pix-modal-qr-wrap">
         <img id="rdPixQrImg" class="rd-pix-modal-qr" src="" alt="QR Code PIX" />
       </div>
-      <div class="rd-pix-modal-key-wrap" id="rdPixKeyWrap" hidden>
-        <span>Chave Pix (Mercado Pago)</span>
-        <code id="rdPixKeyText"></code>
-        <button type="button" class="rd-btn rd-btn-secondary rd-pix-copy-btn" data-copy="rdPixKeyText">Copiar chave</button>
+      <div class="rd-pix-status-box" id="rdPixStatusBox">
+        <div class="rd-pix-status-icon" id="rdPixStatusIcon">⏳</div>
+        <div>
+          <div class="rd-pix-status-title" id="rdPixStatusTitle">Aguardando pagamento</div>
+          <div class="rd-pix-status-message" id="rdPixStatusMessage">Escaneie o QR Code ou use o código Copia e Cola.</div>
+        </div>
       </div>
       <div class="rd-pix-modal-code-wrap">
         <span>Código Pix Copia e Cola</span>

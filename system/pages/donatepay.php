@@ -149,9 +149,9 @@ if ($gateway === 'pix') {
         'amount_label' => 'R$ ' . number_format((float)$order['amount_brl'], 2, ',', '.'),
         'qr_code' => (string)$pixData['qr_code'],
         'qr_code_base64' => (string)($pixData['qr_code_base64'] ?? ''),
-        'pix_key' => (string)($pixData['pix_key'] ?? ''),
         'qr_image' => (string)($pixData['qr_image'] ?? 'images/payments/pix-qrcode-mercadopago.png'),
         'payment_status' => (string)($pixData['status'] ?? 'pending'),
+        'status_url' => getLink('donatepixstatus') . '&order=' . urlencode((string)$order['order_ref']),
     ]);
 }
 

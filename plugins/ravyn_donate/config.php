@@ -10,6 +10,8 @@ $ravynDonateDefaults = [
         'enabled' => true,
         'mercadopago_key' => 'b63bc149-403d-4a76-b836-5ed34ef8ec84',
         'qr_image' => 'images/payments/pix-qrcode-mercadopago.png',
+        'timeout_seconds' => 600,
+        'final_delay_seconds' => 10,
         // Fallback estático (se API MP falhar) — idealmente um BR Code por valor
         'static_copy_paste' => '00020126580014br.gov.bcb.pix0136b63bc149-403d-4a76-b836-5ed34ef8ec845204000053039865802BR5914GFCHGDAEB454376009Sao Paulo610901227-20062240520daqr3426207160759776630478B2',
     ],

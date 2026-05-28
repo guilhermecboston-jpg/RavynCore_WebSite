@@ -74,6 +74,113 @@
     payBtn.disabled = !ok;
   });
 
+  let pixPollTimer = null;
+  let pixFinalTimer = null;
+
+  function stopPixTimers() {
+    if (pixPollTimer) {
+      clearInterval(pixPollTimer);
+      pixPollTimer = null;
+    }
+    if (pixFinalTimer) {
+      clearInterval(pixFinalTimer);
+      pixFinalTimer = null;
+    }
+  }
+
+  function setPixStatus(icon, title, message) {
+    document.getElementById('rdPixStatusIcon').textContent = icon;
+    document.getElementById('rdPixStatusTitle').textContent = title;
+    document.getElementById('rdPixStatusMessage').textContent = message;
+  }
+
+  function startFinalRedirect(seconds, targetUrl) {
+    let left = Math.max(1, Number(seconds || 10));
+    setPixStatus(
+      document.getElementById('rdPixStatusIcon').textContent,
+      document.getElementById('rdPixStatusTitle').textContent,
+      document.getElementById('rdPixStatusMessage').textContent + ' Redirecionando em ' + left + 's.'
+    );
+    pixFinalTimer = setInterval(() => {
+      left -= 1;
+      if (left <= 0) {
+        stopPixTimers();
+        window.location.href = targetUrl;
+        return;
+      }
+      const baseMessage = document.getElementById('rdPixStatusMessage').textContent.replace(/ Redirecionando em \d+s\.$/, '');
+      document.getElementById('rdPixStatusMessage').textContent = baseMessage + ' Redirecionando em ' + left + 's.';
+    }, 1000);
+  }
+
+  function applyPixState(payload) {
+    const uiState = String(payload.ui_state || 'pending');
+    const delaySeconds = Number(payload.redirect_delay_seconds || 10);
+    if (uiState === 'approved') {
+      setPixStatus(
+        '✅',
+        'Pagamento Aprovado',
+        'Seus RavynCore Coins estarão disponíveis em sua account.'
+      );
+      stopPixTimers();
+      startFinalRedirect(delaySeconds, payload.account_manage_url || '/?account/manage');
+      return;
+    }
+    if (uiState === 'rejected') {
+      setPixStatus(
+        '❌',
+        'Pagamento Recusado',
+        'Consultar seu banco, e aguardamos ansiosos pelo seu retorno.'
+      );
+      stopPixTimers();
+      startFinalRedirect(delaySeconds, payload.account_manage_url || '/?account/manage');
+      return;
+    }
+    if (uiState === 'cancelled') {
+      setPixStatus(
+        '⚠️',
+        'Pedido Cancelado',
+        'Tempo de pagamento expirado. Gere um novo pedido para continuar.'
+      );
+      stopPixTimers();
+      startFinalRedirect(delaySeconds, payload.donate_url || '/?donate');
+      return;
+    }
+    if (uiState === 'processing') {
+      setPixStatus('🔄', 'Processando pagamento', 'Pagamento em análise pelo gateway...');
+      return;
+    }
+    const remaining = Number(payload.remaining_seconds || 0);
+    const suffix = remaining > 0 ? (' Tempo restante: ' + Math.floor(remaining / 60) + 'm ' + (remaining % 60) + 's.') : '';
+    setPixStatus('⏳', 'Aguardando pagamento', 'Escaneie o QR Code ou use o código Copia e Cola.' + suffix);
+  }
+
+  async function pollPixStatus(statusUrl) {
+    if (!statusUrl) return;
+    try {
+      const res = await fetch(statusUrl, {
+        credentials: 'same-origin',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        cache: 'no-store',
+      });
+      const data = await res.json();
+      if (!data || !data.ok) {
+        return;
+      }
+      applyPixState(data);
+    } catch (e) {
+      // no-op
+    }
+  }
+
+  function startPixPolling(statusUrl) {
+    stopPixTimers();
+    pollPixStatus(statusUrl);
+    pixPollTimer = setInterval(() => {
+      pollPixStatus(statusUrl);
+    }, 5000);
+  }
+
   function openPixModal(data) {
     document.getElementById('rdPixOrderRef').textContent = data.order_ref || '—';
     document.getElementById('rdPixCoins').textContent = data.coins != null ? String(data.coins) : '—';
@@ -88,23 +195,17 @@
       qrImg.removeAttribute('src');
     }
 
-    const keyWrap = document.getElementById('rdPixKeyWrap');
-    const keyText = document.getElementById('rdPixKeyText');
-    if (data.pix_key) {
-      keyWrap.hidden = false;
-      keyText.textContent = data.pix_key;
-    } else {
-      keyWrap.hidden = true;
-    }
-
     document.getElementById('rdPixCodeText').value = data.qr_code || '';
 
     pixModal.hidden = false;
     pixModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    setPixStatus('⏳', 'Aguardando pagamento', 'Escaneie o QR Code ou use o código Copia e Cola.');
+    startPixPolling(data.status_url || '');
   }
 
   function closePixModal() {
+    stopPixTimers();
     pixModal.hidden = true;
     pixModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
@@ -124,10 +225,16 @@
         const old = btn.textContent;
         btn.textContent = 'Copiado!';
         setTimeout(() => { btn.textContent = old; }, 1500);
+        if (!pixModal.hidden) {
+          setPixStatus('🔄', 'Processando pagamento', 'Pagamento em análise pelo gateway...');
+        }
       }).catch(() => {
         if (el.select) {
           el.select();
           document.execCommand('copy');
+          if (!pixModal.hidden) {
+            setPixStatus('🔄', 'Processando pagamento', 'Pagamento em análise pelo gateway...');
+          }
         }
       });
     });

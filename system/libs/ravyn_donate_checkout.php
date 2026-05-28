@@ -310,6 +310,100 @@ function ravynDonateResolvePixForOrder(array $order): array
     ];
 }
 
+function ravynDonateMapPixStatusToOrderStatus(string $paymentStatus): string
+{
+    $s = strtolower(trim($paymentStatus));
+    if (in_array($s, ['approved', 'paid', 'authorized', 'completed'], true)) {
+        return 'paid';
+    }
+    if (in_array($s, ['rejected', 'cancelled', 'refunded', 'charged_back'], true)) {
+        return 'failed';
+    }
+    return 'pending';
+}
+
+function ravynDonatePixUiState(string $paymentStatus, string $orderStatus): string
+{
+    $ps = strtolower(trim($paymentStatus));
+    $os = strtolower(trim($orderStatus));
+    if ($os === 'cancelled') {
+        return 'cancelled';
+    }
+    if ($os === 'failed' || in_array($ps, ['rejected', 'cancelled', 'refunded', 'charged_back'], true)) {
+        return 'rejected';
+    }
+    if ($os === 'paid' || in_array($ps, ['approved', 'paid', 'authorized', 'completed'], true)) {
+        return 'approved';
+    }
+    if (in_array($ps, ['in_process', 'processing', 'pending_waiting_transfer'], true)) {
+        return 'processing';
+    }
+    return 'pending';
+}
+
+function ravynDonateSyncPixOrderStatus($db, array $order): array
+{
+    $pixCfg = ravynDonatePixConfig();
+    $timeoutSeconds = max(60, (int)($pixCfg['timeout_seconds'] ?? 600));
+
+    $paymentStatus = (string)($order['payment_status'] ?? 'pending');
+    $orderStatus = (string)($order['status'] ?? 'pending');
+    $paymentId = trim((string)($order['payment_id'] ?? ''));
+
+    if ($paymentId !== '' && ravynDonateMercadoPagoAccessToken() !== '') {
+        $ch = curl_init('https://api.mercadopago.com/v1/payments/' . urlencode($paymentId));
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . ravynDonateMercadoPagoAccessToken(),
+                'Content-Type: application/json',
+            ],
+            CURLOPT_TIMEOUT => 20,
+        ]);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $data = json_decode((string)$response, true);
+        if (is_array($data)) {
+            $paymentStatus = (string)($data['status'] ?? $paymentStatus);
+            $nextOrderStatus = ravynDonateMapPixStatusToOrderStatus($paymentStatus);
+            if ($nextOrderStatus !== strtolower($orderStatus)) {
+                $orderStatus = $nextOrderStatus;
+            }
+            if ($orderStatus === 'paid' && (int)($order['delivered'] ?? 0) !== 1) {
+                ravynDonateDeliverOrder($db, $order, $paymentId, $paymentStatus, 'mercadopago');
+                $orderStatus = 'paid';
+            } else {
+                $db->exec(
+                    'UPDATE `ravyn_donate_orders` SET `payment_status` = ' . $db->quote($paymentStatus)
+                    . ', `status` = ' . $db->quote($orderStatus)
+                    . ' WHERE `id` = ' . (int)$order['id']
+                );
+            }
+        }
+    }
+
+    $createdAt = strtotime((string)($order['created_at'] ?? 'now'));
+    $expiresAt = $createdAt + $timeoutSeconds;
+    $remaining = max(0, $expiresAt - time());
+
+    if ($remaining <= 0 && in_array(strtolower($orderStatus), ['pending', 'redirected'], true)) {
+        $orderStatus = 'cancelled';
+        $paymentStatus = $paymentStatus !== '' ? $paymentStatus : 'cancelled';
+        $db->exec(
+            'UPDATE `ravyn_donate_orders` SET `status` = \'cancelled\', `payment_status` = '
+            . $db->quote($paymentStatus) . ' WHERE `id` = ' . (int)$order['id']
+        );
+    }
+
+    return [
+        'order_status' => strtolower($orderStatus),
+        'payment_status' => strtolower((string)$paymentStatus),
+        'remaining_seconds' => $remaining,
+        'ui_state' => ravynDonatePixUiState((string)$paymentStatus, (string)$orderStatus),
+        'redirect_delay_seconds' => max(5, (int)($pixCfg['final_delay_seconds'] ?? 10)),
+    ];
+}
+
 function ravynDonateTermsBullets(): array
 {
     return [
