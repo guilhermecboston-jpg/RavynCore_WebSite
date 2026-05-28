@@ -17,30 +17,6 @@
   <link rel="stylesheet" type="text/css" href="{{ base_dir }}js/vendor/codemirror/addon/hint/show-hint.css?{{ version }}">
   <link rel="stylesheet" type="text/css" href="{{ base_dir }}js/vendor/codemirror/addon/lint/lint.css?{{ version }}">
   <link rel="stylesheet" type="text/css" href="{{ theme_path }}/css/theme{{ text_dir == 'rtl' ? '.rtl' }}.css?{{ version }}">
-  <style>
-    /* RavynCore fix: keep phpMyAdmin horizontally scrollable on narrow layouts */
-    html, body {
-      overflow-x: auto !important;
-    }
-
-    body:not(#loginform) #page_content {
-      margin-left: 260px !important;
-      overflow-x: auto !important;
-      min-width: 0;
-    }
-
-    body:not(#loginform) #pma_navigation {
-      width: 260px !important;
-      min-width: 260px !important;
-      overflow: auto !important;
-      max-width: 320px;
-      resize: horizontal;
-    }
-
-    body:not(#loginform) #pma_navigation_resizer {
-      left: 260px !important;
-    }
-  </style>
   <title>{{ title }}</title>
   {{ scripts|raw }}
   <noscript><style>html{display:block}</style></noscript>
