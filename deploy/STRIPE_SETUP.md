@@ -1,16 +1,29 @@
 # Stripe — RavynCore Donate
 
+**Importante:** chaves `sk_live_` / `pk_live_` **não podem** ir no GitHub (push protection). Use só `config.local.php` no VPS (arquivo ignorado pelo git).
+
 ## 1. Chaves no servidor (`/var/www/html/config.local.php`)
+
+Edite o arquivo no VPS (não commite no repositório):
 
 ```php
 $config['stripe']['enabled'] = true;
 $config['stripe']['environment'] = 'production'; // sandbox para teste
-$config['stripe']['secretKey']['production'] = 'sk_live_...';
-$config['stripe']['secretKey']['sandbox'] = 'sk_test_...';
+$config['stripe']['secretKey']['production'] = 'sk_live_SUA_CHAVE';
+$config['stripe']['secretKey']['sandbox'] = '';
+$config['stripe']['publishableKey']['production'] = 'pk_live_SUA_CHAVE';
+$config['stripe']['publishableKey']['sandbox'] = '';
 $config['stripe']['webhookSecret']['production'] = 'whsec_...';
+$config['stripe']['webhookSecret']['sandbox'] = '';
 ```
 
 Obtenha em: [Stripe Dashboard → API keys](https://dashboard.stripe.com/apikeys)
+
+Pull seguro (preserva `config.local.php`):
+
+```bash
+bash deploy/server-git-pull.sh
+```
 
 ## 2. Webhook
 

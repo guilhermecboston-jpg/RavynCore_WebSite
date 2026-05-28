@@ -18,18 +18,9 @@ git pull origin main
 git stash pop 2>/dev/null || true
 git update-index --no-assume-unchanged config.local.php 2>/dev/null || true
 
-# Garante bloco Stripe se faltar (não sobrescreve chaves existentes)
-if [ -f config.local.php ] && ! grep -q "stripe\]['enabled\]" config.local.php && ! grep -q '\$config\['"'"'stripe'"'"'\]\['"'"'enabled'"'"'\]' config.local.php; then
-  cat >> config.local.php <<'PHP'
-
-$config['stripe']['enabled'] = true;
-$config['stripe']['environment'] = 'production';
-$config['stripe']['secretKey']['production'] = '';
-$config['stripe']['secretKey']['sandbox'] = '';
-$config['stripe']['webhookSecret']['production'] = '';
-$config['stripe']['webhookSecret']['sandbox'] = '';
-PHP
-  echo "Bloco Stripe adicionado em config.local.php — preencha sk_live_ e whsec_"
+# Aviso se Stripe estiver sem secretKey (não altera config.local.php automaticamente)
+if [ -f config.local.php ] && ! grep -qE "secretKey.*production.*sk_(live|test)_" config.local.php; then
+  echo "AVISO: Stripe secretKey não encontrada em config.local.php — veja deploy/STRIPE_SETUP.md"
 fi
 
 php system/bin/clear_cache.php 2>/dev/null || true
