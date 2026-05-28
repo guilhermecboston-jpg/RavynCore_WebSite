@@ -486,7 +486,8 @@ function ravynDonateSyncPixOrderStatus($db, array $order): array
         'coins' => (int)($order['coins'] ?? 0),
         'loyalty_points' => ravynDonateOrderLoyaltyPoints($order),
         'amount_brl' => (float)($order['amount_brl'] ?? 0),
-        'redirect_delay_seconds' => max(5, (int)($pixCfg['final_delay_seconds'] ?? 10)),
+        'redirect_delay_seconds' => max(8, (int)($pixCfg['final_delay_seconds'] ?? 15)),
+        'success_display_seconds' => max(8, (int)($pixCfg['success_display_seconds'] ?? 12)),
     ];
 }
 

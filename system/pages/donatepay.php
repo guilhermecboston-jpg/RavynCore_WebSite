@@ -152,6 +152,8 @@ if ($gateway === 'pix') {
         'payment_status' => (string)($pixData['status'] ?? 'pending'),
         'status_url' => BASE_URL . '?subtopic=donatepixstatus&order=' . urlencode((string)$order['order_ref']),
         'loyalty_points' => ravynDonateOrderLoyaltyPoints($order),
+        'success_display_seconds' => max(8, (int)(ravynDonatePixConfig()['success_display_seconds'] ?? 12)),
+        'redirect_delay_seconds' => max(8, (int)(ravynDonatePixConfig()['final_delay_seconds'] ?? 15)),
     ]);
 }
 

@@ -40,6 +40,7 @@ ravynDonateJsonResponse([
     'amount_brl' => (float)($sync['amount_brl'] ?? 0),
     'remaining_seconds' => $sync['remaining_seconds'],
     'redirect_delay_seconds' => $sync['redirect_delay_seconds'],
+    'success_display_seconds' => (int)($sync['success_display_seconds'] ?? 12),
     'account_manage_url' => getLink('account/manage'),
     'donate_url' => getLink('donate'),
 ]);

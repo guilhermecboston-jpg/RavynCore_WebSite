@@ -76,7 +76,11 @@
 
   let pixPollTimer = null;
   let pixFinalTimer = null;
+  let pixRedirectTimer = null;
+  let pixApprovalHandled = false;
   let pixModalData = { coins: 0, loyalty_points: 0 };
+  const pixSuccessPanel = document.getElementById('rdPixSuccessPanel');
+  const pixStatusBox = document.getElementById('rdPixStatusBox');
 
   function stopPixTimers() {
     if (pixPollTimer) {
@@ -87,6 +91,10 @@
       clearInterval(pixFinalTimer);
       pixFinalTimer = null;
     }
+    if (pixRedirectTimer) {
+      clearTimeout(pixRedirectTimer);
+      pixRedirectTimer = null;
+    }
   }
 
   function setPixStatus(icon, title, message) {
@@ -95,23 +103,24 @@
     document.getElementById('rdPixStatusMessage').textContent = message;
   }
 
-  function startFinalRedirect(seconds, targetUrl) {
-    let left = Math.max(1, Number(seconds || 10));
-    setPixStatus(
-      document.getElementById('rdPixStatusIcon').textContent,
-      document.getElementById('rdPixStatusTitle').textContent,
-      document.getElementById('rdPixStatusMessage').textContent + ' Redirecionando em ' + left + 's.'
-    );
-    pixFinalTimer = setInterval(() => {
-      left -= 1;
-      if (left <= 0) {
-        stopPixTimers();
-        window.location.href = targetUrl;
-        return;
-      }
-      const baseMessage = document.getElementById('rdPixStatusMessage').textContent.replace(/ Redirecionando em \d+s\.$/, '');
-      document.getElementById('rdPixStatusMessage').textContent = baseMessage + ' Redirecionando em ' + left + 's.';
+  function updatePixRedirectCountdown(left, targetUrl) {
+    const redirectEl = document.getElementById('rdPixSuccessRedirect');
+    if (redirectEl) {
+      redirectEl.textContent = 'Redirecionando para sua conta em ' + left + 's...';
+    }
+    if (left <= 0) {
+      stopPixTimers();
+      window.location.href = targetUrl;
+      return;
+    }
+    pixFinalTimer = setTimeout(() => {
+      updatePixRedirectCountdown(left - 1, targetUrl);
     }, 1000);
+  }
+
+  function startFinalRedirect(seconds, targetUrl) {
+    const left = Math.max(3, Number(seconds || 15));
+    updatePixRedirectCountdown(left, targetUrl);
   }
 
   function formatPixNumber(value) {
@@ -125,31 +134,76 @@
     const qrWrap = document.querySelector('.rd-pix-modal-qr-wrap');
     const codeWrap = document.querySelector('.rd-pix-modal-code-wrap');
     const hint = document.querySelector('.rd-pix-modal-hint');
+    const summary = document.querySelector('.rd-pix-modal-summary');
+    const sub = document.querySelector('.rd-pix-modal-sub');
     if (qrWrap) qrWrap.hidden = !!enabled;
     if (codeWrap) codeWrap.hidden = !!enabled;
     if (hint) hint.hidden = !!enabled;
+    if (summary) summary.hidden = !!enabled;
+    if (sub) sub.hidden = !!enabled;
+    if (pixStatusBox) pixStatusBox.hidden = !!enabled;
+    if (pixSuccessPanel) pixSuccessPanel.hidden = !enabled;
   }
 
-  function applyPixState(payload) {
-    const uiState = String(payload.ui_state || 'pending');
-    const delaySeconds = Number(payload.redirect_delay_seconds || 10);
+  function showPixApproved(payload) {
+    if (pixApprovalHandled) return;
+    pixApprovalHandled = true;
+    stopPixTimers();
+
     if (payload.coins != null) {
       pixModalData.coins = Number(payload.coins);
     }
     if (payload.loyalty_points != null) {
       pixModalData.loyalty_points = Number(payload.loyalty_points);
     }
-    if (uiState === 'approved') {
-      const coins = formatPixNumber(pixModalData.coins);
-      const loyalty = formatPixNumber(pixModalData.loyalty_points);
-      setPixApprovedLayout(true);
-      setPixStatus(
-        '✅',
-        'Pagamento APROVADO!',
-        'Obrigado! Adicionado em sua account: ' + coins + ' RavynCore Coins e ' + loyalty + ' Loyalty Points.'
-      );
-      stopPixTimers();
-      startFinalRedirect(delaySeconds, payload.account_manage_url || '/?account/manage');
+
+    const coins = formatPixNumber(pixModalData.coins);
+    const loyalty = formatPixNumber(pixModalData.loyalty_points);
+    const successText = 'Obrigado! Adicionado em sua account: ' + coins + ' RavynCore Coins e ' + loyalty + ' Loyalty Points.';
+    const titleEl = document.getElementById('rdPixModalTitle');
+    if (titleEl) {
+      titleEl.textContent = 'Pagamento APROVADO!';
+    }
+    const successTextEl = document.getElementById('rdPixSuccessText');
+    if (successTextEl) {
+      successTextEl.textContent = successText;
+    }
+    const redirectEl = document.getElementById('rdPixSuccessRedirect');
+    if (redirectEl) {
+      redirectEl.textContent = 'Preparando redirecionamento...';
+    }
+
+    setPixApprovedLayout(true);
+    setPixStatus('✅', 'Pagamento APROVADO!', successText);
+
+    const displaySeconds = Math.max(8, Number(payload.success_display_seconds || 12));
+    const redirectSeconds = Math.max(5, Number(payload.redirect_delay_seconds || 15));
+    const targetUrl = payload.account_manage_url || '/?subtopic=accountmanagement';
+
+    pixRedirectTimer = setTimeout(() => {
+      startFinalRedirect(redirectSeconds, targetUrl);
+    }, displaySeconds * 1000);
+  }
+
+  function isPixApproved(payload) {
+    const uiState = String(payload.ui_state || 'pending');
+    const orderStatus = String(payload.order_status || '');
+    return uiState === 'approved'
+      || Number(payload.delivered) === 1
+      || orderStatus === 'paid';
+  }
+
+  function applyPixState(payload) {
+    const uiState = String(payload.ui_state || 'pending');
+    const delaySeconds = Number(payload.redirect_delay_seconds || 15);
+    if (payload.coins != null) {
+      pixModalData.coins = Number(payload.coins);
+    }
+    if (payload.loyalty_points != null) {
+      pixModalData.loyalty_points = Number(payload.loyalty_points);
+    }
+    if (isPixApproved(payload)) {
+      showPixApproved(payload);
       return;
     }
     setPixApprovedLayout(false);
@@ -210,6 +264,7 @@
   }
 
   function openPixModal(data) {
+    pixApprovalHandled = false;
     pixModalData.coins = Number(data.coins || 0);
     pixModalData.loyalty_points = Number(data.loyalty_points || 0);
     document.getElementById('rdPixOrderRef').textContent = data.order_ref || '—';
@@ -237,6 +292,7 @@
 
   function closePixModal() {
     stopPixTimers();
+    pixApprovalHandled = false;
     setPixApprovedLayout(false);
     pixModal.hidden = true;
     pixModal.setAttribute('aria-hidden', 'true');

@@ -538,6 +538,47 @@
   font-size: 1.15rem;
 }
 
+.rd-pix-success-panel {
+  display: none;
+  text-align: center;
+  padding: 22px 18px;
+  margin: 8px 0 14px;
+  border-radius: 14px;
+  border: 1px solid #3ecf7a;
+  background: linear-gradient(135deg, rgba(24, 68, 44, 0.95), rgba(18, 32, 58, 0.95));
+  box-shadow: 0 0 28px rgba(62, 207, 122, 0.28);
+}
+
+.rd-pix-modal.rd-pix-approved .rd-pix-success-panel {
+  display: block;
+}
+
+.rd-pix-success-icon {
+  font-size: 42px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.rd-pix-success-title {
+  margin: 0 0 10px;
+  font-size: 1.35rem;
+  color: #7dffb0;
+  letter-spacing: 0.02em;
+}
+
+.rd-pix-success-text {
+  margin: 0 0 12px;
+  color: #e8f2ff;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.rd-pix-success-redirect {
+  margin: 0;
+  color: #b8c7ef;
+  font-size: 13px;
+}
+
 .rd-pix-modal-code-wrap span {
   display: block;
   margin-bottom: 6px;
