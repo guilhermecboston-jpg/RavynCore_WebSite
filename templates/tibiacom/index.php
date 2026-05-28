@@ -134,6 +134,7 @@ if (count($charBazaarMenuItems) < 2) {
 }
 $donateMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['donate', 'shop']);
 $systemMenuItems = [
+    ['name' => 'Boss Finder', 'link_full' => BASE_URL . '?subtopic=bossfinder', 'blank' => false],
     ['name' => 'Supreme Tasks', 'link_full' => BASE_URL . '?subtopic=supremetasks', 'blank' => false],
     ['name' => 'Addon&Mount Bonuses', 'link_full' => BASE_URL . '?subtopic=addonmountbonuses', 'blank' => false],
     ['name' => "Elemental's Stones Bonuses", 'link_full' => BASE_URL . '?subtopic=elementalstonesbonuses', 'blank' => false],
