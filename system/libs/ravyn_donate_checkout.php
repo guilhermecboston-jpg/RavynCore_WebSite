@@ -1123,6 +1123,9 @@ function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null, ?
         return null;
     }
 
+    if (!function_exists('ravynPublicBaseUrl')) {
+        require_once SYSTEM . 'functions.php';
+    }
     $baseUrl = ravynPublicBaseUrl();
     $successUrl = $baseUrl . '?subtopic=donate&action=final&gateway=stripe&order='
         . urlencode((string)$order['order_ref']) . '&session_id={CHECKOUT_SESSION_ID}';

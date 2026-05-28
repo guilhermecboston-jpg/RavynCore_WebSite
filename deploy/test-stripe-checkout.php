@@ -6,6 +6,8 @@
  */
 chdir(dirname(__DIR__));
 require 'common.php';
+require_once SYSTEM . 'functions.php';
+require_once SYSTEM . 'init.php';
 require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
 
 $order = [
