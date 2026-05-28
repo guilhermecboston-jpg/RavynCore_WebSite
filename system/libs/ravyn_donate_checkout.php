@@ -912,6 +912,47 @@ function ravynDonateDeliverOrder($db, array $order, string $paymentId, string $p
     }
 }
 
+function ravynDonateAppendQueryParams(string $url, array $params): string
+{
+    if ($params === []) {
+        return $url;
+    }
+    $sep = str_contains($url, '?') ? '&' : '?';
+    $parts = [];
+    foreach ($params as $key => $value) {
+        $parts[] = rawurlencode((string)$key) . '=' . rawurlencode((string)$value);
+    }
+
+    return $url . $sep . implode('&', $parts);
+}
+
+function ravynDonateBuildMercadoPagoPayer(array $order, bool $checkoutPro = false): array
+{
+    $nameParts = preg_split('/\s+/u', trim((string)($order['full_name'] ?? '')), 2);
+    $firstName = $nameParts[0] ?? 'Cliente';
+    $lastName = $nameParts[1] ?? 'RavynCore';
+    $payer = [
+        'name' => $firstName,
+        'surname' => $lastName,
+    ];
+    // Checkout Pro: e-mail na preferência diferente da conta MP logada deixa "Pagar"/Pix cinza
+    if (!$checkoutPro) {
+        $email = trim((string)($order['email'] ?? ''));
+        if ($email !== '') {
+            $payer['email'] = $email;
+        }
+    }
+
+    $taxId = preg_replace('/\D/', '', (string)($order['tax_id'] ?? ''));
+    if (($order['region'] ?? 'BR') === 'BR' && strlen($taxId) === 11) {
+        $payer['identification'] = ['type' => 'CPF', 'number' => $taxId];
+    } elseif ($taxId !== '') {
+        $payer['identification'] = ['type' => 'Otro', 'number' => $taxId];
+    }
+
+    return $payer;
+}
+
 function ravynDonateMercadoPagoCheckoutError(string $response, int $httpCode, string $curlError = ''): string
 {
     $msg = 'Não foi possível abrir o Mercado Pago.';
@@ -946,51 +987,64 @@ function ravynDonateCreateMercadoPagoCheckout(array $order, ?string &$error = nu
         return null;
     }
 
-    $baseUrl = ravynPublicBaseUrl();
+    if (!function_exists('ravynPublicBaseUrl')) {
+        require_once SYSTEM . 'functions.php';
+    }
+    $baseUrl = rtrim(ravynPublicBaseUrl(), '/') . '/';
     $redirectPath = $config['mercadoPago']['urlRedirect'] ?? '?subtopic=donate&action=final';
-    $successUrl = $baseUrl . ltrim($redirectPath, '/') . '&gateway=mercadopago&order=' . urlencode($order['order_ref']);
-    $failureUrl = $baseUrl . '?subtopic=donate&order=' . urlencode($order['order_ref']);
-    $notificationUrl = rtrim($baseUrl, '/') . '/payments/mercadopago.php';
+    $successUrl = ravynDonateAppendQueryParams(
+        $baseUrl . ltrim($redirectPath, '/'),
+        ['gateway' => 'mercadopago', 'order' => (string)$order['order_ref']]
+    );
+    $failureUrl = ravynDonateAppendQueryParams(
+        $baseUrl . ltrim('?subtopic=donate', '/'),
+        ['order' => (string)$order['order_ref']]
+    );
+    $pendingUrl = ravynDonateAppendQueryParams(
+        $baseUrl . ltrim($redirectPath, '/'),
+        ['gateway' => 'mercadopago', 'order' => (string)$order['order_ref'], 'status' => 'pending']
+    );
+    $notificationUrl = $baseUrl . 'payments/mercadopago.php';
 
-    $desc = $order['coins'] . ' RavynCore Coins';
+    $amount = round((float)$order['amount_brl'], 2);
+    if ($amount < 0.5) {
+        $error = 'Valor mínimo do Mercado Pago é R$ 0,50.';
+        return null;
+    }
+
+    $desc = (int)$order['coins'] . ' RavynCore Coins';
     $payload = [
         'items' => [[
             'id' => (string)$order['package_id'],
             'title' => $desc,
-            'description' => 'Donate: ' . $desc,
+            'description' => 'RavynCore Donate ' . (string)$order['order_ref'],
+            'category_id' => 'others',
             'quantity' => 1,
             'currency_id' => 'BRL',
-            'unit_price' => (float)$order['amount_brl'],
+            'unit_price' => $amount,
         ]],
-        'external_reference' => $order['order_ref'],
+        'external_reference' => (string)$order['order_ref'],
+        'statement_descriptor' => 'RAVYNCORE',
+        'payer' => ravynDonateBuildMercadoPagoPayer($order, true),
         'back_urls' => [
             'success' => $successUrl,
-            'pending' => $successUrl,
+            'pending' => $pendingUrl,
             'failure' => $failureUrl,
         ],
         'metadata' => [
-            'order_ref' => $order['order_ref'],
-            'code' => $order['package_id'],
+            'order_ref' => (string)$order['order_ref'],
+            'code' => (string)$order['package_id'],
             'account_id' => (string)$order['account_id'],
         ],
+        'expires' => true,
+        'expiration_date_from' => gmdate('Y-m-d\TH:i:s.000\Z'),
+        'expiration_date_to' => gmdate('Y-m-d\TH:i:s.000\Z', time() + 86400),
     ];
-
-    $payer = ['email' => $order['email']];
-    if (!empty($order['full_name'])) {
-        $payer['name'] = $order['full_name'];
-    }
-    if (!empty($order['tax_id'])) {
-        $payer['identification'] = [
-            'type' => ($order['region'] ?? 'BR') === 'BR' ? 'CPF' : 'Otro',
-            'number' => preg_replace('/\D/', '', (string)$order['tax_id']),
-        ];
-    }
-    $payload['payer'] = $payer;
 
     $httpsOk = stripos($successUrl, 'https://') === 0 && stripos($notificationUrl, 'https://') === 0;
     if ($httpsOk) {
         $payload['notification_url'] = $notificationUrl;
-        $payload['auto_return'] = 'approved';
+        // auto_return desativado: com URLs complexas o MP deixa "Pagar"/"Criar Pix" cinza
     } else {
         log_append(
             'ravyn_donate_errors.log',
@@ -1003,7 +1057,17 @@ function ravynDonateCreateMercadoPagoCheckout(array $order, ?string &$error = nu
     $pmConfig = $config['mercadoPago']['paymentMethods'] ?? [];
     $maxInstallments = (int)($pmConfig['maxInstallments'] ?? 12);
     if ($maxInstallments > 0) {
-        $payload['payment_methods'] = ['installments' => min($maxInstallments, 24)];
+        $payload['payment_methods'] = [
+            'installments' => min($maxInstallments, 24),
+            'default_installments' => 1,
+        ];
+        $excludedTypes = $pmConfig['excludedPaymentTypes'] ?? [];
+        if (is_array($excludedTypes) && $excludedTypes !== []) {
+            $payload['payment_methods']['excluded_payment_types'] = array_map(
+                static fn($id) => ['id' => (string)$id],
+                $excludedTypes
+            );
+        }
     }
 
     $ch = curl_init('https://api.mercadopago.com/checkout/preferences');
@@ -1035,6 +1099,14 @@ function ravynDonateCreateMercadoPagoCheckout(array $order, ?string &$error = nu
         $error = ravynDonateMercadoPagoCheckoutError((string)$response, $httpCode, $curlError);
         return null;
     }
+
+    if (is_array($data) && !empty($data['id'])) {
+        log_append(
+            'ravyn_donate.log',
+            date('Y-m-d H:i:s') . ' MP preference ' . $data['id'] . ' order=' . $order['order_ref']
+        );
+    }
+
     return $checkoutUrl;
 }
 
