@@ -1134,42 +1134,32 @@ function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null, ?
         return null;
     }
 
-    $payload = [
+    // Parâmetros planos (formato exigido pela API Stripe v1)
+    $params = [
         'mode' => 'payment',
         'success_url' => $successUrl,
         'cancel_url' => $cancelUrl,
         'client_reference_id' => (string)$order['order_ref'],
         'customer_email' => (string)$order['email'],
         'locale' => 'pt-BR',
-        'payment_method_types' => ['card'],
-        'metadata' => [
-            'order_ref' => (string)$order['order_ref'],
-            'code' => (string)$order['package_id'],
-            'account_id' => (string)$order['account_id'],
-        ],
-        'line_items' => [[
-            'quantity' => 1,
-            'price_data' => [
-                'currency' => 'brl',
-                'unit_amount' => $unitAmount,
-                'product_data' => [
-                    'name' => (int)$order['coins'] . ' RavynCore Coins',
-                    'description' => 'Doação RavynCore — pedido ' . (string)$order['order_ref'],
-                ],
-            ],
-        ]],
+        'payment_method_types[0]' => 'card',
+        'metadata[order_ref]' => (string)$order['order_ref'],
+        'metadata[code]' => (string)$order['package_id'],
+        'metadata[account_id]' => (string)$order['account_id'],
+        'line_items[0][quantity]' => '1',
+        'line_items[0][price_data][currency]' => 'brl',
+        'line_items[0][price_data][unit_amount]' => (string)$unitAmount,
+        'line_items[0][price_data][product_data][name]' => (int)$order['coins'] . ' RavynCore Coins',
+        'line_items[0][price_data][product_data][description]' => 'RavynCore Donate ' . (string)$order['order_ref'],
     ];
 
-    // Stripe API v1 exige application/x-www-form-urlencoded (não JSON)
     $ch = curl_init('https://api.stripe.com/v1/checkout/sessions');
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
-        CURLOPT_HTTPHEADER => [
-            'Authorization: Bearer ' . $secretKey,
-            'Content-Type: application/x-www-form-urlencoded',
-        ],
-        CURLOPT_POSTFIELDS => http_build_query($payload),
+        CURLOPT_USERPWD => $secretKey . ':',
+        CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],
+        CURLOPT_POSTFIELDS => http_build_query($params, '', '&', PHP_QUERY_RFC1738),
         CURLOPT_TIMEOUT => 30,
     ]);
     $response = curl_exec($ch);
