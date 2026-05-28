@@ -195,6 +195,25 @@ function ravynDonateStripeEnabled(): bool
     return ravynDonateStripeSecretKey() !== '';
 }
 
+function ravynDonateStripeSecretKeyProblem(?string $key = null): string
+{
+    $key = trim($key ?? ravynDonateStripeSecretKey());
+    if ($key === '') {
+        return 'Defina secretKey em config.local.php (Secret key sk_live_... no painel Stripe).';
+    }
+    if (str_starts_with($key, 'pk_')) {
+        return 'Você colocou a Publishable key (pk_...) em secretKey. Use a Secret key (sk_live_...).';
+    }
+    if (preg_match('/(AQUI|COLE_|SUA_CHAVE|\.\.\.)/i', $key)) {
+        return 'secretKey ainda é texto de exemplo. Cole a Secret key real do Stripe Dashboard.';
+    }
+    if (!preg_match('/^sk_(live|test)_[A-Za-z0-9]+$/', $key)) {
+        return 'secretKey inválida: deve começar com sk_live_ ou sk_test_ (sem espaços).';
+    }
+
+    return '';
+}
+
 /**
  * Exibir card Stripe na página donate (independente de secretKey configurada).
  */
@@ -1073,8 +1092,9 @@ function ravynDonateSyncStripeOrderStatus($db, array $order, string $sessionId =
 function ravynDonateCreateStripeCheckout(array $order, ?string &$error = null, ?string &$sessionId = null): ?string
 {
     $secretKey = ravynDonateStripeSecretKey();
-    if ($secretKey === '') {
-        $error = 'Stripe não configurado. Defina secretKey em config.local.php (sk_live_... ou sk_test_...).';
+    $keyProblem = ravynDonateStripeSecretKeyProblem($secretKey);
+    if ($keyProblem !== '') {
+        $error = 'Stripe: ' . $keyProblem;
         return null;
     }
 

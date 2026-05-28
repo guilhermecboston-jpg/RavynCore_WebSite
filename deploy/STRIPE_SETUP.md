@@ -19,6 +19,13 @@ $config['stripe']['webhookSecret']['sandbox'] = '';
 
 Obtenha em: [Stripe Dashboard → API keys](https://dashboard.stripe.com/apikeys)
 
+| Chave no Stripe | Onde colocar | Usada no donate? |
+|-----------------|--------------|------------------|
+| **Secret key** `sk_live_...` | `secretKey['production']` | **Sim** (cria Checkout) |
+| **Publishable key** `pk_live_...` | `publishableKey['production']` | Não (opcional; front-end futuro) |
+
+Erro `Invalid API Key ...AQUI` = ainda está o texto de exemplo `sk_live_COLE_SUA_CHAVE_AQUI` no VPS, ou `pk_` no lugar de `sk_`.
+
 Pull seguro (preserva `config.local.php`):
 
 ```bash
