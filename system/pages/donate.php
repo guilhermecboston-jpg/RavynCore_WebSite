@@ -1,5 +1,5 @@
 <?php
-global $config, $twig, $logged, $account_logged, $db;
+global $config, $twig, $logged, $account_logged, $db, $action;
 defined('MYAAC') or die('Direct access not allowed!');
 
 require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
@@ -102,15 +102,23 @@ if (empty($action)) {
         }
     }
 
-    echo $twig->render('donate-final.html.twig', [
-        'order_ref' => htmlspecialchars($orderRef, ENT_QUOTES, 'UTF-8'),
-        'gateway' => htmlspecialchars($gateway, ENT_QUOTES, 'UTF-8'),
-        'session_id' => htmlspecialchars($sessionId, ENT_QUOTES, 'UTF-8'),
-        'status_url' => $statusUrl,
-        'ui_state' => $uiState,
-        'coins' => $coins,
-        'loyalty_points' => $loyaltyPoints,
-        'account_manage_url' => getLink('account/manage'),
-        'donate_url' => getLink('donate'),
-    ]);
+    try {
+        echo $twig->render('donate-final.html.twig', [
+            'order_ref' => $orderRef,
+            'gateway' => $gateway,
+            'session_id' => $sessionId,
+            'status_url' => $statusUrl,
+            'ui_state' => $uiState,
+            'coins' => (int)$coins,
+            'loyalty_points' => (int)$loyaltyPoints,
+            'account_manage_url' => getLink('account/manage'),
+            'donate_url' => getLink('donate'),
+        ]);
+    } catch (Throwable $e) {
+        log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' donate final twig: ' . $e->getMessage());
+        echo '<div style="max-width:640px;margin:24px auto;padding:20px;background:#1a2238;color:#dce8ff;border-radius:10px">'
+            . '<h2 style="color:#3ecf7a">Pagamento recebido</h2>'
+            . '<p>Seu pagamento foi processado. As coins serão creditadas em instantes.</p>'
+            . '<p><a href="' . htmlspecialchars(getLink('account/manage'), ENT_QUOTES, 'UTF-8') . '">Minha conta</a></p></div>';
+    }
 }

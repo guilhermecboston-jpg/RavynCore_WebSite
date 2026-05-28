@@ -871,7 +871,10 @@ function ravynDonateDeliverOrder($db, array $order, string $paymentId, string $p
         $field = 'coins_transferable';
     }
 
-    $db->beginTransaction();
+    $useTransaction = method_exists($db, 'beginTransaction');
+    if ($useTransaction) {
+        $db->beginTransaction();
+    }
     try {
         $db->exec("UPDATE `accounts` SET `{$field}` = `{$field}` + {$coins} WHERE `id` = {$accountId}");
         if (function_exists('ravynGrantDonationLoyaltyPoints')) {
@@ -893,11 +896,13 @@ function ravynDonateDeliverOrder($db, array $order, string $paymentId, string $p
             . $db->quote($paymentId) . ', `payment_status` = ' . $db->quote($paymentStatus)
             . ', `paid_at` = NOW() WHERE `id` = ' . (int)$order['id']
         );
-        $db->commit();
+        if ($useTransaction && method_exists($db, 'commit')) {
+            $db->commit();
+        }
         log_append('ravyn_donate.log', date('Y-m-d H:i:s') . " DELIVERED {$order['order_ref']} account={$accountId} coins={$coins} pay={$paymentId}");
         return true;
     } catch (Throwable $e) {
-        if ($db->inTransaction()) {
+        if ($useTransaction && method_exists($db, 'inTransaction') && $db->inTransaction() && method_exists($db, 'rollBack')) {
             $db->rollBack();
         }
         log_append('ravyn_donate_errors.log', date('Y-m-d H:i:s') . ' deliver: ' . $e->getMessage());
