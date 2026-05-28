@@ -1,14 +1,18 @@
 #!/usr/bin/env php
 <?php
 /**
- * Testa criação de Checkout Session no servidor.
+ * Testa criação de Checkout Session no servidor (sem MySQL).
  * Uso: php deploy/test-stripe-checkout.php
  */
 chdir(dirname(__DIR__));
 require 'common.php';
 require_once SYSTEM . 'functions.php';
-require_once SYSTEM . 'init.php';
 require_once SYSTEM . 'libs/ravyn_donate_checkout.php';
+
+if (!defined('BASE_URL')) {
+    $base = (string)($config['payment_public_url'] ?? $config['public_url'] ?? 'https://ravyncore.com/');
+    define('BASE_URL', rtrim($base, '/') . '/');
+}
 
 $order = [
     'order_ref' => 'RD-TEST-' . time(),
