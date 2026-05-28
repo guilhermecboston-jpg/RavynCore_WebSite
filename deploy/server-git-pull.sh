@@ -4,6 +4,12 @@
 set -e
 cd /var/www/html
 
+# Ubuntu: "php" pode ser 8.3 sem curl; o site usa php8.2-fpm
+PHPCLI="/usr/bin/php8.2"
+if [ ! -x "$PHPCLI" ]; then
+  PHPCLI="php"
+fi
+
 BACKUP="/root/config.local.php.backup-$(date +%F-%H%M%S)"
 CONFIG_SAFE="/root/config.local.php.deploy-safe"
 
@@ -35,10 +41,10 @@ elif [ -f "$BACKUP" ]; then
 fi
 
 if [ -f deploy/check-stripe.php ]; then
-  php deploy/check-stripe.php 2>/dev/null || true
+  "$PHPCLI" deploy/check-stripe.php 2>/dev/null || true
 fi
 
-php system/bin/clear_cache.php 2>/dev/null || true
+"$PHPCLI" system/bin/clear_cache.php 2>/dev/null || true
 rm -rf system/cache/twig/* 2>/dev/null || true
 systemctl restart php8.2-fpm 2>/dev/null || true
 echo "Deploy concluído. Commit: $(git rev-parse --short HEAD)"

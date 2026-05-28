@@ -1,4 +1,4 @@
-#!/usr/bin/env php
+#!/usr/bin/php8.2
 <?php
 /**
  * Diagnóstico Stripe no VPS (não expõe a chave inteira):

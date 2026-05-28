@@ -3,4 +3,6 @@
 # (preferir: php deploy/set-stripe-webhook-secret.php whsec_...)
 set -e
 cd /var/www/html
-exec php deploy/set-stripe-webhook-secret.php "$@"
+PHPCLI="/usr/bin/php8.2"
+[ -x "$PHPCLI" ] || PHPCLI="php"
+exec "$PHPCLI" deploy/set-stripe-webhook-secret.php "$@"

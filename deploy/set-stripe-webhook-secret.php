@@ -1,4 +1,4 @@
-#!/usr/bin/env php
+#!/usr/bin/php8.2
 <?php
 /**
  * Grava whsec_ em config/ravyncore.stripe.local.php (persiste após git pull).

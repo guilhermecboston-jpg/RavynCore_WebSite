@@ -1,4 +1,4 @@
-#!/usr/bin/env php
+#!/usr/bin/php8.2
 <?php
 /**
  * Testa criação de Checkout Session no servidor (sem MySQL).
