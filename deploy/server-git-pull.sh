@@ -34,8 +34,8 @@ elif [ -f "$BACKUP" ]; then
   echo "config.local.php restaurado do backup."
 fi
 
-if [ -f config.local.php ] && ! grep -qE "secretKey.*production.*sk_(live|test)_" config.local.php; then
-  echo "AVISO: Stripe secretKey não encontrada em config.local.php — veja deploy/STRIPE_SETUP.md"
+if [ -f deploy/check-stripe.php ]; then
+  php deploy/check-stripe.php 2>/dev/null || true
 fi
 
 php system/bin/clear_cache.php 2>/dev/null || true

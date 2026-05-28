@@ -35,7 +35,14 @@ echo "chave usada pelo donate: " . mask_key($active) . " prefixo={$prefix}\n";
 echo "ok: " . ($problem === '' ? 'SIM' : 'NÃO — ' . $problem) . "\n";
 
 $wh = trim((string)($stripe['webhookSecret']['production'] ?? ''));
-echo "webhookSecret[production]: " . ($wh === '' ? '(vazio — cole whsec_ do Stripe)' : mask_key($wh)) . "\n";
+if ($wh === '') {
+    echo "webhookSecret[production]: (vazio)\n";
+    echo "  → php deploy/set-stripe-webhook-secret.php whsec_...  (Stripe → Webhooks → Reveal secret)\n";
+} elseif (!str_starts_with($wh, 'whsec_')) {
+    echo "webhookSecret[production]: inválido (deve começar com whsec_, não sk_)\n";
+} else {
+    echo "webhookSecret[production]: " . mask_key($wh) . " ok\n";
+}
 
 $envVar = getenv('STRIPE_SECRET_KEY');
 if ($envVar !== false && $envVar !== '') {

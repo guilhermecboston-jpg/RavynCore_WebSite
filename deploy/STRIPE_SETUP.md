@@ -48,7 +48,13 @@ No [Stripe Workbench → Webhooks](https://dashboard.stripe.com/workbench/webhoo
 | Endpoint URL | `https://ravyncore.com/webhook/stripe` ou `https://ravyncore.com/payments/stripe.php` |
 | Eventos | `checkout.session.completed` |
 
-Copie o **Signing secret** (`whsec_...`) para `webhookSecret['production']` no `config.local.php` (não coloque `whsec_` em `secretKey`).
+Copie o **Signing secret** (`whsec_...`) e grave no VPS:
+
+```bash
+php deploy/set-stripe-webhook-secret.php whsec_VALOR_REAL_DO_DASHBOARD
+```
+
+(Não use `whsec_COLE_AQUI...` — só o secret revelado no Stripe.)
 
 ## 3. Deploy
 
