@@ -142,17 +142,20 @@ class AssetParser:
         if not app.frame_group:
             return None
 
-        ordered = sorted(
-            app.frame_group,
-            key=lambda g: (0 if g.fixed_frame_group == 1 else 1 if g.fixed_frame_group == 0 else 2),
-        )
-        for fg in ordered:
-            thing = self._parse_frame_group(category, app, fg)
-            if thing and thing.sprite_ids:
-                return thing
-        return self._parse_frame_group(category, app, app.frame_group[0])
+        # Prefer moving animation, else idle, else first group
+        fg = None
+        for candidate in app.frame_group:
+            if candidate.fixed_frame_group == 1:
+                fg = candidate
+                break
+        if fg is None:
+            for candidate in app.frame_group:
+                if candidate.fixed_frame_group == 0:
+                    fg = candidate
+                    break
+        if fg is None:
+            fg = app.frame_group[0]
 
-    def _parse_frame_group(self, category: str, app, fg) -> Optional[ThingAppearance]:
         si = fg.sprite_info
         phases = max(1, len(si.animation.sprite_phase)) if si.animation.sprite_phase else 1
         durations = []

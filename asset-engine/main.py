@@ -60,17 +60,6 @@ def cmd_render(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_diagnose(args: argparse.Namespace) -> int:
-    from asset_engine.diagnose import diagnose_outfit
-
-    eng = RavynAssetEngine()
-    if args.kind != "outfit":
-        print("Only outfit diagnose supported in CLI for now.", file=sys.stderr)
-        return 1
-    print(json.dumps(diagnose_outfit(eng, int(args.id), addons=args.addons), indent=2, ensure_ascii=False))
-    return 0
-
-
 def cmd_regenerate_cache(_: argparse.Namespace) -> int:
     eng = get_engine(reload=True)
     if not eng.enabled:
@@ -94,12 +83,6 @@ def main() -> int:
     p_serve.add_argument("--host", default=None)
     p_serve.add_argument("--port", type=int, default=None)
     p_serve.set_defaults(func=cmd_serve)
-
-    p_diag = sub.add_parser("diagnose", help="Diagnose why an asset fails")
-    p_diag.add_argument("kind", choices=("outfit",))
-    p_diag.add_argument("id", type=int)
-    p_diag.add_argument("--addons", type=int, default=0)
-    p_diag.set_defaults(func=cmd_diagnose)
 
     p_render = sub.add_parser("render", help="Render one asset to cache")
     p_render.add_argument("kind", choices=("outfit", "item", "monster", "effect", "missile"))

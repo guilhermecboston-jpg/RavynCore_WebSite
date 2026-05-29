@@ -17,7 +17,7 @@ function ravyn_asset_engine_config(): array
     $defaults = [
         'enabled' => false,
         'base_url' => 'http://127.0.0.1:8765',
-        'timeout' => 20,
+        'timeout' => 8,
         'legacy_library_url' => 'https://www.ravyncore.com/images/library/',
     ];
 

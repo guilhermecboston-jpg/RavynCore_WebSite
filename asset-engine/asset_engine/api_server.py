@@ -12,7 +12,6 @@ from fastapi.staticfiles import StaticFiles
 
 from . import LEGACY_MESSAGE
 from .config import ASSET_ENGINE_ROOT, load_config
-from .diagnose import diagnose_outfit
 from .engine import RavynAssetEngine, get_engine
 from .utils import setup_logging
 
@@ -61,14 +60,6 @@ def create_app(engine: Optional[RavynAssetEngine] = None) -> FastAPI:
         if PLACEHOLDER.is_file():
             return FileResponse(PLACEHOLDER, media_type="image/png")
         raise HTTPException(404, "Asset not found")
-
-    @app.get("/api/diagnose/outfit")
-    def api_diagnose_outfit(
-        id: int = Query(..., alias="id"),
-        addons: int = 0,
-        direction: int = 2,
-    ):
-        return diagnose_outfit(eng, id, addons=addons, direction=direction)
 
     @app.get("/api/outfit")
     def api_outfit(
