@@ -28,8 +28,10 @@ images/things-cache/outfits/*
 !images/things-cache/mounts/.gitkeep
 !images/things-cache/outfits/.gitkeep
 
-# Scraper staging (optional copies)
-imagens/
+# Scraper staging (other paths under imagens/ stay local)
+imagens/*
+!imagens/creaturestibiawiki/
+!imagens/creaturestibiawiki/**
 
 # Local scraper logs
 scraper/logs/
