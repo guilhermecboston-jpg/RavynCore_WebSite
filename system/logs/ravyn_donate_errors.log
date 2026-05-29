@@ -1,0 +1,34 @@
+[Thu, 28 May 2026 08:35:51 -0300] 2026-05-28 08:35:51 PIX HTTP 401: {"cause":[{"code":7,"data":"28-05-2026T11:35:51UTC;4ad964e8-9b25-4d4e-9f5a-c370c185b21f","description":"Unauthorized use of live credentials"}],"error":"unauthorized","message":"Unauthorized use of live credentials","status":401}
+[Thu, 28 May 2026 08:44:03 -0300] 2026-05-28 08:44:03 PIX HTTP 401: {"cause":[{"code":7,"data":"28-05-2026T11:44:03UTC;0ae843c9-b412-4733-8eb1-016eaa1ad631","description":"Unauthorized use of live credentials"}],"error":"unauthorized","message":"Unauthorized use of live credentials","status":401}
+[Thu, 28 May 2026 08:51:39 -0300] 2026-05-28 08:51:39 PIX HTTP 401: {"cause":[{"code":7,"data":"28-05-2026T11:51:39UTC;92f72d38-e000-41da-af8e-b139e0be3de9","description":"Unauthorized use of live credentials"}],"error":"unauthorized","message":"Unauthorized use of live credentials","status":401}
+[Thu, 28 May 2026 08:56:19 -0300] 2026-05-28 08:56:19 PIX HTTP 401: {"cause":[{"code":7,"data":"28-05-2026T11:56:19UTC;7d84c582-5fee-4db0-a6c1-709155ba3742","description":"Unauthorized use of live credentials"}],"error":"unauthorized","message":"Unauthorized use of live credentials","status":401}
+[Thu, 28 May 2026 13:41:51 -0300] 2026-05-28 13:41:51 Stripe HTTP 401: {
+  "error": {
+    "message": "Invalid API Key provided: sk_live_***************AQUI",
+    "type": "invalid_request_error"
+  }
+}
+
+[Thu, 28 May 2026 13:51:07 -0300] 2026-05-28 13:51:07 Stripe HTTP 401: {
+  "error": {
+    "message": "Invalid API Key provided: zwlt-uer************qgxl",
+    "type": "invalid_request_error"
+  }
+}
+
+[Thu, 28 May 2026 14:07:46 -0300] 2026-05-28 14:07:46 Stripe HTTP 400: {
+  "error": {
+    "message": "Invalid request (check that your POST content type is application/x-www-form-urlencoded). If you have any questions, we can help at https://support.stripe.com/.",
+    "type": "invalid_request_error"
+  }
+}
+
+[Thu, 28 May 2026 14:07:46 -0300] 2026-05-28 14:07:46 Stripe key used prefix/suffix: sk_live…jtCb
+[Thu, 28 May 2026 14:17:36 -0300] 2026-05-28 14:17:36 Stripe HTTP 400: {
+  "error": {
+    "message": "Invalid request (check that your POST content type is application/x-www-form-urlencoded). If you have any questions, we can help at https://support.stripe.com/.",
+    "type": "invalid_request_error"
+  }
+}
+
+[Thu, 28 May 2026 14:17:36 -0300] 2026-05-28 14:17:36 Stripe key used prefix/suffix: sk_live…jtCb

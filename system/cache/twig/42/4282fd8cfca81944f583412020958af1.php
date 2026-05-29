@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/frogazure.html.twig */
+class __TwigTemplate_513089d69aa8093f60cdc0c52f7a9f78 extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=badger\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=assassin\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Azure Frogs</h2>  <img src=\"images/library/frogazure.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>Frogs come in many shapes, colours and sizes. The most common, the green Frog can be found on almost every lake or any other body of water as long as the climate is not too cold. While the green frog is harmless and only a threat to flies and other insects, the aggressive flora and fauna in the South has bred several subspecies of the frog. Distinguishable by eye-catching colours to warn their opponents, they possess a mild but annoying poisonous spittle. Usually they are harmless even if they appear in great numbers, but wounded adventurers who run out of resources face a real threat when stumbling upon a breeding ground of the little amphibians.</p>  <p>Azure Frogs have 60 hitpoints. They are strong against ice damage. On the other hand, they are weak against fire damage. It takes 305 mana to convince these creatures but they cannot be summoned.</p>  <p>Azure Frogs yield 20 experience points. They carry gold coins and worms with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/frogazure.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/frogazure.html.twig", "/var/www/html/system/templates/library/frogazure.html.twig");
+    }
+}

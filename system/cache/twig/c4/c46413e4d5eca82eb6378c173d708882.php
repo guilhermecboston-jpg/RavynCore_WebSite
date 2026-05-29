@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/smuggler.html.twig */
+class __TwigTemplate_fa227587674f2bc20b8f60bc762b9fac extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=snake\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=slug\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Smugglers</h2>  <img src=\"images/library/smuggler.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>Although the main goal of the common Smuggler is easy profit by circumventing taxes and embargoes, or by trading forbidden goods, they do not flinch from murdering and robbing those who find out about their operations. Smugglers can be found at hidden spots close to larger cities or in remote hideouts where they store their goods. Even though they are usually not well equipped for combat, their determination not to lose profit makes them still opponents to be reckoned with. Only lightly armoured, they usually try to retreat if they get seriously hurt or outnumbered.</p>  <p>Smugglers have 130 hitpoints. They are weak against death and physical damage. It takes 390 mana to summon or convince these creatures.</p>  <p>Smugglers yield 48 experience points. They carry gold coins, ham, knives, leather helmets, leather legs, short swords, torches and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/smuggler.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/smuggler.html.twig", "/var/www/html/system/templates/library/smuggler.html.twig");
+    }
+}

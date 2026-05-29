@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/elderbonelord.html.twig */
+class __TwigTemplate_e34aec8dfb33dc3ab35ea1c3ac2a268b extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=elderwyrm\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=efreet\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Elder Bonelords</h2>  <img src=\"images/library/elderbonelord.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>Elder Bonelords are the masters of that necromantic race. They have grown enormously over times and outlived the usual lifespan of its kind by cheating death in some sinister way with its necromantic powers. Just like the size of this creature has enlarged also its evilness and power has done. Its magic outshines that of an ordinary bonelord and its mastery of the necromantic arts has reached levels that had so far been unknown to bonelords. It is them who spawn the dreaded gazers that grow into new bonelords and ensure the existence of the race. It is them who lead the other species of their kind with an iron will and brutal suppression. And it is them who have accumulated knowledge about magic and especially necromancy that was never meant to be known by any creature, dead or alive.</p>  <p>Elder Bonelords have 500 hitpoints. They are immune to earth damage. Moreover, they are strong against death, energy and ice damage. On the other hand, they are weak against fire damage. These creatures can neither be summoned nor convinced. In addition, they are able to sense invisible creatures.</p>  <p>Elder Bonelords yield 280 experience points. They carry elder bonelord tentacles, gold coins, small flasks of eyedrops and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/elderbonelord.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/elderbonelord.html.twig", "/var/www/html/system/templates/library/elderbonelord.html.twig");
+    }
+}

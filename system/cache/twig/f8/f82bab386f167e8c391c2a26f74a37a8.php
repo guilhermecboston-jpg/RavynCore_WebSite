@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/mercuryblob.html.twig */
+class __TwigTemplate_4c465f46dc6b200d8f210f760ae123b1 extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=merlkin\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=medusa\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Mercury Blobs</h2>  <img src=\"images/library/mercuryblob.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>This silver fluid is actually some sort of residue of magical experiments involving teleporting and travelling to other dimensions. Actually, they are part of the usually unseen membrane that separates different states of existence such as dimensions, spheres and worlds. Sometimes, while something is passing from one state of existence to another, parts of the membrane are spilled into one of the worlds involved. Even if it is hard to believe, this residue seems to own some sort of intelligence or at least some instinct. However, it is also possible that a Mercury Blob has an incredibly high intellect which has a concept that we simply cannot grasp.<br/>Though the residue interacts with objects and people in our world, there seems no true purpose in its actions. Whenever it meets a human being it seems to start an attack; however, no malice can be attributed to this behaviour. It is doubtful whether the residue is aware of the harm it causes or the concept of harm at all. Maybe the attacks are a form of communication attempts. Sadly, these attempts are often lethal for mortals, and so it is strongly advised to fight back with all means.<br/>Its ability to produce a copy of itself might be another attempt to interact with our world.  As far as we can tell, killing a Mercury Blob results in cutting its connection to our world and letting it return into the membrane, its natural habitat.</p>  <p>Mercury Blobs have 150 hitpoints. They are immune to death damage. Moreover, they are strong against earth, fire, holy, ice and physical damage. These creatures can neither be summoned nor convinced.</p>  <p>Mercury Blobs yield 180 experience points. They carry globs of mercury with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/mercuryblob.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/mercuryblob.html.twig", "/var/www/html/system/templates/library/mercuryblob.html.twig");
+    }
+}

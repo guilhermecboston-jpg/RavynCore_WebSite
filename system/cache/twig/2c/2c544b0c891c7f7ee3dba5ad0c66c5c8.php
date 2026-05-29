@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/pirateghost.html.twig */
+class __TwigTemplate_db21a8f517cc3ef650b82a3c7f3ae102 extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=piratemarauder\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=piratecutthroat\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Pirate Ghosts</h2>  <img src=\"images/library/pirateghost.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>Considering the lifestyle of a pirate, it is no real surprise that several of them end up as cursed souls - never able to acquire some sort of afterlife. Bound to the world of the living, they continue their evil lifework of spreading fear and of murder. Almost impossible to be hurt, they pursue their victims with reckless malice that is frightful on its own. They posses several powers that are common to ghosts, but they seem to be slightly more accustomed and adapted to murder than others of their kind. While other ghosts seem more concerned about themselves and their dire fate, the Pirate Ghost actually seems to enjoy to inflict pain on the living ones. Some say, making others suffer lets them better bear their own misery.</p>  <p>Pirate Ghosts have 275 hitpoints. They are immune to death, earth and physical damage and cannot be paralyzed. On the other hand, they are weak against holy damage. These creatures can neither be summoned nor convinced.</p>  <p>Pirate Ghosts yield 250 experience points. They carry gold coins and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/pirateghost.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/pirateghost.html.twig", "/var/www/html/system/templates/library/pirateghost.html.twig");
+    }
+}

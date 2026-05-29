@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/cavedevourer.html.twig */
+class __TwigTemplate_4c23ecbd7e9e01434bc68002a916c4bc extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\"> <a style=\"float: right;\" href=\"?subtopic=creatures&race=caverat\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a> <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=cavechimera\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a> <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\"> <h2 style=\"float: right;\">Cave Devourers</h2> <img src=\"images/library/cavedevourer.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\"> <p>While we can only make vague assumptions how the deepest depths of the world might look like, it's inhabitants that were encountered in service of those below, might hint at a hostile environment in which predatory species rout our the weak and survival of the fittest takes place in extremes. The devourer is an extraordinary example of such principles. It is living machine of teeth and muscle, ready to chew and devour everything in its path. The sheer appetite of the devourer seems absurd to a level that borders magical abilities. Dwarfs claim, that devourers were observed that devoured piles of rocks, five times of more mass then themselves, without changing size of mass on their own. This lead to over the top tales of dwarfish explorers that assume that the individual devourers are just remote parts of a bigger organism that is magically connected to them and feeding on all that his remote maws devour. Wherever these stories came from, they have spread through the dwarfen troops and handled as common knowledge. There is yet no scientific evidence of such claims and attempts to capture a devourer only lead to the entrapped devourer turning it inside out, devouring itself, so to say and dying. Devourers diet seems to contain of everything. When left alone they devour minerals, though they don't tend to burrow tunnels while eating and rely instead on loose rocks. Given their appetite, it's remarkable, that they actually can concentrate on battle when needed and put their hunger aside for a while. When the battle is done though they scour the battlefield for corpses and everything that is too wounded to fight back. The dwarfs that fought them the most have another tale about them, claiming the devourers developed a special taste for rust and seem to see it as a delicacy. <br/>The devourers eternal hunger seems to rule all their actions so they know no fear or mercy in battle. They are constantly biting and gnawing, and almost enthusiastically employ this in battle to mangle their enemies. </p> <p>Cave Devourers have 4500 hitpoints. They are weak against fire damage. It takes 305 mana to convince these creatures but they cannot be summoned. In addition, they are able to sense invisible creatures.</p> <p>Cave Devourers yield 2380 experience points. They carry cave devourer eyes, cave devourer legs, cave devourer maws, crystalline arrows, slime hearts and sometimes other items with them.</p> </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/cavedevourer.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/cavedevourer.html.twig", "/var/www/html/system/templates/library/cavedevourer.html.twig");
+    }
+}

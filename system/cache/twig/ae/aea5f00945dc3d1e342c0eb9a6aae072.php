@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/ghoul.html.twig */
+class __TwigTemplate_f9463f1debb91b09c8185ebe7c76e6ee extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=giantspider\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=ghost\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Ghouls</h2>  <img src=\"images/library/ghoul.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>Ghouls are undead monsters that live in the holes and dungeons of Tibia. They are quite strong and extremely dangerous if they crop up in packs. Hiding in the darkness, they wait for incautious adventurers. They can heal themselves and suck life energy out of their opponents.</p>  <p>Ghouls have 100 hitpoints. They are immune to death damage and cannot be paralyzed. Moreover, they are strong against earth, energy and ice damage. On the other hand, they are weak against holy damage. It takes 450 mana to summon or convince these creatures. In addition, they are able to sense invisible creatures.</p>  <p>Ghouls yield 85 experience points. They carry gold coins, rotten pieces of cloth, worms and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/ghoul.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/ghoul.html.twig", "/var/www/html/system/templates/library/ghoul.html.twig");
+    }
+}

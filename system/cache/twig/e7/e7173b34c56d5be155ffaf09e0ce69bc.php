@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/gangmember.html.twig */
+class __TwigTemplate_84f8d0bd64e0396c089970c8998973ba extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=gargoyle\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=fury\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Gang Members</h2>  <img src=\"images/library/gangmember.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>Even small cities often have gangs roaming its streets, pressing money from travellers and shop owners alike. Some gangs might follow a noble cause or only consist of some youths that banded together for protection, but in the harsh reality of Tibia, most gangs are nothing than urban  bandits. Usually led by one or two powerful and charismatic individuals, they claim parts of the city as their territory. The borders of these territories are often disputed among gangs and are subject of violent and bloody fights. The inhabitants that live in such a territory mostly have arranged themselves with the situation, accepting it as given as the rule of the local king.<br/>Gang Members are usually encountered in groups, especially in greater cities with warring gangs. They tend to talk a lot about respect and honour but this is rather to comfort themselves, trying to forget how low they have come and what harm they do to the people around them. When it comes to combat they are all cowards, one way or the other. While some of them might fight to the bitter end, most will flee from it when the going gets rough.</p>  <p>Gang Members have 295 hitpoints. They are weak against death damage. It takes 450 mana to convince these creatures but they cannot be summoned.</p>  <p>Gang Members yield 70 experience points. They carry gold coins, leather legs, maces and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/gangmember.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/gangmember.html.twig", "/var/www/html/system/templates/library/gangmember.html.twig");
+    }
+}

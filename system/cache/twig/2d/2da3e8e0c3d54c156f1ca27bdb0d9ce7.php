@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/wildwarrior.html.twig */
+class __TwigTemplate_97a971bf08c4beb1355b5a3bd87d9f83 extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=wiltingleafgolem\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=wiggler\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Wild Warriors</h2>  <img src=\"images/library/wildwarrior.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>Wild Warriors are deserters of the Royal Army. Together with other criminals they have erected the so-called \"Outlaw Camp\". The king's power is too weak to reach this place, and so they feel quite safe from prosecution there. To keep up this state of lawlessness, they will attack every intruder vigorously. Equipped with heavy weapons and, due to their former training as soldiers well organised, they are quite powerful opponents.</p>  <p>Wild Warriors have 135 hitpoints. They are strong against holy damage. On the other hand, they are weak against death and physical damage. It takes 420 mana to summon or convince these creatures.</p>  <p>Wild Warriors yield 60 experience points. They carry axes, brass shields, eggs, gold coins, maces and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/wildwarrior.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/wildwarrior.html.twig", "/var/www/html/system/templates/library/wildwarrior.html.twig");
+    }
+}

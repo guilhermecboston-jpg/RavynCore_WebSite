@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/dwarf.html.twig */
+class __TwigTemplate_4b6711e6e9caf4762028ca6493116dba extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=dworcfleshhunter\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=dwarfsoldier\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Dwarfs</h2>  <img src=\"images/library/dwarf.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>Dwarfs are a very ancient human-like race. Once they were famous all over Tibia for their craftsmanship, but since the War over the Creation they only hide in their fortresses beneath the mountains and have discontinued all contact with humans. They are very suspicious towards any intruder and will vigorously try to repel him from their realms.</p>  <p>Dwarfs have 90 hitpoints. They are strong against earth damage. On the other hand, they are weak against death and fire damage. It takes 320 mana to summon or convince these creatures.</p>  <p>Dwarfs yield 45 experience points. They carry axes, copper shields, gold coins, hatchets, leather legs, picks, white mushrooms and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/dwarf.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/dwarf.html.twig", "/var/www/html/system/templates/library/dwarf.html.twig");
+    }
+}

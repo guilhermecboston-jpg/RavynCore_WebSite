@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/undeadgladiator.html.twig */
+class __TwigTemplate_3ca326912731f94a664e49fefd6e65fb extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=valkyrie\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=undeaddragon\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Undead Gladiators</h2>  <img src=\"images/library/undeadgladiator.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>A curse, necromancy or some magic plague has turned the Undead Gladiator in his current state. Unlike other undead, his will power and determination let him retain a certain degree of his former self. A few gladiators were even able to stay almost the complete same person considering  personality and intelligence which makes them to especially fearsome opponents. Undead Gladiators can wield a large variety of weapons, and their undead state has even enhanced their fighting skills. Without any moral restraints, immune to pain, and tireless, an Undead Gladiator is a virtual fighting machine that wears down his opponent before he finishes them off in a burst of skilful attacks.<br/>Without the need for sleep or food, their existence has turned into a constant battle, a permanent test of their skills. They strive for perfection, but ironically, their undead state prevents them from enhancing their skills further or to train their body. So the emptiness of their existence is haunting them every moment, and feeds the rage and jealousy towards the living.<br/>Undead Gladiators often participate in gruesome duels with each other to test their skills in a macabre and tireless dance of death, sometimes lasting for days.</p>  <p>Undead Gladiators have 1000 hitpoints. They are strong against energy, fire and holy damage. On the other hand, they are weak against death and earth damage. These creatures can neither be summoned nor convinced. In addition, they are able to sense invisible creatures.</p>  <p>Undead Gladiators yield 800 experience points. They carry gold coins, scimitars, throwing stars and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/undeadgladiator.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/undeadgladiator.html.twig", "/var/www/html/system/templates/library/undeadgladiator.html.twig");
+    }
+}

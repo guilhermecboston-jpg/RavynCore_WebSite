@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/poacher.html.twig */
+class __TwigTemplate_fee6cc618b978dbd1d3fbba895f1c826 extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=poisonspider\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=plaguesmith\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Poachers</h2>  <img src=\"images/library/poacher.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>Several criminals and outcasts of society hide in the wilderness to live on roots, mushrooms, animals and everything else which is somehow edible. Those who survive the first hard months eventually become quite skilled Poachers. Making little difference between animals and humans, they see anything as fitting prey which they manage to kill. Some of them work as pathfinders and trackers for some bandits, others gather in small hunting packs just like wild animals. Again others are loners - close to insanity who turn into beings that the locals call 'wild men'. Poachers can be found almost everywhere. They hunt deer and wolfs in the woods as well as rats and insects in caves. Knowing that travellers posses useful equipment and money, they don't even shrink away from murder and thievery. Poachers have little to lose and often disregard their own safety. Hoping for a lucky shot, they even attack much stronger opponents. Poachers are most dangerous when the victims are taken by surprise while being on a hunting trip. It almost seems as if they could smell the blood of a wounded adventurer as they tend to appear when someone is in a fierce fight with some wild beast. Travelling adventurers are well advised to have some backup healing material available while passing a territory known for Poacher activity.</p>  <p>Poachers have 90 hitpoints. It takes 530 mana to convince these creatures but they cannot be summoned.</p>  <p>Poachers yield 70 experience points. They carry arrows, bows, leather helmets, leather legs, rolls and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/poacher.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/poacher.html.twig", "/var/www/html/system/templates/library/poacher.html.twig");
+    }
+}

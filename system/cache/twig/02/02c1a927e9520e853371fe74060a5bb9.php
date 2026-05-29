@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/bloodhand.html.twig */
+class __TwigTemplate_ec74cce89e2c19989c88fa5830197f60 extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=bloodpriest\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=bloodcrab\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Blood Hands</h2>  <img src=\"images/library/bloodhand.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>Nobody is quite sure how the blood priest cult recruits its pupils, the blood hands, and if they join of their own free will. Rumours have it that blood hands have artificially enhanced blood in their veins, making them ruthless tools that do the bidding of their masters. <br/>Blood hands are named after the red gloves they wear, but the name is not merely a metaphor: blood hands have to pass several years of training and killing in the field to prove worthy of ascending into the ranks of the priests. Though the initiation takes place behind securely closed doors, there are hints of blood rage visions, brain washing, grotesque rituals and blood transfusions during the final trial, and only those who live through these ordeals are entitled to call themselves blood priests, and receive a new name. Blood hands are often sent abroad to fulfil a mission of their master's or assisting him, and may return with strange devices, samples and stains. On the upside, blood hands are also skilled surgeons, and many an unhappy necromancer has relied on their skill to prolong his life or sew a limb back on, even if he had to pledge his services to theirs in return.<br/>In combat, blood hands use what their masters have taught them, and summon minions they managed to pressure into a blood bond, which usually means fellow necromancers who owed them a favour or two. </p>  <p>Blood Hands have 700 hitpoints. They are immune to earth damage. Moreover, they are strong against death, energy and ice damage. On the other hand, they are weak against fire and holy damage. These creatures can neither be summoned nor convinced. In addition, they are able to sense invisible creatures.</p>  <p>Blood Hands yield 750 experience points. They carry blood tincture in a vial, books of necromantic rituals, gold coins, lancets and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/bloodhand.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/bloodhand.html.twig", "/var/www/html/system/templates/library/bloodhand.html.twig");
+    }
+}

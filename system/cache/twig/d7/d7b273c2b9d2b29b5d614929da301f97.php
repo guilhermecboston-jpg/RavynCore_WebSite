@@ -1,0 +1,54 @@
+<?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Extension\SandboxExtension;
+use Twig\Markup;
+use Twig\Sandbox\SecurityError;
+use Twig\Sandbox\SecurityNotAllowedTagError;
+use Twig\Sandbox\SecurityNotAllowedFilterError;
+use Twig\Sandbox\SecurityNotAllowedFunctionError;
+use Twig\Source;
+use Twig\Template;
+
+/* library/weeper.html.twig */
+class __TwigTemplate_902e458bb7897ea32e44dd4c4ce8b6f7 extends \Twig\Template
+{
+    private $source;
+    private $macros = [];
+
+    public function __construct(Environment $env)
+    {
+        parent::__construct($env);
+
+        $this->source = $this->getSourceContext();
+
+        $this->parent = false;
+
+        $this->blocks = [
+        ];
+    }
+
+    protected function doDisplay(array $context, array $blocks = [])
+    {
+        $macros = $this->macros;
+        // line 1
+        echo "<div style=\"position: relative; height: 15px; width: 100%;\">  <a style=\"float: right;\" href=\"?subtopic=creatures&race=werebadger\">next <img src=\"images/arrow_right.gif\" width=\"15\" height=\"11\" border=\"0\"/></a>  <a style=\"position: absolute;\" href=\"?subtopic=creatures&race=waterelemental\"><img src=\"images/arrow_left.gif\" width=\"15\" height=\"11\" border=\"0\"/> previous</a>  <div style=\"position: absolute; width: 80%; margin-left: 10%; margin-right: 10%; text-align: center;\"><a href=\"?subtopic=creatures\"><img src=\"images/arrow_up.gif\" width=\"11\" height=\"15\" border=\"0\"/> back</a></div></div><div style=\"position: relative; top: 25px; clear: both; \"><div style=\"height: 64px; margin-bottom: 5px;\">  <h2 style=\"float: right;\">Weepers</h2>  <img src=\"images/library/weeper.gif\"/></div><div style=\"margin-bottom: 35px; clear: both;\">  <p>The Weepers are more living minerals than anything else. Though the gnomes fiercely deny it, it can be assumed that the Weepers served as inspiration for the construction of the first crystal golems. As an oddity of life, Weepers physically share only a few characteristics with truly living beings. It is all the more astonishing that in appearance and behaviour they could be confused with biological live forms. This raises a lot of questions about the Weepers and is fuel to dozens of more or less educated guesses about their origin. Some speculations see them as surviving servants of a long extinct race. Others point out the possibility that they are the offspring of early gnomish experiments. Some see the Weepers more in the array of elemental beings, going so far as to say that the Weepers are the incarnation of a new and to date undiscovered element. They got their name from the fiery 'tears' that usually leak in what would be considered their eye region as well as the odd sobbing sounds it emanates. Weepers are extremely unpredictable in their behaviour. The only constant seems to be their hatred for biological life which they attack fiercely and without restraint.</p>  <p>Weepers have 6800 hitpoints. They are immune to earth and fire damage and cannot be paralyzed. Moreover, they are strong against death damage. On the other hand, they are weak against ice and physical damage. These creatures can neither be summoned nor convinced. In addition, they are able to sense invisible creatures.</p>  <p>Weepers yield 4800 experience points. They carry blazing bones, brown crystal splinters, eyes of a weeper, fiery hearts, gold coins, great mana potions, magma clumps, platinum coins, prismatic bolts, small rubies, ultimate health potions and sometimes other items with them.</p>  </div></div>";
+    }
+
+    public function getTemplateName()
+    {
+        return "library/weeper.html.twig";
+    }
+
+    public function getDebugInfo()
+    {
+        return array (  37 => 1,);
+    }
+
+    public function getSourceContext()
+    {
+        return new Source("", "library/weeper.html.twig", "/var/www/html/system/templates/library/weeper.html.twig");
+    }
+}
