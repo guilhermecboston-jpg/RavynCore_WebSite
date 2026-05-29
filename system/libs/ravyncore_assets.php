@@ -185,6 +185,108 @@ if (!function_exists('rc_assets_cache_key')) {
 	}
 }
 
+if (!function_exists('rc_assets_engine_enabled')) {
+	function rc_assets_engine_enabled()
+	{
+		global $config;
+		if (empty($config['asset_engine_enabled'])) {
+			return false;
+		}
+		$url = trim((string)($config['asset_engine_url'] ?? 'http://127.0.0.1:8765'));
+		return $url !== '';
+	}
+}
+
+if (!function_exists('rc_assets_engine_url')) {
+	function rc_assets_engine_url()
+	{
+		global $config;
+		return rtrim(trim((string)($config['asset_engine_url'] ?? 'http://127.0.0.1:8765')), '/');
+	}
+}
+
+if (!function_exists('rc_assets_generate_via_engine')) {
+	function rc_assets_generate_via_engine($type, $id, array $params = [])
+	{
+		if (!rc_assets_engine_enabled()) {
+			return '';
+		}
+
+		$normalizedType = rc_assets_normalize_type($type);
+		$id = (int)$id;
+		if ($id <= 0 || $normalizedType === '') {
+			return '';
+		}
+
+		$apiMap = [
+			'outfits' => 'outfit',
+			'items' => 'item',
+			'effects' => 'effect',
+			'missiles' => 'missile',
+		];
+		if (!isset($apiMap[$normalizedType])) {
+			return '';
+		}
+
+		$query = ['id' => $id];
+		if ($normalizedType === 'outfits') {
+			$query['addons'] = max(0, (int)($params['addons'] ?? 0));
+			$query['direction'] = max(0, (int)($params['direction'] ?? 3));
+			$query['head'] = max(0, (int)($params['head'] ?? 0));
+			$query['body'] = max(0, (int)($params['body'] ?? 0));
+			$query['legs'] = max(0, (int)($params['legs'] ?? 0));
+			$query['feet'] = max(0, (int)($params['feet'] ?? 0));
+		} elseif ($normalizedType === 'items') {
+			// item API only needs id
+		}
+
+		$url = rc_assets_engine_url() . '/api/' . $apiMap[$normalizedType] . '?' . http_build_query($query);
+		$ctx = stream_context_create([
+			'http' => [
+				'timeout' => 20,
+				'ignore_errors' => true,
+			],
+		]);
+		$binary = @file_get_contents($url, false, $ctx);
+		if ($binary === false || $binary === '') {
+			return '';
+		}
+
+		$contentType = '';
+		if (!empty($http_response_header)) {
+			foreach ($http_response_header as $line) {
+				if (stripos($line, 'Content-Type:') === 0) {
+					$contentType = trim(substr($line, 13));
+					break;
+				}
+			}
+		}
+		if (strpos($contentType, 'text/') === 0) {
+			return '';
+		}
+
+		$ext = 'png';
+		if (strpos($contentType, 'gif') !== false) {
+			$ext = 'gif';
+		}
+
+		$cacheRoot = rc_assets_get_cache_root_path(false);
+		if ($cacheRoot === '') {
+			return '';
+		}
+		$targetDir = $cacheRoot . DIRECTORY_SEPARATOR . $normalizedType;
+		if (!is_dir($targetDir)) {
+			@mkdir($targetDir, 0775, true);
+		}
+		$target = $targetDir . DIRECTORY_SEPARATOR . rc_assets_cache_key($normalizedType, $id, $params) . '.' . $ext;
+		if (@file_put_contents($target, $binary) !== false) {
+			return $target;
+		}
+
+		return '';
+	}
+}
+
 if (!function_exists('rc_assets_generate_cached_file')) {
 	function rc_assets_generate_cached_file($type, $id, array $params = [])
 	{
@@ -196,6 +298,11 @@ if (!function_exists('rc_assets_generate_cached_file')) {
 
 		if (!in_array($normalizedType, ['items', 'outfits', 'effects', 'missiles'], true)) {
 			return '';
+		}
+
+		$viaEngine = rc_assets_generate_via_engine($type, $id, $params);
+		if ($viaEngine !== '') {
+			return $viaEngine;
 		}
 
 		$root = rc_assets_get_things_root_path(true);
@@ -344,6 +451,8 @@ if (!function_exists('rc_assets_get_status')) {
 			'root' => $root,
 			'catalog' => $catalog,
 			'cache' => $cacheRoot,
+			'asset_engine' => rc_assets_engine_enabled(),
+			'asset_engine_url' => rc_assets_engine_url(),
 		];
 	}
 }

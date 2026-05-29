@@ -1,0 +1,9 @@
+{
+  "things_dir": "/var/www/html/system/data/things/1524",
+  "things_version": "1524",
+  "cache_dir": "/var/www/html/public/cache/asset-engine",
+  "host": "127.0.0.1",
+  "port": 8765,
+  "asset_engine_host": "127.0.0.1",
+  "asset_engine_port": 8765
+}

@@ -1,0 +1,17 @@
+[Unit]
+Description=RavynCore Asset Engine (OTC 1524 renderer)
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/html/asset-engine
+Environment=RAVYN_THINGS_DIR=/var/www/html/system/data/things/1524
+Environment=RAVYN_CACHE_DIR=/var/www/html/public/cache/asset-engine
+ExecStart=/var/www/html/asset-engine/venv/bin/python main.py serve --host 127.0.0.1 --port 8765
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

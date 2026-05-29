@@ -1,0 +1,16 @@
+<?php
+/**
+ * Copie para config.local.php na VPS (nao commitar senhas).
+ * Ajuste /var/www/html se seu path for /var/www/hrml
+ */
+
+$config['asset_engine_enabled'] = true;
+$config['asset_engine_url'] = 'http://127.0.0.1:8765';
+
+$config['things_assets_path'] = 'system/data/things/1524';
+$config['things_assets_version'] = '1524';
+$config['things_assets_cache_path'] = 'images/things-cache';
+$config['things_assets_python_path'] = '/var/www/html/asset-engine/venv/bin/python';
+
+// Depois de validar o motor, troque o renderer de outfits:
+// $config['outfit_images_url'] = '/api/assets/outfit.php';
