@@ -27,3 +27,10 @@ images/things-cache/outfits/*
 !images/things-cache/missiles/.gitkeep
 !images/things-cache/mounts/.gitkeep
 !images/things-cache/outfits/.gitkeep
+
+# Scraper staging (optional copies)
+imagens/
+
+# Local scraper logs
+scraper/logs/
+scraper/__pycache__/
