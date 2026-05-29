@@ -27,3 +27,12 @@ images/things-cache/outfits/*
 !images/things-cache/missiles/.gitkeep
 !images/things-cache/mounts/.gitkeep
 !images/things-cache/outfits/.gitkeep
+
+# RavynCore Asset Engine
+asset-engine/config.json
+asset-engine/**/__pycache__/
+public/cache/asset-engine/*
+!public/cache/asset-engine/.gitkeep
+
+# TibiaWiki scraper output (local only)
+imagens/
