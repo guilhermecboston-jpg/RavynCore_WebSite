@@ -89,7 +89,6 @@ if (!function_exists('esb_item_image')) {
         return rc_wiki_item_image((int)$id, [
             'class' => 'item_image esb-wiki-img',
             'label' => (string)$tooltip,
-            'forceWiki' => true,
         ]);
     }
 }

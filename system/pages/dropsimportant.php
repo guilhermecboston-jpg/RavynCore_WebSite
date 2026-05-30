@@ -41,7 +41,6 @@ if (!function_exists('rc_di_item_html')) {
             'class' => 'rc-tier-item-img',
             'large' => $large,
             'label' => (string)$label,
-            'forceWiki' => true,
         ]);
     }
 }
