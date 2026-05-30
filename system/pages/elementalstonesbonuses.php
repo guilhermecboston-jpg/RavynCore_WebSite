@@ -83,80 +83,14 @@ if (!function_exists('esb_percent_value')) {
     }
 }
 
-if (!function_exists('esb_img_src')) {
-    function esb_img_src($relPath)
-    {
-        $relPath = ltrim(str_replace('\\', '/', (string)$relPath), '/');
-        if ($relPath === '') {
-            return '';
-        }
-        if (defined('BASE_URL')) {
-            return BASE_URL . $relPath;
-        }
-
-        return '/' . $relPath;
-    }
-}
-
-if (!function_exists('esb_wiki_img_path')) {
-    function esb_wiki_img_path($itemId)
-    {
-        $itemId = (int)$itemId;
-        if ($itemId <= 0) {
-            return '';
-        }
-        $candidates = [
-            'imagens/creaturestibiawiki/' . $itemId . '.gif',
-            'images/creaturetibiawiki/' . $itemId . '.gif',
-        ];
-        foreach ($candidates as $path) {
-            if (file_exists(BASE . $path)) {
-                return $path;
-            }
-        }
-        return $candidates[0];
-    }
-}
-
 if (!function_exists('esb_item_image')) {
     function esb_item_image($id, $tooltip = '')
     {
-        $id = (int)$id;
-        if ($id <= 0) {
-            return '';
-        }
-        $tooltip = trim((string)$tooltip);
-        $safeTooltip = htmlspecialchars($tooltip, ENT_QUOTES, 'UTF-8');
-        $titleAttr = $safeTooltip !== '' ? ' title="' . $safeTooltip . '"' : '';
-
-        $wikiPath = esb_wiki_img_path($id);
-        if ($wikiPath !== '' && file_exists(BASE . $wikiPath)) {
-            return '<img class="item_image esb-wiki-img" src="' . htmlspecialchars(esb_img_src($wikiPath), ENT_QUOTES, 'UTF-8') . '" width="32" height="32" alt=""' . $titleAttr . ' loading="lazy">';
-        }
-
-        $path = 'images/items/' . $id . '.gif';
-        if (file_exists(BASE . $path)) {
-            return '<img class="item_image esb-wiki-img" src="' . htmlspecialchars(esb_img_src($path), ENT_QUOTES, 'UTF-8') . '" width="32" height="32" alt=""' . $titleAttr . ' loading="lazy">';
-        }
-
-        $html = getItemImage($id);
-        if ($tooltip === '') {
-            return $html;
-        }
-
-        if (strpos($html, 'class="item_image"') !== false) {
-            if (strpos($html, 'title="') !== false) {
-                return preg_replace('/title="[^"]*"/', 'title="' . $safeTooltip . '"', $html, 1);
-            }
-
-            return str_replace('class="item_image"', 'class="item_image" title="' . $safeTooltip . '"', $html);
-        }
-
-        if (strpos($html, '<img ') !== false) {
-            return preg_replace('/<img\s+/', '<img class="item_image" title="' . $safeTooltip . '" ', $html, 1);
-        }
-
-        return $html;
+        return rc_wiki_item_image((int)$id, [
+            'class' => 'item_image esb-wiki-img',
+            'label' => (string)$tooltip,
+            'forceWiki' => true,
+        ]);
     }
 }
 

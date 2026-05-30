@@ -229,6 +229,117 @@ function getItemImage($id, $count = 1)
     '" />';
 }
 
+if (!function_exists('rc_wiki_item_public_url')) {
+  function rc_wiki_item_public_url($relPath)
+  {
+    $relPath = ltrim(str_replace('\\', '/', (string)$relPath), '/');
+    if ($relPath === '') {
+      return '';
+    }
+    if (defined('BASE_URL')) {
+      return BASE_URL . $relPath;
+    }
+
+    return '/' . $relPath;
+  }
+}
+
+if (!function_exists('rc_wiki_item_path_exists')) {
+  function rc_wiki_item_path_exists($relPath)
+  {
+    $relPath = ltrim(str_replace('\\', '/', (string)$relPath), '/');
+    if ($relPath === '') {
+      return false;
+    }
+
+    if (defined('BASE') && is_readable(BASE . $relPath)) {
+      return true;
+    }
+
+    if (!empty($_SERVER['DOCUMENT_ROOT'])) {
+      $docPath = rtrim(str_replace('\\', '/', (string)$_SERVER['DOCUMENT_ROOT']), '/') . '/' . $relPath;
+      if (is_readable($docPath)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
+
+if (!function_exists('rc_wiki_item_resolve_path')) {
+  function rc_wiki_item_resolve_path($itemId)
+  {
+    $itemId = (int)$itemId;
+    if ($itemId <= 0) {
+      return '';
+    }
+
+    $candidates = [
+      'imagens/creaturestibiawiki/' . $itemId . '.gif',
+      'images/creaturetibiawiki/' . $itemId . '.gif',
+      'images/items/' . $itemId . '.gif',
+    ];
+
+    foreach ($candidates as $path) {
+      if (rc_wiki_item_path_exists($path)) {
+        return $path;
+      }
+    }
+
+    return $candidates[0];
+  }
+}
+
+if (!function_exists('rc_wiki_item_image')) {
+  function rc_wiki_item_image($itemId, array $options = [])
+  {
+    $itemId = (int)$itemId;
+    if ($itemId <= 0) {
+      return '';
+    }
+
+    $class = trim((string)($options['class'] ?? 'rc-tier-item-img'));
+    if (!empty($options['large'])) {
+      $class .= ' rc-tier-item-img-lg';
+    }
+    if (!empty($options['extraClass'])) {
+      $class .= ' ' . trim((string)$options['extraClass']);
+    }
+    $class = trim($class);
+
+    $label = trim((string)($options['label'] ?? ''));
+    $wikiPath = rc_wiki_item_resolve_path($itemId);
+    $hasWikiFile = rc_wiki_item_path_exists($wikiPath);
+    $forceWiki = !empty($options['forceWiki']);
+
+    if (!$forceWiki && !$hasWikiFile && function_exists('getItemImage')) {
+      $html = getItemImage($itemId);
+      if ($html !== '') {
+        if ($class !== '') {
+          $html = preg_replace('/<img\s+/', '<img class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '" ', $html, 1);
+        }
+        if ($label !== '') {
+          if (strpos($html, 'title="') !== false) {
+            $html = preg_replace('/title="[^"]*"/', 'title="' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '"', $html, 1);
+          } else {
+            $html = preg_replace('/<img\s+/', '<img title="' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '" ', $html, 1);
+          }
+          $html = preg_replace('/alt="[^"]*"/', 'alt="' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '"', $html, 1);
+        }
+        return $html;
+      }
+    }
+
+    $titleAttr = $label !== '' ? ' title="' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '"' : '';
+    $alt = $label !== '' ? htmlspecialchars($label, ENT_QUOTES, 'UTF-8') : '';
+    $safeClass = htmlspecialchars($class, ENT_QUOTES, 'UTF-8');
+    $safeSrc = htmlspecialchars(rc_wiki_item_public_url($wikiPath), ENT_QUOTES, 'UTF-8');
+
+    return '<img class="' . $safeClass . '" src="' . $safeSrc . '" width="32" height="32" alt="' . $alt . '"' . $titleAttr . ' loading="lazy">';
+  }
+}
+
 function getAssetImageById($type, $id, array $params = [])
 {
   global $config;

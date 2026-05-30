@@ -34,52 +34,15 @@ if (!function_exists('rc_di_esc')) {
     }
 }
 
-if (!function_exists('rc_di_img_src')) {
-    function rc_di_img_src($relPath)
-    {
-        $relPath = ltrim(str_replace('\\', '/', (string)$relPath), '/');
-        if ($relPath === '') {
-            return '';
-        }
-        if (defined('BASE_URL')) {
-            return BASE_URL . $relPath;
-        }
-
-        return '/' . $relPath;
-    }
-}
-
 if (!function_exists('rc_di_item_html')) {
     function rc_di_item_html($itemId, $large = false, $label = '')
     {
-        $itemId = (int)$itemId;
-        if ($itemId <= 0) {
-            return '';
-        }
-        $class = $large ? 'rc-tier-item-img rc-tier-item-img-lg' : 'rc-tier-item-img';
-        $candidates = [
-            'imagens/creaturestibiawiki/' . $itemId . '.gif',
-            'images/creaturetibiawiki/' . $itemId . '.gif',
-            'images/items/' . $itemId . '.gif',
-        ];
-        foreach ($candidates as $path) {
-            if (file_exists(BASE . $path)) {
-                $alt = $label !== '' ? rc_di_esc($label) : '';
-                return '<img class="' . $class . '" src="' . rc_di_esc(rc_di_img_src($path)) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
-            }
-        }
-
-        if (function_exists('getItemImage')) {
-            $html = getItemImage($itemId);
-            if ($html !== '') {
-                if ($label !== '') {
-                    $html = preg_replace('/<img\s+/', '<img class="' . $class . '" ', $html, 1);
-                }
-                return $html;
-            }
-        }
-
-        return '';
+        return rc_wiki_item_image((int)$itemId, [
+            'class' => 'rc-tier-item-img',
+            'large' => $large,
+            'label' => (string)$label,
+            'forceWiki' => true,
+        ]);
     }
 }
 
