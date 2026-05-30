@@ -152,8 +152,8 @@ if (!function_exists('rc_sg_price_cell')) {
 
 $gemRows = '';
 foreach ($gems as $gem) {
-    $gemRows .= '<tr><td><strong>' . rc_sg_esc($gem['name']) . '</strong><br><span class="rc-sg-id">ID ' . (int)$gem['id'] . '</span></td>'
-        . '<td class="rc-tier-table-item">' . rc_sg_item_html($gem['id'], false, $gem['name']) . '</td>'
+    $gemRows .= '<tr><td class="rc-tier-table-item rc-sg-gem-img">' . rc_sg_item_html($gem['id'], false, '') . '</td>'
+        . '<td><strong>' . rc_sg_esc($gem['name']) . '</strong></td>'
         . '<td>Nível ' . (int)$gem['level'] . '</td><td>' . rc_sg_esc($gem['bonus']) . '</td>'
         . '<td>' . rc_sg_esc($gem['slots']) . '</td><td><strong>' . rc_sg_esc($gem['group']) . '</strong></td></tr>';
 }
@@ -211,7 +211,7 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
 
     . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-gems"><h3>Gemas de Skill</h3>'
     . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table">'
-    . '<thead><tr><th>Gema</th><th>Item</th><th>Nível</th><th>Bônus</th><th>Slots</th><th>Grupo</th></tr></thead>'
+    . '<thead><tr><th>Skill Gem</th><th>Nome</th><th>Nível</th><th>Bônus</th><th>Slots</th><th>Grupo</th></tr></thead>'
     . '<tbody>' . $gemRows . '</tbody></table></div></section>'
 
     . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-tier"><h3>Skill Tier Crystals</h3>'
@@ -230,6 +230,7 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '.rc-sg-page .rc-sg-remove-card{max-width:320px;margin:16px auto 0}'
     . '.rc-sg-page .rc-sg-th-sub{font-size:11px;font-weight:400;color:#9eb8e8}'
     . '.rc-sg-page .rc-sg-tier-gem{padding:8px 6px}'
+    . '.rc-sg-page .rc-sg-gem-img{padding:8px 6px}'
     . '.rc-sg-page .rc-sg-extract-cost{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}'
     . '.rc-sg-page .rc-sg-extract-cost .rc-tier-item-img{vertical-align:middle}'
     . '.rc-sg-page .rc-sg-extract-plus{color:#e8f0ff;font-weight:700}'
