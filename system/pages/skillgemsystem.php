@@ -152,8 +152,9 @@ if (!function_exists('rc_sg_price_cell')) {
 
 $gemRows = '';
 foreach ($gems as $gem) {
-    $gemRows .= '<tr><td class="rc-tier-table-item rc-sg-gem-img">' . rc_sg_item_html($gem['id'], false, '') . '</td>'
-        . '<td><strong>' . rc_sg_esc($gem['name']) . '</strong></td>'
+    $gemRows .= '<tr><td class="rc-tier-table-item rc-sg-gem-cell">'
+        . rc_sg_item_html($gem['id'], false, '')
+        . '<strong class="rc-sg-gem-name">' . rc_sg_esc($gem['name']) . '</strong></td>'
         . '<td>Nível ' . (int)$gem['level'] . '</td><td>' . rc_sg_esc($gem['bonus']) . '</td>'
         . '<td>' . rc_sg_esc($gem['slots']) . '</td><td><strong>' . rc_sg_esc($gem['group']) . '</strong></td></tr>';
 }
@@ -211,7 +212,7 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
 
     . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-gems"><h3>Gemas de Skill</h3>'
     . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table">'
-    . '<thead><tr><th>Skill Gem</th><th>Nome</th><th>Nível</th><th>Bônus</th><th>Slots</th><th>Grupo</th></tr></thead>'
+    . '<thead><tr><th>Skill Gem</th><th>Nível</th><th>Bônus</th><th>Slots</th><th>Grupo</th></tr></thead>'
     . '<tbody>' . $gemRows . '</tbody></table></div></section>'
 
     . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-tier"><h3>Skill Tier Crystals</h3>'
