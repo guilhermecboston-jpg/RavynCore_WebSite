@@ -115,13 +115,6 @@ foreach ($gems as $gem) {
         . '<td>' . rc_sg_esc($gem['slots']) . '</td><td><strong>' . rc_sg_esc($gem['group']) . '</strong></td></tr>';
 }
 
-$priceRows = '';
-foreach ($tierServicePrices as $row) {
-    $priceRows .= '<tr><td><strong>' . rc_sg_esc($row['skill']) . '</strong></td>'
-        . '<td>' . rc_sg_price_cell($row, true) . '</td>'
-        . '<td>' . rc_sg_price_cell($row, false) . '</td></tr>';
-}
-
 $tierRows = '';
 foreach ($skillTierCrystals as $crystal) {
     $lvl = (int)$crystal['level'];
@@ -152,7 +145,6 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<a href="#rc-sg-vocation">Vocação</a>'
     . '<a href="#rc-sg-gems">Gemas</a>'
     . '<a href="#rc-sg-tier">Skill Tier</a>'
-    . '<a href="#rc-sg-prices">Preços (kk)</a>'
     . '</nav></header>'
 
     . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-info">'
@@ -160,16 +152,10 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<ul class="rc-st-notes">'
     . '<li><strong>Grupo A</strong>: Amulet, Ring, Weapon, Helmet. <strong>Grupo B</strong>: Armor, Legs, Boots, Shield / Book / Quiver.</li>'
     . '<li><strong>Aplicar gema</strong> (61521–61528): no equipamento sem gem. Look: <strong>Skill Gem: +8</strong> (sem nome de skill no texto).</li>'
-    . '<li><strong>Extrair (remover)</strong>: <strong>1× Remove Upgrade Status</strong> (ID ' . (int)$removeExtractItemId . ') + gold em <strong>kk</strong> (tabela abaixo).</li>'
-    . '<li><strong>Aplicar cristal</strong>: só gold em <strong>kk</strong> do nível do cristal — <em>sem</em> Remove.</li>'
+    . '<li><strong>Extrair (remover)</strong>: <strong>1× Remove Upgrade Status</strong> (ID ' . (int)$removeExtractItemId . ') + gold em <strong>kk</strong> — valores na tabela <a href="#rc-sg-tier">Skill Tier Crystals</a>.</li>'
+    . '<li><strong>Aplicar cristal</strong>: só gold em <strong>kk</strong> do nível do cristal — <em>sem</em> Remove (ver mesma tabela).</li>'
     . '<li>Equipamento e cristal vão para a <strong>Store Inbox</strong> após extrair ou aplicar cristal.</li>'
     . '</ul>'
-    . '<h4 class="rc-sg-subhead">Tabela de preços (resumo)</h4>'
-    . '<p class="rc-tier-spaced">Valores debitados do <strong>inventário + banco</strong>. Mesmo custo em kk para extrair e para aplicar; na extração soma o item Remove.</p>'
-    . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table rc-sg-price-table">'
-    . '<thead><tr><th>Skill</th><th>Extrair — Remove + kk</th><th>Aplicar cristal — kk</th></tr></thead>'
-    . '<tbody>' . $priceRows . '</tbody></table></div>'
-    . '<p class="rc-sg-more-prices"><a href="#rc-sg-prices">Ver seção Preços (kk)</a> com exemplos e lista completa.</p>'
     . '<div class="rc-tier-extractor rc-sg-remove-card">'
     . '<h4>Remove Upgrade Status</h4>'
     . '<div class="rc-tier-item-spot">' . ($removeItemHtml !== '' ? $removeItemHtml : '') . '</div>'
@@ -195,21 +181,6 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<th>Aplicar cristal<br><span class="rc-sg-th-sub">somente kk</span></th></tr></thead>'
     . '<tbody>' . $tierRows . '</tbody></table></div></section>'
 
-    . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-prices"><h3>Preços em kk (gold)</h3>'
-    . '<p class="rc-tier-spaced" id="rc-sg-prices-desc">Tabela oficial de serviço por <strong>nível da skill</strong> no item ou no cristal. Gold sai do inventário e do banco.</p>'
-    . '<div class="rc-sg-cost-examples">'
-    . '<p><strong>+10:</strong> extrair = 1× Remove + <strong>700kk</strong> (700.000.000) · aplicar = <strong>700kk</strong></p>'
-    . '<p><strong>+12:</strong> extrair = 1× Remove + <strong>1000kk</strong> (1.000.000.000) · aplicar = <strong>1000kk</strong></p>'
-    . '</div>'
-    . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table rc-sg-price-table">'
-    . '<thead><tr><th>Nível skill</th><th>Extrair (remoção)<br><span class="rc-sg-th-sub">1× Remove Upgrade Status + kk</span></th>'
-    . '<th>Aplicar cristal<br><span class="rc-sg-th-sub">somente kk (sem Remove)</span></th></tr></thead>'
-    . '<tbody>' . $priceRows . '</tbody></table></div>'
-    . '<ul class="rc-st-notes rc-sg-price-notes">'
-    . '<li>+1 = 50kk · +2 = 100kk · +3 = 150kk · +4 = 200kk · +5 = 250kk · +6 = 300kk</li>'
-    . '<li>+7 = 350kk · +8 = 500kk · +9 = 600kk · +10 = 700kk · +11 = 800kk · +12 = 1000kk</li>'
-    . '</ul></section>'
-
     . '<style>'
     . '.rc-sg-page .rc-sg-anchor{scroll-margin-top:140px}'
     . '.rc-sg-page .rc-sg-table td,.rc-sg-page .rc-sg-table th{text-align:center}'
@@ -217,11 +188,6 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '.rc-sg-page .rc-sg-desc{margin-top:10px;font-size:13px;color:#d6e4ff;text-align:center}'
     . '.rc-sg-page .rc-sg-remove-card{max-width:320px;margin:16px auto 0}'
     . '.rc-sg-page .rc-sg-th-sub{font-size:11px;font-weight:400;color:#9eb8e8}'
-    . '.rc-sg-page .rc-sg-subhead{margin:18px 0 8px;font-size:15px;color:#e8f0ff}'
-    . '.rc-sg-page .rc-sg-more-prices{margin-top:12px;font-size:13px}'
-    . '.rc-sg-page .rc-sg-cost-examples{margin:12px 0 16px;padding:12px 14px;border-radius:8px;background:rgba(20,40,80,.45);font-size:14px;line-height:1.5}'
-    . '.rc-sg-page .rc-sg-cost-examples p{margin:0 0 8px}.rc-sg-page .rc-sg-cost-examples p:last-child{margin-bottom:0}'
-    . '.rc-sg-page .rc-sg-price-notes{margin-top:14px;font-size:13px}'
     . '</style>'
 
     . '<script>(function(){'
