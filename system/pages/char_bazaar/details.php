@@ -297,7 +297,7 @@ $addonMountBonus = $character['addon_mount_bonus'] ?? ['outfits_used' => 0, 'mou
                         <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars((string)$entry['image']) ?>" alt="<?= htmlspecialchars((string)$entry['name']) ?>"></div>
                     <?php endif; ?>
                     <strong><?= htmlspecialchars((string)$entry['name']) ?></strong>
-                    <small>ID #<?= (int)$entry['id'] ?><?php if ((int)$entry['progress'] > 0): ?> - <?= (int)$entry['progress'] ?><?php endif; ?></small>
+                    <small>ID #<?= (int)$entry['id'] ?><?php if ((int)$entry['progress'] > 0): ?> — <?= (int)$entry['progress'] ?> kills<?php endif; ?></small>
                 </article>
             <?php endforeach; endif; ?>
         </div>
@@ -317,7 +317,7 @@ $addonMountBonus = $character['addon_mount_bonus'] ?? ['outfits_used' => 0, 'mou
                         <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars((string)$entry['image']) ?>" alt="<?= htmlspecialchars((string)$entry['name']) ?>"></div>
                     <?php endif; ?>
                     <strong><?= htmlspecialchars((string)$entry['name']) ?></strong>
-                    <small>ID #<?= (int)$entry['id'] ?><?php if ((int)$entry['progress'] > 0): ?> - <?= (int)$entry['progress'] ?><?php endif; ?></small>
+                    <small>ID #<?= (int)$entry['id'] ?><?php if ((int)$entry['progress'] > 0): ?> — <?= (int)$entry['progress'] ?> kills<?php endif; ?></small>
                 </article>
             <?php endforeach; endif; ?>
         </div>

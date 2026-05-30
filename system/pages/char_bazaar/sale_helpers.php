@@ -235,8 +235,169 @@ if (!function_exists('cbz_get_table_blob_tracker_ids')) {
     }
 }
 
+if (!function_exists('cbz_parse_uint16_id_stream')) {
+    function cbz_parse_uint16_id_stream($rawValue)
+    {
+        if ($rawValue === null) {
+            return [];
+        }
+        if (is_resource($rawValue)) {
+            $rawValue = stream_get_contents($rawValue);
+        }
+
+        $raw = (string)$rawValue;
+        if ($raw === '') {
+            return [];
+        }
+
+        $ids = [];
+        $length = strlen($raw);
+        for ($i = 0; $i + 1 < $length; $i += 2) {
+            $id = ord($raw[$i]) | (ord($raw[$i + 1]) << 8);
+            if ($id > 0) {
+                $ids[$id] = true;
+            }
+        }
+
+        return array_map('intval', array_keys($ids));
+    }
+}
+
+if (!function_exists('cbz_get_player_bestiary_kill_map')) {
+    function cbz_get_player_bestiary_kill_map($db, $playerId)
+    {
+        $playerId = (int)$playerId;
+        $map = [];
+        if ($playerId <= 0 || !cbz_has_table($db, 'player_storage')) {
+            return $map;
+        }
+
+        $baseKey = 61305000;
+        $maxKey = $baseKey + 5000;
+        $playerCol = cbz_find_first_column($db, 'player_storage', ['player_id', 'playerid']);
+        $keyCol = cbz_find_first_column($db, 'player_storage', ['key', 'storage_key']);
+        $valueCol = cbz_find_first_column($db, 'player_storage', ['value', 'storage_value']);
+        if (!$playerCol || !$keyCol || !$valueCol) {
+            return $map;
+        }
+
+        $sql =
+            'SELECT `' . $keyCol . '` AS `storage_key`, `' . $valueCol . '` AS `storage_value` ' .
+            'FROM `player_storage` ' .
+            'WHERE `' . $playerCol . '` = ' . $playerId .
+            ' AND `' . $keyCol . '` > ' . $baseKey .
+            ' AND `' . $keyCol . '` < ' . $maxKey .
+            ' AND `' . $valueCol . '` > 0';
+
+        $query = $db->query($sql);
+        if (!$query) {
+            return $map;
+        }
+
+        foreach ($query as $row) {
+            $storageKey = (int)($row['storage_key'] ?? 0);
+            $raceId = $storageKey - $baseKey;
+            if ($raceId <= 0 || $raceId >= 65535) {
+                continue;
+            }
+
+            $map[$raceId] = (int)($row['storage_value'] ?? 0);
+        }
+
+        return $map;
+    }
+}
+
+if (!function_exists('cbz_get_player_bestiary_entry_ids')) {
+    function cbz_get_player_bestiary_entry_ids($db, $playerId, array $trackerIds = [])
+    {
+        $ids = [];
+        foreach ($trackerIds as $id) {
+            $id = (int)$id;
+            if ($id > 0) {
+                $ids[$id] = true;
+            }
+        }
+
+        foreach (cbz_get_player_bestiary_kill_map($db, $playerId) as $raceId => $kills) {
+            if ((int)$kills > 0) {
+                $ids[(int)$raceId] = true;
+            }
+        }
+
+        return array_map('intval', array_keys($ids));
+    }
+}
+
+if (!function_exists('cbz_get_player_bosstiary_entry_ids')) {
+    function cbz_get_player_bosstiary_entry_ids($db, $playerId)
+    {
+        $playerId = (int)$playerId;
+        $ids = [];
+        if ($playerId <= 0 || !cbz_has_table($db, 'player_bosstiary')) {
+            return [];
+        }
+
+        $playerCol = cbz_find_first_column($db, 'player_bosstiary', ['player_id', 'playerid']);
+        if (!$playerCol) {
+            return [];
+        }
+
+        try {
+            $stmt = $db->query('SELECT * FROM `player_bosstiary` WHERE `' . $playerCol . '` = ' . $playerId . ' LIMIT 1');
+            if (!$stmt) {
+                return [];
+            }
+
+            $row = $stmt->fetch();
+            if (!$row) {
+                return [];
+            }
+
+            foreach (['bossIdSlotOne', 'bossIdSlotTwo', 'boss_id_slot_one', 'boss_id_slot_two'] as $slotCol) {
+                if (array_key_exists($slotCol, $row) && (int)$row[$slotCol] > 0) {
+                    $ids[(int)$row[$slotCol]] = true;
+                }
+            }
+
+            $trackerRaw = cbz_row_value($row, ['tracker', 'tracker_list', 'trackerlist'], null);
+            foreach (cbz_parse_uint16_id_stream($trackerRaw) as $bossId) {
+                if ($bossId > 0) {
+                    $ids[$bossId] = true;
+                }
+            }
+        } catch (Exception $e) {
+            return [];
+        }
+
+        return array_map('intval', array_keys($ids));
+    }
+}
+
+if (!function_exists('cbz_count_unlocked_charms_by_category')) {
+    function cbz_count_unlocked_charms_by_category($bitfield, $minor = false)
+    {
+        $minorBits = [6, 9, 10, 11, 12, 13, 14, 17, 18, 20, 21];
+        $count = 0;
+        $bitfield = (int)$bitfield;
+
+        for ($bit = 0; $bit < 32; $bit++) {
+            if (($bitfield & (1 << $bit)) === 0) {
+                continue;
+            }
+
+            $isMinorBit = in_array($bit, $minorBits, true);
+            if ($minor === $isMinorBit) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+}
+
 if (!function_exists('cbz_build_collection_rows_from_ids')) {
-    function cbz_build_collection_rows_from_ids($db, array $ids, $fallbackPrefix = 'Entry')
+    function cbz_build_collection_rows_from_ids($db, array $ids, $fallbackPrefix = 'Entry', array $progressById = [])
     {
         if (!$ids) {
             return [];
@@ -253,10 +414,14 @@ if (!function_exists('cbz_build_collection_rows_from_ids')) {
             $rows[] = [
                 'id' => $id,
                 'name' => $entryName,
-                'progress' => 0,
-                'image' => cbz_get_library_creature_image($entryName),
+                'progress' => (int)($progressById[$id] ?? 0),
+                'image' => cbz_resolve_creature_image($id, $entryName),
             ];
         }
+
+        usort($rows, static function ($a, $b) {
+            return strcasecmp((string)$a['name'], (string)$b['name']);
+        });
 
         return $rows;
     }
@@ -1286,8 +1451,8 @@ if (!function_exists('cbz_get_monster_lua_search_dirs')) {
     }
 }
 
-if (!function_exists('cbz_get_monster_lua_race_name_map')) {
-    function cbz_get_monster_lua_race_name_map()
+if (!function_exists('cbz_get_monster_lua_race_meta_map')) {
+    function cbz_get_monster_lua_race_meta_map()
     {
         static $cachedMap = null;
         if (is_array($cachedMap)) {
@@ -1302,7 +1467,19 @@ if (!function_exists('cbz_get_monster_lua_race_name_map')) {
         }
 
         $namePattern = '/Game\\.createMonsterType\\(\\s*[\'"]([^\'"]+)[\'"]\\s*\\)/i';
-        $racePattern = '/monster\\.raceId\\s*=\\s*(\\d+)/i';
+        $racePatterns = [
+            '/monster\\.raceId\\s*=\\s*(\\d+)/i',
+            '/monster\\.bossRaceId\\s*=\\s*(\\d+)/i',
+            '/bossRaceId\\s*=\\s*(\\d+)/i',
+        ];
+        $outfitPatterns = [
+            'lookType' => '/lookType\\s*=\\s*(\\d+)/i',
+            'lookAddons' => '/lookAddons\\s*=\\s*(\\d+)/i',
+            'lookHead' => '/lookHead\\s*=\\s*(\\d+)/i',
+            'lookBody' => '/lookBody\\s*=\\s*(\\d+)/i',
+            'lookLegs' => '/lookLegs\\s*=\\s*(\\d+)/i',
+            'lookFeet' => '/lookFeet\\s*=\\s*(\\d+)/i',
+        ];
 
         foreach ($dirs as $dir) {
             try {
@@ -1330,24 +1507,51 @@ if (!function_exists('cbz_get_monster_lua_race_name_map')) {
                 if (!preg_match($namePattern, $content, $nameMatch)) {
                     continue;
                 }
-                if (!preg_match($racePattern, $content, $raceMatch)) {
+                $raceId = 0;
+                foreach ($racePatterns as $racePattern) {
+                    if (preg_match($racePattern, $content, $raceMatch)) {
+                        $raceId = (int)($raceMatch[1] ?? 0);
+                        break;
+                    }
+                }
+                if ($raceId <= 0) {
                     continue;
                 }
 
-                $raceId = (int)($raceMatch[1] ?? 0);
                 $name = trim((string)($nameMatch[1] ?? ''));
-                if ($raceId <= 0 || $name === '') {
+                if ($name === '') {
                     continue;
                 }
 
                 if (!isset($map[$raceId])) {
-                    $map[$raceId] = $name;
+                    $meta = ['name' => $name];
+                    foreach ($outfitPatterns as $key => $pattern) {
+                        if (preg_match($pattern, $content, $outfitMatch)) {
+                            $meta[$key] = (int)($outfitMatch[1] ?? 0);
+                        }
+                    }
+                    $map[$raceId] = $meta;
                 }
             }
         }
 
         $cachedMap = $map;
         return $cachedMap;
+    }
+}
+
+if (!function_exists('cbz_get_monster_lua_race_name_map')) {
+    function cbz_get_monster_lua_race_name_map()
+    {
+        $map = [];
+        foreach (cbz_get_monster_lua_race_meta_map() as $raceId => $meta) {
+            $name = trim((string)($meta['name'] ?? ''));
+            if ($name !== '') {
+                $map[(int)$raceId] = $name;
+            }
+        }
+
+        return $map;
     }
 }
 
@@ -1404,6 +1608,41 @@ if (!function_exists('cbz_get_library_creature_image')) {
 
         $cache[$name] = '';
         return '';
+    }
+}
+
+if (!function_exists('cbz_resolve_creature_image')) {
+    function cbz_resolve_creature_image($raceId, $name)
+    {
+        $raceId = (int)$raceId;
+        $name = (string)$name;
+
+        $libraryImage = cbz_get_library_creature_image($name);
+        if ($libraryImage !== '') {
+            return $libraryImage;
+        }
+
+        if ($raceId <= 0) {
+            return '';
+        }
+
+        $meta = cbz_get_monster_lua_race_meta_map()[$raceId] ?? null;
+        if (!is_array($meta) || empty($meta['lookType'])) {
+            return '';
+        }
+
+        if (!function_exists('getAssetImageById')) {
+            return '';
+        }
+
+        return getAssetImageById('outfit', (int)$meta['lookType'], [
+            'addons' => (int)($meta['lookAddons'] ?? 0),
+            'head' => (int)($meta['lookHead'] ?? 0),
+            'body' => (int)($meta['lookBody'] ?? 0),
+            'legs' => (int)($meta['lookLegs'] ?? 0),
+            'feet' => (int)($meta['lookFeet'] ?? 0),
+            'direction' => 3,
+        ]);
     }
 }
 
@@ -1465,7 +1704,7 @@ if (!function_exists('cbz_get_collection_rows')) {
         }
 
         foreach ($rows as &$row) {
-            $row['image'] = cbz_get_library_creature_image((string)($row['name'] ?? ''));
+            $row['image'] = cbz_resolve_creature_image((int)($row['id'] ?? 0), (string)($row['name'] ?? ''));
         }
         unset($row);
 
@@ -1852,11 +2091,10 @@ if (!function_exists('cbz_get_character_sale_data')) {
                 if ($charms) {
                     $charmPoints = (int)cbz_row_value($charms, ['charm_points', 'charmpoints'], 0);
                     $spentCharmPoints = (int)cbz_row_value($charms, ['spent_charm_points', 'spentcharmpoints'], 0);
-                    $usedRunes = cbz_row_value($charms, ['UnlockedRunesBit', 'unlockedRunesBit', 'unlocked_runes_bit', 'UsedRunesBit', 'usedRunesBit', 'used_runes_bit', 'used_runes'], 0);
-                    if ($usedRunes !== null) {
-                        $unlocked = cbz_count_bits($usedRunes);
-                        $majorCharms = $unlocked;
-                        $minorCharms = $unlocked;
+                    $unlockedRunes = cbz_row_value($charms, ['UnlockedRunesBit', 'unlockedRunesBit', 'unlocked_runes_bit'], 0);
+                    if ($unlockedRunes !== null && (int)$unlockedRunes > 0) {
+                        $majorCharms = cbz_count_unlocked_charms_by_category($unlockedRunes, false);
+                        $minorCharms = cbz_count_unlocked_charms_by_category($unlockedRunes, true);
                     }
 
                     $trackerRaw = cbz_row_value($charms, ['tracker_list', 'trackerlist', 'finished_monsters', 'finishedmonsters'], null);
@@ -1896,13 +2134,32 @@ if (!function_exists('cbz_get_character_sale_data')) {
             $bestiaryPoints = 0;
         }
 
-        $bestiaryList = ($includeCollections && $bestiaryTable) ? cbz_get_collection_rows($db, $bestiaryTable, $playerId, 'Monster') : [];
-        if ($includeCollections && !$bestiaryList && $trackerIds) {
-            $bestiaryList = cbz_build_collection_rows_from_ids($db, $trackerIds, 'Monster');
+        $bestiaryKillMap = cbz_get_player_bestiary_kill_map($db, $playerId);
+        $bestiaryEntryIds = cbz_get_player_bestiary_entry_ids($db, $playerId, $trackerIds);
+        $bestiaryList = [];
+        if ($includeCollections) {
+            if ($bestiaryTable) {
+                $bestiaryList = cbz_get_collection_rows($db, $bestiaryTable, $playerId, 'Monster');
+            }
+            if (!$bestiaryList && $bestiaryEntryIds) {
+                $bestiaryList = cbz_build_collection_rows_from_ids($db, $bestiaryEntryIds, 'Monster', $bestiaryKillMap);
+            }
         }
-        $bosstiaryList = ($includeCollections && $bosstiaryTable) ? cbz_get_collection_rows($db, $bosstiaryTable, $playerId, 'Boss') : [];
-        if ($includeCollections && !$bosstiaryList && $bossTrackerIds) {
-            $bosstiaryList = cbz_build_collection_rows_from_ids($db, $bossTrackerIds, 'Boss');
+
+        $bosstiaryEntryIds = cbz_get_player_bosstiary_entry_ids($db, $playerId);
+        if (!$bosstiaryEntryIds && $bossTrackerIds) {
+            $bosstiaryEntryIds = array_values(array_unique(array_map('intval', $bossTrackerIds)));
+        }
+        $bosstiaryKillMap = [];
+        foreach ($bosstiaryEntryIds as $bossRaceId) {
+            $kills = (int)($bestiaryKillMap[(int)$bossRaceId] ?? 0);
+            if ($kills > 0) {
+                $bosstiaryKillMap[(int)$bossRaceId] = $kills;
+            }
+        }
+        $bosstiaryList = [];
+        if ($includeCollections && $bosstiaryEntryIds) {
+            $bosstiaryList = cbz_build_collection_rows_from_ids($db, $bosstiaryEntryIds, 'Boss', $bosstiaryKillMap);
         }
 
         $offenceStats = (int)$player['skill_sword'] + (int)$player['skill_axe'] + (int)$player['skill_club'] + (int)$player['skill_dist'] + (int)$player['maglevel'];
@@ -2114,11 +2371,8 @@ if (!function_exists('cbz_get_character_sale_data')) {
         $jewelledPounch4Slot = cbz_yes_no((int)($storageValues[95110] ?? 0));
 
         $bosstiary = is_array($bosstiaryList) ? count($bosstiaryList) : 0;
-        if (!$includeCollections && $bosstiaryTable) {
-            $bosstiaryPlayerCol = cbz_find_first_column($db, $bosstiaryTable, ['player_id', 'playerid']);
-            if ($bosstiaryPlayerCol) {
-                $bosstiary = (int)(cbz_scalar($db, "SELECT COUNT(*) FROM `{$bosstiaryTable}` WHERE `{$bosstiaryPlayerCol}` = {$playerId}") ?? 0);
-            }
+        if ($bosstiary <= 0) {
+            $bosstiary = count(cbz_get_player_bosstiary_entry_ids($db, $playerId));
         }
         $bossPoints = cbz_has_column($db, 'players', 'boss_points') ? (int)$player['boss_points'] : 0;
 
