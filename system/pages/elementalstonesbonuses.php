@@ -373,24 +373,46 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-rules li {
     margin-bottom: 5px;
 }
 
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-rules strong {
+    color: #f0c982;
+    font-weight: 700;
+}
+
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-compact-table-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-compact-table-wrap .esb-table {
+    width: 100%;
+}
+
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-compact-table-wrap .esb-table th,
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-compact-table-wrap .esb-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-level-col {
-    min-width: 420px;
+    width: 34%;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-cost-col {
-    min-width: 350px;
+    width: 46%;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-step {
-    display: inline-block;
+    display: block;
     margin-bottom: 8px;
     color: #f0c982;
+    text-align: center;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-pairs {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+    justify-content: center;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-pair {
@@ -426,6 +448,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-cost-inline {
     align-items: center;
     flex-wrap: wrap;
     gap: 6px;
+    justify-content: center;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-cost-item {
@@ -589,10 +612,10 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
             </div>
             <p class="esb-note"><strong>Nota:</strong> estes valores percentuais sao apresentados na pre-visualizacao da pagina e podem ser ajustados a qualquer momento para corresponder ao script final do servidor.</p>
             <ul class="esb-rules">
-                <li>Cada personagem possui 1 slot gratuito para: Arma, Armadura, Capacete e Shield.</li>
+                <li>Cada personagem possui 1 slot gratuito para: <strong>Arma</strong>, <strong>Armadura</strong>, <strong>Capacete</strong>.</li>
                 <li>Contas VIP Account desbloqueiam automaticamente +1 slot adicional por equipamento, totalizando 2 slots por equipamento.</li>
-                <li>Para liberar 3 slots permanentes no personagem, adquira na Store: Unlocked Stones Sloots.</li>
-                <li>Para obter a primeira Stone nivel 1, drope em Soul War, Gnomprona, Rotten Blood, Livrarias, Epic Hunts, ou compre na Store uma Stone Bag nivel 1, Stone Bag nivel 2, Stone Bag nivel 3.</li>
+                <li>Para liberar 3 slots permanentes no personagem, adquira na Store: <strong>Unlocked Stones Sloots</strong>.</li>
+                <li>Possível obter bag of stones 0, 1, 2, 3 a partir de bosses, hunt medium, hard, epic e na <strong>Gamestore</strong>.</li>
                 <li>Algumas evolucoes possuem chance de falha; se falhar, o custo e perdido e as Stones permanecem no mesmo nivel.</li>
             </ul>
         </div>
@@ -602,6 +625,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
         <h2 class="esb-title">Stone Evolution (Fusion)</h2>
         <div class="esb-body">
             <p class="esb-text">Custos e probabilidade de sucesso na evolucao de pedras.</p>
+            <div class="esb-compact-table-wrap">
             <table class="esb-table">
                 <thead>
                 <tr>
@@ -667,13 +691,15 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                 <?php } ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </section>
 
     <section class="esb-section" id="rc-esb-conversion">
         <h2 class="esb-title">Conversion</h2>
         <div class="esb-body">
-            <p class="esb-text">Na Stone Forge, converta <strong>Lesser Fragment</strong> + <strong>Greater Fragment</strong> em <strong>Stone Fusion Dust</strong> (60581). Não utiliza gold (kk).</p>
+            <p class="esb-text">Na Stone Forge, converta <strong>Lesser Fragment</strong> + <strong>Greater Fragment</strong> em <strong>Stone Fusion Dust</strong>.</p>
+            <div class="esb-compact-table-wrap">
             <table class="esb-table">
                 <thead>
                 <tr>
@@ -717,6 +743,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                 <?php } ?>
                 </tbody>
             </table>
+            </div>
             <p class="esb-note"><strong>Fluxo:</strong> o Stone Fusion Dust é gerado na conversão e enviado direto para o <strong>Store Inbox</strong>.</p>
         </div>
     </section>
