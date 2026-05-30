@@ -65,6 +65,21 @@ if (!function_exists('rc_sg_esc')) {
     }
 }
 
+if (!function_exists('rc_sg_img_src')) {
+    function rc_sg_img_src($relPath)
+    {
+        $relPath = ltrim(str_replace('\\', '/', (string)$relPath), '/');
+        if ($relPath === '') {
+            return '';
+        }
+        if (defined('BASE_URL')) {
+            return BASE_URL . $relPath;
+        }
+
+        return '/' . $relPath;
+    }
+}
+
 if (!function_exists('rc_sg_wiki_img_path')) {
     function rc_sg_wiki_img_path($itemId)
     {
@@ -96,7 +111,12 @@ if (!function_exists('rc_sg_item_html')) {
         $wikiPath = rc_sg_wiki_img_path($itemId);
         if ($wikiPath !== '') {
             $alt = $label !== '' ? rc_sg_esc($label) : '';
-            return '<img class="' . $class . '" src="' . rc_sg_esc($wikiPath) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
+            return '<img class="' . $class . '" src="' . rc_sg_esc(rc_sg_img_src($wikiPath)) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
+        }
+        $path = 'images/items/' . $itemId . '.gif';
+        if (file_exists(BASE . $path)) {
+            $alt = $label !== '' ? rc_sg_esc($label) : '';
+            return '<img class="' . $class . '" src="' . rc_sg_esc(rc_sg_img_src($path)) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
         }
         $img = function_exists('getItemImage') ? getItemImage($itemId) : '';
         if ($img !== '') {
@@ -105,11 +125,6 @@ if (!function_exists('rc_sg_item_html')) {
                 $img = preg_replace('/alt="[^"]*"/', 'alt="' . rc_sg_esc($label) . '"', $img, 1);
             }
             return $img;
-        }
-        $path = 'images/items/' . $itemId . '.gif';
-        if (file_exists(BASE . $path)) {
-            $alt = $label !== '' ? rc_sg_esc($label) : '';
-            return '<img class="' . $class . '" src="' . rc_sg_esc($path) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
         }
         if ($label !== '') {
             return '<span class="rc-tier-item-fallback">' . rc_sg_esc($label) . '</span>';
