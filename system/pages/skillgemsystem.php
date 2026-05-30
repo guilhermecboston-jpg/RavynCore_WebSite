@@ -3,46 +3,80 @@ defined('MYAAC') or die('Direct access not allowed!');
 
 $title = 'Skill Gem System';
 
-$gemIds = [
-    'green_l1' => 61521,
-    'purple_l1' => 61522,
-    'red_l1' => 61523,
-    'yellow_l1' => 61524,
-    'green_l2' => 61525,
-    'purple_l2' => 61526,
-    'red_l2' => 61527,
-    'yellow_l2' => 61528,
-];
-
 $removeTransferItemId = 63475;
 
-$levelTables = [
+$gems = [
     [
-        'title' => 'Nível 1',
-        'rows' => [
-            ['name' => 'Green Gem', 'key' => 'green_l1', 'bonus' => '+1~2 Skill Increase'],
-            ['name' => 'Purple Gem', 'key' => 'purple_l1', 'bonus' => '+1~2 Skill Increase'],
-            ['name' => 'Red Gem', 'key' => 'red_l1', 'bonus' => '+1~2 Skill Increase'],
-            ['name' => 'Yellow Gem', 'key' => 'yellow_l1', 'bonus' => '+1~2 Skill Increase'],
-        ],
+        'id' => 61521,
+        'name' => 'Green Gem',
+        'level' => 1,
+        'color' => 'Green',
+        'bonus' => '+1~2',
+        'slot' => 'Amulet',
+        'group' => 'A (Amulet, Ring, Weapon, Helmet)',
     ],
     [
-        'title' => 'Nível 2',
-        'rows' => [
-            ['name' => 'Green Stone', 'key' => 'green_l2', 'bonus' => '+2~4 Skill Increase'],
-            ['name' => 'Purple Stone', 'key' => 'purple_l2', 'bonus' => '+2~4 Skill Increase'],
-            ['name' => 'Red Stone', 'key' => 'red_l2', 'bonus' => '+2~4 Skill Increase'],
-            ['name' => 'Yellow Stone', 'key' => 'yellow_l2', 'bonus' => '+2~4 Skill Increase'],
-        ],
+        'id' => 61522,
+        'name' => 'Blue Gem',
+        'level' => 1,
+        'color' => 'Blue',
+        'bonus' => '+1~2',
+        'slot' => 'Armor',
+        'group' => 'B (Armor, Legs, Boots, Shield/Book/Quiver)',
     ],
     [
-        'title' => 'Nível 3',
-        'rows' => [
-            ['name' => 'Green Stone', 'bonus' => '+5~8 Skill Increase'],
-            ['name' => 'Purple Stone', 'bonus' => '+5~8 Skill Increase'],
-            ['name' => 'Red Stone', 'bonus' => '+5~8 Skill Increase'],
-            ['name' => 'Yellow Stone', 'bonus' => '+5~8 Skill Increase'],
-        ],
+        'id' => 61523,
+        'name' => 'Yellow Gem',
+        'level' => 2,
+        'color' => 'Yellow',
+        'bonus' => '+2~4',
+        'slot' => 'Ring',
+        'group' => 'A',
+    ],
+    [
+        'id' => 61524,
+        'name' => 'Red Gem',
+        'level' => 2,
+        'color' => 'Red',
+        'bonus' => '+2~4',
+        'slot' => 'Legs',
+        'group' => 'B',
+    ],
+    [
+        'id' => 61525,
+        'name' => 'Orange Gem',
+        'level' => 3,
+        'color' => 'Orange',
+        'bonus' => '+5~8',
+        'slot' => 'Weapon',
+        'group' => 'A',
+    ],
+    [
+        'id' => 61526,
+        'name' => 'White Gem',
+        'level' => 3,
+        'color' => 'White',
+        'bonus' => '+5~8',
+        'slot' => 'Boots',
+        'group' => 'B',
+    ],
+    [
+        'id' => 61527,
+        'name' => 'Black Gem',
+        'level' => 4,
+        'color' => 'Black',
+        'bonus' => '+9~12',
+        'slot' => 'Helmet',
+        'group' => 'A',
+    ],
+    [
+        'id' => 61528,
+        'name' => 'Pink Gem',
+        'level' => 4,
+        'color' => 'Pink',
+        'bonus' => '+9~12',
+        'slot' => 'Shield / Book / Quiver',
+        'group' => 'B',
     ],
 ];
 
@@ -55,6 +89,10 @@ $transferPrices = [
     ['skill' => '+6', 'price' => '300kk'],
     ['skill' => '+7', 'price' => '350kk'],
     ['skill' => '+8', 'price' => '400kk'],
+    ['skill' => '+9', 'price' => '450kk'],
+    ['skill' => '+10', 'price' => '500kk'],
+    ['skill' => '+11', 'price' => '550kk'],
+    ['skill' => '+12', 'price' => '600kk'],
 ];
 
 if (!function_exists('rc_sg_esc')) {
@@ -99,22 +137,16 @@ if (!function_exists('rc_sg_item_html')) {
     }
 }
 
-$levelSectionsHtml = '';
-foreach ($levelTables as $section) {
-    $rowsHtml = '';
-    foreach ($section['rows'] as $row) {
-        $itemId = isset($row['key'], $gemIds[$row['key']]) ? (int)$gemIds[$row['key']] : 0;
-        $itemCell = $itemId > 0
-            ? '<td class="rc-tier-table-item">' . rc_sg_item_html($itemId, false, $row['name']) . '</td>'
-            : '<td>-</td>';
-        $rowsHtml .= '<tr><td><strong>' . rc_sg_esc($row['name']) . '</strong></td>' . $itemCell
-            . '<td>' . rc_sg_esc($row['bonus']) . '</td></tr>';
-    }
-    $levelSectionsHtml .= '<h4 class="rc-tier-h4">' . rc_sg_esc($section['title']) . '</h4>'
-        . '<div class="rc-bf-table-wrap rc-tier-table-wrap">'
-        . '<table class="rc-bf-table rc-tier-table rc-sg-table">'
-        . '<thead><tr><th>Gema</th><th>Item</th><th>Bônus</th></tr></thead>'
-        . '<tbody>' . $rowsHtml . '</tbody></table></div>';
+$gemRows = '';
+foreach ($gems as $gem) {
+    $gemRows .= '<tr>'
+        . '<td><strong>' . rc_sg_esc($gem['name']) . '</strong><br><span class="rc-sg-id">ID ' . (int)$gem['id'] . '</span></td>'
+        . '<td class="rc-tier-table-item">' . rc_sg_item_html($gem['id'], false, $gem['name']) . '</td>'
+        . '<td>Nível ' . (int)$gem['level'] . '</td>'
+        . '<td>' . rc_sg_esc($gem['bonus']) . '</td>'
+        . '<td><strong>' . rc_sg_esc($gem['slot']) . '</strong></td>'
+        . '<td>' . rc_sg_esc($gem['group']) . '</td>'
+        . '</tr>';
 }
 
 $transferRows = '';
@@ -127,10 +159,10 @@ $removeItemHtml = rc_sg_item_html($removeTransferItemId, true, 'Remove Upgrade S
 echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<header class="rc-st-page-title rc-tier-hero">'
     . '<h2>Skill Gem System</h2>'
-    . '<p class="rc-tier-subtitle">Aplique Skill Gems em equipamentos, ganhe bônus na skill principal e transfira o bônus com o Remove Upgrade Status.</p>'
+    . '<p class="rc-tier-subtitle">8 gemas, 4 níveis — cada ID aplica em <strong>um único slot</strong> de equipamento. Backpack e Trinket não são válidos.</p>'
     . '<nav class="rc-tier-nav" aria-label="Seções do guia">'
     . '<a href="#rc-sg-info">Informações</a>'
-    . '<a href="#rc-sg-ganhos">Ganhos</a>'
+    . '<a href="#rc-sg-slots">Mapa de IDs</a>'
     . '<a href="#rc-sg-transfer">Transferência</a>'
     . '</nav>'
     . '</header>'
@@ -138,28 +170,32 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<section class="rc-st-card" id="rc-sg-info">'
     . '<h3>Informações Gerais</h3>'
     . '<ul class="rc-st-notes">'
-    . '<li>No <strong>RavynCore</strong>, as Skill Gems podem ser usadas em: <strong>Helmet, Armor, Legs, Boots, Arma, Shield/Book, Ring e Amulet</strong> (um bônus por item).</li>'
-    . '<li>Você pode adquirir as gemas por meio de <strong>Quests</strong>, <strong>NPCs</strong>, <strong>Craft</strong> e <strong>Store</strong>.</li>'
-    . '<li>Para remover ou transferir o bônus, utilize o item <strong>Remove Upgrade Status</strong> (ID ' . (int)$removeTransferItemId . ') — uso único, abre a janela de transferência no cliente.</li>'
-    . '<li>Apenas <strong>uma gema por item</strong>. Para trocar o bônus, use o Remove Upgrade Status antes de aplicar outra gema.</li>'
-    . '<li>Ao aplicar uma Skill Gem, o equipamento recebe um bônus aleatório na <strong>skill principal</strong> do personagem no momento da aplicação.</li>'
+    . '<li>Slots permitidos: <strong>Amulet, Ring, Weapon, Helmet, Armor, Legs, Boots, Shield/Book/Quiver</strong>.</li>'
+    . '<li><strong>Não</strong> funciona em Backpack, Trinket ou munição comum.</li>'
+    . '<li>Grupo <strong>A</strong> (gemas Green / Yellow / Orange / Black): Amulet, Ring, Weapon, Helmet — cada nível em um slot fixo.</li>'
+    . '<li>Grupo <strong>B</strong> (gemas Blue / Red / White / Pink): Armor, Legs, Boots, Shield/Book/Quiver — cada nível em um slot fixo.</li>'
+    . '<li>Uma gema por item. Para transferir, use <strong>Remove Upgrade Status</strong> (ID ' . (int)$removeTransferItemId . ') no cliente OTC.</li>'
+    . '<li>Bônus na <strong>skill principal</strong> do personagem no momento da aplicação.</li>'
     . '</ul>'
-    . '<p class="rc-sg-warning"><strong>⚠️ Atenção!</strong> Ao utilizar Fusion/Convergence Fusion no Forge System em um item com gems, todas as gems serão perdidas, pois o sistema cria um novo item.</p>'
+    . '<p class="rc-sg-warning"><strong>⚠️ Atenção!</strong> Fusion/Convergence no Forge remove as gems do item.</p>'
     . '<div class="rc-tier-extractor rc-sg-remove-card">'
     . '<h4>Remove Upgrade Status</h4>'
     . '<div class="rc-tier-item-spot">' . ($removeItemHtml !== '' ? $removeItemHtml : '<span class="rc-tier-item-fallback">Remove Upgrade Status</span>') . '</div>'
-    . '<p class="rc-sg-desc">Abre a janela de transferência: escolha o item com gem, pague o valor em KK, escolha o destino e ambos os itens vão para a Store Inbox.</p>'
+    . '<p class="rc-sg-desc">Use o item no jogo (OTC) para abrir a janela de transferência. Destino deve ser o <strong>mesmo tipo de slot</strong> do item origem.</p>'
     . '</div>'
     . '</section>'
 
-    . '<section class="rc-st-card" id="rc-sg-ganhos">'
-    . '<h3>Ganho de Skill por Gem</h3>'
-    . $levelSectionsHtml
+    . '<section class="rc-st-card" id="rc-sg-slots">'
+    . '<h3>Mapa: ID → Nome → Slot</h3>'
+    . '<div class="rc-bf-table-wrap rc-tier-table-wrap">'
+    . '<table class="rc-bf-table rc-tier-table rc-sg-table">'
+    . '<thead><tr><th>Gema</th><th>Item</th><th>Nível</th><th>Bônus</th><th>Slot exclusivo</th><th>Grupo</th></tr></thead>'
+    . '<tbody>' . $gemRows . '</tbody></table></div>'
     . '</section>'
 
     . '<section class="rc-st-card" id="rc-sg-transfer">'
     . '<h3>Transfer Skill to Catcher</h3>'
-    . '<p class="rc-tier-spaced">Transfira o bônus de skill acumulado usando o <strong>Remove Upgrade Status</strong> e o valor em gold abaixo:</p>'
+    . '<p class="rc-tier-spaced">Preços ao transferir com Remove Upgrade Status:</p>'
     . '<div class="rc-bf-table-wrap rc-tier-table-wrap">'
     . '<table class="rc-bf-table rc-tier-table rc-sg-table">'
     . '<thead><tr><th>Skill</th><th>Preço</th></tr></thead>'
@@ -169,6 +205,7 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
 
     . '<style>'
     . '.rc-sg-page .rc-sg-table td,.rc-sg-page .rc-sg-table th{text-align:center}'
+    . '.rc-sg-page .rc-sg-id{font-size:11px;color:#9eb8e8;font-weight:normal}'
     . '.rc-sg-page .rc-sg-desc{margin:10px 0 0;color:#d6e4ff;font-size:13px;line-height:1.45;text-align:center}'
     . '.rc-sg-page .rc-sg-warning{margin:16px 0;padding:12px 14px;border:1px solid rgba(240,120,80,.45);border-radius:8px;background:rgba(80,24,16,.35);color:#ffd8cc;font-size:13px;line-height:1.5}'
     . '.rc-sg-page .rc-sg-remove-card{max-width:320px;margin:16px auto 0}'
