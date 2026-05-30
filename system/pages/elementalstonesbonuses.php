@@ -135,9 +135,6 @@ if (!function_exists('esb_increase_value')) {
                 ];
 
                 return '+' . (int)($skillIncrease[$level] ?? 0);
-            case 'momentum':
-            case 'critical_damage':
-                return esb_percent_value($basePercent * 2);
             default:
                 return esb_percent_value($basePercent);
         }
