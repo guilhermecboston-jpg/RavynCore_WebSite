@@ -28,12 +28,30 @@ images/things-cache/outfits/*
 !images/things-cache/mounts/.gitkeep
 !images/things-cache/outfits/.gitkeep
 
-# Scraper staging (other paths under imagens/ stay local)
-imagens/*
-!imagens/creaturestibiawiki/
-!imagens/creaturestibiawiki/**
-
-# Local scraper logs
-scraper/logs/
-scraper/__pycache__/
-downloads/*.rar
+# Skill Gem wiki sprites — upload on each server (VPS); skip git to avoid pull conflicts
+imagens/creaturestibiawiki/63339.gif
+imagens/creaturestibiawiki/63340.gif
+imagens/creaturestibiawiki/63341.gif
+imagens/creaturestibiawiki/63342.gif
+imagens/creaturestibiawiki/63343.gif
+imagens/creaturestibiawiki/63344.gif
+imagens/creaturestibiawiki/63345.gif
+imagens/creaturestibiawiki/63346.gif
+imagens/creaturestibiawiki/63347.gif
+imagens/creaturestibiawiki/63348.gif
+imagens/creaturestibiawiki/63349.gif
+imagens/creaturestibiawiki/63350.gif
+imagens/creaturestibiawiki/63475.gif
+images/creaturetibiawiki/63339.gif
+images/creaturetibiawiki/63340.gif
+images/creaturetibiawiki/63341.gif
+images/creaturetibiawiki/63342.gif
+images/creaturetibiawiki/63343.gif
+images/creaturetibiawiki/63344.gif
+images/creaturetibiawiki/63345.gif
+images/creaturetibiawiki/63346.gif
+images/creaturetibiawiki/63347.gif
+images/creaturetibiawiki/63348.gif
+images/creaturetibiawiki/63349.gif
+images/creaturetibiawiki/63350.gif
+images/creaturetibiawiki/63475.gif
