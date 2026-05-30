@@ -6737,34 +6737,42 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
   margin-top: 14px !important;
 }
 
+.rc-tier-items-center {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
 .rc-tier-h4 {
-  margin: 18px 0 10px;
+  margin: 16px 0 8px;
   color: #e8c98a;
   font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 700;
+  text-align: center;
 }
 
 .rc-tier-extractor {
-  padding: 14px;
+  padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid rgba(104, 150, 225, 0.28);
   background: rgba(8, 14, 28, 0.55);
+  text-align: center;
 }
 
 .rc-tier-extractor h4 {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   color: #efd39b;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .rc-tier-item-spot {
-  margin-top: 12px;
-  min-height: 72px;
+  margin: 0 auto;
+  width: 88px;
+  min-height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 8px;
   border: 1px solid rgba(120, 168, 236, 0.35);
   background: radial-gradient(circle at center, rgba(25, 43, 74, 0.55), rgba(11, 21, 38, 0.85));
 }
@@ -6774,16 +6782,38 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
 }
 
 .rc-tier-item-img-lg {
-  width: 48px !important;
-  height: 48px !important;
+  width: 40px !important;
+  height: 40px !important;
 }
 
 .rc-tier-table-wrap {
-  margin-top: 8px;
+  margin-top: 6px;
+}
+
+.rc-tier-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.rc-tier-table th,
+.rc-tier-table td {
+  text-align: center;
+  padding: 6px 8px !important;
+  font-size: 13px !important;
+}
+
+.rc-tier-table th:first-child,
+.rc-tier-table td:first-child {
+  width: 42%;
 }
 
 .rc-tier-table td.rc-tier-table-item {
-  text-align: center;
+  width: 58%;
+}
+
+.rc-tier-table td.rc-tier-table-item img {
+  display: block;
+  margin: 0 auto;
 }
 
 .rc-tier-item-fallback {
