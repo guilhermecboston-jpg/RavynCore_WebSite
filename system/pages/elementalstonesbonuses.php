@@ -120,13 +120,21 @@ if (!function_exists('esb_item_image')) {
     function esb_item_image($id, $tooltip = '')
     {
         $id = (int)$id;
+        if ($id <= 0) {
+            return '';
+        }
         $tooltip = trim((string)$tooltip);
         $safeTooltip = htmlspecialchars($tooltip, ENT_QUOTES, 'UTF-8');
         $titleAttr = $safeTooltip !== '' ? ' title="' . $safeTooltip . '"' : '';
 
         $wikiPath = esb_wiki_img_path($id);
-        if ($wikiPath !== '') {
+        if ($wikiPath !== '' && file_exists(BASE . $wikiPath)) {
             return '<img class="item_image esb-wiki-img" src="' . htmlspecialchars(esb_img_src($wikiPath), ENT_QUOTES, 'UTF-8') . '" width="32" height="32" alt=""' . $titleAttr . ' loading="lazy">';
+        }
+
+        $path = 'images/items/' . $id . '.gif';
+        if (file_exists(BASE . $path)) {
+            return '<img class="item_image esb-wiki-img" src="' . htmlspecialchars(esb_img_src($path), ENT_QUOTES, 'UTF-8') . '" width="32" height="32" alt=""' . $titleAttr . ' loading="lazy">';
         }
 
         $html = getItemImage($id);

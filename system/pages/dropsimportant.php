@@ -60,16 +60,26 @@ if (!function_exists('rc_di_item_html')) {
         $candidates = [
             'imagens/creaturestibiawiki/' . $itemId . '.gif',
             'images/creaturetibiawiki/' . $itemId . '.gif',
+            'images/items/' . $itemId . '.gif',
         ];
-        $wikiPath = $candidates[0];
         foreach ($candidates as $path) {
             if (file_exists(BASE . $path)) {
-                $wikiPath = $path;
-                break;
+                $alt = $label !== '' ? rc_di_esc($label) : '';
+                return '<img class="' . $class . '" src="' . rc_di_esc(rc_di_img_src($path)) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
             }
         }
-        $alt = $label !== '' ? rc_di_esc($label) : '';
-        return '<img class="' . $class . '" src="' . rc_di_esc(rc_di_img_src($wikiPath)) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
+
+        if (function_exists('getItemImage')) {
+            $html = getItemImage($itemId);
+            if ($html !== '') {
+                if ($label !== '') {
+                    $html = preg_replace('/<img\s+/', '<img class="' . $class . '" ', $html, 1);
+                }
+                return $html;
+            }
+        }
+
+        return '';
     }
 }
 
