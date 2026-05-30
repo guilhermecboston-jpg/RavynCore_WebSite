@@ -36,3 +36,4 @@ imagens/*
 # Local scraper logs
 scraper/logs/
 scraper/__pycache__/
+downloads/*.rar
