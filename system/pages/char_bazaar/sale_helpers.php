@@ -1493,6 +1493,178 @@ if (!function_exists('cbz_yes_no')) {
     }
 }
 
+if (!function_exists('cbz_kv_value_is_truthy')) {
+    function cbz_kv_value_is_truthy($rawValue)
+    {
+        if ($rawValue === null) {
+            return false;
+        }
+        if (is_resource($rawValue)) {
+            $rawValue = stream_get_contents($rawValue);
+        }
+
+        $raw = (string)$rawValue;
+        if ($raw === '') {
+            return false;
+        }
+
+        // Protobuf deleted marker or empty wrapper — treat as unset.
+        if (strpos($raw, 'deleted') !== false) {
+            return false;
+        }
+
+        return true;
+    }
+}
+
+if (!function_exists('cbz_get_player_wheel_kv_scroll_flags')) {
+    function cbz_get_player_wheel_kv_scroll_flags($db, $playerId)
+    {
+        $playerId = (int)$playerId;
+        $flags = [];
+        if ($playerId <= 0 || !cbz_has_table($db, 'kv_store')) {
+            return $flags;
+        }
+
+        $prefix = 'player.' . $playerId . '.wheel-of-destiny.scrolls.';
+        $sql = 'SELECT `key_name`, `value` FROM `kv_store` WHERE `key_name` LIKE ' . $db->quote($prefix . '%');
+        $query = $db->query($sql);
+        if (!$query) {
+            return $flags;
+        }
+
+        foreach ($query as $row) {
+            $keyName = (string)($row['key_name'] ?? '');
+            if ($keyName === '' || !cbz_kv_value_is_truthy($row['value'] ?? null)) {
+                continue;
+            }
+
+            $scrollName = substr($keyName, strlen($prefix));
+            if ($scrollName !== '') {
+                $flags[$scrollName] = true;
+            }
+        }
+
+        return $flags;
+    }
+}
+
+if (!function_exists('cbz_get_wheel_destiny_scroll_data')) {
+    function cbz_get_wheel_destiny_scroll_data($db, $playerId, array $player = [], array $storageValues = [])
+    {
+        $scrollDefinitions = [
+            'abridged' => [
+                'points' => 3,
+                'legacy_storage' => 95121,
+                'legacy_columns' => [
+                    'initiate_promotion_scroll',
+                    'promotion_points_initiate',
+                    'promotion_point_initiate',
+                    'wheel_promotion_initiate',
+                    'promotion_initiate',
+                ],
+            ],
+            'basic' => [
+                'points' => 5,
+                'legacy_storage' => 95122,
+                'legacy_columns' => [
+                    'ascendant_promotion_scroll',
+                    'promotion_points_ascendant',
+                    'promotion_point_ascendant',
+                    'wheel_promotion_ascendant',
+                    'promotion_ascendant',
+                ],
+            ],
+            'revised' => [
+                'points' => 9,
+                'legacy_storage' => 95123,
+                'legacy_columns' => [
+                    'mythic_promotion_scroll',
+                    'promotion_points_mythic',
+                    'promotion_point_mythic',
+                    'wheel_promotion_mythic',
+                    'promotion_mythic',
+                ],
+            ],
+            'extended' => [
+                'points' => 13,
+                'legacy_storage' => 0,
+                'legacy_columns' => [
+                    'extended_promotion_scroll',
+                    'promotion_points_extended',
+                    'promotion_point_extended',
+                    'wheel_promotion_extended',
+                    'promotion_extended',
+                ],
+            ],
+            'advanced' => [
+                'points' => 20,
+                'legacy_storage' => 0,
+                'legacy_columns' => [
+                    'advanced_promotion_scroll',
+                    'promotion_points_advanced',
+                    'promotion_point_advanced',
+                    'wheel_promotion_advanced',
+                    'promotion_advanced',
+                ],
+            ],
+        ];
+
+        $epicScrollNames = [
+            'destiny_points_61863_first' => 100,
+            'destiny_points_61863_second' => 100,
+        ];
+
+        $kvScrollFlags = cbz_get_player_wheel_kv_scroll_flags($db, $playerId);
+        $used = [];
+        $scrollBonusPoints = 0;
+
+        foreach ($scrollDefinitions as $scrollName => $definition) {
+            $raw = 0;
+            if (!empty($kvScrollFlags[$scrollName])) {
+                $raw = 1;
+            } elseif ($definition['legacy_storage'] > 0 && !empty($storageValues[$definition['legacy_storage']])) {
+                $raw = (int)$storageValues[$definition['legacy_storage']];
+            } else {
+                $raw = cbz_player_numeric_value($player, $definition['legacy_columns'], 0);
+            }
+
+            $used[$scrollName] = ((int)$raw > 0);
+            if ($used[$scrollName]) {
+                $scrollBonusPoints += (int)$definition['points'];
+            }
+        }
+
+        $epicUses = 0;
+        foreach ($epicScrollNames as $epicName => $points) {
+            if (!empty($kvScrollFlags[$epicName])) {
+                $epicUses++;
+            }
+        }
+
+        $epicStorageUses = max(0, (int)($storageValues[30062] ?? 0));
+        if ($epicUses < $epicStorageUses) {
+            $epicUses = min(2, $epicStorageUses);
+        }
+
+        $epicBonusPoints = $epicUses * 100;
+
+        return [
+            'promotion_scroll_abridged' => cbz_yes_no($used['abridged'] ?? false),
+            'promotion_scroll_basic' => cbz_yes_no($used['basic'] ?? false),
+            'promotion_scroll_revised' => cbz_yes_no($used['revised'] ?? false),
+            'promotion_scroll_extended' => cbz_yes_no($used['extended'] ?? false),
+            'promotion_scroll_advanced' => cbz_yes_no($used['advanced'] ?? false),
+            'epic_points_wheel' => cbz_yes_no($epicUses > 0),
+            'scroll_bonus_points' => $scrollBonusPoints,
+            'epic_bonus_points' => $epicBonusPoints,
+            'promotion_points_initiate' => cbz_yes_no($used['abridged'] ?? false),
+            'promotion_points_ascendant' => cbz_yes_no($used['basic'] ?? false),
+            'promotion_points_mythic' => cbz_yes_no($used['revised'] ?? false),
+        ];
+    }
+}
+
 if (!function_exists('cbz_sum_wheel_slot_blob_points')) {
     function cbz_sum_wheel_slot_blob_points($rawValue)
     {
@@ -1842,7 +2014,7 @@ if (!function_exists('cbz_get_character_sale_data')) {
         }
 
         $storageValues = cbz_get_player_storage_map($db, $playerId, [
-            95101, 95102, 95103, 95109, 95110, 95121, 95122, 95123, 95124,
+            95101, 95102, 95103, 95109, 95110, 95121, 95122, 95123, 95124, 30062,
         ]);
 
         $preyWildcards = cbz_player_numeric_value($player, ['prey_wildcard', 'wildcard', 'prey_wildcards', 'wildcards'], 0);
@@ -1916,60 +2088,29 @@ if (!function_exists('cbz_get_character_sale_data')) {
             $wheelPoints = $wheelInvestedPoints;
         }
 
-        $promotionInitiateRaw = cbz_player_numeric_value($player, [
-            'promotion_points_initiate',
-            'promotion_point_initiate',
-            'wheel_promotion_initiate',
-            'initiate_promotion_scroll',
-            'promotion_initiate',
-        ], 0);
-        $promotionAscendantRaw = cbz_player_numeric_value($player, [
-            'promotion_points_ascendant',
-            'promotion_point_ascendant',
-            'wheel_promotion_ascendant',
-            'ascendant_promotion_scroll',
-            'promotion_ascendant',
-        ], 0);
-        $promotionMythicRaw = cbz_player_numeric_value($player, [
-            'promotion_points_mythic',
-            'promotion_point_mythic',
-            'wheel_promotion_mythic',
-            'mythic_promotion_scroll',
-            'promotion_mythic',
-        ], 0);
-
-        if ($promotionInitiateRaw <= 0 && isset($storageValues[95121])) {
-            $promotionInitiateRaw = (int)$storageValues[95121];
-        }
-        if ($promotionAscendantRaw <= 0 && isset($storageValues[95122])) {
-            $promotionAscendantRaw = (int)$storageValues[95122];
-        }
-        if ($promotionMythicRaw <= 0 && isset($storageValues[95123])) {
-            $promotionMythicRaw = (int)$storageValues[95123];
-        }
+        $wheelScrollData = cbz_get_wheel_destiny_scroll_data($db, $playerId, $player, $storageValues);
+        $scrollBonusPoints = (int)($wheelScrollData['scroll_bonus_points'] ?? 0);
+        $epicBonusPoints = (int)($wheelScrollData['epic_bonus_points'] ?? 0);
 
         $baseWheelPoints = max(0, ((int)$player['level']) - 50);
-        $scrollBonusPoints = 0;
-        if ($promotionInitiateRaw > 0) {
-            $scrollBonusPoints += 3;
-        }
-        if ($promotionAscendantRaw > 0) {
-            $scrollBonusPoints += 5;
-        }
-        if ($promotionMythicRaw > 0) {
-            $scrollBonusPoints += 9;
-        }
-        $estimatedTotalWheelPoints = $baseWheelPoints + $scrollBonusPoints;
-        if ($wheelPoints <= 0 && $estimatedTotalWheelPoints > 0) {
+        $estimatedTotalWheelPoints = $baseWheelPoints + $scrollBonusPoints + $epicBonusPoints;
+        if ($estimatedTotalWheelPoints > $wheelPoints) {
             $wheelPoints = $estimatedTotalWheelPoints;
         }
-        if ($availablePromotionPoints <= 0 && $estimatedTotalWheelPoints > 0) {
-            $availablePromotionPoints = max(0, $estimatedTotalWheelPoints - $wheelInvestedPoints);
+
+        $calculatedAvailablePoints = max(0, $estimatedTotalWheelPoints - $wheelInvestedPoints);
+        if ($calculatedAvailablePoints > 0) {
+            $availablePromotionPoints = $calculatedAvailablePoints;
+        } elseif ($availablePromotionPoints <= 0 && isset($storageValues[95124]) && (int)$storageValues[95124] > 0) {
+            $availablePromotionPoints = (int)$storageValues[95124];
         }
 
-        $promotionInitiate = cbz_yes_no($promotionInitiateRaw);
-        $promotionAscendant = cbz_yes_no($promotionAscendantRaw);
-        $promotionMythic = cbz_yes_no($promotionMythicRaw);
+        $promotionInitiate = (string)($wheelScrollData['promotion_scroll_abridged'] ?? 'No');
+        $promotionAscendant = (string)($wheelScrollData['promotion_scroll_basic'] ?? 'No');
+        $promotionMythic = (string)($wheelScrollData['promotion_scroll_revised'] ?? 'No');
+        $promotionExtended = (string)($wheelScrollData['promotion_scroll_extended'] ?? 'No');
+        $promotionAdvanced = (string)($wheelScrollData['promotion_scroll_advanced'] ?? 'No');
+        $epicPointsWheel = (string)($wheelScrollData['epic_points_wheel'] ?? 'No');
         $jewelledPounch4Slot = cbz_yes_no((int)($storageValues[95110] ?? 0));
 
         $bosstiary = is_array($bosstiaryList) ? count($bosstiaryList) : 0;
@@ -2076,6 +2217,13 @@ if (!function_exists('cbz_get_character_sale_data')) {
             'promotion_points_initiate' => $promotionInitiate,
             'promotion_points_ascendant' => $promotionAscendant,
             'promotion_points_mythic' => $promotionMythic,
+            'promotion_scroll_abridged' => $promotionInitiate,
+            'promotion_scroll_basic' => $promotionAscendant,
+            'promotion_scroll_revised' => $promotionMythic,
+            'promotion_scroll_extended' => $promotionExtended,
+            'promotion_scroll_advanced' => $promotionAdvanced,
+            'epic_points_wheel' => $epicPointsWheel,
+            'wheel_total_points' => $estimatedTotalWheelPoints,
             'item_summary' => $summary,
             'item_summary_rows' => $itemSummaryRows,
             'task_board' => $taskBoard,

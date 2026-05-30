@@ -162,9 +162,12 @@ $addonMountBonus = $character['addon_mount_bonus'] ?? ['outfits_used' => 0, 'mou
                         <h3>Wheel of Destiny</h3>
                         <div class="rc-cbz-grid-two">
                             <div><span>Available Promotions Points</span><strong><?= number_format((int)$character['available_promotion_points'], 0, ',', '.') ?></strong></div>
-                            <div><span>Promotions Points Initiate</span><strong><?= htmlspecialchars((string)$character['promotion_points_initiate']) ?></strong></div>
-                            <div><span>Promotions Points Ascendant</span><strong><?= htmlspecialchars((string)$character['promotion_points_ascendant']) ?></strong></div>
-                            <div><span>Promotions Points Mythic</span><strong><?= htmlspecialchars((string)$character['promotion_points_mythic']) ?></strong></div>
+                            <div><span>Abridged Promotion Scroll</span><strong><?= htmlspecialchars((string)$character['promotion_scroll_abridged']) ?></strong></div>
+                            <div><span>Basic Promotion Scroll</span><strong><?= htmlspecialchars((string)$character['promotion_scroll_basic']) ?></strong></div>
+                            <div><span>Revised Promotion Scroll</span><strong><?= htmlspecialchars((string)$character['promotion_scroll_revised']) ?></strong></div>
+                            <div><span>Extended Promotion Scroll</span><strong><?= htmlspecialchars((string)$character['promotion_scroll_extended']) ?></strong></div>
+                            <div><span>Advanced Promotion Scroll</span><strong><?= htmlspecialchars((string)$character['promotion_scroll_advanced']) ?></strong></div>
+                            <div><span>Epic Points Wheel of Destiny</span><strong><?= htmlspecialchars((string)$character['epic_points_wheel']) ?></strong></div>
                         </div>
                     </div>
 
