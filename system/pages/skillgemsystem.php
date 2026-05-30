@@ -140,15 +140,13 @@ if (!function_exists('rc_sg_price_cell')) {
             return '—';
         }
         $kk = rc_sg_esc($row['kk']);
-        $gold = rc_sg_esc($row['gold']);
         if ($withRemove) {
             $removeImg = rc_sg_item_html((int)$removeItemId, false, '');
             return '<div class="rc-sg-extract-cost">'
                 . ($removeImg !== '' ? $removeImg : '')
-                . '<span class="rc-sg-extract-plus">+</span> <strong>' . $kk . '</strong>'
-                . '<br><span class="rc-sg-id">' . $gold . ' gold</span></div>';
+                . '<span class="rc-sg-extract-plus">+</span> <strong>' . $kk . '</strong></div>';
         }
-        return '<strong>' . $kk . '</strong><br><span class="rc-sg-id">' . $gold . ' gold</span>';
+        return '<strong>' . $kk . '</strong>';
     }
 }
 
@@ -203,7 +201,6 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<div class="rc-tier-extractor rc-sg-remove-card">'
     . '<h4>Remove Upgrade Status</h4>'
     . '<div class="rc-tier-item-spot">' . ($removeItemHtml !== '' ? $removeItemHtml : '') . '</div>'
-    . '<p class="rc-sg-desc">ID ' . (int)$removeExtractItemId . ' — só na <strong>extração</strong>.</p>'
     . '</div></section>'
 
     . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-vocation">'
@@ -221,8 +218,8 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<p class="rc-tier-spaced">Cada Skill Tier Gem tem skill fixa (+1 a +12) e guarda o tipo de skill após extrair. Custos em <strong>kk</strong> por nível (inventário + banco):</p>'
     . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table">'
     . '<thead><tr><th>Skill Tier Gem</th><th>Skill</th>'
-    . '<th>Extrair equip.<br><span class="rc-sg-th-sub">Remove + kk</span></th>'
-    . '<th>Aplicar Skill Tier Gem<br><span class="rc-sg-th-sub">somente kk</span></th></tr></thead>'
+    . '<th>Extrair equip.</th>'
+    . '<th>Aplicar Skill Tier Gem</th></tr></thead>'
     . '<tbody>' . $tierRows . '</tbody></table></div></section>'
 
     . '<style>'
