@@ -16,6 +16,21 @@ $gems = [
     ['id' => 61528, 'name' => 'Pink Gem', 'level' => 4, 'bonus' => '+9~12', 'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver', 'group' => 'B'],
 ];
 
+$tierServicePrices = [
+    ['skill' => '+1', 'price' => '50kk'],
+    ['skill' => '+2', 'price' => '100kk'],
+    ['skill' => '+3', 'price' => '150kk'],
+    ['skill' => '+4', 'price' => '200kk'],
+    ['skill' => '+5', 'price' => '250kk'],
+    ['skill' => '+6', 'price' => '300kk'],
+    ['skill' => '+7', 'price' => '350kk'],
+    ['skill' => '+8', 'price' => '500kk'],
+    ['skill' => '+9', 'price' => '600kk'],
+    ['skill' => '+10', 'price' => '700kk'],
+    ['skill' => '+11', 'price' => '800kk'],
+    ['skill' => '+12', 'price' => '1000kk'],
+];
+
 $skillTierCrystals = [
     ['id' => 63340, 'skill' => '+1'],
     ['id' => 63341, 'skill' => '+2'],
@@ -73,6 +88,11 @@ foreach ($gems as $gem) {
         . '<td>' . rc_sg_esc($gem['slots']) . '</td><td><strong>' . rc_sg_esc($gem['group']) . '</strong></td></tr>';
 }
 
+$priceRows = '';
+foreach ($tierServicePrices as $row) {
+    $priceRows .= '<tr><td><strong>' . rc_sg_esc($row['skill']) . '</strong></td><td>' . rc_sg_esc($row['price']) . '</td></tr>';
+}
+
 $tierRows = '';
 foreach ($skillTierCrystals as $row) {
     $tierRows .= '<tr><td><strong>Skill ' . rc_sg_esc($row['skill']) . '</strong><br><span class="rc-sg-id">ID ' . (int)$row['id'] . '</span></td>'
@@ -90,6 +110,7 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<a href="#rc-sg-info">Informações</a>'
     . '<a href="#rc-sg-gems">Gemas</a>'
     . '<a href="#rc-sg-tier">Skill Tier</a>'
+    . '<a href="#rc-sg-prices">Preços</a>'
     . '</nav></header>'
 
     . '<section class="rc-st-card" id="rc-sg-info">'
