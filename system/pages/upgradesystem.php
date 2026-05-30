@@ -75,6 +75,41 @@ if (!function_exists('rc_upg_esc')) {
     }
 }
 
+if (!function_exists('rc_upg_img_src')) {
+    function rc_upg_img_src($relPath)
+    {
+        $relPath = ltrim(str_replace('\\', '/', (string)$relPath), '/');
+        if ($relPath === '') {
+            return '';
+        }
+        if (defined('BASE_URL')) {
+            return BASE_URL . $relPath;
+        }
+
+        return '/' . $relPath;
+    }
+}
+
+if (!function_exists('rc_upg_wiki_img_path')) {
+    function rc_upg_wiki_img_path($itemId)
+    {
+        $itemId = (int)$itemId;
+        if ($itemId <= 0) {
+            return '';
+        }
+        $candidates = [
+            'imagens/creaturestibiawiki/' . $itemId . '.gif',
+            'images/creaturetibiawiki/' . $itemId . '.gif',
+        ];
+        foreach ($candidates as $path) {
+            if (file_exists(BASE . $path)) {
+                return $path;
+            }
+        }
+        return $candidates[0];
+    }
+}
+
 if (!function_exists('rc_upg_item_html')) {
     function rc_upg_item_html($itemId, $large = false, $label = '')
     {
@@ -83,11 +118,17 @@ if (!function_exists('rc_upg_item_html')) {
             return '';
         }
 
-        $alt = $label !== '' ? $label : 'Item';
         $class = $large ? 'rc-tier-item-img rc-tier-item-img-lg' : 'rc-tier-item-img';
-        $wikiPath = 'images/creaturetibiawiki/' . $itemId . '.gif';
-        if (file_exists(BASE . $wikiPath)) {
-            return '<img class="' . $class . '" src="' . rc_upg_esc($wikiPath) . '" width="32" height="32" alt="' . rc_upg_esc($alt) . '" loading="lazy">';
+        $wikiPath = rc_upg_wiki_img_path($itemId);
+        if ($wikiPath !== '') {
+            $alt = $label !== '' ? rc_upg_esc($label) : '';
+            return '<img class="' . $class . '" src="' . rc_upg_esc(rc_upg_img_src($wikiPath)) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
+        }
+
+        $path = 'images/items/' . $itemId . '.gif';
+        if (file_exists(BASE . $path)) {
+            $alt = $label !== '' ? rc_upg_esc($label) : '';
+            return '<img class="' . $class . '" src="' . rc_upg_esc(rc_upg_img_src($path)) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
         }
 
         $img = function_exists('getItemImage') ? getItemImage($itemId) : '';
@@ -96,18 +137,18 @@ if (!function_exists('rc_upg_item_html')) {
             if (strpos($img, 'class="') === false) {
                 $img = str_replace('<img ', '<img class="' . $class . '" ', $img);
             }
-            $img = preg_replace('/alt="[^"]*"/', 'alt="' . rc_upg_esc($alt) . '"', $img, 1);
+            if ($label !== '') {
+                $img = preg_replace('/alt="[^"]*"/', 'alt="' . rc_upg_esc($label) . '"', $img, 1);
+            }
             $img = preg_replace('/title="[^"]*"/', '', $img);
 
             return $img;
         }
 
-        $path = 'images/items/' . $itemId . '.gif';
-        if (file_exists(BASE . $path)) {
-            return '<img class="' . $class . '" src="' . rc_upg_esc($path) . '" width="32" height="32" alt="' . rc_upg_esc($alt) . '" loading="lazy">';
+        if ($label !== '') {
+            return '<span class="rc-tier-item-fallback">' . rc_upg_esc($label) . '</span>';
         }
-
-        return '<span class="rc-tier-item-fallback">' . rc_upg_esc($alt) . '</span>';
+        return '';
     }
 }
 
