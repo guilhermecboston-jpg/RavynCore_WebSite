@@ -308,24 +308,65 @@ if (!function_exists('cbz_get_player_bestiary_kill_map')) {
     }
 }
 
+if (!function_exists('cbz_is_bestiary_entry_complete')) {
+    function cbz_is_bestiary_entry_complete($raceId, $kills)
+    {
+        $raceId = (int)$raceId;
+        $kills = (int)$kills;
+        if ($raceId <= 0 || $kills <= 0) {
+            return false;
+        }
+
+        $meta = cbz_get_monster_lua_race_meta_map()[$raceId] ?? null;
+        $requiredKills = (int)($meta['bestiaryToKill'] ?? 0);
+        if ($requiredKills <= 0) {
+            return false;
+        }
+
+        return $kills >= $requiredKills;
+    }
+}
+
 if (!function_exists('cbz_get_player_bestiary_entry_ids')) {
     function cbz_get_player_bestiary_entry_ids($db, $playerId, array $trackerIds = [])
     {
+        $killMap = cbz_get_player_bestiary_kill_map($db, $playerId);
         $ids = [];
-        foreach ($trackerIds as $id) {
-            $id = (int)$id;
-            if ($id > 0) {
-                $ids[$id] = true;
-            }
-        }
 
-        foreach (cbz_get_player_bestiary_kill_map($db, $playerId) as $raceId => $kills) {
-            if ((int)$kills > 0) {
+        foreach ($killMap as $raceId => $kills) {
+            if (cbz_is_bestiary_entry_complete((int)$raceId, (int)$kills)) {
                 $ids[(int)$raceId] = true;
             }
         }
 
+        foreach ($trackerIds as $id) {
+            $id = (int)$id;
+            if ($id <= 0) {
+                continue;
+            }
+
+            $kills = (int)($killMap[$id] ?? 0);
+            if (cbz_is_bestiary_entry_complete($id, $kills)) {
+                $ids[$id] = true;
+            }
+        }
+
         return array_map('intval', array_keys($ids));
+    }
+}
+
+if (!function_exists('cbz_filter_bestiary_kill_map_complete')) {
+    function cbz_filter_bestiary_kill_map_complete(array $killMap)
+    {
+        $filtered = [];
+        foreach ($killMap as $raceId => $kills) {
+            $raceId = (int)$raceId;
+            if (cbz_is_bestiary_entry_complete($raceId, (int)$kills)) {
+                $filtered[$raceId] = (int)$kills;
+            }
+        }
+
+        return $filtered;
     }
 }
 
@@ -1469,6 +1510,7 @@ if (!function_exists('cbz_get_monster_lua_race_meta_map')) {
         $namePattern = '/Game\\.createMonsterType\\(\\s*[\'"]([^\'"]+)[\'"]\\s*\\)/i';
         $racePatterns = [
             '/monster\\.raceId\\s*=\\s*(\\d+)/i',
+            '/\\braceId\\s*=\\s*(\\d+)/i',
             '/monster\\.bossRaceId\\s*=\\s*(\\d+)/i',
             '/bossRaceId\\s*=\\s*(\\d+)/i',
         ];
@@ -1529,6 +1571,9 @@ if (!function_exists('cbz_get_monster_lua_race_meta_map')) {
                         if (preg_match($pattern, $content, $outfitMatch)) {
                             $meta[$key] = (int)($outfitMatch[1] ?? 0);
                         }
+                    }
+                    if (preg_match('/toKill\\s*=\\s*(\\d+)/i', $content, $bestiaryMatch)) {
+                        $meta['bestiaryToKill'] = (int)($bestiaryMatch[1] ?? 0);
                     }
                     $map[$raceId] = $meta;
                 }
@@ -1693,6 +1738,10 @@ if (!function_exists('cbz_get_collection_rows')) {
             $progress = (int)($row['progress'] ?? 0);
             $completed = $row['completed'];
             if ($completed !== null && is_numeric($completed) && (int)$completed <= 0 && $progress <= 0) {
+                continue;
+            }
+
+            if (strcasecmp((string)$fallbackPrefix, 'Monster') === 0 && !cbz_is_bestiary_entry_complete($entryId, $progress)) {
                 continue;
             }
 
@@ -2142,7 +2191,8 @@ if (!function_exists('cbz_get_character_sale_data')) {
                 $bestiaryList = cbz_get_collection_rows($db, $bestiaryTable, $playerId, 'Monster');
             }
             if (!$bestiaryList && $bestiaryEntryIds) {
-                $bestiaryList = cbz_build_collection_rows_from_ids($db, $bestiaryEntryIds, 'Monster', $bestiaryKillMap);
+                $bestiaryKillMapComplete = cbz_filter_bestiary_kill_map_complete($bestiaryKillMap);
+                $bestiaryList = cbz_build_collection_rows_from_ids($db, $bestiaryEntryIds, 'Monster', $bestiaryKillMapComplete);
             }
         }
 
