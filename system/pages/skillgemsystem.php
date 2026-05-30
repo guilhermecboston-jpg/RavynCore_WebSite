@@ -12,8 +12,8 @@ $gems = [
         'level' => 1,
         'color' => 'Green',
         'bonus' => '+1~2',
-        'slot' => 'Amulet',
-        'group' => 'A (Amulet, Ring, Weapon, Helmet)',
+        'slots' => 'Amulet, Ring, Weapon ou Helmet',
+        'group' => 'A',
     ],
     [
         'id' => 61522,
@@ -21,8 +21,8 @@ $gems = [
         'level' => 1,
         'color' => 'Blue',
         'bonus' => '+1~2',
-        'slot' => 'Armor',
-        'group' => 'B (Armor, Legs, Boots, Shield/Book/Quiver)',
+        'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver',
+        'group' => 'B',
     ],
     [
         'id' => 61523,
@@ -30,7 +30,7 @@ $gems = [
         'level' => 2,
         'color' => 'Yellow',
         'bonus' => '+2~4',
-        'slot' => 'Ring',
+        'slots' => 'Amulet, Ring, Weapon ou Helmet',
         'group' => 'A',
     ],
     [
@@ -39,7 +39,7 @@ $gems = [
         'level' => 2,
         'color' => 'Red',
         'bonus' => '+2~4',
-        'slot' => 'Legs',
+        'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver',
         'group' => 'B',
     ],
     [
@@ -48,7 +48,7 @@ $gems = [
         'level' => 3,
         'color' => 'Orange',
         'bonus' => '+5~8',
-        'slot' => 'Weapon',
+        'slots' => 'Amulet, Ring, Weapon ou Helmet',
         'group' => 'A',
     ],
     [
@@ -57,7 +57,7 @@ $gems = [
         'level' => 3,
         'color' => 'White',
         'bonus' => '+5~8',
-        'slot' => 'Boots',
+        'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver',
         'group' => 'B',
     ],
     [
@@ -66,7 +66,7 @@ $gems = [
         'level' => 4,
         'color' => 'Black',
         'bonus' => '+9~12',
-        'slot' => 'Helmet',
+        'slots' => 'Amulet, Ring, Weapon ou Helmet',
         'group' => 'A',
     ],
     [
@@ -75,7 +75,7 @@ $gems = [
         'level' => 4,
         'color' => 'Pink',
         'bonus' => '+9~12',
-        'slot' => 'Shield / Book / Quiver',
+        'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver',
         'group' => 'B',
     ],
 ];
@@ -144,8 +144,8 @@ foreach ($gems as $gem) {
         . '<td class="rc-tier-table-item">' . rc_sg_item_html($gem['id'], false, $gem['name']) . '</td>'
         . '<td>Nível ' . (int)$gem['level'] . '</td>'
         . '<td>' . rc_sg_esc($gem['bonus']) . '</td>'
-        . '<td><strong>' . rc_sg_esc($gem['slot']) . '</strong></td>'
-        . '<td>' . rc_sg_esc($gem['group']) . '</td>'
+        . '<td>' . rc_sg_esc($gem['slots']) . '</td>'
+        . '<td><strong>' . rc_sg_esc($gem['group']) . '</strong></td>'
         . '</tr>';
 }
 
@@ -159,7 +159,7 @@ $removeItemHtml = rc_sg_item_html($removeTransferItemId, true, 'Remove Upgrade S
 echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<header class="rc-st-page-title rc-tier-hero">'
     . '<h2>Skill Gem System</h2>'
-    . '<p class="rc-tier-subtitle">8 gemas, 4 níveis — cada ID aplica em <strong>um único slot</strong> de equipamento. Backpack e Trinket não são válidos.</p>'
+    . '<p class="rc-tier-subtitle">8 gemas, 4 níveis — cada gema aplica em <strong>1 dos 4 slots</strong> do seu grupo (A ou B). Backpack e Trinket não são válidos.</p>'
     . '<nav class="rc-tier-nav" aria-label="Seções do guia">'
     . '<a href="#rc-sg-info">Informações</a>'
     . '<a href="#rc-sg-slots">Mapa de IDs</a>'
@@ -172,8 +172,8 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<ul class="rc-st-notes">'
     . '<li>Slots permitidos: <strong>Amulet, Ring, Weapon, Helmet, Armor, Legs, Boots, Shield/Book/Quiver</strong>.</li>'
     . '<li><strong>Não</strong> funciona em Backpack, Trinket ou munição comum.</li>'
-    . '<li>Grupo <strong>A</strong> (gemas Green / Yellow / Orange / Black): Amulet, Ring, Weapon, Helmet — cada nível em um slot fixo.</li>'
-    . '<li>Grupo <strong>B</strong> (gemas Blue / Red / White / Pink): Armor, Legs, Boots, Shield/Book/Quiver — cada nível em um slot fixo.</li>'
+    . '<li>Grupo <strong>A</strong> (Green / Yellow / Orange / Black): pode aplicar em <strong>Amulet, Ring, Weapon ou Helmet</strong> (um item por vez).</li>'
+    . '<li>Grupo <strong>B</strong> (Blue / Red / White / Pink): pode aplicar em <strong>Armor, Legs, Boots ou Shield/Book/Quiver</strong>.</li>'
     . '<li>Uma gema por item. Para transferir, use <strong>Remove Upgrade Status</strong> (ID ' . (int)$removeTransferItemId . ') no cliente OTC.</li>'
     . '<li>Bônus na <strong>skill principal</strong> do personagem no momento da aplicação.</li>'
     . '</ul>'
@@ -181,7 +181,7 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<div class="rc-tier-extractor rc-sg-remove-card">'
     . '<h4>Remove Upgrade Status</h4>'
     . '<div class="rc-tier-item-spot">' . ($removeItemHtml !== '' ? $removeItemHtml : '<span class="rc-tier-item-fallback">Remove Upgrade Status</span>') . '</div>'
-    . '<p class="rc-sg-desc">Use o item no jogo (OTC) para abrir a janela de transferência. Destino deve ser o <strong>mesmo tipo de slot</strong> do item origem.</p>'
+    . '<p class="rc-sg-desc">Use o item no jogo (OTC) para abrir a janela de transferência. Destino deve estar no <strong>mesmo grupo</strong> (A ou B) do item origem.</p>'
     . '</div>'
     . '</section>'
 
@@ -189,7 +189,7 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<h3>Mapa: ID → Nome → Slot</h3>'
     . '<div class="rc-bf-table-wrap rc-tier-table-wrap">'
     . '<table class="rc-bf-table rc-tier-table rc-sg-table">'
-    . '<thead><tr><th>Gema</th><th>Item</th><th>Nível</th><th>Bônus</th><th>Slot exclusivo</th><th>Grupo</th></tr></thead>'
+    . '<thead><tr><th>Gema</th><th>Item</th><th>Nível</th><th>Bônus</th><th>Slots permitidos</th><th>Grupo</th></tr></thead>'
     . '<tbody>' . $gemRows . '</tbody></table></div>'
     . '</section>'
 
