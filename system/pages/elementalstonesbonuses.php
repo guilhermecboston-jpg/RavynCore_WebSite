@@ -54,16 +54,18 @@ $increaseRows = [
 ];
 
 $fusionSteps = [
-    ['from' => 0, 'to' => 1, 'gold' => '2kk', 'stone_qty' => 3, 'dust_qty' => 1, 'chance' => 90],
-    ['from' => 1, 'to' => 2, 'gold' => '5kk', 'stone_qty' => 3, 'dust_qty' => 2, 'chance' => 80],
-    ['from' => 2, 'to' => 3, 'gold' => '10kk', 'stone_qty' => 3, 'dust_qty' => 3, 'chance' => 55],
-    ['from' => 3, 'to' => 4, 'gold' => '20kk', 'stone_qty' => 3, 'dust_qty' => 4, 'chance' => 45],
-    ['from' => 4, 'to' => 5, 'gold' => '40kk', 'stone_qty' => 3, 'dust_qty' => 5, 'chance' => 35],
-    ['from' => 5, 'to' => 6, 'gold' => '75kk', 'stone_qty' => 3, 'dust_qty' => 6, 'chance' => 30],
-    ['from' => 6, 'to' => 7, 'gold' => '200kk', 'stone_qty' => 3, 'dust_qty' => 7, 'chance' => 25],
-    ['from' => 7, 'to' => 8, 'gold' => '600kk', 'stone_qty' => 3, 'dust_qty' => 8, 'chance' => 20],
-    ['from' => 8, 'to' => 9, 'gold' => '800kk', 'stone_qty' => 3, 'dust_qty' => 9, 'chance' => 15],
+    ['from' => 0, 'to' => 1, 'gold' => '15kk', 'stone_qty' => 3, 'dust_qty' => 2, 'chance' => 90],
+    ['from' => 1, 'to' => 2, 'gold' => '35kk', 'stone_qty' => 3, 'dust_qty' => 3, 'chance' => 80],
+    ['from' => 2, 'to' => 3, 'gold' => '85kk', 'stone_qty' => 3, 'dust_qty' => 4, 'chance' => 65],
+    ['from' => 3, 'to' => 4, 'gold' => '150kk', 'stone_qty' => 3, 'dust_qty' => 5, 'chance' => 50],
+    ['from' => 4, 'to' => 5, 'gold' => '250kk', 'stone_qty' => 3, 'dust_qty' => 6, 'chance' => 45],
+    ['from' => 5, 'to' => 6, 'gold' => '400kk', 'stone_qty' => 3, 'dust_qty' => 7, 'chance' => 35],
+    ['from' => 6, 'to' => 7, 'gold' => '500kk', 'stone_qty' => 3, 'dust_qty' => 8, 'chance' => 25],
+    ['from' => 7, 'to' => 8, 'gold' => '600kk', 'stone_qty' => 3, 'dust_qty' => 9, 'chance' => 15],
+    ['from' => 8, 'to' => 9, 'gold' => '800kk', 'stone_qty' => 3, 'dust_qty' => 10, 'chance' => 10],
 ];
+
+$fusionDemoColor = 'Blue';
 
 $transformRows = [
     ['lesser' => 1, 'greater' => 1, 'dust' => 1],
@@ -684,33 +686,28 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                         <td>
                             <span class="esb-fusion-step"><strong><?= (int)$step['from'] ?> -> <?= (int)$step['to'] ?></strong></span>
                             <div class="esb-fusion-pairs">
-                                <?php foreach ($colorMeta as $stoneColor => $meta) {
-                                    $fromItemId = (int)$stoneLevels[$stoneColor][(int)$step['from']];
-                                    $toItemId = (int)$stoneLevels[$stoneColor][(int)$step['to']];
-                                    $fromName = getItemNameById($fromItemId);
-                                    $toName = getItemNameById($toItemId);
-                                    $fromTitle = !empty($fromName) ? $fromName : ($meta['element'] . ' Stone');
-                                    $toTitle = !empty($toName) ? $toName : ($meta['element'] . ' Stone');
+                                <?php
+                                $fromItemId = (int)$stoneLevels[$fusionDemoColor][(int)$step['from']];
+                                $toItemId = (int)$stoneLevels[$fusionDemoColor][(int)$step['to']];
+                                $fromName = getItemNameById($fromItemId);
+                                $toName = getItemNameById($toItemId);
+                                $fromTitle = !empty($fromName) ? $fromName : ($colorMeta[$fusionDemoColor]['element'] . ' Stone');
+                                $toTitle = !empty($toName) ? $toName : ($colorMeta[$fusionDemoColor]['element'] . ' Stone');
                                 ?>
-                                    <span class="esb-fusion-pair">
-                                        <span class="esb-fusion-item">
-                                            <?= esb_item_image($fromItemId, $fromTitle . ' - Nivel ' . (int)$step['from']) ?>
-                                        </span>
-                                        <span class="esb-fusion-arrow">&rarr;</span>
-                                        <span class="esb-fusion-item">
-                                            <?= esb_item_image($toItemId, $toTitle . ' - Nivel ' . (int)$step['to']) ?>
-                                        </span>
+                                <span class="esb-fusion-pair">
+                                    <span class="esb-fusion-item">
+                                        <?= esb_item_image($fromItemId, $fromTitle . ' - Nivel ' . (int)$step['from']) ?>
                                     </span>
-                                <?php } ?>
+                                    <span class="esb-fusion-arrow">&rarr;</span>
+                                    <span class="esb-fusion-item">
+                                        <?= esb_item_image($toItemId, $toTitle . ' - Nivel ' . (int)$step['to']) ?>
+                                    </span>
+                                </span>
                             </div>
                         </td>
                         <td>
                             <?php
-                            $fromIds = [];
-                            foreach (array_keys($colorMeta) as $stoneColor) {
-                                $fromIds[] = (int)$stoneLevels[$stoneColor][(int)$step['from']];
-                            }
-                            $fromPreviewId = (int)$fromIds[0];
+                            $fromPreviewId = (int)$stoneLevels[$fusionDemoColor][(int)$step['from']];
                             ?>
                             <div class="esb-cost-inline">
                                 <span class="esb-cost-item">
