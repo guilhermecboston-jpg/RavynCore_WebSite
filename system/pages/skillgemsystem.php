@@ -65,6 +65,26 @@ if (!function_exists('rc_sg_esc')) {
     }
 }
 
+if (!function_exists('rc_sg_wiki_img_path')) {
+    function rc_sg_wiki_img_path($itemId)
+    {
+        $itemId = (int)$itemId;
+        if ($itemId <= 0) {
+            return '';
+        }
+        $candidates = [
+            'imagens/creaturestibiawiki/' . $itemId . '.gif',
+            'images/creaturetibiawiki/' . $itemId . '.gif',
+        ];
+        foreach ($candidates as $path) {
+            if (file_exists(BASE . $path)) {
+                return $path;
+            }
+        }
+        return $candidates[0];
+    }
+}
+
 if (!function_exists('rc_sg_item_html')) {
     function rc_sg_item_html($itemId, $large = false, $label = '')
     {
@@ -72,28 +92,34 @@ if (!function_exists('rc_sg_item_html')) {
         if ($itemId <= 0) {
             return '';
         }
-        $alt = $label !== '' ? $label : 'Item';
         $class = $large ? 'rc-tier-item-img rc-tier-item-img-lg' : 'rc-tier-item-img';
-        $wikiPath = 'images/creaturetibiawiki/' . $itemId . '.gif';
-        if (file_exists(BASE . $wikiPath)) {
-            return '<img class="' . $class . '" src="' . rc_sg_esc($wikiPath) . '" width="32" height="32" alt="' . rc_sg_esc($alt) . '" loading="lazy">';
+        $wikiPath = rc_sg_wiki_img_path($itemId);
+        if ($wikiPath !== '') {
+            $alt = $label !== '' ? rc_sg_esc($label) : '';
+            return '<img class="' . $class . '" src="' . rc_sg_esc($wikiPath) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
         }
         $img = function_exists('getItemImage') ? getItemImage($itemId) : '';
         if ($img !== '') {
             $img = preg_replace('/<img\s+/', '<img class="' . $class . '" ', $img, 1);
-            $img = preg_replace('/alt="[^"]*"/', 'alt="' . rc_sg_esc($alt) . '"', $img, 1);
+            if ($label !== '') {
+                $img = preg_replace('/alt="[^"]*"/', 'alt="' . rc_sg_esc($label) . '"', $img, 1);
+            }
             return $img;
         }
         $path = 'images/items/' . $itemId . '.gif';
         if (file_exists(BASE . $path)) {
-            return '<img class="' . $class . '" src="' . rc_sg_esc($path) . '" width="32" height="32" alt="' . rc_sg_esc($alt) . '" loading="lazy">';
+            $alt = $label !== '' ? rc_sg_esc($label) : '';
+            return '<img class="' . $class . '" src="' . rc_sg_esc($path) . '" width="32" height="32" alt="' . $alt . '" loading="lazy">';
         }
-        return '<span class="rc-tier-item-fallback">' . rc_sg_esc($alt) . '</span>';
+        if ($label !== '') {
+            return '<span class="rc-tier-item-fallback">' . rc_sg_esc($label) . '</span>';
+        }
+        return '';
     }
 }
 
 if (!function_exists('rc_sg_price_cell')) {
-    function rc_sg_price_cell($row, $withRemove)
+    function rc_sg_price_cell($row, $withRemove, $removeItemId = 0)
     {
         if (!$row) {
             return '—';
@@ -101,7 +127,11 @@ if (!function_exists('rc_sg_price_cell')) {
         $kk = rc_sg_esc($row['kk']);
         $gold = rc_sg_esc($row['gold']);
         if ($withRemove) {
-            return '<strong>1× Remove + ' . $kk . '</strong><br><span class="rc-sg-id">' . $gold . ' gold</span>';
+            $removeImg = rc_sg_item_html((int)$removeItemId, false, '');
+            return '<div class="rc-sg-extract-cost">'
+                . ($removeImg !== '' ? $removeImg : '')
+                . '<span class="rc-sg-extract-plus">+</span> <strong>' . $kk . '</strong>'
+                . '<br><span class="rc-sg-id">' . $gold . ' gold</span></div>';
         }
         return '<strong>' . $kk . '</strong><br><span class="rc-sg-id">' . $gold . ' gold</span>';
     }
@@ -120,10 +150,9 @@ foreach ($skillTierCrystals as $crystal) {
     $lvl = (int)$crystal['level'];
     $price = $priceByLevel[$lvl] ?? null;
     $skillLabel = $price ? $price['skill'] : ('+' . $lvl);
-    $tierRows .= '<tr><td><strong>Skill ' . rc_sg_esc($skillLabel) . '</strong><br><span class="rc-sg-id">ID ' . (int)$crystal['id'] . '</span></td>'
-        . '<td class="rc-tier-table-item">' . rc_sg_item_html($crystal['id'], false, 'Skill ' . $skillLabel) . '</td>'
+    $tierRows .= '<tr><td class="rc-tier-table-item rc-sg-tier-gem">' . rc_sg_item_html($crystal['id'], false, '') . '</td>'
         . '<td><strong>' . rc_sg_esc($skillLabel) . '</strong></td>'
-        . '<td>' . rc_sg_price_cell($price, true) . '</td>'
+        . '<td>' . rc_sg_price_cell($price, true, $removeExtractItemId) . '</td>'
         . '<td>' . rc_sg_price_cell($price, false) . '</td></tr>';
 }
 
@@ -139,7 +168,7 @@ $removeItemHtml = rc_sg_item_html($removeExtractItemId, true, 'Remove Upgrade St
 echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<header class="rc-st-page-title rc-tier-hero">'
     . '<h2>Skill Gem System</h2>'
-    . '<p class="rc-tier-subtitle">Gemas nos equipamentos (Grupos A e B), bônus por vocação, extração com Remove + gold (kk) e reaplicação da (Skill Tier Gem). Look do item: <strong>Skill Gem: +N</strong>.</p>'
+    . '<p class="rc-tier-subtitle">Gemas nos equipamentos (Grupos A e B), bônus por vocação, extração com Remove + gold (kk) e reaplicação da Skill Tier Gem. Look do item: <strong>Skill Gem: +N</strong>.</p>'
     . '<nav class="rc-tier-nav" aria-label="Seções do guia">'
     . '<a href="#rc-sg-info">Informações</a>'
     . '<a href="#rc-sg-vocation">Vocação</a>'
@@ -153,8 +182,8 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<li><strong>Grupo A</strong>: Amulet, Ring, Weapon, Helmet. <strong>Grupo B</strong>: Armor, Legs, Boots, Shield / Book / Quiver.</li>'
     . '<li><strong>Aplicar gema</strong> (61521–61528): no equipamento sem gem. Look: <strong>Skill Gem: +8</strong> (sem nome de skill no texto).</li>'
     . '<li><strong>Extrair (remover)</strong>: <strong>1× Remove Upgrade Status</strong> (ID ' . (int)$removeExtractItemId . ') + gold em <strong>kk</strong> — valores na tabela <a href="#rc-sg-tier">Skill Tier Crystals</a>.</li>'
-    . '<li><strong>Aplicar (Skill Tier Gem)</strong>: só gold em <strong>kk</strong> do nível da gem — <em>sem</em> Remove (ver mesma tabela).</li>'
-    . '<li>Equipamento e (Skill Tier Gem) vão para a <strong>Store Inbox</strong> após extrair ou aplicar a gem.</li>'
+    . '<li><strong>Aplicar Skill Tier Gem</strong>: só gold em <strong>kk</strong> do nível da gem — <em>sem</em> Remove (ver mesma tabela).</li>'
+    . '<li>Equipamento e Skill Tier Gem vão para a <strong>Store Inbox</strong> após extrair ou aplicar a gem.</li>'
     . '</ul>'
     . '<div class="rc-tier-extractor rc-sg-remove-card">'
     . '<h4>Remove Upgrade Status</h4>'
@@ -174,11 +203,11 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<tbody>' . $gemRows . '</tbody></table></div></section>'
 
     . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-tier"><h3>Skill Tier Crystals</h3>'
-    . '<p class="rc-tier-spaced">Cada (Skill Tier Gem) tem skill fixa (+1 a +12) e guarda o tipo de skill após extrair. Custos em <strong>kk</strong> por nível (inventário + banco):</p>'
+    . '<p class="rc-tier-spaced">Cada Skill Tier Gem tem skill fixa (+1 a +12) e guarda o tipo de skill após extrair. Custos em <strong>kk</strong> por nível (inventário + banco):</p>'
     . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table">'
-    . '<thead><tr><th>(Skill Tier Gem)</th><th>Item</th><th>Skill</th>'
+    . '<thead><tr><th>Skill Tier Gem</th><th>Skill</th>'
     . '<th>Extrair equip.<br><span class="rc-sg-th-sub">Remove + kk</span></th>'
-    . '<th>Aplicar (Skill Tier Gem)<br><span class="rc-sg-th-sub">somente kk</span></th></tr></thead>'
+    . '<th>Aplicar Skill Tier Gem<br><span class="rc-sg-th-sub">somente kk</span></th></tr></thead>'
     . '<tbody>' . $tierRows . '</tbody></table></div></section>'
 
     . '<style>'
@@ -188,6 +217,10 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '.rc-sg-page .rc-sg-desc{margin-top:10px;font-size:13px;color:#d6e4ff;text-align:center}'
     . '.rc-sg-page .rc-sg-remove-card{max-width:320px;margin:16px auto 0}'
     . '.rc-sg-page .rc-sg-th-sub{font-size:11px;font-weight:400;color:#9eb8e8}'
+    . '.rc-sg-page .rc-sg-tier-gem{padding:8px 6px}'
+    . '.rc-sg-page .rc-sg-extract-cost{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}'
+    . '.rc-sg-page .rc-sg-extract-cost .rc-tier-item-img{vertical-align:middle}'
+    . '.rc-sg-page .rc-sg-extract-plus{color:#e8f0ff;font-weight:700}'
     . '</style>'
 
     . '<script>(function(){'
