@@ -66,10 +66,13 @@ $fusionSteps = [
 ];
 
 $transformRows = [
-    ['bag_id' => 60576, 'coin_cost' => '1kk', 'dust_qty' => 1],
-    ['bag_id' => 60577, 'coin_cost' => '2kk', 'dust_qty' => 2],
-    ['bag_id' => 60578, 'coin_cost' => '3kk', 'dust_qty' => 3],
+    ['lesser' => 1, 'greater' => 1, 'dust' => 1],
+    ['lesser' => 5, 'greater' => 5, 'dust' => 5],
+    ['lesser' => 10, 'greater' => 10, 'dust' => 10],
 ];
+
+$lesserFragmentId = 46625;
+$greaterFragmentId = 46626;
 
 if (!function_exists('esb_percent_value')) {
     function esb_percent_value($value)
@@ -78,16 +81,59 @@ if (!function_exists('esb_percent_value')) {
     }
 }
 
+if (!function_exists('esb_img_src')) {
+    function esb_img_src($relPath)
+    {
+        $relPath = ltrim(str_replace('\\', '/', (string)$relPath), '/');
+        if ($relPath === '') {
+            return '';
+        }
+        if (defined('BASE_URL')) {
+            return BASE_URL . $relPath;
+        }
+
+        return '/' . $relPath;
+    }
+}
+
+if (!function_exists('esb_wiki_img_path')) {
+    function esb_wiki_img_path($itemId)
+    {
+        $itemId = (int)$itemId;
+        if ($itemId <= 0) {
+            return '';
+        }
+        $candidates = [
+            'imagens/creaturestibiawiki/' . $itemId . '.gif',
+            'images/creaturetibiawiki/' . $itemId . '.gif',
+        ];
+        foreach ($candidates as $path) {
+            if (file_exists(BASE . $path)) {
+                return $path;
+            }
+        }
+        return $candidates[0];
+    }
+}
+
 if (!function_exists('esb_item_image')) {
     function esb_item_image($id, $tooltip = '')
     {
-        $html = getItemImage((int)$id);
+        $id = (int)$id;
         $tooltip = trim((string)$tooltip);
+        $safeTooltip = htmlspecialchars($tooltip, ENT_QUOTES, 'UTF-8');
+        $titleAttr = $safeTooltip !== '' ? ' title="' . $safeTooltip . '"' : '';
+
+        $wikiPath = esb_wiki_img_path($id);
+        if ($wikiPath !== '') {
+            return '<img class="item_image esb-wiki-img" src="' . htmlspecialchars(esb_img_src($wikiPath), ENT_QUOTES, 'UTF-8') . '" width="32" height="32" alt=""' . $titleAttr . ' loading="lazy">';
+        }
+
+        $html = getItemImage($id);
         if ($tooltip === '') {
             return $html;
         }
 
-        $safeTooltip = htmlspecialchars($tooltip, ENT_QUOTES, 'UTF-8');
         if (strpos($html, 'class="item_image"') !== false) {
             if (strpos($html, 'title="') !== false) {
                 return preg_replace('/title="[^"]*"/', 'title="' . $safeTooltip . '"', $html, 1);
@@ -689,15 +735,14 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
         </div>
     </section>
 
-    <section class="esb-section">
+    <section class="esb-section" id="rc-esb-conversion">
         <h2 class="esb-title">Conversion</h2>
         <div class="esb-body">
-            <p class="esb-text">Converta Bag of Stone em Stone Dust.</p>
+            <p class="esb-text">Na Stone Forge, converta <strong>Lesser Fragment</strong> + <strong>Greater Fragment</strong> em <strong>Stone Fusion Dust</strong> (60581). Não utiliza gold (kk).</p>
             <table class="esb-table">
                 <thead>
                 <tr>
                     <th>Input</th>
-                    <th>Cost</th>
                     <th>Output</th>
                     <th>Chance</th>
                 </tr>
@@ -708,9 +753,16 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                         <td>
                             <div class="esb-cost-inline">
                                 <span class="esb-cost-item">
-                                    <?= esb_item_image((int)$row['bag_id'], 'Bag of Stone') ?>
+                                    <?= esb_item_image($lesserFragmentId, 'Lesser Fragment') ?>
                                     <span class="esb-cost-meta">
-                                        <strong>x1</strong>
+                                        <strong>x<?= (int)$row['lesser'] ?></strong>
+                                    </span>
+                                </span>
+                                <span class="esb-cost-plus">+</span>
+                                <span class="esb-cost-item">
+                                    <?= esb_item_image($greaterFragmentId, 'Greater Fragment') ?>
+                                    <span class="esb-cost-meta">
+                                        <strong>x<?= (int)$row['greater'] ?></strong>
                                     </span>
                                 </span>
                             </div>
@@ -718,19 +770,9 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                         <td>
                             <div class="esb-cost-inline">
                                 <span class="esb-cost-item">
-                                    <?= esb_item_image(3043, 'Crystal Coin') ?>
+                                    <?= esb_item_image(60581, 'Stone Fusion Dust') ?>
                                     <span class="esb-cost-meta">
-                                        <strong><?= htmlspecialchars($row['coin_cost'], ENT_QUOTES, 'UTF-8') ?></strong>
-                                    </span>
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="esb-cost-inline">
-                                <span class="esb-cost-item">
-                                    <?= esb_item_image(60581, 'Stone Dust') ?>
-                                    <span class="esb-cost-meta">
-                                        <strong>x<?= (int)$row['dust_qty'] ?></strong>
+                                        <strong>x<?= (int)$row['dust'] ?></strong>
                                     </span>
                                 </span>
                             </div>
@@ -740,7 +782,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                 <?php } ?>
                 </tbody>
             </table>
-            <p class="esb-note"><strong>Fluxo:</strong> Stone Dust e gerada ao transformar Bag of Stone + custo, e o resultado e enviado direto para o <strong>Store Inbox</strong>.</p>
+            <p class="esb-note"><strong>Fluxo:</strong> o Stone Fusion Dust é gerado na conversão e enviado direto para o <strong>Store Inbox</strong>.</p>
         </div>
     </section>
 
