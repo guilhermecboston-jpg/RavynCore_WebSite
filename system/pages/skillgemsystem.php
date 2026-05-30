@@ -55,7 +55,7 @@ $vocationBonuses = [
     ['vocation' => 'Knight', 'skills' => 'Sword, Club e Axe', 'note' => 'Bônus nas três skills melee ao equipar.'],
     ['vocation' => 'Paladin', 'skills' => 'Distance e Shield', 'note' => ''],
     ['vocation' => 'Druid / Sorcerer', 'skills' => 'Magic Level', 'note' => ''],
-    ['vocation' => 'Monk', 'skills' => 'Fist e Magic Level', 'note' => ''],
+    ['vocation' => 'Monk', 'skills' => 'Magic Level e Fist', 'note' => 'Bônus nas duas skills ao equipar (magic e fist).'],
 ];
 
 if (!function_exists('rc_sg_esc')) {
@@ -139,7 +139,7 @@ $removeItemHtml = rc_sg_item_html($removeExtractItemId, true, 'Remove Upgrade St
 echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<header class="rc-st-page-title rc-tier-hero">'
     . '<h2>Skill Gem System</h2>'
-    . '<p class="rc-tier-subtitle">Gemas nos equipamentos (Grupos A e B), bônus por vocação, extração com Remove + gold (kk) e reaplicação do cristal. Look do item: <strong>Skill Gem: +N</strong>.</p>'
+    . '<p class="rc-tier-subtitle">Gemas nos equipamentos (Grupos A e B), bônus por vocação, extração com Remove + gold (kk) e reaplicação da (Skill Tier Gem). Look do item: <strong>Skill Gem: +N</strong>.</p>'
     . '<nav class="rc-tier-nav" aria-label="Seções do guia">'
     . '<a href="#rc-sg-info">Informações</a>'
     . '<a href="#rc-sg-vocation">Vocação</a>'
@@ -153,8 +153,8 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<li><strong>Grupo A</strong>: Amulet, Ring, Weapon, Helmet. <strong>Grupo B</strong>: Armor, Legs, Boots, Shield / Book / Quiver.</li>'
     . '<li><strong>Aplicar gema</strong> (61521–61528): no equipamento sem gem. Look: <strong>Skill Gem: +8</strong> (sem nome de skill no texto).</li>'
     . '<li><strong>Extrair (remover)</strong>: <strong>1× Remove Upgrade Status</strong> (ID ' . (int)$removeExtractItemId . ') + gold em <strong>kk</strong> — valores na tabela <a href="#rc-sg-tier">Skill Tier Crystals</a>.</li>'
-    . '<li><strong>Aplicar cristal</strong>: só gold em <strong>kk</strong> do nível do cristal — <em>sem</em> Remove (ver mesma tabela).</li>'
-    . '<li>Equipamento e cristal vão para a <strong>Store Inbox</strong> após extrair ou aplicar cristal.</li>'
+    . '<li><strong>Aplicar (Skill Tier Gem)</strong>: só gold em <strong>kk</strong> do nível da gem — <em>sem</em> Remove (ver mesma tabela).</li>'
+    . '<li>Equipamento e (Skill Tier Gem) vão para a <strong>Store Inbox</strong> após extrair ou aplicar a gem.</li>'
     . '</ul>'
     . '<div class="rc-tier-extractor rc-sg-remove-card">'
     . '<h4>Remove Upgrade Status</h4>'
@@ -174,11 +174,11 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<tbody>' . $gemRows . '</tbody></table></div></section>'
 
     . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-tier"><h3>Skill Tier Crystals</h3>'
-    . '<p class="rc-tier-spaced">Cada cristal tem skill fixa (+1 a +12) e guarda o tipo de skill após extrair. Custos em <strong>kk</strong> por nível:</p>'
+    . '<p class="rc-tier-spaced">Cada (Skill Tier Gem) tem skill fixa (+1 a +12) e guarda o tipo de skill após extrair. Custos em <strong>kk</strong> por nível (inventário + banco):</p>'
     . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table">'
-    . '<thead><tr><th>Cristal</th><th>Item</th><th>Skill</th>'
+    . '<thead><tr><th>(Skill Tier Gem)</th><th>Item</th><th>Skill</th>'
     . '<th>Extrair equip.<br><span class="rc-sg-th-sub">Remove + kk</span></th>'
-    . '<th>Aplicar cristal<br><span class="rc-sg-th-sub">somente kk</span></th></tr></thead>'
+    . '<th>Aplicar (Skill Tier Gem)<br><span class="rc-sg-th-sub">somente kk</span></th></tr></thead>'
     . '<tbody>' . $tierRows . '</tbody></table></div></section>'
 
     . '<style>'
