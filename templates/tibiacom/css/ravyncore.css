@@ -6691,6 +6691,10 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
 }
 
 /* Tier System (SYSTEM menu) */
+.rc-tier-page .rc-st-card[id] {
+  scroll-margin-top: 132px;
+}
+
 .rc-tier-page .rc-tier-subtitle {
   margin: 10px 0 0;
   max-width: 820px;
@@ -6779,15 +6783,7 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
 }
 
 .rc-tier-table td.rc-tier-table-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.rc-tier-item-id {
-  color: #9eb8df;
-  font-weight: 700;
-  font-size: 15px;
+  text-align: center;
 }
 
 .rc-tier-item-fallback {

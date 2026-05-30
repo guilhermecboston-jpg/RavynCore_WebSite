@@ -26,13 +26,14 @@ if (!function_exists('rc_tier_esc')) {
 }
 
 if (!function_exists('rc_tier_item_html')) {
-    function rc_tier_item_html($itemId, $large = false)
+    function rc_tier_item_html($itemId, $large = false, $label = '')
     {
         $itemId = (int)$itemId;
         if ($itemId <= 0) {
             return '';
         }
 
+        $alt = $label !== '' ? $label : 'Item';
         $class = $large ? 'rc-tier-item-img rc-tier-item-img-lg' : 'rc-tier-item-img';
         $img = function_exists('getItemImage') ? getItemImage($itemId) : '';
         if ($img !== '') {
@@ -40,15 +41,17 @@ if (!function_exists('rc_tier_item_html')) {
             if (strpos($img, 'class="') === false) {
                 $img = str_replace('<img ', '<img class="' . $class . '" ', $img);
             }
+            $img = preg_replace('/alt="[^"]*"/', 'alt="' . rc_tier_esc($alt) . '"', $img, 1);
+            $img = preg_replace('/title="[^"]*"/', '', $img);
             return $img;
         }
 
         $path = 'images/items/' . $itemId . '.gif';
         if (file_exists(BASE . $path)) {
-            return '<img class="' . $class . '" src="' . rc_tier_esc($path) . '" width="32" height="32" alt="' . $itemId . '" loading="lazy">';
+            return '<img class="' . $class . '" src="' . rc_tier_esc($path) . '" width="32" height="32" alt="' . rc_tier_esc($alt) . '" loading="lazy">';
         }
 
-        return '<span class="rc-tier-item-fallback">#' . $itemId . '</span>';
+        return '<span class="rc-tier-item-fallback">' . rc_tier_esc($alt) . '</span>';
     }
 }
 
@@ -56,15 +59,9 @@ $tierRows = '';
 foreach ($tierToItem as $tier => $itemId) {
     $tierRows .= '<tr>'
         . '<td><strong>Tier ' . (int)$tier . '</strong></td>'
-        . '<td class="rc-tier-table-item">' . rc_tier_item_html($itemId) . '<span class="rc-tier-item-id">' . (int)$itemId . '</span></td>'
+        . '<td class="rc-tier-table-item">' . rc_tier_item_html($itemId, false, 'Tier ' . (int)$tier) . '</td>'
         . '</tr>';
 }
-
-$tierMapCode = "tierToItem = {\n";
-foreach ($tierToItem as $tier => $itemId) {
-    $tierMapCode .= '    [' . (int)$tier . '] = ' . (int)$itemId . ",\n";
-}
-$tierMapCode .= '}';
 
 echo '<div class="rc-st-page rc-tier-page">'
     . '<header class="rc-st-page-title rc-tier-hero">'
@@ -125,8 +122,7 @@ echo '<div class="rc-st-page rc-tier-page">'
     . '<h3>Itens do Sistema</h3>'
     . '<div class="rc-tier-extractor">'
     . '<h4>Extractor Tier</h4>'
-    . '<p>Item ID: <strong>' . (int)$extractorItemId . '</strong></p>'
-    . '<div class="rc-tier-item-spot">' . rc_tier_item_html($extractorItemId, true) . '</div>'
+    . '<div class="rc-tier-item-spot">' . rc_tier_item_html($extractorItemId, true, 'Extractor Tier') . '</div>'
     . '</div>'
     . '<h4 class="rc-tier-h4">Tiers Disponíveis</h4>'
     . '<div class="rc-bf-table-wrap rc-tier-table-wrap">'
@@ -134,13 +130,36 @@ echo '<div class="rc-st-page rc-tier-page">'
     . '<thead><tr><th>Tier</th><th>Item</th></tr></thead>'
     . '<tbody>' . $tierRows . '</tbody>'
     . '</table></div>'
-    . '<h4 class="rc-tier-h4">Referência (servidor)</h4>'
-    . '<pre class="rc-tier-code"><code>' . rc_tier_esc($tierMapCode) . '</code></pre>'
     . '</section>'
 
     . '<section class="rc-st-card rc-tier-obs">'
     . '<h3>Observação</h3>'
     . '<p>Todos os itens enviados pelo sistema serão encaminhados automaticamente para sua <strong>Store Inbox</strong> para maior segurança e praticidade.</p>'
     . '</section>'
+
+    . '<script>(function(){'
+    . 'document.querySelectorAll(".rc-tier-nav a[href^=\'#\']").forEach(function(link){'
+    . 'link.addEventListener("click",function(ev){'
+    . 'var id=link.getAttribute("href");'
+    . 'if(!id||id.charAt(0)!=="#"){return;}'
+    . 'var el=document.querySelector(id);'
+    . 'if(!el){return;}'
+    . 'ev.preventDefault();'
+    . 'var header=document.querySelector(".rc-header");'
+    . 'var offset=(header?header.offsetHeight:0)+12;'
+    . 'var top=el.getBoundingClientRect().top+window.pageYOffset-offset;'
+    . 'window.scrollTo({top:Math.max(0,top),behavior:"smooth"});'
+    . 'history.replaceState(null,"",id);'
+    . '});'
+    . '});'
+    . 'var hash=window.location.hash;'
+    . 'if(hash){var target=document.querySelector(hash);'
+    . 'if(target){setTimeout(function(){'
+    . 'var header=document.querySelector(".rc-header");'
+    . 'var offset=(header?header.offsetHeight:0)+12;'
+    . 'var top=target.getBoundingClientRect().top+window.pageYOffset-offset;'
+    . 'window.scrollTo({top:Math.max(0,top),behavior:"auto"});'
+    . '},50);}}'
+    . '})();</script>'
 
     . '</div>';
