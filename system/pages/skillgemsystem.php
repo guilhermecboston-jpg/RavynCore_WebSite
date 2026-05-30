@@ -3,96 +3,32 @@ defined('MYAAC') or die('Direct access not allowed!');
 
 $title = 'Skill Gem System';
 
-$removeTransferItemId = 63475;
+$removeExtractItemId = 63475;
 
 $gems = [
-    [
-        'id' => 61521,
-        'name' => 'Green Gem',
-        'level' => 1,
-        'color' => 'Green',
-        'bonus' => '+1~2',
-        'slots' => 'Amulet, Ring, Weapon ou Helmet',
-        'group' => 'A',
-    ],
-    [
-        'id' => 61522,
-        'name' => 'Blue Gem',
-        'level' => 1,
-        'color' => 'Blue',
-        'bonus' => '+1~2',
-        'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver',
-        'group' => 'B',
-    ],
-    [
-        'id' => 61523,
-        'name' => 'Yellow Gem',
-        'level' => 2,
-        'color' => 'Yellow',
-        'bonus' => '+2~4',
-        'slots' => 'Amulet, Ring, Weapon ou Helmet',
-        'group' => 'A',
-    ],
-    [
-        'id' => 61524,
-        'name' => 'Red Gem',
-        'level' => 2,
-        'color' => 'Red',
-        'bonus' => '+2~4',
-        'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver',
-        'group' => 'B',
-    ],
-    [
-        'id' => 61525,
-        'name' => 'Orange Gem',
-        'level' => 3,
-        'color' => 'Orange',
-        'bonus' => '+5~8',
-        'slots' => 'Amulet, Ring, Weapon ou Helmet',
-        'group' => 'A',
-    ],
-    [
-        'id' => 61526,
-        'name' => 'White Gem',
-        'level' => 3,
-        'color' => 'White',
-        'bonus' => '+5~8',
-        'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver',
-        'group' => 'B',
-    ],
-    [
-        'id' => 61527,
-        'name' => 'Black Gem',
-        'level' => 4,
-        'color' => 'Black',
-        'bonus' => '+9~12',
-        'slots' => 'Amulet, Ring, Weapon ou Helmet',
-        'group' => 'A',
-    ],
-    [
-        'id' => 61528,
-        'name' => 'Pink Gem',
-        'level' => 4,
-        'color' => 'Pink',
-        'bonus' => '+9~12',
-        'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver',
-        'group' => 'B',
-    ],
+    ['id' => 61521, 'name' => 'Green Gem', 'level' => 1, 'bonus' => '+1~2', 'slots' => 'Amulet, Ring, Weapon ou Helmet', 'group' => 'A'],
+    ['id' => 61522, 'name' => 'Blue Gem', 'level' => 1, 'bonus' => '+1~2', 'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver', 'group' => 'B'],
+    ['id' => 61523, 'name' => 'Yellow Gem', 'level' => 2, 'bonus' => '+2~4', 'slots' => 'Amulet, Ring, Weapon ou Helmet', 'group' => 'A'],
+    ['id' => 61524, 'name' => 'Red Gem', 'level' => 2, 'bonus' => '+2~4', 'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver', 'group' => 'B'],
+    ['id' => 61525, 'name' => 'Orange Gem', 'level' => 3, 'bonus' => '+5~8', 'slots' => 'Amulet, Ring, Weapon ou Helmet', 'group' => 'A'],
+    ['id' => 61526, 'name' => 'White Gem', 'level' => 3, 'bonus' => '+5~8', 'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver', 'group' => 'B'],
+    ['id' => 61527, 'name' => 'Black Gem', 'level' => 4, 'bonus' => '+9~12', 'slots' => 'Amulet, Ring, Weapon ou Helmet', 'group' => 'A'],
+    ['id' => 61528, 'name' => 'Pink Gem', 'level' => 4, 'bonus' => '+9~12', 'slots' => 'Armor, Legs, Boots ou Shield/Book/Quiver', 'group' => 'B'],
 ];
 
-$transferPrices = [
-    ['skill' => '+1', 'price' => '50kk'],
-    ['skill' => '+2', 'price' => '100kk'],
-    ['skill' => '+3', 'price' => '150kk'],
-    ['skill' => '+4', 'price' => '200kk'],
-    ['skill' => '+5', 'price' => '250kk'],
-    ['skill' => '+6', 'price' => '300kk'],
-    ['skill' => '+7', 'price' => '350kk'],
-    ['skill' => '+8', 'price' => '400kk'],
-    ['skill' => '+9', 'price' => '450kk'],
-    ['skill' => '+10', 'price' => '500kk'],
-    ['skill' => '+11', 'price' => '550kk'],
-    ['skill' => '+12', 'price' => '600kk'],
+$skillTierCrystals = [
+    ['id' => 63340, 'skill' => '+1'],
+    ['id' => 63341, 'skill' => '+2'],
+    ['id' => 63342, 'skill' => '+3'],
+    ['id' => 63343, 'skill' => '+4'],
+    ['id' => 63344, 'skill' => '+5'],
+    ['id' => 63345, 'skill' => '+6'],
+    ['id' => 63346, 'skill' => '+7'],
+    ['id' => 63347, 'skill' => '+8'],
+    ['id' => 63348, 'skill' => '+9'],
+    ['id' => 63349, 'skill' => '+10'],
+    ['id' => 63350, 'skill' => '+11'],
+    ['id' => 63339, 'skill' => '+12'],
 ];
 
 if (!function_exists('rc_sg_esc')) {
@@ -109,123 +45,77 @@ if (!function_exists('rc_sg_item_html')) {
         if ($itemId <= 0) {
             return '';
         }
-
         $alt = $label !== '' ? $label : 'Item';
         $class = $large ? 'rc-tier-item-img rc-tier-item-img-lg' : 'rc-tier-item-img';
         $wikiPath = 'images/creaturetibiawiki/' . $itemId . '.gif';
         if (file_exists(BASE . $wikiPath)) {
             return '<img class="' . $class . '" src="' . rc_sg_esc($wikiPath) . '" width="32" height="32" alt="' . rc_sg_esc($alt) . '" loading="lazy">';
         }
-
         $img = function_exists('getItemImage') ? getItemImage($itemId) : '';
         if ($img !== '') {
             $img = preg_replace('/<img\s+/', '<img class="' . $class . '" ', $img, 1);
-            if (strpos($img, 'class="') === false) {
-                $img = str_replace('<img ', '<img class="' . $class . '" ', $img);
-            }
             $img = preg_replace('/alt="[^"]*"/', 'alt="' . rc_sg_esc($alt) . '"', $img, 1);
-            $img = preg_replace('/title="[^"]*"/', '', $img);
             return $img;
         }
-
         $path = 'images/items/' . $itemId . '.gif';
         if (file_exists(BASE . $path)) {
             return '<img class="' . $class . '" src="' . rc_sg_esc($path) . '" width="32" height="32" alt="' . rc_sg_esc($alt) . '" loading="lazy">';
         }
-
         return '<span class="rc-tier-item-fallback">' . rc_sg_esc($alt) . '</span>';
     }
 }
 
 $gemRows = '';
 foreach ($gems as $gem) {
-    $gemRows .= '<tr>'
-        . '<td><strong>' . rc_sg_esc($gem['name']) . '</strong><br><span class="rc-sg-id">ID ' . (int)$gem['id'] . '</span></td>'
+    $gemRows .= '<tr><td><strong>' . rc_sg_esc($gem['name']) . '</strong><br><span class="rc-sg-id">ID ' . (int)$gem['id'] . '</span></td>'
         . '<td class="rc-tier-table-item">' . rc_sg_item_html($gem['id'], false, $gem['name']) . '</td>'
-        . '<td>Nível ' . (int)$gem['level'] . '</td>'
-        . '<td>' . rc_sg_esc($gem['bonus']) . '</td>'
-        . '<td>' . rc_sg_esc($gem['slots']) . '</td>'
-        . '<td><strong>' . rc_sg_esc($gem['group']) . '</strong></td>'
-        . '</tr>';
+        . '<td>Nível ' . (int)$gem['level'] . '</td><td>' . rc_sg_esc($gem['bonus']) . '</td>'
+        . '<td>' . rc_sg_esc($gem['slots']) . '</td><td><strong>' . rc_sg_esc($gem['group']) . '</strong></td></tr>';
 }
 
-$transferRows = '';
-foreach ($transferPrices as $row) {
-    $transferRows .= '<tr><td><strong>' . rc_sg_esc($row['skill']) . '</strong></td><td>' . rc_sg_esc($row['price']) . '</td></tr>';
+$tierRows = '';
+foreach ($skillTierCrystals as $row) {
+    $tierRows .= '<tr><td><strong>Skill ' . rc_sg_esc($row['skill']) . '</strong><br><span class="rc-sg-id">ID ' . (int)$row['id'] . '</span></td>'
+        . '<td class="rc-tier-table-item">' . rc_sg_item_html($row['id'], false, 'Skill ' . $row['skill']) . '</td>'
+        . '<td>' . rc_sg_esc($row['skill']) . '</td></tr>';
 }
 
-$removeItemHtml = rc_sg_item_html($removeTransferItemId, true, 'Remove Upgrade Status');
+$removeItemHtml = rc_sg_item_html($removeExtractItemId, true, 'Remove Upgrade Status');
 
 echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<header class="rc-st-page-title rc-tier-hero">'
     . '<h2>Skill Gem System</h2>'
-    . '<p class="rc-tier-subtitle">8 gemas, 4 níveis — cada gema aplica em <strong>1 dos 4 slots</strong> do seu grupo (A ou B). Backpack e Trinket não são válidos.</p>'
+    . '<p class="rc-tier-subtitle">Aplique gemas nos equipamentos. Extraia skill com Remove Upgrade Status (estilo Tier Extractor). Aplique o cristal Skill Tier em qualquer slot do Grupo A ou B.</p>'
     . '<nav class="rc-tier-nav" aria-label="Seções do guia">'
     . '<a href="#rc-sg-info">Informações</a>'
-    . '<a href="#rc-sg-slots">Mapa de IDs</a>'
-    . '<a href="#rc-sg-transfer">Transferência</a>'
-    . '</nav>'
-    . '</header>'
+    . '<a href="#rc-sg-gems">Gemas</a>'
+    . '<a href="#rc-sg-tier">Skill Tier</a>'
+    . '</nav></header>'
 
     . '<section class="rc-st-card" id="rc-sg-info">'
-    . '<h3>Informações Gerais</h3>'
+    . '<h3>Como funciona</h3>'
     . '<ul class="rc-st-notes">'
-    . '<li>Slots permitidos: <strong>Amulet, Ring, Weapon, Helmet, Armor, Legs, Boots, Shield/Book/Quiver</strong>.</li>'
-    . '<li><strong>Não</strong> funciona em Backpack, Trinket ou munição comum.</li>'
-    . '<li>Grupo <strong>A</strong> (Green / Yellow / Orange / Black): pode aplicar em <strong>Amulet, Ring, Weapon ou Helmet</strong> (um item por vez).</li>'
-    . '<li>Grupo <strong>B</strong> (Blue / Red / White / Pink): pode aplicar em <strong>Armor, Legs, Boots ou Shield/Book/Quiver</strong>.</li>'
-    . '<li>Uma gema por item. Para transferir, use <strong>Remove Upgrade Status</strong> (ID ' . (int)$removeTransferItemId . ') no cliente OTC.</li>'
-    . '<li>Bônus na <strong>skill principal</strong> do personagem no momento da aplicação.</li>'
+    . '<li><strong>Aplicar gema</strong> (61521–61528): use a gema no equipamento ou pela janela do cliente OTC.</li>'
+    . '<li><strong>Extrair skill</strong>: use <strong>Remove Upgrade Status</strong> (ID ' . (int)$removeExtractItemId . ') <em>no equipamento que já tem skill gem</em> — igual ao extrator de Tier. O item vai para a Store Inbox e você recebe um <strong>Skill Tier Crystal</strong>.</li>'
+    . '<li><strong>Aplicar cristal</strong>: use o Skill Tier (63339–63350) em qualquer equipamento vazio do <strong>Grupo A ou B</strong>. Mantém o tipo de skill extraído (ex.: Sword, Distance).</li>'
+    . '<li>Backpack e Trinket não são válidos.</li>'
     . '</ul>'
-    . '<p class="rc-sg-warning"><strong>⚠️ Atenção!</strong> Fusion/Convergence no Forge remove as gems do item.</p>'
     . '<div class="rc-tier-extractor rc-sg-remove-card">'
     . '<h4>Remove Upgrade Status</h4>'
-    . '<div class="rc-tier-item-spot">' . ($removeItemHtml !== '' ? $removeItemHtml : '<span class="rc-tier-item-fallback">Remove Upgrade Status</span>') . '</div>'
-    . '<p class="rc-sg-desc">Use o item no jogo (OTC) para abrir a janela de transferência. Destino deve estar no <strong>mesmo grupo</strong> (A ou B) do item origem.</p>'
-    . '</div>'
-    . '</section>'
+    . '<div class="rc-tier-item-spot">' . ($removeItemHtml !== '' ? $removeItemHtml : '') . '</div>'
+  . '<p class="rc-sg-desc">Use no item com gem equipada (não abre janela — ação direta no item).</p>'
+    . '</div></section>'
 
-    . '<section class="rc-st-card" id="rc-sg-slots">'
-    . '<h3>Mapa: ID → Nome → Slot</h3>'
-    . '<div class="rc-bf-table-wrap rc-tier-table-wrap">'
-    . '<table class="rc-bf-table rc-tier-table rc-sg-table">'
-    . '<thead><tr><th>Gema</th><th>Item</th><th>Nível</th><th>Bônus</th><th>Slots permitidos</th><th>Grupo</th></tr></thead>'
-    . '<tbody>' . $gemRows . '</tbody></table></div>'
-    . '</section>'
+    . '<section class="rc-st-card" id="rc-sg-gems"><h3>Gemas de Skill</h3>'
+    . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table">'
+    . '<thead><tr><th>Gema</th><th>Item</th><th>Nível</th><th>Bônus</th><th>Slots</th><th>Grupo</th></tr></thead>'
+    . '<tbody>' . $gemRows . '</tbody></table></div></section>'
 
-    . '<section class="rc-st-card" id="rc-sg-transfer">'
-    . '<h3>Transfer Skill to Catcher</h3>'
-    . '<p class="rc-tier-spaced">Preços ao transferir com Remove Upgrade Status:</p>'
-    . '<div class="rc-bf-table-wrap rc-tier-table-wrap">'
-    . '<table class="rc-bf-table rc-tier-table rc-sg-table">'
-    . '<thead><tr><th>Skill</th><th>Preço</th></tr></thead>'
-    . '<tbody>' . $transferRows . '</tbody>'
-    . '</table></div>'
-    . '</section>'
+    . '<section class="rc-st-card" id="rc-sg-tier"><h3>Skill Tier Crystals (extraídos)</h3>'
+    . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table">'
+    . '<thead><tr><th>Cristal</th><th>Item</th><th>Skill</th></tr></thead>'
+    . '<tbody>' . $tierRows . '</tbody></table></div></section>'
 
-    . '<style>'
-    . '.rc-sg-page .rc-sg-table td,.rc-sg-page .rc-sg-table th{text-align:center}'
-    . '.rc-sg-page .rc-sg-id{font-size:11px;color:#9eb8e8;font-weight:normal}'
-    . '.rc-sg-page .rc-sg-desc{margin:10px 0 0;color:#d6e4ff;font-size:13px;line-height:1.45;text-align:center}'
-    . '.rc-sg-page .rc-sg-warning{margin:16px 0;padding:12px 14px;border:1px solid rgba(240,120,80,.45);border-radius:8px;background:rgba(80,24,16,.35);color:#ffd8cc;font-size:13px;line-height:1.5}'
-    . '.rc-sg-page .rc-sg-remove-card{max-width:320px;margin:16px auto 0}'
-    . '</style>'
-
-    . '<script>(function(){'
-    . 'document.querySelectorAll(".rc-tier-nav a[href^=\'#\']").forEach(function(link){'
-    . 'link.addEventListener("click",function(ev){'
-    . 'var id=link.getAttribute("href");'
-    . 'if(!id||id.charAt(0)!=="#"){return;}'
-    . 'var el=document.querySelector(id);'
-    . 'if(!el){return;}'
-    . 'ev.preventDefault();'
-    . 'var header=document.querySelector(".rc-header");'
-    . 'var offset=(header?header.offsetHeight:0)+12;'
-    . 'var top=el.getBoundingClientRect().top+window.pageYOffset-offset;'
-    . 'window.scrollTo({top:Math.max(0,top),behavior:"smooth"});'
-    . 'history.replaceState(null,"",id);'
-    . '});'
-    . '});'
-    . '})();</script>'
-
-    . '</div>';
+    . '<style>.rc-sg-page .rc-sg-table td,.rc-sg-page .rc-sg-table th{text-align:center}'
+    . '.rc-sg-page .rc-sg-id{font-size:11px;color:#9eb8e8}.rc-sg-page .rc-sg-desc{margin-top:10px;font-size:13px;color:#d6e4ff;text-align:center}'
+    . '.rc-sg-page .rc-sg-remove-card{max-width:320px;margin:16px auto 0}</style></div>';
