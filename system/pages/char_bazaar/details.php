@@ -259,7 +259,6 @@ $addonMountBonus = $character['addon_mount_bonus'] ?? ['outfits_used' => 0, 'mou
                 <article class="rc-cbz-collect-card">
                     <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars($addon['image']) ?>" alt="<?= htmlspecialchars($addon['name']) ?>"></div>
                     <strong><?= htmlspecialchars($addon['name']) ?></strong>
-                    <small>Outfit #<?= (int)$addon['id'] ?></small>
                 </article>
             <?php endforeach; endif; ?>
         </div>
@@ -277,7 +276,6 @@ $addonMountBonus = $character['addon_mount_bonus'] ?? ['outfits_used' => 0, 'mou
                 <article class="rc-cbz-collect-card">
                     <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars($mount['image']) ?>" alt="<?= htmlspecialchars($mount['name']) ?>"></div>
                     <strong><?= htmlspecialchars($mount['name']) ?></strong>
-                    <small>Mount #<?= (int)$mount['id'] ?></small>
                 </article>
             <?php endforeach; endif; ?>
         </div>
@@ -297,7 +295,9 @@ $addonMountBonus = $character['addon_mount_bonus'] ?? ['outfits_used' => 0, 'mou
                         <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars((string)$entry['image']) ?>" alt="<?= htmlspecialchars((string)$entry['name']) ?>"></div>
                     <?php endif; ?>
                     <strong><?= htmlspecialchars((string)$entry['name']) ?></strong>
-                    <small>ID #<?= (int)$entry['id'] ?><?php if ((int)$entry['progress'] > 0): ?> — <?= (int)$entry['progress'] ?> kills<?php endif; ?></small>
+                    <?php if ((int)$entry['progress'] > 0): ?>
+                        <small><?= (int)$entry['progress'] ?> kills</small>
+                    <?php endif; ?>
                 </article>
             <?php endforeach; endif; ?>
         </div>
@@ -317,7 +317,9 @@ $addonMountBonus = $character['addon_mount_bonus'] ?? ['outfits_used' => 0, 'mou
                         <div class="rc-cbz-collect-image"><img src="<?= htmlspecialchars((string)$entry['image']) ?>" alt="<?= htmlspecialchars((string)$entry['name']) ?>"></div>
                     <?php endif; ?>
                     <strong><?= htmlspecialchars((string)$entry['name']) ?></strong>
-                    <small>ID #<?= (int)$entry['id'] ?><?php if ((int)$entry['progress'] > 0): ?> — <?= (int)$entry['progress'] ?> kills<?php endif; ?></small>
+                    <?php if ((int)$entry['progress'] > 0): ?>
+                        <small><?= (int)$entry['progress'] ?> kills</small>
+                    <?php endif; ?>
                 </article>
             <?php endforeach; endif; ?>
         </div>
@@ -335,7 +337,7 @@ $addonMountBonus = $character['addon_mount_bonus'] ?? ['outfits_used' => 0, 'mou
                 <article class="rc-cbz-collect-card">
                     <div class="rc-cbz-collect-image"><?= $row['image'] ?></div>
                     <strong><?= htmlspecialchars((string)($row['name'] ?? ('Item #' . (int)$row['item_id']))) ?></strong>
-                    <small>x<?= (int)$row['amount'] ?></small>
+                    <small><?= (int)$row['amount'] ?></small>
                 </article>
             <?php endforeach; endif; ?>
         </div>

@@ -136,6 +136,7 @@ $donateMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['donate', 'shop']);
 $systemMenuItems = [
     ['name' => 'Boss Finder', 'link_full' => BASE_URL . '?subtopic=bossfinder', 'blank' => false],
     ['name' => 'Tier System', 'link_full' => BASE_URL . '?subtopic=tiersystem', 'blank' => false],
+    ['name' => 'Upgrade System', 'link_full' => BASE_URL . '?subtopic=upgradesystem', 'blank' => false],
     ['name' => 'Supreme Tasks', 'link_full' => BASE_URL . '?subtopic=supremetasks', 'blank' => false],
     ['name' => 'Addon&Mount Bonuses', 'link_full' => BASE_URL . '?subtopic=addonmountbonuses', 'blank' => false],
     ['name' => "Elemental's Stones Bonuses", 'link_full' => BASE_URL . '?subtopic=elementalstonesbonuses', 'blank' => false],
