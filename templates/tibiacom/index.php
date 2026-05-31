@@ -155,7 +155,6 @@ $brandLogoPreferred = $brandDir . '/ravyncore-logo.png';
 $brandBackgroundPreferred = $brandDir . '/ravyncore-background.png';
 $brandBackgroundLegacy = $brandDir . '/ravyncore-background.jpg';
 $brandSloganPreferred = $brandDir . '/sloganRC.png';
-$brandBannerRefratPreferred = $brandDir . '/logobannerrefrat.png';
 
 $logoFile = $config['logo_image'] ?? 'tibia-logo-artwork-top.gif';
 $logoPath = $template_path . '/images/header/' . $logoFile;
@@ -187,7 +186,6 @@ if (!$hasBrandBackground && !empty($configuredBackground)) {
 $backgroundUrl = BASE_URL . ltrim($backgroundFile, '/');
 
 $hasBrandSlogan = file_exists(BASE . $brandSloganPreferred);
-$hasBrandBannerRefrat = file_exists(BASE . $brandBannerRefratPreferred);
 
 $playersOnline = (int)($status['players'] ?? 0);
 $playersMax = (int)($status['playersMax'] ?? 0);
@@ -424,15 +422,7 @@ $socialLinks = [
     </header>
 
     <section class="rc-logo-band" aria-label="RavynCore">
-        <div class="rc-logo-band-inner">
-            <?php if ($hasBrandBannerRefrat): ?>
-                <img class="rc-logo-band-wordmark" src="<?= $brandBannerRefratPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
-            <?php elseif ($hasBrandSlogan): ?>
-                <img class="rc-logo-band-wordmark" src="<?= $brandSloganPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
-            <?php else: ?>
-                <img class="rc-logo-band-logo" src="<?= $logoPath; ?>" alt="RavynCore">
-            <?php endif; ?>
-        </div>
+        <div class="rc-logo-band-inner" aria-hidden="true"></div>
     </section>
 
     <section id="rcSocialLinks" class="rc-social-strip" aria-label="RavynCore social links">
@@ -548,9 +538,7 @@ $socialLinks = [
         <div class="rc-footer-top">
             <a class="rc-footer-brand" href="<?= getLink('news'); ?>">
                 <div class="rc-footer-brand-text rc-logo-text">
-                    <?php if ($hasBrandBannerRefrat): ?>
-                        <img class="rc-footer-wordmark rc-logo-wordmark" src="<?= $brandBannerRefratPreferred; ?>" alt="RavynCore">
-                    <?php elseif ($hasBrandSlogan): ?>
+                    <?php if ($hasBrandSlogan): ?>
                         <img class="rc-footer-wordmark rc-logo-wordmark" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
                     <?php else: ?>
                         <strong>RavynCore</strong>
