@@ -421,61 +421,19 @@ $socialLinks = [
         </div>
     </header>
 
-    <section class="rc-hero hero-ravyncore">
-        <div class="rc-hero-bg" aria-hidden="true"></div>
-        <div class="rc-hero-overlay" aria-hidden="true"></div>
-        <div class="rc-hero-vignette" aria-hidden="true"></div>
-
-        <div class="rc-hero-inner hero-ravyncore-content">
+    <section class="rc-logo-band" aria-label="RavynCore">
+        <div class="rc-logo-band-inner">
             <?php if ($hasBrandSlogan): ?>
-                <img class="rc-hero-wordmark hero-logo-text hero-main-slogan" src="<?= $brandSloganPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
+                <img class="rc-logo-band-wordmark" src="<?= $brandSloganPreferred; ?>" alt="<?= escapeHtml($serverName); ?>">
             <?php else: ?>
-                <img class="rc-hero-logo" src="<?= $logoPath; ?>" alt="RavynCore">
+                <img class="rc-logo-band-logo" src="<?= $logoPath; ?>" alt="RavynCore">
             <?php endif; ?>
-
-            <p class="rc-hero-eyebrow">Custom MMORPG Experience</p>
-
-            <div class="rc-hero-ctas">
-                <a class="rc-btn rc-btn-play rc-btn-lg" href="<?= $downloadUrl; ?>">
-                    <i class="fas fa-gavel"></i><span>Play Now</span>
-                </a>
-                <a class="rc-btn rc-btn-violet rc-btn-lg" href="<?= $accountCreateUrl; ?>">
-                    <i class="fas fa-user-plus"></i><span>Create Account</span>
-                </a>
-            </div>
-
-            <p class="rc-hero-support">Join thousands of players in an epic adventure!</p>
-        </div>
-    </section>
-
-    <section class="rc-features" aria-label="Server highlights">
-        <div class="rc-features-inner">
-            <article class="rc-feature">
-                <div class="rc-feature-icon"><i class="fas fa-scroll"></i></div>
-                <h3>Custom Content</h3>
-                <p>Exclusive maps, quests, and systems designed for a unique experience.</p>
-            </article>
-            <article class="rc-feature">
-                <div class="rc-feature-icon"><i class="fas fa-balance-scale"></i></div>
-                <h3>Fair Play</h3>
-                <p>Balanced gameplay, active staff and a dedicated anti-cheat system.</p>
-            </article>
-            <article class="rc-feature">
-                <div class="rc-feature-icon"><i class="fas fa-users"></i></div>
-                <h3>Active Community</h3>
-                <p>Friendly players, events, tournaments and constant updates.</p>
-            </article>
-            <article class="rc-feature">
-                <div class="rc-feature-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3>Secure &amp; Stable</h3>
-                <p>Protected server, daily backups and 24/7 monitoring for the best performance.</p>
-            </article>
         </div>
     </section>
 
     <section id="rcSocialLinks" class="rc-social-strip" aria-label="RavynCore social links">
         <div class="rc-social-strip-inner">
-            <h6 class="rc-social-strip-label">Connect with the Community</h6>
+            <h6 class="rc-social-strip-label">Community</h6>
             <div class="rc-social-icons">
                 <?php foreach ($socialLinks as $social): ?>
                     <?php if (!empty($social['url'])): ?>
@@ -614,4 +572,3 @@ $socialLinks = [
 <?= template_place_holder('body_end'); ?>
 </body>
 </html>
-
