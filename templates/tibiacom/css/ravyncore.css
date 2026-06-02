@@ -5838,6 +5838,80 @@ body.rc-page-upgradesystem .rc-panel-content > h3 {
   font-weight: 700;
 }
 
+.rc-upg-page a.rc-upg-link {
+  color: #f2c16b;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rc-upg-page a.rc-upg-link:hover {
+  color: #ffd15c;
+}
+
+.rc-upg-page .rc-upg-look-wrap {
+  margin: 16px auto 0;
+  text-align: center;
+}
+
+.rc-upg-page .rc-upg-look-preview {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(120, 168, 236, 0.35);
+}
+
+.rc-upg-page .rc-upg-look-wrap figcaption {
+  margin-top: 8px;
+  color: #9eb8e8;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+  font-size: 13px;
+}
+
+.rc-upg-page .rc-upg-price-table {
+  max-width: 640px;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.rc-upg-page .rc-upg-price-table th:first-child,
+.rc-upg-page .rc-upg-price-table td:first-child {
+  width: 22%;
+  text-align: center;
+}
+
+.rc-upg-page .rc-upg-price-table th:nth-child(2),
+.rc-upg-page .rc-upg-price-table td:nth-child(2) {
+  width: 26%;
+  text-align: left;
+  padding-left: 4px;
+  padding-right: 12px;
+}
+
+.rc-upg-page .rc-upg-price-table th:nth-child(3),
+.rc-upg-page .rc-upg-price-table td:nth-child(3) {
+  width: 52%;
+  text-align: left;
+  padding-left: 0;
+}
+
+.rc-upg-page .rc-upg-price-table .rc-upg-transfer-cost {
+  justify-content: flex-start;
+}
+
+.rc-upg-page .rc-upg-price-table td:nth-child(2) strong {
+  display: inline-block;
+  min-width: 4.5em;
+  text-align: left;
+}
+
+.rc-upg-page .rc-upg-price-table td:nth-child(3) strong {
+  display: inline-block;
+  min-width: 5.5em;
+  text-align: left;
+}
+
 .rc-st-overview-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

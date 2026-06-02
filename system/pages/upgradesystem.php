@@ -3,6 +3,21 @@ defined('MYAAC') or die('Direct access not allowed!');
 
 $title = 'Upgrade System';
 
+global $template_path, $config;
+
+$rcTemplateName = 'tibiacom';
+if (isset($config['template']) && is_string($config['template']) && $config['template'] !== '') {
+    $rcTemplateName = $config['template'];
+}
+if (function_exists('config')) {
+    $configTemplate = config('template');
+    if (is_string($configTemplate) && $configTemplate !== '') {
+        $rcTemplateName = $configTemplate;
+    }
+}
+$rcTemplatePath = '/' . ltrim((string)($template_path ?? ('templates/' . $rcTemplateName)), '/');
+$rcUpgImageBase = $rcTemplatePath . '/images/weapon_upgrade';
+
 $upgradeStoneItems = [
     'basic' => 63100,
     'medium' => 63101,
@@ -45,6 +60,20 @@ $successRates = [
     ['level' => '+12', 'basic' => '-', 'medium' => '-', 'epic' => '2%'],
 ];
 
+$failDowngradeRates = [
+    ['level' => '+2', 'chance' => '10%'],
+    ['level' => '+3', 'chance' => '15%'],
+    ['level' => '+4', 'chance' => '20%'],
+    ['level' => '+5', 'chance' => '25%'],
+    ['level' => '+6', 'chance' => '28%'],
+    ['level' => '+7', 'chance' => '30%'],
+    ['level' => '+8', 'chance' => '32%'],
+    ['level' => '+9', 'chance' => '35%'],
+    ['level' => '+10', 'chance' => '40%'],
+    ['level' => '+11', 'chance' => '45%'],
+    ['level' => '+12', 'chance' => '50%'],
+];
+
 $attackBonuses = [];
 for ($i = 1; $i <= 12; $i++) {
     $attackBonuses[] = [
@@ -61,8 +90,8 @@ $transferPrices = [
     ['level' => 5, 'label' => '+5', 'kk' => '400kk', 'tokens' => 5],
     ['level' => 6, 'label' => '+6', 'kk' => '550kk', 'tokens' => 6],
     ['level' => 7, 'label' => '+7', 'kk' => '750kk', 'tokens' => 7],
-    ['level' => 8, 'label' => '+8', 'kk' => '1,000kk', 'tokens' => 8],
-    ['level' => 9, 'label' => '+9', 'kk' => '1,250kk', 'tokens' => 9],
+    ['level' => 8, 'label' => '+8', 'kk' => '1kkk', 'tokens' => 8],
+    ['level' => 9, 'label' => '+9', 'kk' => '1,250kkk', 'tokens' => 9],
     ['level' => 10, 'label' => '+10', 'kk' => '1,5kkk', 'tokens' => 10],
     ['level' => 11, 'label' => '+11', 'kk' => '2kkk', 'tokens' => 20],
     ['level' => 12, 'label' => '+12', 'kk' => '3kkk', 'tokens' => 30],
@@ -154,6 +183,18 @@ if (!function_exists('rc_upg_item_html')) {
     }
 }
 
+if (!function_exists('rc_upg_page_image')) {
+    function rc_upg_page_image($templateRelBase, $fileName, $class, $alt)
+    {
+        $relPath = rtrim(ltrim(str_replace('\\', '/', (string)$templateRelBase), '/'), '/')
+            . '/' . ltrim((string)$fileName, '/');
+        if (!file_exists(BASE . $relPath)) {
+            return '';
+        }
+        return '<img class="' . rc_upg_esc($class) . '" src="' . rc_upg_esc(rc_upg_img_src($relPath)) . '" alt="' . rc_upg_esc($alt) . '" loading="lazy">';
+    }
+}
+
 if (!function_exists('rc_upg_apply_cost_cell')) {
     function rc_upg_apply_cost_cell()
     {
@@ -191,6 +232,13 @@ foreach ($stoneTypes as $stone) {
         . '</div>';
 }
 
+$lookUpgradeHtml = rc_upg_page_image(
+    $rcUpgImageBase,
+    'look_upgrade-gem.png',
+    'rc-upg-look-preview',
+    'Look do item com Weapon Upgrade'
+);
+
 $successRows = '';
 foreach ($successRates as $row) {
     $successRows .= '<tr>'
@@ -198,6 +246,14 @@ foreach ($successRates as $row) {
         . '<td>' . rc_upg_esc($row['basic']) . '</td>'
         . '<td>' . rc_upg_esc($row['medium']) . '</td>'
         . '<td>' . rc_upg_esc($row['epic']) . '</td>'
+        . '</tr>';
+}
+
+$failDowngradeRows = '';
+foreach ($failDowngradeRates as $row) {
+    $failDowngradeRows .= '<tr>'
+        . '<td><strong>' . rc_upg_esc($row['level']) . '</strong></td>'
+        . '<td>' . rc_upg_esc($row['chance']) . '</td>'
         . '</tr>';
 }
 
@@ -226,7 +282,11 @@ echo '<div class="rc-st-page rc-upg-page">'
     . '<ul class="rc-st-notes">'
     . '<li>O Upgrade System tem como objetivo aprimorar suas armas, aumentando o poder de ataque por meio do uso das <strong>Upgrade Stones</strong>.</li>'
     . '<li>Durante o processo de refinamento, é possível utilizar diferentes pedras de aprimoramento, cada uma com uma taxa de sucesso variável. Quanto maior o nível de refinamento, menor será a chance de sucesso.</li>'
+    . '<li>Se o refinamento <strong>falhar</strong> e a arma já estiver em <strong>+1 ou superior</strong>, existe chance de <strong>perder 1 nível de upgrade</strong> — consulte a <a class="rc-upg-link" href="#rc-upg-downgrade">tabela de downgrade na falha</a>.</li>'
     . '</ul>'
+    . ($lookUpgradeHtml !== ''
+        ? '<figure class="rc-upg-look-wrap">' . $lookUpgradeHtml . '<figcaption>Exemplo de look com Weapon Upgrade</figcaption></figure>'
+        : '')
     . '<p class="rc-tier-spaced">Existem três tipos de Upgrade Stones disponíveis no jogo:</p>'
     . '<ul class="rc-st-notes">'
     . '<li><strong>Basic Upgrade Stones:</strong> permite melhorias em equipamentos até o nível 4.</li>'
@@ -258,6 +318,17 @@ echo '<div class="rc-st-page rc-upg-page">'
     . '<table class="rc-bf-table rc-tier-table rc-upg-table">'
     . '<thead><tr><th>Upgrade</th><th>Basic</th><th>Medium</th><th>Epic</th></tr></thead>'
     . '<tbody>' . $successRows . '</tbody>'
+    . '</table></div>'
+    . '</section>'
+
+    . '<section class="rc-st-card rc-upg-anchor" id="rc-upg-downgrade">'
+    . '<h3>Downgrade na falha</h3>'
+    . '<p class="rc-tier-spaced">Ao falhar uma tentativa de upgrade, se a arma já estiver em <strong>+1 ou mais</strong>, rola a chance abaixo de voltar <strong>1 nível</strong> (ex.: de +5 para +4). Tentativas de +0 para +1 nunca perdem nível.</p>'
+    . '<h4 class="rc-tier-h4">Chance de perder 1 nível (na falha)</h4>'
+    . '<div class="rc-bf-table-wrap rc-tier-table-wrap">'
+    . '<table class="rc-bf-table rc-tier-table rc-upg-table">'
+    . '<thead><tr><th>Tentando alcançar</th><th>Chance de downgrade</th></tr></thead>'
+    . '<tbody>' . $failDowngradeRows . '</tbody>'
     . '</table></div>'
     . '</section>'
 
