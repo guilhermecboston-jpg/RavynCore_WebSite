@@ -5876,6 +5876,100 @@ body.rc-page-upgradesystem .rc-panel-content > h3 {
   font-size: 13px;
 }
 
+/* Centered wiki tables (Tier System pattern) */
+.rc-st-table-center {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.rc-upg-page .rc-upg-table-center--sm {
+  max-width: 300px;
+}
+
+.rc-upg-page .rc-upg-table-center--md {
+  max-width: 420px;
+}
+
+.rc-upg-page .rc-upg-table-center--lg {
+  max-width: 560px;
+}
+
+.rc-upg-page .rc-upg-table-center--xl {
+  max-width: 720px;
+}
+
+.rc-upg-page .rc-st-table-center .rc-bf-table-wrap,
+.rc-sg-page .rc-st-table-center .rc-bf-table-wrap {
+  margin-top: 0;
+}
+
+.rc-upg-page #rc-upg-chances h3,
+.rc-upg-page #rc-upg-bonus h3,
+.rc-upg-page #rc-upg-transfer h3,
+.rc-upg-page #rc-upg-downgrade h3 {
+  text-align: center;
+}
+
+.rc-upg-page #rc-upg-chances .rc-tier-table th,
+.rc-upg-page #rc-upg-chances .rc-tier-table td {
+  width: 25% !important;
+}
+
+.rc-upg-page #rc-upg-downgrade .rc-tier-table th:first-child,
+.rc-upg-page #rc-upg-downgrade .rc-tier-table td:first-child {
+  width: 50% !important;
+}
+
+.rc-upg-page #rc-upg-bonus .rc-tier-table th:first-child,
+.rc-upg-page #rc-upg-bonus .rc-tier-table td:first-child {
+  width: 42% !important;
+}
+
+.rc-upg-page #rc-upg-bonus .rc-tier-table td:last-child,
+.rc-upg-page #rc-upg-bonus .rc-tier-table th:last-child {
+  width: 58% !important;
+}
+
+.rc-sg-page .rc-sg-table-center--lg {
+  max-width: 720px;
+}
+
+.rc-sg-page .rc-sg-table-center--xl {
+  max-width: 920px;
+}
+
+.rc-sg-page #rc-sg-vocation h3,
+.rc-sg-page #rc-sg-gems h3,
+.rc-sg-page #rc-sg-prices h3 {
+  text-align: center;
+}
+
+.rc-sg-page #rc-sg-vocation .rc-tier-table th:first-child,
+.rc-sg-page #rc-sg-vocation .rc-tier-table td:first-child {
+  width: 22% !important;
+}
+
+.rc-sg-page #rc-sg-vocation .rc-tier-table th:nth-child(2),
+.rc-sg-page #rc-sg-vocation .rc-tier-table td:nth-child(2) {
+  width: 38% !important;
+}
+
+.rc-sg-page #rc-sg-vocation .rc-tier-table th:nth-child(3),
+.rc-sg-page #rc-sg-vocation .rc-tier-table td:nth-child(3) {
+  width: 40% !important;
+}
+
+.rc-sg-page #rc-sg-gems .rc-tier-table th,
+.rc-sg-page #rc-sg-gems .rc-tier-table td {
+  width: auto !important;
+}
+
+.rc-sg-page #rc-sg-gems .rc-tier-table th:first-child,
+.rc-sg-page #rc-sg-gems .rc-tier-table td:first-child {
+  width: 24% !important;
+}
+
 .rc-st-overview-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
