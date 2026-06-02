@@ -101,10 +101,26 @@ if (!function_exists('esb_percent_value')) {
 if (!function_exists('esb_item_image')) {
     function esb_item_image($id, $tooltip = '')
     {
-        return rc_wiki_item_image((int)$id, [
+        $id = (int)$id;
+        $tooltipText = trim((string)$tooltip);
+        if ($tooltipText === '' && function_exists('getItemNameById')) {
+            $tooltipText = (string)getItemNameById($id);
+        }
+
+        return rc_wiki_item_image($id, [
             'class' => 'item_image esb-wiki-img',
-            'label' => (string)$tooltip,
+            'label' => $tooltipText,
         ]);
+    }
+}
+
+if (!function_exists('esb_flow_arrow')) {
+    function esb_flow_arrow()
+    {
+        return '<span class="esb-flow-arrow" aria-hidden="true">'
+            . '<svg viewBox="0 0 24 24" width="22" height="22" focusable="false">'
+            . '<path d="M5 12h11M14 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+            . '</svg></span>';
     }
 }
 
@@ -429,48 +445,51 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-compact-table-wrap .es
     vertical-align: middle;
 }
 
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-table-wrap {
+    max-width: 100%;
+}
+
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-level-col {
-    width: 34%;
+    width: 30%;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-cost-col {
-    width: 46%;
+    width: 58%;
+    min-width: 340px;
 }
 
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-step {
-    display: block;
-    margin-bottom: 8px;
-    color: #f0c982;
-    text-align: center;
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-pairs {
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-evolution {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: center;
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-pair {
-    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+    padding: 6px 8px;
     border: 1px solid rgba(150, 172, 216, 0.22);
-    border-radius: 8px;
+    border-radius: 10px;
     background: rgba(10, 18, 33, 0.68);
-    padding: 4px 6px;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-item {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-arrow {
-    color: #f0c982;
-    font-size: 14px;
-    font-weight: 700;
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-flow-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    color: #f2c16b;
+    filter: drop-shadow(0 0 6px rgba(242, 193, 107, 0.35));
+}
+
+body.rc-page-elementalstonesbonuses .rc-rich-content .esb-flow-arrow svg {
+    display: block;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-id {
@@ -482,8 +501,8 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-id {
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-cost-inline {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
+    flex-wrap: nowrap;
+    gap: 10px;
     justify-content: center;
 }
 
@@ -512,12 +531,6 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-cost-meta strong {
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-cost-meta span {
     color: #9db3d7;
     font-size: 11px;
-}
-
-body.rc-page-elementalstonesbonuses .rc-rich-content .esb-cost-plus {
-    color: #f0c982;
-    font-weight: 800;
-    font-size: 14px;
 }
 
 body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
@@ -650,18 +663,17 @@ body.rc-page-elementalstonesbonuses .esb-element-summary-left {
     min-width: 0;
 }
 
-body.rc-page-elementalstonesbonuses .esb-element-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    box-shadow: 0 0 10px currentColor;
+body.rc-page-elementalstonesbonuses .esb-element-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #f2e8d4;
+    min-width: 72px;
 }
 
-body.rc-page-elementalstonesbonuses .esb-element-preview {
+body.rc-page-elementalstonesbonuses .esb-element-stone {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
 }
 
 body.rc-page-elementalstonesbonuses .esb-element-toggle {
@@ -695,6 +707,27 @@ body.rc-page-elementalstonesbonuses .esb-stone-tile-label {
     font-size: 12px;
     font-weight: 700;
     text-align: center;
+}
+
+body.rc-page-elementalstonesbonuses .tpd-skin-dark .tpd-content,
+body.rc-page-elementalstonesbonuses .tpd-skin-dark .tpd-title {
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+body.rc-page-elementalstonesbonuses .tpd-skin-dark .tpd-background-content {
+    background: linear-gradient(160deg, rgba(18, 32, 54, 0.98), rgba(10, 18, 33, 0.98));
+    border: 1px solid rgba(242, 193, 107, 0.45);
+}
+
+@media (max-width: 900px) {
+    body.rc-page-elementalstonesbonuses .rc-rich-content .esb-fusion-cost-col {
+        min-width: 0;
+    }
+
+    body.rc-page-elementalstonesbonuses .rc-rich-content .esb-cost-inline {
+        flex-wrap: wrap;
+    }
 }
 
 @media (max-width: 900px) {
@@ -815,22 +848,17 @@ body.rc-page-elementalstonesbonuses .esb-stone-tile-label {
 
     <section class="rc-st-card rc-esb-anchor" id="rc-esb-catalog">
         <h3>Elemental Stones Bonuses</h3>
-        <p class="esb-text">Catálogo de stones por nível. Clique em cada elemento para expandir os níveis 0 a 9.</p>
         <div class="esb-catalog-list">
             <?php foreach ($stoneLevels as $color => $levels) {
                 $meta = $colorMeta[$color];
                 $previewLow = (int)$levels[0];
-                $previewHigh = (int)$levels[9];
             ?>
                 <details class="esb-element-details">
                     <summary class="esb-element-summary">
                         <span class="esb-element-summary-left">
-                            <span class="esb-element-dot" style="color: <?= htmlspecialchars($meta['hex'], ENT_QUOTES, 'UTF-8') ?>; background: <?= htmlspecialchars($meta['hex'], ENT_QUOTES, 'UTF-8') ?>;"></span>
-                            <span><?= htmlspecialchars($meta['element'], ENT_QUOTES, 'UTF-8') ?></span>
-                            <span class="esb-element-preview">
+                            <span class="esb-element-name"><?= htmlspecialchars($meta['element'], ENT_QUOTES, 'UTF-8') ?></span>
+                            <span class="esb-element-stone">
                                 <?= esb_item_image($previewLow, $meta['element'] . ' Stone - Nível 0') ?>
-                                <span class="esb-fusion-arrow">&rarr;</span>
-                                <?= esb_item_image($previewHigh, $meta['element'] . ' Stone - Nível 9') ?>
                             </span>
                         </span>
                         <span class="esb-element-toggle">Abrir / fechar</span>
@@ -853,46 +881,39 @@ body.rc-page-elementalstonesbonuses .esb-stone-tile-label {
     <section class="esb-section rc-esb-anchor" id="rc-esb-fusion">
         <h2 class="esb-title">Stone Evolution (Fusion)</h2>
         <div class="esb-body">
-            <p class="esb-text">Custos e probabilidade de sucesso na evolução de pedras na Stone Forge.</p>
             <?= esb_guide_image('stone-forge.png', 'Stone Forge', 'rc-esb-guide-img rc-esb-guide-img--wide') ?>
-            <div class="esb-compact-table-wrap">
+            <div class="esb-fusion-table-wrap">
             <table class="esb-table">
                 <thead>
                 <tr>
-                    <th class="esb-fusion-level-col">Nivel</th>
+                    <th class="esb-fusion-level-col">Evolução</th>
                     <th class="esb-fusion-cost-col">Custo</th>
                     <th class="esb-center">Chance</th>
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($fusionSteps as $step) { ?>
+                <?php foreach ($fusionSteps as $step) {
+                    $fromItemId = (int)$stoneLevels[$fusionDemoColor][(int)$step['from']];
+                    $toItemId = (int)$stoneLevels[$fusionDemoColor][(int)$step['to']];
+                    $fromName = getItemNameById($fromItemId);
+                    $toName = getItemNameById($toItemId);
+                    $fromTitle = !empty($fromName) ? $fromName : ($colorMeta[$fusionDemoColor]['element'] . ' Stone');
+                    $toTitle = !empty($toName) ? $toName : ($colorMeta[$fusionDemoColor]['element'] . ' Stone');
+                    $fromPreviewId = $fromItemId;
+                ?>
                     <tr>
                         <td>
-                            <span class="esb-fusion-step"><strong><?= (int)$step['from'] ?> -> <?= (int)$step['to'] ?></strong></span>
-                            <div class="esb-fusion-pairs">
-                                <?php
-                                $fromItemId = (int)$stoneLevels[$fusionDemoColor][(int)$step['from']];
-                                $toItemId = (int)$stoneLevels[$fusionDemoColor][(int)$step['to']];
-                                $fromName = getItemNameById($fromItemId);
-                                $toName = getItemNameById($toItemId);
-                                $fromTitle = !empty($fromName) ? $fromName : ($colorMeta[$fusionDemoColor]['element'] . ' Stone');
-                                $toTitle = !empty($toName) ? $toName : ($colorMeta[$fusionDemoColor]['element'] . ' Stone');
-                                ?>
-                                <span class="esb-fusion-pair">
-                                    <span class="esb-fusion-item">
-                                        <?= esb_item_image($fromItemId, $fromTitle . ' - Nivel ' . (int)$step['from']) ?>
-                                    </span>
-                                    <span class="esb-fusion-arrow">&rarr;</span>
-                                    <span class="esb-fusion-item">
-                                        <?= esb_item_image($toItemId, $toTitle . ' - Nivel ' . (int)$step['to']) ?>
-                                    </span>
+                            <div class="esb-fusion-evolution">
+                                <span class="esb-fusion-item">
+                                    <?= esb_item_image($fromItemId, $fromTitle . ' - Nível ' . (int)$step['from']) ?>
+                                </span>
+                                <?= esb_flow_arrow() ?>
+                                <span class="esb-fusion-item">
+                                    <?= esb_item_image($toItemId, $toTitle . ' - Nível ' . (int)$step['to']) ?>
                                 </span>
                             </div>
                         </td>
                         <td>
-                            <?php
-                            $fromPreviewId = (int)$stoneLevels[$fusionDemoColor][(int)$step['from']];
-                            ?>
                             <div class="esb-cost-inline">
                                 <span class="esb-cost-item">
                                     <?= esb_item_image(3043, 'Crystal Coin') ?>
@@ -900,16 +921,14 @@ body.rc-page-elementalstonesbonuses .esb-stone-tile-label {
                                         <strong><?= htmlspecialchars($step['gold'], ENT_QUOTES, 'UTF-8') ?></strong>
                                     </span>
                                 </span>
-                                <span class="esb-cost-plus">+</span>
                                 <span class="esb-cost-item">
-                                    <?= esb_item_image($fromPreviewId, 'Stone do nivel ' . (int)$step['from']) ?>
+                                    <?= esb_item_image($fromPreviewId, $fromTitle . ' - Nível ' . (int)$step['from']) ?>
                                     <span class="esb-cost-meta">
                                         <strong>x<?= (int)$step['stone_qty'] ?></strong>
                                     </span>
                                 </span>
-                                <span class="esb-cost-plus">+</span>
                                 <span class="esb-cost-item">
-                                    <?= esb_item_image(60581, 'Stone Dust') ?>
+                                    <?= esb_item_image(60581, 'Stone Fusion Dust') ?>
                                     <span class="esb-cost-meta">
                                         <strong>x<?= (int)$step['dust_qty'] ?></strong>
                                     </span>
@@ -950,7 +969,6 @@ body.rc-page-elementalstonesbonuses .esb-stone-tile-label {
                                         <strong>x<?= (int)$row['lesser'] ?></strong>
                                     </span>
                                 </span>
-                                <span class="esb-cost-plus">+</span>
                                 <span class="esb-cost-item">
                                     <?= esb_item_image($greaterFragmentId, 'Greater Fragment') ?>
                                     <span class="esb-cost-meta">
@@ -984,7 +1002,13 @@ body.rc-page-elementalstonesbonuses .esb-stone-tile-label {
 <script>
 (function() {
     if (window.Tipped && typeof window.Tipped.create === 'function') {
-        window.Tipped.create('.item_image');
+        window.Tipped.create('.rc-esb-page .item_image', {
+            skin: 'dark',
+            size: 'medium',
+            radius: { size: 6, position: 'border' },
+            hideOn: false,
+            showOn: { element: 'mouseenter' }
+        });
     }
 
     function esbScrollTo(el) {
