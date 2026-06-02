@@ -5816,6 +5816,13 @@ body.rc-page-upgradesystem .rc-panel-content > h3 {
   line-height: 1.5;
 }
 
+.rc-upg-page .rc-upg-important {
+  margin: 12px 0 0;
+  color: #d6e4ff;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .rc-upg-page .rc-upg-table td,
 .rc-upg-page .rc-upg-table th {
   text-align: center;
@@ -7128,26 +7135,30 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
 }
 
 /* Upgrade System — transfer cost table (3 columns; overrides rc-tier-table 42/58 split) */
+.rc-upg-page .rc-upg-price-table {
+  table-layout: fixed;
+}
+
+.rc-upg-page .rc-upg-price-table th,
+.rc-upg-page .rc-upg-price-table td {
+  text-align: center !important;
+  padding: 8px 10px !important;
+  vertical-align: middle;
+}
+
 .rc-upg-page .rc-upg-price-table th:first-child,
 .rc-upg-page .rc-upg-price-table td:first-child {
-  width: 14% !important;
-  text-align: center;
+  width: 16% !important;
 }
 
 .rc-upg-page .rc-upg-price-table th:nth-child(2),
 .rc-upg-page .rc-upg-price-table td:nth-child(2) {
-  width: 24% !important;
-  text-align: center;
-  padding-left: 18px !important;
-  padding-right: 10px !important;
+  width: 26% !important;
 }
 
 .rc-upg-page .rc-upg-price-table th:nth-child(3),
 .rc-upg-page .rc-upg-price-table td:nth-child(3) {
-  width: 62% !important;
-  text-align: center;
-  padding-left: 12px !important;
-  padding-right: 16px !important;
+  width: 58% !important;
 }
 
 .rc-upg-page .rc-upg-price-table .rc-upg-transfer-cost {
@@ -7156,13 +7167,12 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
   justify-content: center;
   gap: 6px;
   flex-wrap: wrap;
-  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .rc-upg-page .rc-upg-price-table .rc-upg-transfer-cost > strong {
-  display: inline-block;
-  min-width: 5.2em;
-  text-align: right;
+  display: inline;
   font-variant-numeric: tabular-nums;
 }
 
