@@ -1,7 +1,22 @@
 <?php
 defined('MYAAC') or die('Direct access not allowed!');
 
-$title = "Elemental's Stones Bonuses";
+$title = 'Elemental Stones';
+
+global $template_path, $config;
+
+$rcTemplateName = 'tibiacom';
+if (isset($config['template']) && is_string($config['template']) && $config['template'] !== '') {
+    $rcTemplateName = $config['template'];
+}
+if (function_exists('config')) {
+    $configTemplate = config('template');
+    if (is_string($configTemplate) && $configTemplate !== '') {
+        $rcTemplateName = $configTemplate;
+    }
+}
+$rcTemplatePath = '/' . ltrim((string)($template_path ?? ('templates/' . $rcTemplateName)), '/');
+$rcEsbImagePath = $rcTemplatePath . '/images/elemental_stones';
 
 $stoneLevels = [
     'Blue' => [0 => 61826, 1 => 61833, 2 => 61840, 3 => 61772, 4 => 61777, 5 => 61783, 6 => 61789, 7 => 61795, 8 => 61801, 9 => 61807],
@@ -90,6 +105,27 @@ if (!function_exists('esb_item_image')) {
             'class' => 'item_image esb-wiki-img',
             'label' => (string)$tooltip,
         ]);
+    }
+}
+
+if (!function_exists('esb_guide_image')) {
+    function esb_guide_image($fileName, $alt, $class = 'rc-esb-guide-img')
+    {
+        global $rcEsbImagePath;
+
+        $relPath = rtrim(ltrim(str_replace('\\', '/', (string)$rcEsbImagePath), '/'), '/')
+            . '/' . ltrim((string)$fileName, '/');
+        $exists = function_exists('rc_wiki_item_path_exists')
+            ? rc_wiki_item_path_exists($relPath)
+            : (defined('BASE') && is_readable(BASE . ltrim($relPath, '/')));
+
+        if (!$exists) {
+            return '';
+        }
+
+        return '<img class="' . htmlspecialchars((string)$class, ENT_QUOTES, 'UTF-8') . '" src="'
+            . htmlspecialchars($relPath, ENT_QUOTES, 'UTF-8') . '" alt="'
+            . htmlspecialchars((string)$alt, ENT_QUOTES, 'UTF-8') . '" loading="lazy">';
     }
 }
 
@@ -488,6 +524,185 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
     text-align: center;
 }
 
+body.rc-page-elementalstonesbonuses .rc-rich-content .rc-esb-page {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+body.rc-page-elementalstonesbonuses .rc-esb-nav-below {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 4px;
+}
+
+body.rc-page-elementalstonesbonuses .rc-esb-nav a {
+    text-decoration: none;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(122, 154, 210, 0.42);
+    background: rgba(11, 23, 41, 0.75);
+    color: #e8efff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+body.rc-page-elementalstonesbonuses .rc-esb-nav a:hover {
+    border-color: rgba(242, 193, 107, 0.55);
+    color: #f2c16b;
+}
+
+body.rc-page-elementalstonesbonuses .rc-esb-anchor {
+    scroll-margin-top: 140px;
+}
+
+body.rc-page-elementalstonesbonuses .rc-st-card h3 {
+    margin: 0 0 12px;
+    color: #efd39b;
+    font-size: 27px;
+    font-weight: 700;
+}
+
+body.rc-page-elementalstonesbonuses .rc-st-card > p,
+body.rc-page-elementalstonesbonuses .rc-st-card .rc-st-notes li {
+    color: #d4deef;
+    font-size: 17px;
+    line-height: 1.65;
+}
+
+body.rc-page-elementalstonesbonuses .rc-st-card strong,
+body.rc-page-elementalstonesbonuses .rc-esb-highlight {
+    color: #f2c16b;
+}
+
+body.rc-page-elementalstonesbonuses .rc-esb-figure-duo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 16px 0 0;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(120, 168, 236, 0.35);
+    background: rgba(10, 18, 33, 0.55);
+}
+
+body.rc-page-elementalstonesbonuses .rc-esb-guide-img {
+    max-width: min(100%, 280px);
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid rgba(120, 168, 236, 0.3);
+}
+
+body.rc-page-elementalstonesbonuses .rc-esb-guide-img--wide {
+    max-width: min(100%, 900px);
+    display: block;
+    margin: 14px auto 0;
+}
+
+body.rc-page-elementalstonesbonuses .rc-esb-figure-caption {
+    flex: 1 1 100%;
+    margin: 0;
+    text-align: center;
+    color: #b8c8e4;
+    font-size: 14px;
+}
+
+body.rc-page-elementalstonesbonuses .esb-catalog-list {
+    display: grid;
+    gap: 10px;
+}
+
+body.rc-page-elementalstonesbonuses .esb-element-details {
+    border: 1px solid rgba(104, 150, 225, 0.32);
+    border-radius: 10px;
+    background: rgba(9, 18, 34, 0.72);
+    overflow: hidden;
+}
+
+body.rc-page-elementalstonesbonuses .esb-element-details[open] {
+    border-color: rgba(242, 193, 107, 0.45);
+}
+
+body.rc-page-elementalstonesbonuses .esb-element-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    list-style: none;
+    color: #e8efff;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+body.rc-page-elementalstonesbonuses .esb-element-summary::-webkit-details-marker {
+    display: none;
+}
+
+body.rc-page-elementalstonesbonuses .esb-element-summary-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+body.rc-page-elementalstonesbonuses .esb-element-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px currentColor;
+}
+
+body.rc-page-elementalstonesbonuses .esb-element-preview {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.rc-page-elementalstonesbonuses .esb-element-toggle {
+    color: #f2c16b;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+body.rc-page-elementalstonesbonuses .esb-stone-level-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    padding: 12px 14px 14px;
+    border-top: 1px solid rgba(104, 150, 225, 0.22);
+}
+
+body.rc-page-elementalstonesbonuses .esb-stone-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(120, 168, 236, 0.25);
+    background: rgba(8, 16, 31, 0.65);
+}
+
+body.rc-page-elementalstonesbonuses .esb-stone-tile-label {
+    color: #c5d6f5;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    body.rc-page-elementalstonesbonuses .esb-stone-level-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 1024px) {
     body.rc-page-elementalstonesbonuses .rc-rich-content .esb-grid-3 {
         grid-template-columns: 1fr;
@@ -502,54 +717,31 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
 }
 </style>
 
-<div class="esb-page">
-    <section class="esb-section">
-        <h2 class="esb-title">Elemental Stones Bonuses</h2>
-        <div class="esb-body">
-            <p class="esb-text">Catalogo de stones por nivel.</p>
-            <table class="esb-table">
-                <thead>
-                <tr>
-                    <th class="esb-element-col">Element</th>
-                    <th class="esb-stone-col">Level 0</th>
-                    <th class="esb-stone-col">Level 1</th>
-                    <th class="esb-stone-col">Level 2</th>
-                    <th class="esb-stone-col">Level 3</th>
-                    <th class="esb-stone-col">Level 4</th>
-                    <th class="esb-stone-col">Level 5</th>
-                    <th class="esb-stone-col">Level 6</th>
-                    <th class="esb-stone-col">Level 7</th>
-                    <th class="esb-stone-col">Level 8</th>
-                    <th class="esb-stone-col">Level 9</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($stoneLevels as $color => $levels) {
-                    $meta = $colorMeta[$color];
-                ?>
-                    <tr>
-                        <td class="esb-element-cell">
-                            <span class="esb-element-label">
-                                <?= htmlspecialchars($meta['element'], ENT_QUOTES, 'UTF-8') ?>
-                            </span>
-                        </td>
-                        <?php for ($level = 0; $level <= 9; $level++) {
-                            $itemId = (int)$levels[$level];
-                        ?>
-                            <td class="esb-stone-cell">
-                                <span class="esb-item-cell">
-                                    <?= esb_item_image($itemId, $meta['element'] . ' Stone - Nivel ' . $level) ?>
-                                </span>
-                            </td>
-                        <?php } ?>
-                    </tr>
-                <?php } ?>
-                </tbody>
-            </table>
-        </div>
+<div class="esb-page rc-st-page rc-esb-page">
+    <header class="rc-st-page-title"><h2>Elemental Stones</h2></header>
+    <nav class="rc-esb-nav rc-esb-nav-below" aria-label="Seções do guia">
+        <a href="#rc-esb-sobre">Sobre</a>
+        <a href="#rc-esb-percent">Bônus</a>
+        <a href="#rc-esb-catalog">Catálogo</a>
+        <a href="#rc-esb-fusion">Fusão</a>
+        <a href="#rc-esb-conversion">Conversão</a>
+    </nav>
+
+    <section class="rc-st-card rc-esb-anchor" id="rc-esb-sobre">
+        <h3>Sobre</h3>
+        <p>As <strong>Elemental Stones</strong> permitem que o jogador personalize e fortaleça seu personagem com poderes elementais, oferecendo bônus de dano, defesa e outros aprimoramentos.</p>
+        <ul class="rc-st-notes">
+            <li>Elas podem ser utilizadas na <strong>Jewelled Pouch</strong>, que fica em sua <strong>Store Inbox</strong>. Ao pressionar <strong>Ctrl + clique direito</strong>, abre o <strong>Craft Stones</strong>, possibilitando crafting em qualquer lugar do mapa.</li>
+            <li>Quanto maior o nível da Elemental Stone, mais poderosos se tornam seus bônus, podendo realizar troca das stones em qualquer lugar do mapa — tornando esse sistema uma parte essencial da evolução do seu personagem. O nível máximo de uma Elemental Stone é <strong>9</strong>.</li>
+        </ul>
+        <figure class="rc-esb-figure-duo">
+            <?= esb_guide_image('jewelled-pouch.png', 'Jewelled Pouch', 'rc-esb-guide-img') ?>
+            <?= esb_guide_image('clickdireito.png', 'Ctrl + clique direito', 'rc-esb-guide-img') ?>
+            <figcaption class="rc-esb-figure-caption">Jewelled Pouch na Store Inbox — use <strong>Ctrl + clique direito</strong> para abrir o Craft Stones.</figcaption>
+        </figure>
     </section>
 
-    <section class="esb-section">
+    <section class="esb-section rc-esb-anchor" id="rc-esb-percent">
         <h2 class="esb-title">Percentages - Stones by Level</h2>
         <div class="esb-body">
             <p class="esb-text">Selecione um nivel de pedra para visualizar os bonus com 1 pedra equipada.</p>
@@ -610,21 +802,59 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                     </article>
                 <?php } ?>
             </div>
-            <p class="esb-note"><strong>Nota:</strong> estes valores percentuais sao apresentados na pre-visualizacao da pagina e podem ser ajustados a qualquer momento para corresponder ao script final do servidor.</p>
+            <p class="esb-note"><strong>Nota:</strong> estes valores percentuais são apresentados na pré-visualização da página e podem ser ajustados a qualquer momento para corresponder ao script final do servidor.</p>
             <ul class="esb-rules">
                 <li>Cada personagem possui 1 slot gratuito para: <strong>Arma</strong>, <strong>Armadura</strong>, <strong>Capacete</strong>.</li>
-                <li>Contas VIP Account desbloqueiam automaticamente +1 slot adicional por equipamento, totalizando 2 slots por equipamento.</li>
+                <li>Contas <strong>VIP Account</strong> desbloqueiam automaticamente +1 slot adicional por equipamento, totalizando 2 slots por equipamento.</li>
                 <li>Para liberar 3 slots permanentes no personagem, adquira na Store: <strong>Unlocked Stones Sloots</strong>.</li>
-                <li>Possível obter bag of stones 0, 1, 2, 3 a partir de bosses, hunt medium, hard, epic e na <strong>Gamestore</strong>.</li>
-                <li>Algumas evolucoes possuem chance de falha; se falhar, o custo e perdido e as Stones permanecem no mesmo nivel.</li>
+                <li>Possível obter <strong>Bag of Stones</strong> 0, 1, 2, 3 a partir de bosses, hunt medium, hard, epic e na <strong>Game Store</strong>.</li>
+                <li>Algumas evoluções possuem chance de falha; se falhar, o custo é perdido e as Stones permanecem no mesmo nível.</li>
             </ul>
         </div>
     </section>
 
-    <section class="esb-section">
+    <section class="rc-st-card rc-esb-anchor" id="rc-esb-catalog">
+        <h3>Elemental Stones Bonuses</h3>
+        <p class="esb-text">Catálogo de stones por nível. Clique em cada elemento para expandir os níveis 0 a 9.</p>
+        <div class="esb-catalog-list">
+            <?php foreach ($stoneLevels as $color => $levels) {
+                $meta = $colorMeta[$color];
+                $previewLow = (int)$levels[0];
+                $previewHigh = (int)$levels[9];
+            ?>
+                <details class="esb-element-details">
+                    <summary class="esb-element-summary">
+                        <span class="esb-element-summary-left">
+                            <span class="esb-element-dot" style="color: <?= htmlspecialchars($meta['hex'], ENT_QUOTES, 'UTF-8') ?>; background: <?= htmlspecialchars($meta['hex'], ENT_QUOTES, 'UTF-8') ?>;"></span>
+                            <span><?= htmlspecialchars($meta['element'], ENT_QUOTES, 'UTF-8') ?></span>
+                            <span class="esb-element-preview">
+                                <?= esb_item_image($previewLow, $meta['element'] . ' Stone - Nível 0') ?>
+                                <span class="esb-fusion-arrow">&rarr;</span>
+                                <?= esb_item_image($previewHigh, $meta['element'] . ' Stone - Nível 9') ?>
+                            </span>
+                        </span>
+                        <span class="esb-element-toggle">Abrir / fechar</span>
+                    </summary>
+                    <div class="esb-stone-level-grid">
+                        <?php for ($level = 0; $level <= 9; $level++) {
+                            $itemId = (int)$levels[$level];
+                        ?>
+                            <div class="esb-stone-tile">
+                                <?= esb_item_image($itemId, $meta['element'] . ' Stone - Nível ' . $level) ?>
+                                <span class="esb-stone-tile-label">Nível <?= $level ?></span>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </details>
+            <?php } ?>
+        </div>
+    </section>
+
+    <section class="esb-section rc-esb-anchor" id="rc-esb-fusion">
         <h2 class="esb-title">Stone Evolution (Fusion)</h2>
         <div class="esb-body">
-            <p class="esb-text">Custos e probabilidade de sucesso na evolucao de pedras.</p>
+            <p class="esb-text">Custos e probabilidade de sucesso na evolução de pedras na Stone Forge.</p>
+            <?= esb_guide_image('stone-forge.png', 'Stone Forge', 'rc-esb-guide-img rc-esb-guide-img--wide') ?>
             <div class="esb-compact-table-wrap">
             <table class="esb-table">
                 <thead>
@@ -695,10 +925,11 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
         </div>
     </section>
 
-    <section class="esb-section" id="rc-esb-conversion">
+    <section class="esb-section rc-esb-anchor" id="rc-esb-conversion">
         <h2 class="esb-title">Conversion</h2>
         <div class="esb-body">
             <p class="esb-text">Na Stone Forge, converta <strong>Lesser Fragment</strong> + <strong>Greater Fragment</strong> em <strong>Stone Fusion Dust</strong>.</p>
+            <?= esb_guide_image('stone-convers.png', 'Stone Conversion', 'rc-esb-guide-img rc-esb-guide-img--wide') ?>
             <div class="esb-compact-table-wrap">
             <table class="esb-table">
                 <thead>
@@ -744,7 +975,7 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
                 </tbody>
             </table>
             </div>
-            <p class="esb-note"><strong>Fluxo:</strong> o Stone Fusion Dust é gerado na conversão e enviado direto para o <strong>Store Inbox</strong>.</p>
+            <p class="esb-note"><strong>Fluxo:</strong> o Stone Fusion Dust é gerado na conversão e enviado direto para a <strong>Store Inbox</strong>.</p>
         </div>
     </section>
 
@@ -754,6 +985,44 @@ body.rc-page-elementalstonesbonuses .rc-rich-content .esb-center {
 (function() {
     if (window.Tipped && typeof window.Tipped.create === 'function') {
         window.Tipped.create('.item_image');
+    }
+
+    function esbScrollTo(el) {
+        if (!el) {
+            return;
+        }
+        var header = document.querySelector('.rc-header');
+        var offset = (header ? header.offsetHeight : 0) + 16;
+        var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        if (el.tagName === 'DETAILS') {
+            el.open = true;
+        }
+    }
+
+    document.querySelectorAll('.rc-esb-page a[href^="#"]').forEach(function(link) {
+        link.addEventListener('click', function(ev) {
+            var id = link.getAttribute('href');
+            if (!id || id.charAt(0) !== '#') {
+                return;
+            }
+            var target = document.querySelector(id);
+            if (!target) {
+                return;
+            }
+            ev.preventDefault();
+            esbScrollTo(target);
+        });
+    });
+
+    var hash = window.location.hash;
+    if (hash) {
+        var hashTarget = document.querySelector(hash);
+        if (hashTarget) {
+            setTimeout(function() {
+                esbScrollTo(hashTarget);
+            }, 120);
+        }
     }
 
     function setupLevelTabs(groupKey) {
