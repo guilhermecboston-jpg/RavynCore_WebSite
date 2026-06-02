@@ -6360,6 +6360,79 @@ body.rc-page-upgradesystem .rc-panel-content > h3 {
   font-weight: 700;
 }
 
+.rc-st-taskfinder-page .rc-st-nav-below {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.rc-st-taskfinder-page .rc-st-nav a {
+  text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(122, 154, 210, 0.42);
+  background: rgba(11, 23, 41, 0.75);
+  color: #e8efff;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rc-st-taskfinder-page .rc-st-nav a:hover {
+  border-color: rgba(242, 193, 107, 0.55);
+  color: #f2c16b;
+}
+
+.rc-st-taskfinder-page .rc-st-anchor {
+  scroll-margin-top: 140px;
+}
+
+.rc-st-taskfinder-page .rc-st-intro-card p {
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.rc-st-taskfinder-page .rc-st-intro-card strong {
+  color: #f2c16b;
+}
+
+.rc-st-taskfinder-page .rc-st-steps {
+  margin: 0;
+  padding-left: 26px;
+  display: grid;
+  gap: 10px;
+}
+
+.rc-st-taskfinder-page .rc-st-steps li {
+  color: #d4deef;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  font-weight: 500;
+}
+
+.rc-st-taskfinder-page .rc-st-steps strong,
+.rc-st-taskfinder-page .rc-st-notes strong {
+  color: #f2c16b;
+}
+
+.rc-st-taskfinder-page .rc-st-preview-wrap {
+  margin: 18px auto 0;
+  max-width: 100%;
+  text-align: center;
+}
+
+.rc-st-taskfinder-page .rc-st-preview {
+  display: block;
+  width: 100%;
+  max-width: min(100%, 900px);
+  height: auto;
+  margin: 0 auto;
+  border-radius: 8px;
+  border: 1px solid rgba(120, 168, 236, 0.35);
+}
+
 @media (max-width: 1200px) {
   .rc-st-overview-grid {
     grid-template-columns: 1fr;

@@ -449,37 +449,61 @@ $categories[] = rc_supreme_category_block(
 	]
 );
 
-$taskPreviewPath = $rcTemplatePath . '/images/supreme_tasks/taskfinder-mini.png';
-$taskPreviewHtml = file_exists(BASE . $taskPreviewPath)
-	? '<img class="rc-st-feature-preview" src="' . $taskPreviewPath . '" alt="Supreme Tasks UI preview" loading="lazy">'
-	: '<div class="rc-st-feature-preview rc-st-feature-preview-fallback">Interface Preview</div>';
+if (!function_exists('rc_st_page_image')) {
+	function rc_st_page_image($templateRelBase, $fileName, $class, $alt)
+	{
+		$relPath = rtrim(ltrim(str_replace('\\', '/', (string)$templateRelBase), '/'), '/')
+			. '/' . ltrim((string)$fileName, '/');
+		if (!file_exists(BASE . $relPath)) {
+			return '';
+		}
+		return '<img class="' . htmlspecialchars((string)$class, ENT_QUOTES, 'UTF-8') . '" src="'
+			. htmlspecialchars((string)$relPath, ENT_QUOTES, 'UTF-8') . '" alt="'
+			. htmlspecialchars((string)$alt, ENT_QUOTES, 'UTF-8') . '" loading="lazy">';
+	}
+}
 
-echo '<div class="rc-st-page">'
+$taskFinderImgHtml = rc_st_page_image(
+	$rcTemplatePath . '/images/supreme_tasks',
+	'taskfinder.png',
+	'rc-st-preview',
+	'Supreme Tasks'
+);
+
+echo '<div class="rc-st-page rc-st-taskfinder-page">'
 	. '<header class="rc-st-page-title"><h2>Supreme Tasks</h2></header>'
-	. '<section class="rc-st-overview-grid">'
-	. '<article class="rc-st-card rc-st-card-feature">'
-	. '<h3>Informacoes</h3>'
-	. '<p>Desenvolvido pela Equipe RavynCore, o sistema de Supreme Tasks foi projetado para transformar a maneira como os jogadores progridem e realizam suas atividades dentro do jogo. Com uma proposta realmente inovadora, ele unifica diversas tarefas e objetivos em uma unica estrutura, oferecendo uma experiencia mais dinamica, fluida e extremamente recompensadora.</p>'
-	. '</article>'
-	. '<article class="rc-st-card rc-st-card-feature">'
-	. '<h3>Como fazer?</h3>'
-	. '<div class="rc-st-feature-media">' . $taskPreviewHtml . '</div>'
-	. '<p>Para iniciar uma Supreme Task, basta abrir a interface clicando no icone em formato de "pata" brilhante, localizado logo abaixo do seu set. Em seguida, selecione o rank correspondente ao seu nivel atual e escolha a task desejada. Ao abrir a pagina da task, clique em Start ou Repeat, conforme a situacao. Depois disso, e so cacar as criaturas indicadas para comecar a progredir.</p>'
-	. '</article>'
+	. '<nav class="rc-st-nav rc-st-nav-below" aria-label="Seções do guia">'
+	. '<a href="#rc-st-como">Como Fazer</a>'
+	. '<a href="#rc-st-info">Informações</a>'
+	. '<a href="#rc-st-categorias">Categorias</a>'
+	. '</nav>'
+	. '<section class="rc-st-card rc-st-intro-card">'
+	. '<p>Desenvolvido pela equipe <strong>RavynCore</strong>, o sistema de Supreme Tasks reúne diversos desafios em uma única interface, oferecendo uma progressão mais dinâmica e recompensadora.</p>'
 	. '</section>'
-	. '<section class="rc-st-card">'
-	. '<h3>Observacoes Importantes</h3>'
+	. '<section class="rc-st-card rc-st-anchor" id="rc-st-como">'
+	. '<h3>Como Fazer?</h3>'
+	. '<ol class="rc-st-steps">'
+	. '<li>Abra a interface através do ícone localizado abaixo do seu equipamento.</li>'
+	. '<li>Selecione o rank correspondente ao seu nível.</li>'
+	. '<li>Escolha a task desejada e clique em <strong>Start</strong> ou <strong>Repeat</strong>.</li>'
+	. '<li>Derrote as criaturas indicadas para avançar no progresso.</li>'
+	. '<li>Ao concluir a task, clique em <strong>Claim</strong> para receber a recompensa.</li>'
+	. '</ol>'
+	. ($taskFinderImgHtml !== ''
+		? '<figure class="rc-st-preview-wrap">' . $taskFinderImgHtml . '</figure>'
+		: '')
+	. '</section>'
+	. '<section class="rc-st-card rc-st-anchor" id="rc-st-info">'
+	. '<h3>Informações Importantes</h3>'
 	. '<ul class="rc-st-notes">'
-	. '<li>Quando a recompensa incluir dinheiro, o valor sera enviado diretamente para sua Store Inbox. E importante sempre verificar se o seu personagem possui capacidade disponivel antes de coletar a premiacao.</li>'
-	. '<li>Quando a recompensa incluir qualquer item, ele sera enviado diretamente para sua Store Inbox. E importante sempre verificar se o seu personagem possui capacidade disponivel antes de coletar a premiacao.</li>'
-	. '<li>Voce pode verificar o progresso da sua task atraves da interface da Supreme Task.</li>'
-	. '<li>Apos concluir a task pela primeira vez, voce podera repeti-la quantas vezes desejar.</li>'
-	. '<li>Voce pode verificar se ha algum Task Boost ativo acessando a aba de Skills do seu personagem.</li>'
-	. '<li>Apenas uma unica task pode estar ativa por personagem por vez.</li>'
-	. '<li>Para concluir a task, clique novamente no botao que antes exibia Start/Repeat e agora aparecera como Redeem.</li>'
+	. '<li>Apenas uma task pode ficar ativa por personagem.</li>'
+	. '<li>Após concluir uma task pela primeira vez, ela poderá ser repetida.</li>'
+	. '<li>O progresso pode ser acompanhado diretamente pela interface.</li>'
+	. '<li>Recompensas em itens e dinheiro são enviadas para a <strong>Store Inbox</strong>.</li>'
+	. '<li>Task Boosts ativos podem ser consultados na aba <strong>Skills</strong> do personagem.</li>'
 	. '</ul>'
 	. '</section>'
-	. '<section class="rc-st-card">'
+	. '<section class="rc-st-card rc-st-anchor" id="rc-st-categorias">'
 	. '<h3>Categorias e Recompensas</h3>'
 	. '<div class="rc-st-top-categories">'
 	. '<a href="#hall-apprentice" class="rc-st-cat-link"><img src="' . $rcTemplatePath . '/images/supreme_tasks/rank.png" alt="" loading="lazy"><span>Hall of the Apprentice</span></a>'
@@ -490,5 +514,19 @@ echo '<div class="rc-st-page">'
 	. '</div>'
 	. '</section>'
 	. implode('', $categories)
-	. '<script>(function(){var links=document.querySelectorAll(".rc-st-cat-link");if(!links.length){return;}var header=document.querySelector(".rc-header");links.forEach(function(link){link.addEventListener("click",function(ev){var href=link.getAttribute("href")||"";if(href.charAt(0)!=="#"){return;}var target=document.querySelector(href);if(!target){return;}ev.preventDefault();target.open=true;var offset=(header?header.offsetHeight:0)+10;var top=target.getBoundingClientRect().top+window.pageYOffset-offset;window.scrollTo({top:Math.max(0,top),behavior:"smooth"});});});})();</script>'
+	. '<script>(function(){'
+	. 'function stScrollTo(el){if(!el){return;}'
+	. 'var header=document.querySelector(".rc-header");'
+	. 'var offset=(header?header.offsetHeight:0)+16;'
+	. 'var top=el.getBoundingClientRect().top+window.pageYOffset-offset;'
+	. 'window.scrollTo({top:Math.max(0,top),behavior:"smooth"});'
+	. 'if(el.tagName==="DETAILS"){el.open=true;}}'
+	. 'document.querySelectorAll(".rc-st-taskfinder-page a[href^=\'#\']").forEach(function(link){'
+	. 'link.addEventListener("click",function(ev){'
+	. 'var id=link.getAttribute("href");if(!id||id.charAt(0)!=="#"){return;}'
+	. 'var el=document.querySelector(id);if(!el){return;}'
+	. 'ev.preventDefault();stScrollTo(el);});});'
+	. 'var hash=window.location.hash;'
+	. 'if(hash){var t=document.querySelector(hash);if(t){setTimeout(function(){stScrollTo(t);},120);}}'
+	. '})();</script>'
 	. '</div>';
