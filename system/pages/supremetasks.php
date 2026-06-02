@@ -72,6 +72,104 @@ if (!function_exists('rc_supreme_monster_slug_candidates')) {
 	}
 }
 
+if (!function_exists('rc_supreme_creature_path_exists')) {
+	function rc_supreme_creature_path_exists($relPath)
+	{
+		if (function_exists('rc_wiki_item_path_exists')) {
+			return rc_wiki_item_path_exists($relPath);
+		}
+
+		$relPath = ltrim(str_replace('\\', '/', (string)$relPath), '/');
+		return $relPath !== '' && defined('BASE') && is_readable(BASE . $relPath);
+	}
+}
+
+if (!function_exists('rc_supreme_creature_slug_variants')) {
+	function rc_supreme_creature_slug_variants($name)
+	{
+		$variants = [];
+		foreach (rc_supreme_monster_slug_candidates($name) as $slug) {
+			$variants[] = $slug;
+			if (substr($slug, -1) === 's' && strlen($slug) > 3) {
+				$variants[] = substr($slug, 0, -1);
+			}
+			if (substr($slug, -2) === 'es' && strlen($slug) > 4) {
+				$variants[] = substr($slug, 0, -2);
+			}
+		}
+
+		$normalized = strtolower(trim((string)$name));
+		$normalized = str_replace(['&', '\'', '"', '’'], ' ', $normalized);
+		$underscore = preg_replace('/[^a-z0-9]+/', '_', $normalized);
+		$underscore = trim((string)$underscore, '_');
+		if ($underscore !== '') {
+			$variants[] = $underscore;
+			$compact = str_replace('_', '', $underscore);
+			if ($compact !== '') {
+				$variants[] = $compact;
+			}
+		}
+
+		return array_values(array_unique(array_filter($variants)));
+	}
+}
+
+if (!function_exists('rc_supreme_creature_lookup_paths')) {
+	function rc_supreme_creature_lookup_paths($slug)
+	{
+		$slug = strtolower(preg_replace('/[^a-z0-9_]+/', '', (string)$slug));
+		if ($slug === '') {
+			return [];
+		}
+
+		return [
+			'imagens/creaturestibiawiki/' . $slug . '.gif',
+			'images/creaturetibiawiki/' . $slug . '.gif',
+			'imagens/creaturestibiawiki/' . $slug . '.png',
+			'images/library/' . $slug . '.gif',
+			'images/library/' . $slug . '.png',
+		];
+	}
+}
+
+if (!function_exists('rc_supreme_creature_name_map')) {
+	function rc_supreme_creature_name_map()
+	{
+		static $map = null;
+		if ($map !== null) {
+			return $map;
+		}
+
+		$map = [];
+		if (!defined('BASE')) {
+			return $map;
+		}
+
+		$path = BASE . 'scraper/name_map.json';
+		if (is_readable($path)) {
+			$decoded = json_decode((string)file_get_contents($path), true);
+			if (is_array($decoded)) {
+				$map = $decoded;
+			}
+		}
+
+		return $map;
+	}
+}
+
+if (!function_exists('rc_supreme_creature_resolve_path')) {
+	function rc_supreme_creature_resolve_path($slug)
+	{
+		foreach (rc_supreme_creature_lookup_paths($slug) as $relPath) {
+			if (rc_supreme_creature_path_exists($relPath)) {
+				return $relPath;
+			}
+		}
+
+		return '';
+	}
+}
+
 if (!function_exists('rc_supreme_task_image_url')) {
 	function rc_supreme_task_image_url($taskName, $creatures = '')
 	{
@@ -99,36 +197,36 @@ if (!function_exists('rc_supreme_task_image_url')) {
 		];
 
 		$slugs = [];
+		$nameMap = rc_supreme_creature_name_map();
 		foreach ($searchNames as $name) {
-			$candidates = rc_supreme_monster_slug_candidates($name);
-			foreach ($candidates as $slug) {
+			foreach (rc_supreme_creature_slug_variants($name) as $slug) {
 				$slugs[] = $slug;
 				if (isset($aliases[$slug])) {
 					$slugs[] = $aliases[$slug];
 				}
-			}
-		}
-		$slugs = array_values(array_unique($slugs));
-
-		foreach ($slugs as $slug) {
-			$libraryGif = '/images/library/' . $slug . '.gif';
-			if (file_exists(BASE . $libraryGif)) {
-				return $libraryGif;
-			}
-
-			$libraryPng = '/images/library/' . $slug . '.png';
-			if (file_exists(BASE . $libraryPng)) {
-				return $libraryPng;
-			}
-
-			$templateMonster = $rcTemplatePath . '/images/supreme_tasks/monsters/' . $slug . '.png';
-			if (file_exists(BASE . $templateMonster)) {
-				return $templateMonster;
+				if (isset($nameMap[$slug]) && is_string($nameMap[$slug])) {
+					foreach (rc_supreme_creature_slug_variants($nameMap[$slug]) as $mappedSlug) {
+						$slugs[] = $mappedSlug;
+					}
+				}
 			}
 		}
 
-		$fallback = $rcTemplatePath . '/images/supreme_tasks/taskfinder-mini.png';
-		return file_exists(BASE . $fallback) ? $fallback : '';
+		foreach (array_values(array_unique($slugs)) as $slug) {
+			$resolved = rc_supreme_creature_resolve_path($slug);
+			if ($resolved !== '') {
+				return $resolved;
+			}
+			if (isset($aliases[$slug])) {
+				$resolved = rc_supreme_creature_resolve_path($aliases[$slug]);
+				if ($resolved !== '') {
+					return $resolved;
+				}
+			}
+		}
+
+		$fallback = ltrim($rcTemplatePath, '/') . '/images/supreme_tasks/taskfinder-mini.png';
+		return rc_supreme_creature_path_exists($fallback) ? $fallback : '';
 	}
 }
 
@@ -200,7 +298,7 @@ if (!function_exists('rc_supreme_task_row')) {
 		$taskImg = rc_supreme_task_image_url($task, $creatures);
 		$taskMedia = '';
 		if (!empty($taskImg)) {
-			$taskMedia = '<img class="rc-st-task-monster" src="' . $taskImg . '" alt="' . htmlspecialchars($task) . '" loading="lazy">';
+			$taskMedia = '<img class="rc-st-task-monster" src="' . htmlspecialchars($taskImg, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($task) . '" loading="lazy">';
 		}
 
 		return '<tr>'

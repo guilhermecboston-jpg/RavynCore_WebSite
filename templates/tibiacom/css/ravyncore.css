@@ -5669,6 +5669,42 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
   display: none;
 }
 
+/* Wider center column so task tables fit without horizontal scroll */
+@media (min-width: 1141px) {
+  body.rc-page-supremetasks .rc-main-grid {
+    max-width: min(100%, 1680px);
+    grid-template-columns: clamp(176px, 10.5vw, 210px) minmax(0, 1fr) clamp(176px, 10.5vw, 210px);
+  }
+
+  body.rc-page-supremetasks .rc-content-column .rc-panel {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  body.rc-page-supremetasks .rc-st-table {
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  body.rc-page-supremetasks .rc-st-table td:nth-child(4),
+  body.rc-page-supremetasks .rc-st-table td:nth-child(5) {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  body.rc-page-supremetasks .rc-st-table-wrap {
+    overflow-x: visible;
+  }
+}
+
+@media (min-width: 1141px) and (max-width: 1300px) {
+  body.rc-page-supremetasks .rc-main-grid {
+    max-width: min(100%, 1480px);
+    grid-template-columns: minmax(172px, 188px) minmax(0, 1fr) minmax(172px, 188px);
+  }
+}
+
 /* Skill Gem System */
 body.rc-page-skillgemsystem .rc-rich-content {
   max-width: 100%;
