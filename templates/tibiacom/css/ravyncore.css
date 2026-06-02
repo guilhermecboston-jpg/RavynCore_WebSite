@@ -5771,15 +5771,6 @@ body.rc-page-skillgemsystem .rc-panel-content > h3 {
   font-weight: 700;
 }
 
-.rc-sg-page .rc-sg-apply-note {
-  margin: 14px 0 0;
-  color: #b8c8e4;
-  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  text-align: center;
-}
-
 .rc-st-overview-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
