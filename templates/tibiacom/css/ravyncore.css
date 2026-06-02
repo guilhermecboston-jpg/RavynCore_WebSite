@@ -6628,14 +6628,16 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
 
 .rc-bf-preview-wrap {
   margin: 16px auto 0;
+  max-width: 100%;
   text-align: center;
 }
 
 .rc-bf-preview {
-  display: inline-block;
-  max-width: min(100%, 520px);
+  display: block;
   width: 100%;
+  max-width: min(100%, 900px);
   height: auto;
+  margin: 0 auto;
   border-radius: 8px;
   border: 1px solid rgba(120, 168, 236, 0.35);
 }
