@@ -7295,6 +7295,15 @@ body.rc-page-tiersystem .rc-panel-content > h3 {
   display: none;
 }
 
+/* Drops Important (SYSTEM menu) */
+body.rc-page-dropsimportant .rc-rich-content {
+  max-width: 100%;
+}
+
+body.rc-page-dropsimportant .rc-panel-content > h3 {
+  display: none;
+}
+
 .rc-tier-page .rc-tier-anchor {
   scroll-margin-top: 140px;
 }
