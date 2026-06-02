@@ -63,9 +63,9 @@ $transferPrices = [
     ['level' => 7, 'label' => '+7', 'kk' => '750kk', 'tokens' => 7],
     ['level' => 8, 'label' => '+8', 'kk' => '1,000kk', 'tokens' => 8],
     ['level' => 9, 'label' => '+9', 'kk' => '1,250kk', 'tokens' => 9],
-    ['level' => 10, 'label' => '+10', 'kk' => '1,500kk', 'tokens' => 10],
-    ['level' => 11, 'label' => '+11', 'kk' => '2,000kk', 'tokens' => 20],
-    ['level' => 12, 'label' => '+12', 'kk' => '3,000kk', 'tokens' => 30],
+    ['level' => 10, 'label' => '+10', 'kk' => '1,5kkk', 'tokens' => 10],
+    ['level' => 11, 'label' => '+11', 'kk' => '2kkk', 'tokens' => 20],
+    ['level' => 12, 'label' => '+12', 'kk' => '3kkk', 'tokens' => 30],
 ];
 
 $ravynCoreTokenItemId = 61869;
@@ -239,7 +239,7 @@ echo '<div class="rc-st-page rc-upg-page">'
     . '<section class="rc-st-card rc-upg-anchor" id="rc-upg-onde">'
     . '<h3>Onde Obter?</h3>'
     . '<ul class="rc-st-notes">'
-    . '<li>Comprando com o NPC <strong>Jorge Trambiqueiro</strong>, localizado no -1 do Templo.</li>'
+    . '<li>Comprando com o NPC <strong>Jorge Trambiqueiro</strong>, localizado no +1 do Templo.</li>'
     . '<li>Através do sistema de <strong>Cassino</strong>.</li>'
     . '<li>Completando a <strong>Upgrade Stones Quest</strong>.</li>'
     . '<li>Derrotando <strong>bosses custom</strong> e de <strong>invasão</strong>.</li>'
