@@ -54,18 +54,18 @@ for ($i = 1; $i <= 12; $i++) {
 }
 
 $transferPrices = [
-    ['level' => '+1', 'price' => '50kk'],
-    ['level' => '+2', 'price' => '125kk'],
-    ['level' => '+3', 'price' => '200kk'],
-    ['level' => '+4', 'price' => '300kk'],
-    ['level' => '+5', 'price' => '400kk'],
-    ['level' => '+6', 'price' => '550kk'],
-    ['level' => '+7', 'price' => '750kk'],
-    ['level' => '+8', 'price' => '1,000kk'],
-    ['level' => '+9', 'price' => '1,250kk'],
-    ['level' => '+10', 'price' => '1,500kk'],
-    ['level' => '+11', 'price' => '2,000kk'],
-    ['level' => '+12', 'price' => '3,000kk'],
+    ['level' => 1, 'label' => '+1', 'kk' => '50kk'],
+    ['level' => 2, 'label' => '+2', 'kk' => '125kk'],
+    ['level' => 3, 'label' => '+3', 'kk' => '200kk'],
+    ['level' => 4, 'label' => '+4', 'kk' => '300kk'],
+    ['level' => 5, 'label' => '+5', 'kk' => '400kk'],
+    ['level' => 6, 'label' => '+6', 'kk' => '550kk'],
+    ['level' => 7, 'label' => '+7', 'kk' => '750kk'],
+    ['level' => 8, 'label' => '+8', 'kk' => '1,000kk'],
+    ['level' => 9, 'label' => '+9', 'kk' => '1,250kk'],
+    ['level' => 10, 'label' => '+10', 'kk' => '1,500kk'],
+    ['level' => 11, 'label' => '+11', 'kk' => '2,000kk'],
+    ['level' => 12, 'label' => '+12', 'kk' => '3,000kk'],
 ];
 
 if (!function_exists('rc_upg_esc')) {
@@ -152,6 +152,23 @@ if (!function_exists('rc_upg_item_html')) {
     }
 }
 
+if (!function_exists('rc_upg_apply_cost_cell')) {
+    function rc_upg_apply_cost_cell()
+    {
+        return '<strong>Grátis</strong>';
+    }
+}
+
+if (!function_exists('rc_upg_extract_cost_cell')) {
+    function rc_upg_extract_cost_cell($row)
+    {
+        if (!$row) {
+            return '—';
+        }
+        return '<strong>' . rc_upg_esc($row['kk']) . '</strong>';
+    }
+}
+
 $stoneCardsHtml = '';
 foreach ($stoneTypes as $stone) {
     $itemId = (int)($upgradeStoneItems[$stone['key']] ?? 0);
@@ -184,26 +201,16 @@ foreach ($attackBonuses as $row) {
 $transferRows = '';
 foreach ($transferPrices as $row) {
     $transferRows .= '<tr>'
-        . '<td><strong>' . rc_upg_esc($row['level']) . '</strong></td>'
-        . '<td>' . rc_upg_esc($row['price']) . '</td>'
+        . '<td><strong>' . rc_upg_esc($row['label']) . '</strong></td>'
+        . '<td>' . rc_upg_apply_cost_cell() . '</td>'
+        . '<td>' . rc_upg_extract_cost_cell($row) . '</td>'
         . '</tr>';
 }
 
-echo '<div class="rc-st-page rc-tier-page rc-upg-page">'
-    . '<header class="rc-st-page-title rc-tier-hero">'
-    . '<h2>Upgrade System</h2>'
-    . '<p class="rc-tier-subtitle">Aprimore suas armas com Upgrade Stones, aumentando o ataque conforme o nível de refinamento — com taxas de sucesso e pedras específicas para cada faixa.</p>'
-    . '<nav class="rc-tier-nav" aria-label="Seções do guia">'
-    . '<a href="#rc-upg-sobre">Sobre</a>'
-    . '<a href="#rc-upg-onde">Onde Obter</a>'
-    . '<a href="#rc-upg-tipos">Tipos de Pedras</a>'
-    . '<a href="#rc-upg-chances">Chances</a>'
-    . '<a href="#rc-upg-bonus">Bônus</a>'
-    . '<a href="#rc-upg-transfer">Transferência</a>'
-    . '</nav>'
-    . '</header>'
+echo '<div class="rc-st-page rc-upg-page">'
+    . '<header class="rc-st-page-title"><h2>Upgrade System</h2></header>'
 
-    . '<section class="rc-st-card" id="rc-upg-sobre">'
+    . '<section class="rc-st-card rc-upg-anchor" id="rc-upg-sobre">'
     . '<h3>Sobre o Upgrade System</h3>'
     . '<ul class="rc-st-notes">'
     . '<li>O Upgrade System tem como objetivo aprimorar suas armas, aumentando o poder de ataque por meio do uso das <strong>Upgrade Stones</strong>.</li>'
@@ -218,10 +225,10 @@ echo '<div class="rc-st-page rc-tier-page rc-upg-page">'
     . '<p class="rc-upg-warning"><strong>⚠️ Atenção!</strong> Ao utilizar a Fusion/Convergence Fusion no Forge System em um item com upgrade, todos os upgrades serão perdidos, pois o sistema cria um novo item, o que impossibilita manter quaisquer bônus.</p>'
     . '</section>'
 
-    . '<section class="rc-st-card" id="rc-upg-onde">'
+    . '<section class="rc-st-card rc-upg-anchor" id="rc-upg-onde">'
     . '<h3>Onde Obter?</h3>'
     . '<ul class="rc-st-notes">'
-    . '<li>Comprando com o NPC <strong>Dealer Merchant</strong>, localizado no -1 do Templo.</li>'
+    . '<li>Comprando com o NPC <strong>Jorge Trambiqueiro</strong>, localizado no -1 do Templo.</li>'
     . '<li>Através do sistema de <strong>Cassino</strong>.</li>'
     . '<li>Completando a <strong>Upgrade Stones Quest</strong>.</li>'
     . '<li>Derrotando <strong>bosses custom</strong> e de <strong>invasão</strong>.</li>'
@@ -253,47 +260,29 @@ echo '<div class="rc-st-page rc-tier-page rc-upg-page">'
     . '</table></div>'
     . '</section>'
 
-    . '<section class="rc-st-card" id="rc-upg-transfer">'
+    . '<section class="rc-st-card rc-upg-anchor" id="rc-upg-transfer">'
     . '<h3>Transfer Upgrade to Catcher</h3>'
-    . '<h4 class="rc-tier-h4">Preços de Transferência</h4>'
     . '<div class="rc-bf-table-wrap rc-tier-table-wrap">'
-    . '<table class="rc-bf-table rc-tier-table rc-upg-table">'
-    . '<thead><tr><th>Upgrade</th><th>Price</th></tr></thead>'
+    . '<table class="rc-bf-table rc-tier-table rc-upg-table rc-upg-price-table">'
+    . '<thead><tr><th>Upgrade</th><th>Custo (aplicação)</th><th>Custo (extrair)</th></tr></thead>'
     . '<tbody>' . $transferRows . '</tbody>'
     . '</table></div>'
     . '</section>'
 
-    . '<style>'
-    . '.rc-upg-page .rc-upg-stones-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:8px}'
-    . '.rc-upg-page .rc-upg-stone-card{flex:1 1 220px;max-width:280px}'
-    . '.rc-upg-page .rc-upg-stone-desc{margin:10px 0 0;color:#d6e4ff;font-size:13px;line-height:1.45;text-align:center}'
-    . '.rc-upg-page .rc-upg-warning{margin:16px 0 0;padding:12px 14px;border:1px solid rgba(240,120,80,.45);border-radius:8px;background:rgba(80,24,16,.35);color:#ffd8cc;font-size:13px;line-height:1.5}'
-    . '.rc-upg-page .rc-upg-table td,.rc-upg-page .rc-upg-table th{text-align:center}'
-    . '</style>'
-
     . '<script>(function(){'
-    . 'document.querySelectorAll(".rc-tier-nav a[href^=\'#\']").forEach(function(link){'
-    . 'link.addEventListener("click",function(ev){'
-    . 'var id=link.getAttribute("href");'
-    . 'if(!id||id.charAt(0)!=="#"){return;}'
-    . 'var el=document.querySelector(id);'
-    . 'if(!el){return;}'
-    . 'ev.preventDefault();'
+    . 'function upgScrollTo(el){if(!el){return;}'
     . 'var header=document.querySelector(".rc-header");'
-    . 'var offset=(header?header.offsetHeight:0)+12;'
+    . 'var offset=(header?header.offsetHeight:0)+16;'
     . 'var top=el.getBoundingClientRect().top+window.pageYOffset-offset;'
     . 'window.scrollTo({top:Math.max(0,top),behavior:"smooth"});'
-    . 'history.replaceState(null,"",id);'
-    . '});'
-    . '});'
+    . 'history.replaceState(null,"",el.id?"#"+el.id:"");}'
+    . 'document.querySelectorAll(".rc-upg-page a[href^=\'#\']").forEach(function(link){'
+    . 'link.addEventListener("click",function(ev){'
+    . 'var id=link.getAttribute("href");if(!id||id.charAt(0)!=="#"){return;}'
+    . 'var el=document.querySelector(id);if(!el){return;}'
+    . 'ev.preventDefault();upgScrollTo(el);});});'
     . 'var hash=window.location.hash;'
-    . 'if(hash){var target=document.querySelector(hash);'
-    . 'if(target){setTimeout(function(){'
-    . 'var header=document.querySelector(".rc-header");'
-    . 'var offset=(header?header.offsetHeight:0)+12;'
-    . 'var top=target.getBoundingClientRect().top+window.pageYOffset-offset;'
-    . 'window.scrollTo({top:Math.max(0,top),behavior:"auto"});'
-    . '},50);}}'
+    . 'if(hash){var t=document.querySelector(hash);if(t){setTimeout(function(){upgScrollTo(t);},120);}}'
     . '})();</script>'
 
     . '</div>';
