@@ -7096,6 +7096,16 @@ body.rc-page-tiersystem .rc-panel-content > h3 {
   scroll-margin-top: 140px;
 }
 
+.rc-tier-page .rc-tier-highlight,
+.rc-tier-page .rc-st-notes strong,
+.rc-tier-page p strong,
+.rc-tier-page li strong,
+.rc-tier-page em {
+  color: #f2c16b;
+  font-style: normal;
+  font-weight: 700;
+}
+
 .rc-tier-page .rc-tier-nav-below {
   display: flex;
   flex-wrap: wrap;
