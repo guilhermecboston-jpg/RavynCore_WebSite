@@ -8,8 +8,8 @@ return [
         'O tempo padrão de cooldown é de <strong>20 horas</strong>.',
     ],
     'progression_intro' => [
-        'Alguns bosses possuem uma progressão obrigatória através de Mini Bosses. Para acessar o Boss Final, é necessário derrotar todos os Mini Bosses da respectiva linha de progressão.',
-        'Após derrotar o Boss Final, todo o progresso daquela linha é reiniciado. Para enfrentar o Boss Final novamente, será necessário derrotar todos os Mini Bosses outra vez.',
+        'Alguns bosses exigem a derrota de todos os Mini Bosses da sua progressão para liberar o acesso ao Boss Final.',
+        'Ao derrotar o Boss Final, a progressão é reiniciada. Para enfrentá-lo novamente, será necessário derrotar todos os Mini Bosses outra vez.',
     ],
     'progression_bosses' => [
         ['name' => 'Ascending Ferumbras', 'note' => 'cooldown de 2 dias'],
@@ -17,36 +17,6 @@ return [
         ['name' => 'The Nightmare Beast', 'note' => ''],
         ['name' => 'Bakragore', 'note' => 'cooldown de 2 dias'],
         ['name' => 'Megalomania', 'note' => ''],
-    ],
-    'progression_systems' => [
-        [
-            'id' => 'dream-courts',
-            'name' => 'Dream Courts Progressão',
-            'minis' => ['Plagueroot', 'Malofur Mangrinder', 'Maxxenius', 'Alptramun', 'Izcandar The Banished'],
-            'final' => 'The Nightmare Beast',
-            'mini_count' => 5,
-        ],
-        [
-            'id' => 'grave-danger',
-            'name' => 'Grave Danger (GT) Progressão',
-            'minis' => ['Count Vlarkorth', 'Duke Krule', 'Earl Osam', 'Lord Azaram', 'Sir Nictros'],
-            'final' => 'King Zelos',
-            'mini_count' => 5,
-        ],
-        [
-            'id' => 'ferumbras',
-            'name' => 'Ferumbras Ascendant Progressão',
-            'minis' => ['Plagirath', 'Ragiaz', 'Razzagorn', 'Tarbaz', 'Zamulosh', 'Shulgrax', 'Mazoran', 'The Lord of the Lice'],
-            'final' => 'Ascending Ferumbras',
-            'mini_count' => 8,
-        ],
-        [
-            'id' => 'sanguine',
-            'name' => 'Sanguine / Rotten Blood Progressão',
-            'minis' => ['Vermiath', 'Murcion', 'Chagorz', 'Ichgahal'],
-            'final' => 'Bakragore',
-            'mini_count' => 4,
-        ],
     ],
     'summary_table' => [
         ['system' => 'Dream Courts', 'minis' => 5, 'final' => 'The Nightmare Beast', 'reset' => 'Sim'],

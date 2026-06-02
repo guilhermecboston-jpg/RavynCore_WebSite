@@ -6615,15 +6615,11 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
   display: none;
 }
 
-.rc-bf-page-title {
+.rc-bf-page .rc-bf-nav-below {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
-}
-
-.rc-bf-page-title .rc-bf-nav {
-  margin-top: 18px;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
 }
 
 .rc-bf-page .rc-bf-anchor {
@@ -6642,13 +6638,6 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
   height: auto;
   border-radius: 8px;
   border: 1px solid rgba(120, 168, 236, 0.35);
-}
-
-.rc-bf-preview-wrap figcaption {
-  margin-top: 8px;
-  color: #9eb8e8;
-  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
-  font-size: 13px;
 }
 
 .rc-bf-prog-boss-list {
