@@ -54,19 +54,21 @@ for ($i = 1; $i <= 12; $i++) {
 }
 
 $transferPrices = [
-    ['level' => 1, 'label' => '+1', 'kk' => '50kk'],
-    ['level' => 2, 'label' => '+2', 'kk' => '125kk'],
-    ['level' => 3, 'label' => '+3', 'kk' => '200kk'],
-    ['level' => 4, 'label' => '+4', 'kk' => '300kk'],
-    ['level' => 5, 'label' => '+5', 'kk' => '400kk'],
-    ['level' => 6, 'label' => '+6', 'kk' => '550kk'],
-    ['level' => 7, 'label' => '+7', 'kk' => '750kk'],
-    ['level' => 8, 'label' => '+8', 'kk' => '1,000kk'],
-    ['level' => 9, 'label' => '+9', 'kk' => '1,250kk'],
-    ['level' => 10, 'label' => '+10', 'kk' => '1,500kk'],
-    ['level' => 11, 'label' => '+11', 'kk' => '2,000kk'],
-    ['level' => 12, 'label' => '+12', 'kk' => '3,000kk'],
+    ['level' => 1, 'label' => '+1', 'kk' => '50kk', 'tokens' => 1],
+    ['level' => 2, 'label' => '+2', 'kk' => '125kk', 'tokens' => 2],
+    ['level' => 3, 'label' => '+3', 'kk' => '200kk', 'tokens' => 3],
+    ['level' => 4, 'label' => '+4', 'kk' => '300kk', 'tokens' => 4],
+    ['level' => 5, 'label' => '+5', 'kk' => '400kk', 'tokens' => 5],
+    ['level' => 6, 'label' => '+6', 'kk' => '550kk', 'tokens' => 6],
+    ['level' => 7, 'label' => '+7', 'kk' => '750kk', 'tokens' => 7],
+    ['level' => 8, 'label' => '+8', 'kk' => '1,000kk', 'tokens' => 8],
+    ['level' => 9, 'label' => '+9', 'kk' => '1,250kk', 'tokens' => 9],
+    ['level' => 10, 'label' => '+10', 'kk' => '1,500kk', 'tokens' => 10],
+    ['level' => 11, 'label' => '+11', 'kk' => '2,000kk', 'tokens' => 20],
+    ['level' => 12, 'label' => '+12', 'kk' => '3,000kk', 'tokens' => 30],
 ];
+
+$ravynCoreTokenItemId = 61869;
 
 if (!function_exists('rc_upg_esc')) {
     function rc_upg_esc($value)
@@ -160,12 +162,21 @@ if (!function_exists('rc_upg_apply_cost_cell')) {
 }
 
 if (!function_exists('rc_upg_extract_cost_cell')) {
-    function rc_upg_extract_cost_cell($row)
+    function rc_upg_extract_cost_cell($row, $tokenItemId)
     {
         if (!$row) {
             return '—';
         }
-        return '<strong>' . rc_upg_esc($row['kk']) . '</strong>';
+        $tokens = (int)($row['tokens'] ?? 0);
+        $tokenImg = rc_upg_item_html((int)$tokenItemId, false, 'RavynCore Token');
+        $tokenLabel = $tokens . ' RavynCore Token' . ($tokens === 1 ? '' : 's');
+
+        return '<div class="rc-upg-transfer-cost">'
+            . '<strong>' . rc_upg_esc($row['kk']) . '</strong>'
+            . '<span class="rc-upg-cost-plus">+</span>'
+            . ($tokenImg !== '' ? $tokenImg : '')
+            . '<span>' . rc_upg_esc($tokenLabel) . '</span>'
+            . '</div>';
     }
 }
 
@@ -203,7 +214,7 @@ foreach ($transferPrices as $row) {
     $transferRows .= '<tr>'
         . '<td><strong>' . rc_upg_esc($row['label']) . '</strong></td>'
         . '<td>' . rc_upg_apply_cost_cell() . '</td>'
-        . '<td>' . rc_upg_extract_cost_cell($row) . '</td>'
+        . '<td>' . rc_upg_extract_cost_cell($row, $ravynCoreTokenItemId) . '</td>'
         . '</tr>';
 }
 
