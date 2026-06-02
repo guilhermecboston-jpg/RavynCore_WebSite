@@ -3,7 +3,23 @@ defined('MYAAC') or die('Direct access not allowed!');
 
 $title = 'Skill Gem System';
 
+global $template_path, $config;
+
+$rcTemplateName = 'tibiacom';
+if (isset($config['template']) && is_string($config['template']) && $config['template'] !== '') {
+    $rcTemplateName = $config['template'];
+}
+if (function_exists('config')) {
+    $configTemplate = config('template');
+    if (is_string($configTemplate) && $configTemplate !== '') {
+        $rcTemplateName = $configTemplate;
+    }
+}
+$rcTemplatePath = '/' . ltrim((string)($template_path ?? ('templates/' . $rcTemplateName)), '/');
+$rcSgImageBase = $rcTemplatePath . '/images/skill_gem';
+
 $removeExtractItemId = 63475;
+$ravynCoreTokenItemId = 61869;
 
 $gems = [
     ['id' => 61521, 'name' => 'Green Gem', 'level' => 1, 'bonus' => '+1~2', 'slots' => 'Amulet, Ring, Weapon ou Helmet', 'group' => 'A'],
@@ -17,24 +33,19 @@ $gems = [
 ];
 
 $tierServicePrices = [
-    ['skill' => '+1',  'level' => 1,  'kk' => '50kk',   'gold' => '50.000.000'],
-    ['skill' => '+2',  'level' => 2,  'kk' => '100kk',  'gold' => '100.000.000'],
-    ['skill' => '+3',  'level' => 3,  'kk' => '150kk',  'gold' => '150.000.000'],
-    ['skill' => '+4',  'level' => 4,  'kk' => '200kk',  'gold' => '200.000.000'],
-    ['skill' => '+5',  'level' => 5,  'kk' => '250kk',  'gold' => '250.000.000'],
-    ['skill' => '+6',  'level' => 6,  'kk' => '300kk',  'gold' => '300.000.000'],
-    ['skill' => '+7',  'level' => 7,  'kk' => '350kk',  'gold' => '350.000.000'],
-    ['skill' => '+8',  'level' => 8,  'kk' => '500kk',  'gold' => '500.000.000'],
-    ['skill' => '+9',  'level' => 9,  'kk' => '600kk',  'gold' => '600.000.000'],
-    ['skill' => '+10', 'level' => 10, 'kk' => '700kk',  'gold' => '700.000.000'],
-    ['skill' => '+11', 'level' => 11, 'kk' => '800kk',  'gold' => '800.000.000'],
-    ['skill' => '+12', 'level' => 12, 'kk' => '1000kk', 'gold' => '1.000.000.000'],
+    ['skill' => '+1', 'level' => 1, 'kk' => '50kk', 'tokens' => 5],
+    ['skill' => '+2', 'level' => 2, 'kk' => '125kk', 'tokens' => 10],
+    ['skill' => '+3', 'level' => 3, 'kk' => '200kk', 'tokens' => 15],
+    ['skill' => '+4', 'level' => 4, 'kk' => '300kk', 'tokens' => 20],
+    ['skill' => '+5', 'level' => 5, 'kk' => '400kk', 'tokens' => 30],
+    ['skill' => '+6', 'level' => 6, 'kk' => '550kk', 'tokens' => 40],
+    ['skill' => '+7', 'level' => 7, 'kk' => '750kk', 'tokens' => 50],
+    ['skill' => '+8', 'level' => 8, 'kk' => '1,000kk', 'tokens' => 60],
+    ['skill' => '+9', 'level' => 9, 'kk' => '1,250kk', 'tokens' => 70],
+    ['skill' => '+10', 'level' => 10, 'kk' => '1,500kk', 'tokens' => 80],
+    ['skill' => '+11', 'level' => 11, 'kk' => '2,000kk', 'tokens' => 90],
+    ['skill' => '+12', 'level' => 12, 'kk' => '3,000kk', 'tokens' => 100],
 ];
-
-$priceByLevel = [];
-foreach ($tierServicePrices as $row) {
-    $priceByLevel[(int)$row['level']] = $row;
-}
 
 $skillTierCrystals = [
     ['id' => 63340, 'level' => 1],
@@ -133,22 +144,54 @@ if (!function_exists('rc_sg_item_html')) {
     }
 }
 
-if (!function_exists('rc_sg_price_cell')) {
-    function rc_sg_price_cell($row, $withRemove, $removeItemId = 0)
+if (!function_exists('rc_sg_page_image')) {
+    function rc_sg_page_image($templateRelBase, $fileName, $class, $alt)
+    {
+        $relPath = rtrim(ltrim(str_replace('\\', '/', (string)$templateRelBase), '/'), '/')
+            . '/' . ltrim((string)$fileName, '/');
+        if (!file_exists(BASE . $relPath)) {
+            return '';
+        }
+        return '<img class="' . rc_sg_esc($class) . '" src="' . rc_sg_esc(rc_sg_img_src($relPath)) . '" alt="' . rc_sg_esc($alt) . '" loading="lazy">';
+    }
+}
+
+if (!function_exists('rc_sg_extract_cost_cell')) {
+    function rc_sg_extract_cost_cell($row, $removeItemId, $tokenItemId)
     {
         if (!$row) {
             return '—';
         }
-        $kk = rc_sg_esc($row['kk']);
-        if ($withRemove) {
-            $removeImg = rc_sg_item_html((int)$removeItemId, false, '');
-            return '<div class="rc-sg-extract-cost">'
-                . ($removeImg !== '' ? $removeImg : '')
-                . '<span class="rc-sg-extract-plus">+</span> <strong>' . $kk . '</strong></div>';
-        }
-        return '<strong>' . $kk . '</strong>';
+        $tokens = (int)($row['tokens'] ?? 0);
+        $tokenImg = rc_sg_item_html((int)$tokenItemId, false, 'RavynCore Token');
+        $removeImg = rc_sg_item_html((int)$removeItemId, false, 'Remove Upgrade Status');
+        $tokenLabel = $tokens . ' RavynCore Token' . ($tokens === 1 ? '' : 's');
+        $removeLabel = '1 Remove Upgrade Status';
+
+        return '<div class="rc-sg-extract-cost">'
+            . '<strong>' . rc_sg_esc($row['kk']) . '</strong>'
+            . '<span class="rc-sg-extract-plus">+</span>'
+            . ($tokenImg !== '' ? $tokenImg : '')
+            . '<span>' . rc_sg_esc($tokenLabel) . '</span>'
+            . '<span class="rc-sg-extract-plus">+</span>'
+            . ($removeImg !== '' ? $removeImg : '')
+            . '<span>' . rc_sg_esc($removeLabel) . '</span>'
+            . '</div>';
     }
 }
+
+$lookSkillGemHtml = rc_sg_page_image(
+    $rcSgImageBase,
+    'look_skill-gem.png',
+    'rc-sg-look-preview',
+    'Look do item com Skill Gem'
+);
+$transferUiHtml = rc_sg_page_image(
+    $rcSgImageBase,
+    'skill_gem_transfer.png',
+    'rc-sg-transfer-preview',
+    'Remove Skill Gem — interface'
+);
 
 $gemRows = '';
 foreach ($gems as $gem) {
@@ -159,15 +202,26 @@ foreach ($gems as $gem) {
         . '<td>' . rc_sg_esc($gem['slots']) . '</td><td><strong>' . rc_sg_esc($gem['group']) . '</strong></td></tr>';
 }
 
+$priceRows = '';
+foreach ($tierServicePrices as $row) {
+    $priceRows .= '<tr>'
+        . '<td><strong>' . rc_sg_esc($row['skill']) . '</strong></td>'
+        . '<td>' . rc_sg_extract_cost_cell($row, $removeExtractItemId, $ravynCoreTokenItemId) . '</td>'
+        . '</tr>';
+}
+
 $tierRows = '';
 foreach ($skillTierCrystals as $crystal) {
     $lvl = (int)$crystal['level'];
-    $price = $priceByLevel[$lvl] ?? null;
-    $skillLabel = $price ? $price['skill'] : ('+' . $lvl);
+    $skillLabel = '+' . $lvl;
+    foreach ($tierServicePrices as $priceRow) {
+        if ((int)$priceRow['level'] === $lvl) {
+            $skillLabel = $priceRow['skill'];
+            break;
+        }
+    }
     $tierRows .= '<tr><td class="rc-tier-table-item rc-sg-tier-gem">' . rc_sg_item_html($crystal['id'], false, '') . '</td>'
-        . '<td><strong>' . rc_sg_esc($skillLabel) . '</strong></td>'
-        . '<td>' . rc_sg_price_cell($price, true, $removeExtractItemId) . '</td>'
-        . '<td>' . rc_sg_price_cell($price, false) . '</td></tr>';
+        . '<td><strong>' . rc_sg_esc($skillLabel) . '</strong></td></tr>';
 }
 
 $vocationRows = '';
@@ -179,26 +233,28 @@ foreach ($vocationBonuses as $row) {
 
 $removeItemHtml = rc_sg_item_html($removeExtractItemId, true, 'Remove Upgrade Status');
 
-echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
-    . '<header class="rc-st-page-title rc-tier-hero">'
-    . '<h2>Skill Gem System</h2>'
-    . '<p class="rc-tier-subtitle">Gemas nos equipamentos (Grupos A e B), bônus por vocação, extração com Remove + gold (kk) e reaplicação da Skill Tier Gem. Look do item: <strong>Skill Gem: +N</strong>.</p>'
-    . '<nav class="rc-tier-nav" aria-label="Seções do guia">'
-    . '<a href="#rc-sg-info">Informações</a>'
-    . '<a href="#rc-sg-vocation">Vocação</a>'
-    . '<a href="#rc-sg-gems">Gemas</a>'
-    . '<a href="#rc-sg-tier">Skill Tier</a>'
-    . '</nav></header>'
+echo '<div class="rc-st-page rc-sg-page">'
+    . '<header class="rc-st-page-title"><h2>Skill Gem System</h2></header>'
 
     . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-info">'
     . '<h3>Como funciona</h3>'
     . '<ul class="rc-st-notes">'
-    . '<li><strong>Grupo A</strong>: Amulet, Ring, Weapon, Helmet. <strong>Grupo B</strong>: Armor, Legs, Boots, Shield / Book / Quiver.</li>'
-    . '<li><strong>Aplicar gema</strong> (61521–61528): no equipamento sem gem. Look: <strong>Skill Gem: +8</strong> (sem nome de skill no texto).</li>'
-    . '<li><strong>Extrair (remover)</strong>: <strong>1× Remove Upgrade Status</strong> (ID ' . (int)$removeExtractItemId . ') + gold em <strong>kk</strong> — valores na tabela <a href="#rc-sg-tier">Skill Tier Crystals</a>.</li>'
-    . '<li><strong>Aplicar Skill Tier Gem</strong>: só gold em <strong>kk</strong> do nível da gem — <em>sem</em> Remove (ver mesma tabela).</li>'
+    . '<li><strong>Grupo A</strong>: '
+    . '<span class="rc-sg-highlight">Amulet</span>, <span class="rc-sg-highlight">Ring</span>, '
+    . '<span class="rc-sg-highlight">Weapon</span>, <span class="rc-sg-highlight">Helmet</span>. '
+    . '<strong>Grupo B</strong>: '
+    . '<span class="rc-sg-highlight">Armor</span>, <span class="rc-sg-highlight">Legs</span>, '
+    . '<span class="rc-sg-highlight">Boots</span>, <span class="rc-sg-highlight">Shield / Book / Quiver</span>.</li>'
+    . '<li>Aplicar gema no equipamento que não possui skill gem'
+    . ($lookSkillGemHtml !== '' ? ', conforme imagem abaixo' : '')
+    . ', conforme <a class="rc-sg-price-link" href="#rc-sg-prices">tabela de preço</a>.</li>'
+    . '<li>Extração do Skill Gem necessita do Remove Upgrade Status + dinheiro + RavynCore Token, conforme '
+    . '<a class="rc-sg-price-link" href="#rc-sg-prices">tabela de preço</a>.</li>'
     . '<li>Equipamento e Skill Tier Gem vão para a <strong>Store Inbox</strong> após extrair ou aplicar a gem.</li>'
     . '</ul>'
+    . ($lookSkillGemHtml !== ''
+        ? '<figure class="rc-sg-look-wrap">' . $lookSkillGemHtml . '<figcaption>Look: Skill Gem: +N</figcaption></figure>'
+        : '')
     . '<div class="rc-tier-extractor rc-sg-remove-card">'
     . '<h4>Remove Upgrade Status</h4>'
     . '<div class="rc-tier-item-spot">' . ($removeItemHtml !== '' ? $removeItemHtml : '') . '</div>'
@@ -215,27 +271,21 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . '<thead><tr><th>Skill Gem</th><th>Nível</th><th>Bônus</th><th>Slots</th><th>Grupo</th></tr></thead>'
     . '<tbody>' . $gemRows . '</tbody></table></div></section>'
 
-    . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-tier"><h3>Skill Tier Crystals</h3>'
-    . '<p class="rc-tier-spaced">Cada Skill Tier Gem tem skill fixa (+1 a +12) e guarda o tipo de skill após extrair. Custos em <strong>kk</strong> por nível (inventário + banco):</p>'
-    . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table">'
-    . '<thead><tr><th>Skill Tier Gem</th><th>Skill</th>'
-    . '<th>Extrair equip.</th>'
-    . '<th>Aplicar Skill Tier Gem</th></tr></thead>'
-    . '<tbody>' . $tierRows . '</tbody></table></div></section>'
+    . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-prices">'
+    . '<h3>Tabela de preços</h3>'
+    . ($transferUiHtml !== ''
+        ? '<figure class="rc-sg-transfer-wrap">' . $transferUiHtml . '<figcaption>Remove Skill Gem</figcaption></figure>'
+        : '')
+    . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table rc-sg-price-table">'
+    . '<thead><tr><th>Skill</th><th>Custo (extrair)</th></tr></thead>'
+    . '<tbody>' . $priceRows . '</tbody></table></div>'
+    . '<p class="rc-sg-apply-note">Para <strong>aplicar</strong> Skill Tier Gem no equipamento, cobra-se apenas o valor em <strong>kk</strong> (gold) da linha correspondente.</p>'
+    . '</section>'
 
-    . '<style>'
-    . '.rc-sg-page .rc-sg-anchor{scroll-margin-top:140px}'
-    . '.rc-sg-page .rc-sg-table td,.rc-sg-page .rc-sg-table th{text-align:center}'
-    . '.rc-sg-page .rc-sg-id{font-size:11px;color:#9eb8e8}'
-    . '.rc-sg-page .rc-sg-desc{margin-top:10px;font-size:13px;color:#d6e4ff;text-align:center}'
-    . '.rc-sg-page .rc-sg-remove-card{max-width:320px;margin:16px auto 0}'
-    . '.rc-sg-page .rc-sg-th-sub{font-size:11px;font-weight:400;color:#9eb8e8}'
-    . '.rc-sg-page .rc-sg-tier-gem{padding:8px 6px}'
-    . '.rc-sg-page .rc-sg-gem-img{padding:8px 6px}'
-    . '.rc-sg-page .rc-sg-extract-cost{display:inline-flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}'
-    . '.rc-sg-page .rc-sg-extract-cost .rc-tier-item-img{vertical-align:middle}'
-    . '.rc-sg-page .rc-sg-extract-plus{color:#e8f0ff;font-weight:700}'
-    . '</style>'
+    . '<section class="rc-st-card rc-sg-anchor" id="rc-sg-tier"><h3>Skill Tier Crystals</h3>'
+    . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-sg-table">'
+    . '<thead><tr><th>Skill Tier Gem</th><th>Skill</th></tr></thead>'
+    . '<tbody>' . $tierRows . '</tbody></table></div></section>'
 
     . '<script>(function(){'
     . 'function sgScrollTo(el){if(!el){return;}'
@@ -244,13 +294,7 @@ echo '<div class="rc-st-page rc-tier-page rc-sg-page">'
     . 'var top=el.getBoundingClientRect().top+window.pageYOffset-offset;'
     . 'window.scrollTo({top:Math.max(0,top),behavior:"smooth"});'
     . 'history.replaceState(null,"",el.id?"#"+el.id:"");}'
-    . 'document.querySelectorAll(".rc-sg-page .rc-tier-nav a[href^=\'#\']").forEach(function(link){'
-    . 'link.addEventListener("click",function(ev){'
-    . 'var id=link.getAttribute("href");if(!id||id.charAt(0)!=="#"){return;}'
-    . 'var el=document.querySelector(id);if(!el){return;}'
-    . 'ev.preventDefault();sgScrollTo(el);});});'
     . 'document.querySelectorAll(".rc-sg-page a[href^=\'#\']").forEach(function(link){'
-    . 'if(link.closest(".rc-tier-nav")){return;}'
     . 'link.addEventListener("click",function(ev){'
     . 'var id=link.getAttribute("href");if(!id||id.charAt(0)!=="#"){return;}'
     . 'var el=document.querySelector(id);if(!el){return;}'

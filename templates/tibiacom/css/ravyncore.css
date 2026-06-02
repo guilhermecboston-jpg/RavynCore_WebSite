@@ -5669,6 +5669,117 @@ body.rc-page-supremetasks .rc-panel-content > h3 {
   display: none;
 }
 
+/* Skill Gem System */
+body.rc-page-skillgemsystem .rc-rich-content {
+  max-width: 100%;
+}
+
+body.rc-page-skillgemsystem .rc-panel-content > h3 {
+  display: none;
+}
+
+.rc-sg-page .rc-sg-anchor {
+  scroll-margin-top: 140px;
+}
+
+.rc-sg-page .rc-sg-highlight {
+  color: #f2c16b;
+  font-weight: 700;
+}
+
+.rc-sg-page a.rc-sg-price-link {
+  color: #f2c16b;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rc-sg-page a.rc-sg-price-link:hover {
+  color: #ffd15c;
+}
+
+.rc-sg-page .rc-sg-look-wrap,
+.rc-sg-page .rc-sg-transfer-wrap {
+  margin: 16px auto 0;
+  text-align: center;
+}
+
+.rc-sg-page .rc-sg-look-preview {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(120, 168, 236, 0.35);
+}
+
+.rc-sg-page .rc-sg-transfer-preview {
+  display: inline-block;
+  max-width: min(100%, 470px);
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(120, 168, 236, 0.35);
+}
+
+.rc-sg-page .rc-sg-look-wrap figcaption,
+.rc-sg-page .rc-sg-transfer-wrap figcaption {
+  margin-top: 8px;
+  color: #9eb8e8;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+  font-size: 13px;
+}
+
+.rc-sg-page .rc-sg-table td,
+.rc-sg-page .rc-sg-table th {
+  text-align: center;
+}
+
+.rc-sg-page .rc-sg-remove-card {
+  max-width: 320px;
+  margin: 16px auto 0;
+}
+
+.rc-sg-page .rc-sg-tier-gem,
+.rc-sg-page .rc-sg-gem-cell {
+  padding: 8px 6px;
+}
+
+.rc-sg-page .rc-sg-gem-cell .rc-tier-item-img {
+  display: block;
+  margin: 0 auto 6px;
+}
+
+.rc-sg-page .rc-sg-gem-name {
+  display: block;
+  font-size: 13px;
+}
+
+.rc-sg-page .rc-sg-extract-cost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rc-sg-page .rc-sg-extract-cost .rc-tier-item-img {
+  vertical-align: middle;
+}
+
+.rc-sg-page .rc-sg-extract-plus {
+  color: #e8f0ff;
+  font-weight: 700;
+}
+
+.rc-sg-page .rc-sg-apply-note {
+  margin: 14px 0 0;
+  color: #b8c8e4;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
 .rc-st-overview-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
