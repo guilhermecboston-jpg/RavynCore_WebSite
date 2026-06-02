@@ -9,9 +9,10 @@ Uso no site: /var/www/html/imagens/creaturestibiawiki/<itemId>.gif
 Elemental Stones / Stone Forge: 60581, 3043, 46625, 46626, bags 63980–60578, stones 61826–61815 (ver elementalstonesbonuses.php).
 Copiar de IMPORTANDO RUBINI: ITENS/items/<id>/0.gif → <id>.gif nesta pasta.
 
-Supreme Tasks e outras páginas wiki buscam criaturas por slug em:
-  imagens/creaturestibiawiki/<slug>.gif (prioridade)
-  images/library/<slug>.gif (fallback)
+Supreme Tasks (e criaturas por nome no wiki) usam SOMENTE GIF animado em:
+  imagens/creaturestibiawiki/<slug>.gif
+  (fallback de pasta: images/creaturetibiawiki/)
+Nao usa images/library nem PNG estatico — evita sprite parado na tabela.
 Slugs aceitos: compacto (minotaurhunter) ou com underscore (minotaur_hunter).
 
 O Hunt/Boss Finder usa images/library/ com os mesmos nomes do hunts_config.lua.

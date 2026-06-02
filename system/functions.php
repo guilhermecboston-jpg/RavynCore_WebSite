@@ -303,6 +303,38 @@ if (!function_exists('rc_wiki_item_default_path')) {
   }
 }
 
+if (!function_exists('rc_wiki_creature_wiki_dirs')) {
+  /**
+   * Animated creature GIFs (TibiaWiki). Server path: /var/www/html/imagens/creaturestibiawiki/
+   */
+  function rc_wiki_creature_wiki_dirs()
+  {
+    return [
+      'imagens/creaturestibiawiki',
+      'images/creaturetibiawiki',
+    ];
+  }
+}
+
+if (!function_exists('rc_wiki_creature_gif_resolve_slug')) {
+  function rc_wiki_creature_gif_resolve_slug($slug)
+  {
+    $slug = strtolower(preg_replace('/[^a-z0-9_]+/', '', (string)$slug));
+    if ($slug === '') {
+      return '';
+    }
+
+    foreach (rc_wiki_creature_wiki_dirs() as $dir) {
+      $path = $dir . '/' . $slug . '.gif';
+      if (rc_wiki_item_path_exists($path)) {
+        return $path;
+      }
+    }
+
+    return '';
+  }
+}
+
 if (!function_exists('rc_wiki_item_image')) {
   function rc_wiki_item_image($itemId, array $options = [])
   {

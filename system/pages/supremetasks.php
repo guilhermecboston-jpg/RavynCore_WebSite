@@ -114,24 +114,6 @@ if (!function_exists('rc_supreme_creature_slug_variants')) {
 	}
 }
 
-if (!function_exists('rc_supreme_creature_lookup_paths')) {
-	function rc_supreme_creature_lookup_paths($slug)
-	{
-		$slug = strtolower(preg_replace('/[^a-z0-9_]+/', '', (string)$slug));
-		if ($slug === '') {
-			return [];
-		}
-
-		return [
-			'imagens/creaturestibiawiki/' . $slug . '.gif',
-			'images/creaturetibiawiki/' . $slug . '.gif',
-			'imagens/creaturestibiawiki/' . $slug . '.png',
-			'images/library/' . $slug . '.gif',
-			'images/library/' . $slug . '.png',
-		];
-	}
-}
-
 if (!function_exists('rc_supreme_creature_name_map')) {
 	function rc_supreme_creature_name_map()
 	{
@@ -160,29 +142,32 @@ if (!function_exists('rc_supreme_creature_name_map')) {
 if (!function_exists('rc_supreme_creature_resolve_path')) {
 	function rc_supreme_creature_resolve_path($slug)
 	{
-		foreach (rc_supreme_creature_lookup_paths($slug) as $relPath) {
-			if (rc_supreme_creature_path_exists($relPath)) {
-				return $relPath;
-			}
+		if (function_exists('rc_wiki_creature_gif_resolve_slug')) {
+			return rc_wiki_creature_gif_resolve_slug($slug);
 		}
 
-		return '';
+		$slug = strtolower(preg_replace('/[^a-z0-9_]+/', '', (string)$slug));
+		if ($slug === '') {
+			return '';
+		}
+
+		$path = 'imagens/creaturestibiawiki/' . $slug . '.gif';
+		return rc_supreme_creature_path_exists($path) ? $path : '';
 	}
 }
 
 if (!function_exists('rc_supreme_task_image_url')) {
 	function rc_supreme_task_image_url($taskName, $creatures = '')
 	{
-		global $rcTemplatePath;
-
 		$searchNames = [];
 		if (!empty($creatures)) {
 			$parts = array_filter(array_map('trim', explode(',', (string)$creatures)));
-			if (!empty($parts[0])) {
-				$searchNames[] = $parts[0];
+			foreach ($parts as $part) {
+				$searchNames[] = $part;
 			}
 		}
 		$searchNames[] = (string)$taskName;
+		$searchNames = array_values(array_unique($searchNames));
 
 		$aliases = [
 			'corymcharlatan' => 'charlatan',
@@ -225,8 +210,7 @@ if (!function_exists('rc_supreme_task_image_url')) {
 			}
 		}
 
-		$fallback = ltrim($rcTemplatePath, '/') . '/images/supreme_tasks/taskfinder-mini.png';
-		return rc_supreme_creature_path_exists($fallback) ? $fallback : '';
+		return '';
 	}
 }
 
