@@ -5869,49 +5869,6 @@ body.rc-page-upgradesystem .rc-panel-content > h3 {
   font-size: 13px;
 }
 
-.rc-upg-page .rc-upg-price-table {
-  max-width: 640px;
-  margin-left: 0;
-  margin-right: auto;
-}
-
-.rc-upg-page .rc-upg-price-table th:first-child,
-.rc-upg-page .rc-upg-price-table td:first-child {
-  width: 22%;
-  text-align: center;
-}
-
-.rc-upg-page .rc-upg-price-table th:nth-child(2),
-.rc-upg-page .rc-upg-price-table td:nth-child(2) {
-  width: 26%;
-  text-align: left;
-  padding-left: 4px;
-  padding-right: 12px;
-}
-
-.rc-upg-page .rc-upg-price-table th:nth-child(3),
-.rc-upg-page .rc-upg-price-table td:nth-child(3) {
-  width: 52%;
-  text-align: left;
-  padding-left: 0;
-}
-
-.rc-upg-page .rc-upg-price-table .rc-upg-transfer-cost {
-  justify-content: flex-start;
-}
-
-.rc-upg-page .rc-upg-price-table td:nth-child(2) strong {
-  display: inline-block;
-  min-width: 4.5em;
-  text-align: left;
-}
-
-.rc-upg-page .rc-upg-price-table td:nth-child(3) strong {
-  display: inline-block;
-  min-width: 5.5em;
-  text-align: left;
-}
-
 .rc-st-overview-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -7168,6 +7125,45 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
 .rc-tier-table td.rc-tier-table-item img {
   display: block;
   margin: 0 auto;
+}
+
+/* Upgrade System — transfer cost table (3 columns; overrides rc-tier-table 42/58 split) */
+.rc-upg-page .rc-upg-price-table th:first-child,
+.rc-upg-page .rc-upg-price-table td:first-child {
+  width: 14% !important;
+  text-align: center;
+}
+
+.rc-upg-page .rc-upg-price-table th:nth-child(2),
+.rc-upg-page .rc-upg-price-table td:nth-child(2) {
+  width: 24% !important;
+  text-align: center;
+  padding-left: 18px !important;
+  padding-right: 10px !important;
+}
+
+.rc-upg-page .rc-upg-price-table th:nth-child(3),
+.rc-upg-page .rc-upg-price-table td:nth-child(3) {
+  width: 62% !important;
+  text-align: center;
+  padding-left: 12px !important;
+  padding-right: 16px !important;
+}
+
+.rc-upg-page .rc-upg-price-table .rc-upg-transfer-cost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.rc-upg-page .rc-upg-price-table .rc-upg-transfer-cost > strong {
+  display: inline-block;
+  min-width: 5.2em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .rc-tier-item-fallback {
