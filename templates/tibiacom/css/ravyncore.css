@@ -6615,6 +6615,62 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
   display: none;
 }
 
+.rc-bf-page-title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.rc-bf-page-title .rc-bf-nav {
+  margin-top: 18px;
+}
+
+.rc-bf-page .rc-bf-anchor {
+  scroll-margin-top: 140px;
+}
+
+.rc-bf-preview-wrap {
+  margin: 16px auto 0;
+  text-align: center;
+}
+
+.rc-bf-preview {
+  display: inline-block;
+  max-width: min(100%, 520px);
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(120, 168, 236, 0.35);
+}
+
+.rc-bf-preview-wrap figcaption {
+  margin-top: 8px;
+  color: #9eb8e8;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+  font-size: 13px;
+}
+
+.rc-bf-prog-boss-list {
+  margin: 0 0 18px;
+}
+
+.rc-bf-prog-boss-note {
+  color: #9eb8e8;
+  font-weight: 600;
+}
+
+.rc-bf-tl-label {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  color: #9eb8e8;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
 .rc-bf-subtitle {
   margin: 10px 0 0;
   max-width: 52rem;
@@ -6816,10 +6872,23 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
   font-style: italic;
 }
 
+.rc-bf-prog-card h4 {
+  margin: 0 0 12px;
+  color: #d4b8ff;
+  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
 .rc-bf-lead {
-  margin: -4px 0 14px !important;
-  color: #b8c8e4 !important;
-  font-size: 15px !important;
+  margin: 0 0 12px;
+  color: #d6e4ff;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.rc-bf-lead:last-of-type {
+  margin-bottom: 16px;
 }
 
 .rc-bf-prog-wrap {
@@ -6832,14 +6901,6 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
   border: 1px solid rgba(196, 155, 255, 0.28);
   border-radius: 10px;
   background: linear-gradient(160deg, rgba(18, 14, 32, 0.6), rgba(8, 14, 28, 0.9));
-}
-
-.rc-bf-prog-card h4 {
-  margin: 0 0 12px;
-  color: #d4b8ff;
-  font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
-  font-size: 22px;
-  font-weight: 700;
 }
 
 .rc-bf-progress-labels {
