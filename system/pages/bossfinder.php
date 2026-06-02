@@ -90,7 +90,7 @@ foreach ($data['general_rules'] as $rule) {
 
 $bossFinderImgHtml = rc_bf_page_image(
     $rcBfImageBase,
-    'bossfinder.png',
+    'boss-finder.png',
     'rc-bf-preview',
     'Boss Finder'
 );
