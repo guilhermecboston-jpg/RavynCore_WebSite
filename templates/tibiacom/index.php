@@ -142,7 +142,6 @@ $systemMenuItems = [
     ['name' => 'Supreme Tasks', 'link_full' => BASE_URL . '?subtopic=supremetasks', 'blank' => false],
     ['name' => 'Addon&Mount Bonuses', 'link_full' => BASE_URL . '?subtopic=addonmountbonuses', 'blank' => false],
     ['name' => "Elemental's Stones Bonuses", 'link_full' => BASE_URL . '?subtopic=elementalstonesbonuses', 'blank' => false],
-    ['name' => "Loyalt's Bonuses", 'link_full' => BASE_URL . '?subtopic=loyaltbonuses', 'blank' => false],
 ];
 
 $serverName = $config['lua']['serverName'] ?? 'RavynCore';

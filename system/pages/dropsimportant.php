@@ -16,15 +16,15 @@ $tokenRewardRows = [
 ];
 
 $bagOfStoneRows = [
-    ['level' => 0, 'id' => 63980, 'name' => 'Bag of Stone nível 0', 'source' => 'Chance de dropar de todos os Bosses ou comprar no NPC <strong>Jorge Trambiqueiro</strong>, por RavynCore Token.'],
-    ['level' => 1, 'id' => 60576, 'name' => 'Bag of Stone nível 1', 'source' => 'Chance de dropar nas hunts <strong>Medium</strong> ou comprar no NPC <strong>Jorge Trambiqueiro</strong>, por RavynCore Token.'],
-    ['level' => 2, 'id' => 60577, 'name' => 'Bag of Stone nível 2', 'source' => 'Chance de dropar nas hunts <strong>Hard</strong> ou comprar no NPC <strong>Jorge Trambiqueiro</strong>, por RavynCore Token.'],
-    ['level' => 3, 'id' => 60578, 'name' => 'Bag of Stone nível 3', 'source' => 'Chance de dropar nas hunts <strong>Epic</strong> ou comprar no NPC <strong>Jorge Trambiqueiro</strong>, por RavynCore Token.'],
+    ['level' => 0, 'id' => 63980, 'name' => 'Bag of Stone nível 0', 'source' => 'Chance de dropar de todos os <span class="rc-di-highlight">Bosses</span> ou comprar no NPC <span class="rc-di-highlight">Jorge Trambiqueiro</span>, por <span class="rc-di-highlight">RavynCore Token</span>.'],
+    ['level' => 1, 'id' => 60576, 'name' => 'Bag of Stone nível 1', 'source' => 'Chance de dropar nas hunts <span class="rc-di-highlight">Medium</span> ou comprar no NPC <span class="rc-di-highlight">Jorge Trambiqueiro</span>, por <span class="rc-di-highlight">RavynCore Token</span>.'],
+    ['level' => 2, 'id' => 60577, 'name' => 'Bag of Stone nível 2', 'source' => 'Chance de dropar nas hunts <span class="rc-di-highlight">Hard</span> ou comprar no NPC <span class="rc-di-highlight">Jorge Trambiqueiro</span>, por <span class="rc-di-highlight">RavynCore Token</span>.'],
+    ['level' => 3, 'id' => 60578, 'name' => 'Bag of Stone nível 3', 'source' => 'Chance de dropar nas hunts <span class="rc-di-highlight">Epic</span> ou comprar no NPC <span class="rc-di-highlight">Jorge Trambiqueiro</span>, por <span class="rc-di-highlight">RavynCore Token</span>.'],
 ];
 
 $fragmentRows = [
-    ['id' => $lesserFragmentId, 'name' => 'Lesser Fragment', 'source' => 'Chance de dropar nas hunts <strong>Hard</strong> e <strong>Epic</strong> ou comprar no NPC <strong>Jorge Trambiqueiro</strong>, por RavynCore Token.'],
-    ['id' => $greaterFragmentId, 'name' => 'Greater Fragment', 'source' => 'Chance de dropar nas hunts <strong>Hard</strong> e <strong>Epic</strong> ou comprar no NPC <strong>Jorge Trambiqueiro</strong>, por RavynCore Token.'],
+    ['id' => $lesserFragmentId, 'name' => 'Lesser Fragment', 'source' => 'Chance de dropar nas hunts <span class="rc-di-highlight">Hard</span> e <span class="rc-di-highlight">Epic</span> ou comprar no NPC <span class="rc-di-highlight">Jorge Trambiqueiro</span>, por <span class="rc-di-highlight">RavynCore Token</span>.'],
+    ['id' => $greaterFragmentId, 'name' => 'Greater Fragment', 'source' => 'Chance de dropar nas hunts <span class="rc-di-highlight">Hard</span> e <span class="rc-di-highlight">Epic</span> ou comprar no NPC <span class="rc-di-highlight">Jorge Trambiqueiro</span>, por <span class="rc-di-highlight">RavynCore Token</span>.'],
 ];
 
 if (!function_exists('rc_di_esc')) {
@@ -69,15 +69,13 @@ $tokenImg = rc_di_item_html($ravynCoreTokenId, true, 'RavynCore Token');
 $toolImg = rc_di_item_html($destructionRarityId, true, 'Destruction Rarity');
 
 echo '<div class="rc-st-page rc-tier-page rc-di-page">'
-    . '<header class="rc-st-page-title rc-tier-hero">'
-    . '<h2>Drops Important</h2>'
-    . '<p class="rc-tier-subtitle">RavynCore Token, destruction rarity, bags of stone e fragments — onde conseguir e como usar.</p>'
-    . '<nav class="rc-tier-nav" aria-label="Seções do guia">'
+    . '<header class="rc-st-page-title"><h2>Drops Important</h2></header>'
+    . '<nav class="rc-tier-nav rc-tier-nav-below" aria-label="Seções do guia">'
     . '<a href="#rc-di-token">RavynCore Token</a>'
     . '<a href="#rc-di-obtain">Obtenção</a>'
     . '<a href="#rc-di-bags">Bag of Stone</a>'
     . '<a href="#rc-di-fragments">Fragments</a>'
-    . '</nav></header>'
+    . '</nav>'
 
     . '<section class="rc-st-card rc-di-anchor" id="rc-di-token">'
     . '<h3>RavynCore Token</h3>'
@@ -104,18 +102,18 @@ echo '<div class="rc-st-page rc-tier-page rc-di-page">'
     . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-di-table">'
     . '<thead><tr><th>Alvo</th><th>RavynCore Token</th></tr></thead>'
     . '<tbody>' . $tokenRewardTable . '</tbody></table></div>'
-    . '<p class="rc-di-note">Prioridade: classification <strong>4</strong> → 5 tokens · classification <strong>3</strong> → 1 token · stone nível <strong>1</strong> → 3 · stone nível <strong>0</strong> → 1.</p>'
     . '</section>'
 
     . '<section class="rc-st-card rc-di-anchor" id="rc-di-bags">'
     . '<h3>Bag of Stone</h3>'
+    . '<p class="rc-di-lead">Cada <span class="rc-di-highlight">Bag of Stone</span> contém pedras elementais. O <span class="rc-di-highlight">nível da bag</span> define a dificuldade do drop ou o custo em <span class="rc-di-highlight">RavynCore Token</span> no <span class="rc-di-highlight">Jorge Trambiqueiro</span>.</p>'
     . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-di-table">'
     . '<thead><tr><th>Item</th><th>Nível</th><th>Como obter</th></tr></thead>'
     . '<tbody>' . $bagRowsHtml . '</tbody></table></div></section>'
 
     . '<section class="rc-st-card rc-di-anchor" id="rc-di-fragments">'
     . '<h3>Lesser &amp; Greater Fragments</h3>'
-    . '<p class="rc-tier-spaced">Usados na <a href="' . rc_di_esc(BASE_URL . '?subtopic=elementalstonesbonuses') . '#rc-esb-conversion">conversão Stone Forge</a> (Elemental Stones) para gerar Stone Fusion Dust.</p>'
+    . '<p class="rc-di-lead">Usados na <a href="' . rc_di_esc(BASE_URL . '?subtopic=elementalstonesbonuses') . '#rc-esb-conversion">conversão Stone Forge</a> (Elemental Stones) para gerar <span class="rc-di-highlight">Stone Fusion Dust</span>. Dropam em hunts <span class="rc-di-highlight">Hard</span> e <span class="rc-di-highlight">Epic</span> ou podem ser comprados com <span class="rc-di-highlight">RavynCore Token</span>.</p>'
     . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table rc-di-table">'
     . '<thead><tr><th>Item</th><th>Nome</th><th>Como obter</th></tr></thead>'
     . '<tbody>' . $fragmentRowsHtml . '</tbody></table></div></section>'
@@ -128,7 +126,8 @@ echo '<div class="rc-st-page rc-tier-page rc-di-page">'
     . '.rc-di-page .rc-di-hero-row{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;margin-bottom:12px}'
     . '.rc-di-page .rc-di-hero-text{flex:1;min-width:240px;font-size:14px;line-height:1.55;color:#d6e4ff}'
     . '.rc-di-page .rc-di-hero-text p{margin:0 0 10px}'
-    . '.rc-di-page .rc-di-note{margin-top:12px;font-size:13px;color:#9eb8e8;text-align:center}'
+    . '.rc-di-page .rc-di-lead{margin:0 0 14px;font-size:14px;line-height:1.6;color:#d6e4ff}'
+    . '.rc-di-page .rc-di-highlight{color:#f2c16b;font-weight:700}'
     . '</style>'
 
     . '<script>(function(){'
