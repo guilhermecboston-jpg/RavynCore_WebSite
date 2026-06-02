@@ -6644,6 +6644,29 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
   margin: 0 0 18px;
 }
 
+#rc-bf-progressao .rc-bf-lead {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+#rc-bf-progressao .rc-tier-h4 {
+  font-size: 20px;
+  margin-top: 18px;
+}
+
+#rc-bf-progressao .rc-bf-prog-boss-list li {
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+#rc-bf-resumo .rc-bf-table th {
+  font-size: 16px;
+}
+
+#rc-bf-resumo .rc-bf-table td {
+  font-size: 16px;
+}
+
 .rc-bf-prog-boss-note {
   color: #9eb8e8;
   font-weight: 600;
@@ -6872,8 +6895,8 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
 .rc-bf-lead {
   margin: 0 0 12px;
   color: #d6e4ff;
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: 17px;
+  line-height: 1.6;
 }
 
 .rc-bf-lead:last-of-type {
