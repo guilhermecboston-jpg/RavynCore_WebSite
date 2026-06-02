@@ -7084,8 +7084,41 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
 }
 
 /* Tier System (SYSTEM menu) */
-.rc-tier-page .rc-st-card[id] {
-  scroll-margin-top: 132px;
+body.rc-page-tiersystem .rc-rich-content {
+  max-width: 100%;
+}
+
+body.rc-page-tiersystem .rc-panel-content > h3 {
+  display: none;
+}
+
+.rc-tier-page .rc-tier-anchor {
+  scroll-margin-top: 140px;
+}
+
+.rc-tier-page .rc-tier-nav-below {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.rc-tier-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+
+.rc-tier-grid .rc-st-card {
+  height: 100%;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .rc-tier-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .rc-tier-page .rc-tier-subtitle {
@@ -7102,7 +7135,6 @@ body.rc-page-bossfinder .rc-panel-content > h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 14px;
 }
 
 .rc-tier-nav a {
