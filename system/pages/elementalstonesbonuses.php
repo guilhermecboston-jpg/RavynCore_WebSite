@@ -82,15 +82,6 @@ $fusionSteps = [
 
 $fusionDemoColor = 'Blue';
 
-$transformRows = [
-    ['lesser' => 1, 'greater' => 1, 'dust' => 1],
-    ['lesser' => 5, 'greater' => 5, 'dust' => 5],
-    ['lesser' => 10, 'greater' => 10, 'dust' => 10],
-];
-
-$lesserFragmentId = 46625;
-$greaterFragmentId = 46626;
-
 if (!function_exists('esb_percent_value')) {
     function esb_percent_value($value)
     {
@@ -949,50 +940,6 @@ body.rc-page-elementalstonesbonuses .tpd-skin-dark .tpd-background-content {
         <div class="esb-body">
             <p class="esb-text">Na Stone Forge, converta <strong>Lesser Fragment</strong> + <strong>Greater Fragment</strong> em <strong>Stone Fusion Dust</strong>.</p>
             <?= esb_guide_image('stone-convers.png', 'Stone Conversion', 'rc-esb-guide-img rc-esb-guide-img--wide') ?>
-            <div class="esb-compact-table-wrap">
-            <table class="esb-table">
-                <thead>
-                <tr>
-                    <th>Input</th>
-                    <th>Output</th>
-                    <th>Chance</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($transformRows as $row) { ?>
-                    <tr>
-                        <td>
-                            <div class="esb-cost-inline">
-                                <span class="esb-cost-item">
-                                    <?= esb_item_image($lesserFragmentId, 'Lesser Fragment') ?>
-                                    <span class="esb-cost-meta">
-                                        <strong>x<?= (int)$row['lesser'] ?></strong>
-                                    </span>
-                                </span>
-                                <span class="esb-cost-item">
-                                    <?= esb_item_image($greaterFragmentId, 'Greater Fragment') ?>
-                                    <span class="esb-cost-meta">
-                                        <strong>x<?= (int)$row['greater'] ?></strong>
-                                    </span>
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="esb-cost-inline">
-                                <span class="esb-cost-item">
-                                    <?= esb_item_image(60581, 'Stone Fusion Dust') ?>
-                                    <span class="esb-cost-meta">
-                                        <strong>x<?= (int)$row['dust'] ?></strong>
-                                    </span>
-                                </span>
-                            </div>
-                        </td>
-                        <td><strong>100%</strong></td>
-                    </tr>
-                <?php } ?>
-                </tbody>
-            </table>
-            </div>
             <p class="esb-note"><strong>Fluxo:</strong> o Stone Fusion Dust é gerado na conversão e enviado direto para a <strong>Store Inbox</strong>.</p>
         </div>
     </section>
