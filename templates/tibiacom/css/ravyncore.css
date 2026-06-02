@@ -6920,6 +6920,15 @@ body.rc-page-huntfinder .rc-panel-content > h3 {
   color: #d6e4ff;
 }
 
+.rc-hf-page .rc-hf-highlight,
+.rc-hf-page .rc-hf-lead strong,
+.rc-hf-page .rc-hf-rules-list strong,
+.rc-hf-page .rc-hf-note strong {
+  color: #f2c16b;
+  font-style: normal;
+  font-weight: 700;
+}
+
 .rc-hf-page .rc-hf-table td,
 .rc-hf-page .rc-hf-table th {
   text-align: center;
