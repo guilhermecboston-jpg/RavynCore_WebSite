@@ -59,6 +59,11 @@ $rcHtmlLang = rc_html_language();
 $menuCategories = config('menu_categories') ?: [];
 $menus = get_template_menus();
 $templateLinks = isset($template) && is_array($template) ? $template : [];
+$rcBuildPageUrl = static function($page, array $params = []) use ($rcCurrentLang): string {
+    $params = array_merge(['subtopic' => (string)$page], $params);
+    $params['lang'] = $rcCurrentLang;
+    return BASE_URL . '?' . http_build_query($params);
+};
 
 $rcMenuGroups = [];
 if (!empty($menus)) {
@@ -234,11 +239,11 @@ foreach ($topPlayers as &$player) {
 unset($player);
 
 $quickLinks = [
-    ['name' => 'Latest News', 'url' => $templateLinks['link_news'] ?? getLink('news')],
-    ['name' => 'Create Account', 'url' => $templateLinks['link_account_create'] ?? getLink('account/create')],
-    ['name' => 'Highscores', 'url' => $templateLinks['link_highscores'] ?? getLink('highscores')],
-    ['name' => 'Guilds', 'url' => $templateLinks['link_guilds'] ?? getLink('guilds')],
-    ['name' => 'Server Info', 'url' => $templateLinks['link_serverInfo'] ?? getLink('serverInfo')],
+    ['name' => 'Latest News', 'url' => $rcBuildPageUrl('news')],
+    ['name' => 'Create Account', 'url' => $rcBuildPageUrl('createaccount')],
+    ['name' => 'Highscores', 'url' => $rcBuildPageUrl('highscores')],
+    ['name' => 'Guilds', 'url' => $rcBuildPageUrl('guilds')],
+    ['name' => 'Server Info', 'url' => $rcBuildPageUrl('serverinfo')],
 ];
 
 $accountManageUrl = $templateLinks['link_account_manage'] ?? getLink('account/manage');
@@ -493,7 +498,7 @@ $socialLinks = [
                 <ul class="rc-links">
                     <?php foreach ($quickLinks as $link): ?>
                         <li>
-                            <a href="<?= $link['url']; ?>"><?= escapeHtml(rc_t($link['name'])); ?></a>
+                            <a href="<?= escapeHtml($link['url']); ?>"><?= escapeHtml(rc_t($link['name'])); ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -515,7 +520,7 @@ $socialLinks = [
                 <h3><?= escapeHtml($pageTitle); ?></h3>
                 <div class="rc-panel-body rc-rich-content">
                     <?php $hooks->trigger(HOOK_TIBIACOM_BORDER_3); ?>
-                    <?= template_place_holder('center_top') . $content; ?>
+                    <?= function_exists('rc_translate_html') ? rc_translate_html(template_place_holder('center_top') . $content) : template_place_holder('center_top') . $content; ?>
                 </div>
             </section>
         </section>
@@ -539,7 +544,7 @@ $socialLinks = [
                         </a>
                     <?php endforeach; ?>
                 </div>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= getLink('highscores'); ?>"><?= escapeHtml(rc_t('Full Ranking')); ?></a>
+                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= escapeHtml($rcBuildPageUrl('highscores')); ?>"><?= escapeHtml(rc_t('Full Ranking')); ?></a>
             </section>
 
             <section class="rc-panel">

@@ -226,6 +226,12 @@ function rc_i18n_page_translations(): array
         ['pt-br' => 'Repetir senha', 'en' => 'Repeat password', 'es' => 'Repetir contraseña'],
         ['pt-br' => 'Mostrar', 'en' => 'Show', 'es' => 'Mostrar'],
         ['pt-br' => 'Ocultar', 'en' => 'Hide', 'es' => 'Ocultar'],
+        ['pt-br' => 'masculino', 'en' => 'male', 'es' => 'masculino'],
+        ['pt-br' => 'feminino', 'en' => 'female', 'es' => 'femenino'],
+        ['pt-br' => '[sugerir nome]', 'en' => '[suggest name]', 'es' => '[sugerir nombre]'],
+        ['pt-br' => '[sugerir número]', 'en' => '[suggest number]', 'es' => '[sugerir número]'],
+        ['pt-br' => 'Use um endereço real!', 'en' => 'Please use real address!', 'es' => '¡Usa una dirección real!'],
+        ['pt-br' => 'Enviaremos um link para validar seu e-mail.', 'en' => 'We will send a link to validate your Email.', 'es' => 'Enviaremos un link para validar tu e-mail.'],
         ['pt-br' => 'Selecionar cidade', 'en' => 'Select your town', 'es' => 'Seleccionar ciudad'],
         ['pt-br' => 'Por favor, selecione a caixa abaixo:', 'en' => 'Please select the following check box:', 'es' => 'Por favor, selecciona la siguiente casilla:'],
         ['pt-br' => 'Eu concordo com as', 'en' => 'I agree to the', 'es' => 'Acepto las'],
@@ -294,6 +300,110 @@ function rc_i18n_page_translations(): array
         ['pt-br' => 'Boss Final', 'en' => 'Final Boss', 'es' => 'Boss final'],
         ['pt-br' => 'Reset após derrotar o final', 'en' => 'Reset after defeating the final boss', 'es' => 'Reset después de derrotar al boss final'],
         ['pt-br' => 'Sim', 'en' => 'Yes', 'es' => 'Sí'],
+        ['pt-br' => 'Utilize o <span class="rc-hf-highlight">HuntFinder</span>, localizado no <span class="rc-hf-highlight">+1 do Templo</span>, para consultar respawns e ser teleportado diretamente para a hunt escolhida.', 'en' => 'Use <span class="rc-hf-highlight">HuntFinder</span>, located on <span class="rc-hf-highlight">Temple +1</span>, to check respawns and teleport directly to the selected hunt.', 'es' => 'Usa <span class="rc-hf-highlight">HuntFinder</span>, ubicado en el <span class="rc-hf-highlight">+1 del Templo</span>, para consultar respawns y teletransportarte directamente a la hunt elegida.'],
+        ['pt-br' => 'Cada card exibe as criaturas disponíveis naquele respawn, com opções de <span class="rc-hf-highlight">detalhes</span>, <span class="rc-hf-highlight">favoritos</span> e <span class="rc-hf-highlight">teleporte</span>.', 'en' => 'Each card shows the creatures available in that respawn, with <span class="rc-hf-highlight">details</span>, <span class="rc-hf-highlight">favorites</span>, and <span class="rc-hf-highlight">teleport</span> options.', 'es' => 'Cada card muestra las criaturas disponibles en ese respawn, con opciones de <span class="rc-hf-highlight">detalles</span>, <span class="rc-hf-highlight">favoritos</span> y <span class="rc-hf-highlight">teleport</span>.'],
+        ['pt-br' => 'Use a barra de busca para filtrar hunts pelo nome da criatura ou do local.', 'en' => 'Use the search bar to filter hunts by creature or location name.', 'es' => 'Usa la barra de búsqueda para filtrar hunts por nombre de criatura o ubicación.'],
+        ['pt-br' => 'Consultar quais criaturas estão disponíveis em cada respawn.', 'en' => 'Check which creatures are available in each respawn.', 'es' => 'Consultar qué criaturas están disponibles en cada respawn.'],
+        ['pt-br' => 'Filtrar hunts por nível de <span class="rc-hf-highlight">dificuldade</span>.', 'en' => 'Filter hunts by <span class="rc-hf-highlight">difficulty</span> level.', 'es' => 'Filtrar hunts por nivel de <span class="rc-hf-highlight">dificultad</span>.'],
+        ['pt-br' => 'Selecionar a instância desejada (<span class="rc-hf-highlight">Ravyn Depths I</span> a <span class="rc-hf-highlight">V</span>) quando a hunt possuir mais de uma localização.', 'en' => 'Select the desired instance (<span class="rc-hf-highlight">Ravyn Depths I</span> to <span class="rc-hf-highlight">V</span>) when the hunt has more than one location.', 'es' => 'Seleccionar la instancia deseada (<span class="rc-hf-highlight">Ravyn Depths I</span> a <span class="rc-hf-highlight">V</span>) cuando la hunt tenga más de una ubicación.'],
+        ['pt-br' => 'Marcar hunts como <span class="rc-hf-highlight">favoritos</span> e filtrar apenas favoritos.', 'en' => 'Mark hunts as <span class="rc-hf-highlight">favorites</span> and filter only favorites.', 'es' => 'Marcar hunts como <span class="rc-hf-highlight">favoritas</span> y filtrar solo favoritas.'],
+        ['pt-br' => 'Teleportar diretamente para o respawn selecionado.', 'en' => 'Teleport directly to the selected respawn.', 'es' => 'Teletransportarte directamente al respawn seleccionado.'],
+        ['pt-br' => 'Hunts introdutórias, ideais para começar a explorar o sistema e conhecer os respawns.', 'en' => 'Introductory hunts, ideal for starting to explore the system and learning the respawns.', 'es' => 'Hunts introductorias, ideales para empezar a explorar el sistema y conocer los respawns.'],
+        ['pt-br' => 'Dificuldade intermediária. Respawns mais exigentes, com criaturas e recompensas superiores.', 'en' => 'Intermediate difficulty. More demanding respawns with stronger creatures and better rewards.', 'es' => 'Dificultad intermedia. Respawns más exigentes, con criaturas y recompensas superiores.'],
+        ['pt-br' => 'Hunts avançadas para personagens preparados. Maior risco e melhor potencial de loot.', 'en' => 'Advanced hunts for prepared characters. Higher risk and better loot potential.', 'es' => 'Hunts avanzadas para personajes preparados. Mayor riesgo y mejor potencial de loot.'],
+        ['pt-br' => 'O mais alto nível de dificuldade disponível no HuntFinder, reservado aos respawns mais desafiadores.', 'en' => 'The highest difficulty level available in HuntFinder, reserved for the most challenging respawns.', 'es' => 'El nivel de dificultad más alto disponible en HuntFinder, reservado para los respawns más desafiantes.'],
+        ['pt-br' => 'Todas as hunts possuem um <span class="rc-hf-highlight">teleport de retorno</span> para o <span class="rc-hf-highlight">templo de RavynCore</span>.', 'en' => 'All hunts have a <span class="rc-hf-highlight">return teleport</span> to the <span class="rc-hf-highlight">RavynCore temple</span>.', 'es' => 'Todas las hunts tienen un <span class="rc-hf-highlight">teleport de retorno</span> al <span class="rc-hf-highlight">templo de RavynCore</span>.'],
+        ['pt-br' => 'O teleport de retorno <span class="rc-hf-highlight">não possui Protection Zone (PZ)</span>. Ao utilizá-lo, você <span class="rc-hf-highlight">não estará em área segura</span>.', 'en' => 'The return teleport <span class="rc-hf-highlight">does not have Protection Zone (PZ)</span>. When using it, you <span class="rc-hf-highlight">will not be in a safe area</span>.', 'es' => 'El teleport de retorno <span class="rc-hf-highlight">no tiene Protection Zone (PZ)</span>. Al usarlo, <span class="rc-hf-highlight">no estarás en una zona segura</span>.'],
+        ['pt-br' => 'Se estiver com <span class="rc-hf-highlight">PZ Lock</span> (PvP / atacou outro jogador) ao usar o teleport de retorno, você <span class="rc-hf-highlight">não será enviado ao templo</span>.', 'en' => 'If you have <span class="rc-hf-highlight">PZ Lock</span> (PvP / attacked another player) when using the return teleport, you <span class="rc-hf-highlight">will not be sent to the temple</span>.', 'es' => 'Si tienes <span class="rc-hf-highlight">PZ Lock</span> (PvP / atacaste a otro jugador) al usar el teleport de retorno, <span class="rc-hf-highlight">no serás enviado al templo</span>.'],
+        ['pt-br' => 'Nessa situação, será transportado <span class="rc-hf-highlight">aleatoriamente</span> para um dos barcos ao redor de RavynCore:', 'en' => 'In that situation, you will be transported <span class="rc-hf-highlight">randomly</span> to one of the boats around RavynCore:', 'es' => 'En esa situación, serás transportado <span class="rc-hf-highlight">aleatoriamente</span> a uno de los barcos alrededor de RavynCore:'],
+        ['pt-br' => 'Primeira instância paralela. Disponível em diversas hunts como opção de teleporte.', 'en' => 'First parallel instance. Available in several hunts as a teleport option.', 'es' => 'Primera instancia paralela. Disponible en varias hunts como opción de teleport.'],
+        ['pt-br' => 'Segunda instância paralela. Alguns respawns possuem esta localização como alternativa.', 'en' => 'Second parallel instance. Some respawns have this location as an alternative.', 'es' => 'Segunda instancia paralela. Algunos respawns tienen esta ubicación como alternativa.'],
+        ['pt-br' => 'Terceira instância paralela. Permite distribuir hunts entre instâncias quando o respawn oferece múltiplos pontos.', 'en' => 'Third parallel instance. Lets hunts be distributed between instances when the respawn offers multiple points.', 'es' => 'Tercera instancia paralela. Permite distribuir hunts entre instancias cuando el respawn ofrece múltiples puntos.'],
+        ['pt-br' => 'Quarta instância paralela. Selecionável no painel de detalhes quando disponível para a hunt.', 'en' => 'Fourth parallel instance. Selectable in the details panel when available for the hunt.', 'es' => 'Cuarta instancia paralela. Seleccionable en el panel de detalles cuando está disponible para la hunt.'],
+        ['pt-br' => 'Quinta instância paralela. Use quando precisar de uma instância adicional do mesmo respawn.', 'en' => 'Fifth parallel instance. Use it when you need an additional instance of the same respawn.', 'es' => 'Quinta instancia paralela. Úsala cuando necesites una instancia adicional del mismo respawn.'],
+        ['pt-br' => 'Barco localizado ao <span class="rc-hf-highlight">norte</span> de RavynCore.', 'en' => 'Boat located to the <span class="rc-hf-highlight">north</span> of RavynCore.', 'es' => 'Barco ubicado al <span class="rc-hf-highlight">norte</span> de RavynCore.'],
+        ['pt-br' => 'Barco localizado à <span class="rc-hf-highlight">esquerda (oeste)</span> de RavynCore.', 'en' => 'Boat located to the <span class="rc-hf-highlight">left (west)</span> of RavynCore.', 'es' => 'Barco ubicado a la <span class="rc-hf-highlight">izquierda (oeste)</span> de RavynCore.'],
+        ['pt-br' => 'Barco localizado à <span class="rc-hf-highlight">direita (leste)</span> de RavynCore.', 'en' => 'Boat located to the <span class="rc-hf-highlight">right (east)</span> of RavynCore.', 'es' => 'Barco ubicado a la <span class="rc-hf-highlight">derecha (este)</span> de RavynCore.'],
+        ['pt-br' => 'O destino é escolhado <span class="rc-hf-highlight">aleatoriamente</span> a cada utilização do teleport enquanto você estiver com <span class="rc-hf-highlight">PZ Lock</span>. Battle de monstro não impede o retorno ao templo.', 'en' => 'The destination is chosen <span class="rc-hf-highlight">randomly</span> each time the teleport is used while you have <span class="rc-hf-highlight">PZ Lock</span>. Monster battle does not prevent returning to the temple.', 'es' => 'El destino se elige <span class="rc-hf-highlight">aleatoriamente</span> cada vez que usas el teleport mientras tienes <span class="rc-hf-highlight">PZ Lock</span>. Battle de monstruo no impide el retorno al templo.'],
+        ['pt-br' => 'cooldown de 2 dias', 'en' => '2-day cooldown', 'es' => 'cooldown de 2 días'],
+        ['pt-br' => 'Isso permite:', 'en' => 'This allows you to:', 'es' => 'Esto te permite:'],
+        ['pt-br' => 'No <strong>RavynCore</strong>, você pode remover e reaplicar o <em>Tier</em> dos seus equipamentos sempre que desejar.', 'en' => 'In <strong>RavynCore</strong>, you can remove and reapply the <em>Tier</em> from your equipment whenever you want.', 'es' => 'En <strong>RavynCore</strong>, puedes remover y reaplicar el <em>Tier</em> de tus equipamentos cuando quieras.'],
+        ['pt-br' => 'Remover o <span class="rc-tier-highlight">Tier</span> antes de uma nova tentativa de upgrade;', 'en' => 'Remove the <span class="rc-tier-highlight">Tier</span> before a new upgrade attempt;', 'es' => 'Remover el <span class="rc-tier-highlight">Tier</span> antes de un nuevo intento de upgrade;'],
+        ['pt-br' => 'Vender o item sem o <span class="rc-tier-highlight">Tier</span> aplicado;', 'en' => 'Sell the item without the <span class="rc-tier-highlight">Tier</span> applied;', 'es' => 'Vender el item sin el <span class="rc-tier-highlight">Tier</span> aplicado;'],
+        ['pt-br' => 'Alterar sua build ou estilo de jogo;', 'en' => 'Change your build or playstyle;', 'es' => 'Cambiar tu build o estilo de juego;'],
+        ['pt-br' => 'Reaproveitar seus <span class="rc-tier-highlight">Tiers</span> em outros equipamentos.', 'en' => 'Reuse your <span class="rc-tier-highlight">Tiers</span> on other equipment.', 'es' => 'Reutilizar tus <span class="rc-tier-highlight">Tiers</span> en otros equipamentos.'],
+        ['pt-br' => 'O sistema foi desenvolvido para oferecer mais flexibilidade e liberdade na evolução dos seus itens.', 'en' => 'The system was designed to offer more flexibility and freedom in your item progression.', 'es' => 'El sistema fue desarrollado para ofrecer más flexibilidad y libertad en la evolución de tus items.'],
+        ['pt-br' => 'Ao utilizar um <strong>Extractor Tier</strong>:', 'en' => 'When using an <strong>Extractor Tier</strong>:', 'es' => 'Al usar un <strong>Extractor Tier</strong>:'],
+        ['pt-br' => 'O <span class="rc-tier-highlight">Tier</span> é removido do equipamento;', 'en' => 'The <span class="rc-tier-highlight">Tier</span> is removed from the equipment;', 'es' => 'El <span class="rc-tier-highlight">Tier</span> se remueve del equipamento;'],
+        ['pt-br' => 'O item original é enviado para a <strong>Store Inbox</strong> sem Tier;', 'en' => 'The original item is sent to the <strong>Store Inbox</strong> without Tier;', 'es' => 'El item original se envía a la <strong>Store Inbox</strong> sin Tier;'],
+        ['pt-br' => 'O <span class="rc-tier-highlight">Tier</span> removido é entregue na sua <strong>Store Inbox</strong> como um item.', 'en' => 'The removed <span class="rc-tier-highlight">Tier</span> is delivered to your <strong>Store Inbox</strong> as an item.', 'es' => 'El <span class="rc-tier-highlight">Tier</span> removido se entrega en tu <strong>Store Inbox</strong> como item.'],
+        ['pt-br' => 'Ao utilizar um <span class="rc-tier-highlight">Tier</span> em um equipamento:', 'en' => 'When using a <span class="rc-tier-highlight">Tier</span> on equipment:', 'es' => 'Al usar un <span class="rc-tier-highlight">Tier</span> en un equipamento:'],
+        ['pt-br' => 'O <span class="rc-tier-highlight">Tier</span> é aplicado normalmente;', 'en' => 'The <span class="rc-tier-highlight">Tier</span> is applied normally;', 'es' => 'El <span class="rc-tier-highlight">Tier</span> se aplica normalmente;'],
+        ['pt-br' => 'O equipamento é enviado diretamente para a <strong>Store Inbox</strong> já com o Tier aplicado.', 'en' => 'The equipment is sent directly to the <strong>Store Inbox</strong> with the Tier already applied.', 'es' => 'El equipamento se envía directamente a la <strong>Store Inbox</strong> con el Tier aplicado.'],
+        ['pt-br' => 'O <span class="rc-tier-highlight">Tier</span> nunca é perdido durante a extração;', 'en' => 'The <span class="rc-tier-highlight">Tier</span> is never lost during extraction;', 'es' => 'El <span class="rc-tier-highlight">Tier</span> nunca se pierde durante la extracción;'],
+        ['pt-br' => 'É possível extrair e reaplicar <span class="rc-tier-highlight">Tiers</span> quantas vezes desejar;', 'en' => 'You can extract and reapply <span class="rc-tier-highlight">Tiers</span> as many times as you want;', 'es' => 'Puedes extraer y reaplicar <span class="rc-tier-highlight">Tiers</span> cuantas veces quieras;'],
+        ['pt-br' => 'Cada extração consome <strong>1 Extractor Tier</strong>;', 'en' => 'Each extraction consumes <strong>1 Extractor Tier</strong>;', 'es' => 'Cada extracción consume <strong>1 Extractor Tier</strong>;'],
+        ['pt-br' => 'O <strong>Extractor Tier</strong> está disponível na <strong>Game Store</strong> por <strong>2.000 Tibia Coins</strong>.', 'en' => 'The <strong>Extractor Tier</strong> is available in the <strong>Game Store</strong> for <strong>2,000 Tibia Coins</strong>.', 'es' => 'El <strong>Extractor Tier</strong> está disponible en la <strong>Game Store</strong> por <strong>2.000 Tibia Coins</strong>.'],
+        ['pt-br' => 'Pedra básica para upgrades até o nível 4', 'en' => 'Basic stone for upgrades up to level 4', 'es' => 'Piedra básica para upgrades hasta nivel 4'],
+        ['pt-br' => 'Pedra intermediária para upgrades até o nível 7', 'en' => 'Intermediate stone for upgrades up to level 7', 'es' => 'Piedra intermedia para upgrades hasta nivel 7'],
+        ['pt-br' => 'Pedra épica para upgrades até o nível 12', 'en' => 'Epic stone for upgrades up to level 12', 'es' => 'Piedra épica para upgrades hasta nivel 12'],
+        ['pt-br' => 'Grátis', 'en' => 'Free', 'es' => 'Gratis'],
+        ['pt-br' => 'Sobre o Upgrade System', 'en' => 'About the Upgrade System', 'es' => 'Sobre el Upgrade System'],
+        ['pt-br' => 'O Upgrade System tem como objetivo aprimorar suas armas, aumentando o poder de ataque por meio do uso das <strong>Upgrade Stones</strong>.', 'en' => 'The Upgrade System improves your weapons, increasing attack power through the use of <strong>Upgrade Stones</strong>.', 'es' => 'El Upgrade System mejora tus armas, aumentando el poder de ataque mediante el uso de <strong>Upgrade Stones</strong>.'],
+        ['pt-br' => 'Durante o processo de refinamento, é possível utilizar diferentes pedras de aprimoramento, cada uma com uma taxa de sucesso variável. Quanto maior o nível de refinamento, menor será a chance de sucesso.', 'en' => 'During refinement, you can use different upgrade stones, each with a variable success rate. The higher the refinement level, the lower the success chance.', 'es' => 'Durante el refinamiento, puedes usar diferentes piedras de mejora, cada una con una tasa de éxito variable. Cuanto mayor el nivel de refinamiento, menor será la chance de éxito.'],
+        ['pt-br' => 'Se o refinamento <strong>falhar</strong> e a arma já estiver em <strong>+1 ou superior</strong>, existe chance de <strong>perder 1 nível de upgrade</strong> — consulte <a class="rc-upg-link" href="#rc-upg-downgrade">Downgrade em Caso de Falha</a>.', 'en' => 'If refinement <strong>fails</strong> and the weapon is already <strong>+1 or higher</strong>, there is a chance to <strong>lose 1 upgrade level</strong> — see <a class="rc-upg-link" href="#rc-upg-downgrade">Downgrade on Failure</a>.', 'es' => 'Si el refinamiento <strong>falla</strong> y el arma ya está en <strong>+1 o superior</strong>, existe chance de <strong>perder 1 nivel de upgrade</strong> — consulta <a class="rc-upg-link" href="#rc-upg-downgrade">Downgrade en caso de falla</a>.'],
+        ['pt-br' => 'Exemplo de look com Weapon Upgrade', 'en' => 'Example look with Weapon Upgrade', 'es' => 'Ejemplo de look con Weapon Upgrade'],
+        ['pt-br' => 'Existem três tipos de Upgrade Stones disponíveis no jogo:', 'en' => 'There are three types of Upgrade Stones available in the game:', 'es' => 'Hay tres tipos de Upgrade Stones disponibles en el juego:'],
+        ['pt-br' => '<strong>Basic Upgrade Stones:</strong> permite melhorias em equipamentos até o nível 4.', 'en' => '<strong>Basic Upgrade Stones:</strong> allows improvements on equipment up to level 4.', 'es' => '<strong>Basic Upgrade Stones:</strong> permite mejoras en equipamentos hasta nivel 4.'],
+        ['pt-br' => '<strong>Medium Upgrade Stones:</strong> permite melhorias em equipamentos até o nível 7.', 'en' => '<strong>Medium Upgrade Stones:</strong> allows improvements on equipment up to level 7.', 'es' => '<strong>Medium Upgrade Stones:</strong> permite mejoras en equipamentos hasta nivel 7.'],
+        ['pt-br' => '<strong>Epic Upgrade Stones:</strong> permite melhorias em equipamentos até o nível máximo, que é 12.', 'en' => '<strong>Epic Upgrade Stones:</strong> allows improvements on equipment up to the maximum level, which is 12.', 'es' => '<strong>Epic Upgrade Stones:</strong> permite mejoras en equipamentos hasta el nivel máximo, que es 12.'],
+        ['pt-br' => '<strong>⚠️ Atenção!</strong> Ao utilizar a Fusion/Convergence Fusion no Forge System em um item com upgrade, todos os upgrades serão perdidos, pois o sistema cria um novo item, o que impossibilita manter quaisquer bônus.', 'en' => '<strong>⚠️ Attention!</strong> When using Fusion/Convergence Fusion in the Forge System on an upgraded item, all upgrades will be lost because the system creates a new item, making it impossible to keep any bonuses.', 'es' => '<strong>⚠️ Atención!</strong> Al usar Fusion/Convergence Fusion en el Forge System en un item con upgrade, todos los upgrades se perderán porque el sistema crea un nuevo item, lo que impide mantener cualquier bono.'],
+        ['pt-br' => 'Transfer Upgrade to Catcher', 'en' => 'Transfer Upgrade to Catcher', 'es' => 'Transferir upgrade al catcher'],
+        ['pt-br' => 'Onde Obter?', 'en' => 'Where to obtain?', 'es' => '¿Dónde obtener?'],
+        ['pt-br' => 'Comprando com o NPC <strong>Jorge Trambiqueiro</strong>, localizado no +1 do Templo.', 'en' => 'Buying from NPC <strong>Jorge Trambiqueiro</strong>, located on Temple +1.', 'es' => 'Comprando con el NPC <strong>Jorge Trambiqueiro</strong>, ubicado en el +1 del Templo.'],
+        ['pt-br' => 'Através do sistema de <strong>Cassino</strong>.', 'en' => 'Through the <strong>Casino</strong> system.', 'es' => 'A través del sistema de <strong>Casino</strong>.'],
+        ['pt-br' => 'Completando a <strong>Upgrade Stones Quest</strong>.', 'en' => 'Completing the <strong>Upgrade Stones Quest</strong>.', 'es' => 'Completando la <strong>Upgrade Stones Quest</strong>.'],
+        ['pt-br' => 'Derrotando <strong>bosses custom</strong> e de <strong>invasão</strong>.', 'en' => 'Defeating <strong>custom bosses</strong> and <strong>invasion</strong> bosses.', 'es' => 'Derrotando <strong>bosses custom</strong> y de <strong>invasión</strong>.'],
+        ['pt-br' => 'Tipos de Pedras', 'en' => 'Stone Types', 'es' => 'Tipos de piedras'],
+        ['pt-br' => 'Taxas de Sucesso por Nível', 'en' => 'Success Rates by Level', 'es' => 'Tasas de éxito por nivel'],
+        ['pt-br' => 'Downgrade em Caso de Falha', 'en' => 'Downgrade on Failure', 'es' => 'Downgrade en caso de falla'],
+        ['pt-br' => 'Ao falhar uma tentativa de upgrade, armas que já estejam no nível <strong>+1 ou superior</strong> possuem uma chance de perder <strong>1 nível de upgrade</strong> (ex.: de +5 para +4).', 'en' => 'When an upgrade attempt fails, weapons already at <strong>+1 or higher</strong> have a chance to lose <strong>1 upgrade level</strong> (for example: +5 to +4).', 'es' => 'Al fallar un intento de upgrade, armas que ya estén en <strong>+1 o superior</strong> tienen una chance de perder <strong>1 nivel de upgrade</strong> (ej.: de +5 a +4).'],
+        ['pt-br' => '<strong>Importante:</strong> Tentativas de upgrade de <strong>+0 para +1</strong> nunca resultam em perda de nível.', 'en' => '<strong>Important:</strong> Upgrade attempts from <strong>+0 to +1</strong> never result in level loss.', 'es' => '<strong>Importante:</strong> Intentos de upgrade de <strong>+0 a +1</strong> nunca resultan en pérdida de nivel.'],
+        ['pt-br' => 'Tentando alcançar', 'en' => 'Trying to reach', 'es' => 'Intentando alcanzar'],
+        ['pt-br' => 'Chance de downgrade', 'en' => 'Downgrade chance', 'es' => 'Chance de downgrade'],
+        ['pt-br' => 'Bônus de Ataque', 'en' => 'Attack Bonus', 'es' => 'Bono de ataque'],
+        ['pt-br' => 'Bônus', 'en' => 'Bonus', 'es' => 'Bono'],
+        ['pt-br' => 'Ataque', 'en' => 'Attack', 'es' => 'Ataque'],
+        ['pt-br' => 'Custo (aplicação)', 'en' => 'Cost (application)', 'es' => 'Costo (aplicación)'],
+        ['pt-br' => 'Custo (extrair)', 'en' => 'Cost (extraction)', 'es' => 'Costo (extraer)'],
+        ['pt-br' => '<strong>Grupo A</strong>: <span class="rc-sg-highlight">Amulet</span>, <span class="rc-sg-highlight">Ring</span>, <span class="rc-sg-highlight">Weapon</span> e <span class="rc-sg-highlight">Helmet</span>.', 'en' => '<strong>Group A</strong>: <span class="rc-sg-highlight">Amulet</span>, <span class="rc-sg-highlight">Ring</span>, <span class="rc-sg-highlight">Weapon</span>, and <span class="rc-sg-highlight">Helmet</span>.', 'es' => '<strong>Grupo A</strong>: <span class="rc-sg-highlight">Amulet</span>, <span class="rc-sg-highlight">Ring</span>, <span class="rc-sg-highlight">Weapon</span> y <span class="rc-sg-highlight">Helmet</span>.'],
+        ['pt-br' => '<strong>Grupo B</strong>: <span class="rc-sg-highlight">Armor</span>, <span class="rc-sg-highlight">Legs</span>, <span class="rc-sg-highlight">Boots</span> e <span class="rc-sg-highlight">Shield / Spellbook / Quiver</span>.', 'en' => '<strong>Group B</strong>: <span class="rc-sg-highlight">Armor</span>, <span class="rc-sg-highlight">Legs</span>, <span class="rc-sg-highlight">Boots</span>, and <span class="rc-sg-highlight">Shield / Spellbook / Quiver</span>.', 'es' => '<strong>Grupo B</strong>: <span class="rc-sg-highlight">Armor</span>, <span class="rc-sg-highlight">Legs</span>, <span class="rc-sg-highlight">Boots</span> y <span class="rc-sg-highlight">Shield / Spellbook / Quiver</span>.'],
+        ['pt-br' => 'Aplique uma Skill Gem em um equipamento que ainda não possua uma gema, conforme demonstrado na imagem abaixo e seguindo a <a class="rc-sg-price-link" href="#rc-sg-prices">tabela de custos</a>.', 'en' => 'Apply a Skill Gem to equipment that does not already have a gem, as shown in the image below and following the <a class="rc-sg-price-link" href="#rc-sg-prices">cost table</a>.', 'es' => 'Aplica una Skill Gem en un equipamento que aún no tenga una gema, como se muestra en la imagen abajo y siguiendo la <a class="rc-sg-price-link" href="#rc-sg-prices">tabla de costos</a>.'],
+        ['pt-br' => 'Para extrair uma Skill Gem, é necessário utilizar um Remove Upgrade Status, além da quantidade de dinheiro e RavynCore Tokens indicada na <a class="rc-sg-price-link" href="#rc-sg-prices">tabela de custos</a>.', 'en' => 'To extract a Skill Gem, you must use a Remove Upgrade Status, plus the amount of money and RavynCore Tokens shown in the <a class="rc-sg-price-link" href="#rc-sg-prices">cost table</a>.', 'es' => 'Para extraer una Skill Gem, es necesario usar un Remove Upgrade Status, además de la cantidad de dinero y RavynCore Tokens indicada en la <a class="rc-sg-price-link" href="#rc-sg-prices">tabla de costos</a>.'],
+        ['pt-br' => 'Após aplicar ou extrair uma Skill Gem, tanto o equipamento quanto a gema serão enviados automaticamente para a <strong>Store Inbox</strong>.', 'en' => 'After applying or extracting a Skill Gem, both the equipment and the gem are automatically sent to the <strong>Store Inbox</strong>.', 'es' => 'Después de aplicar o extraer una Skill Gem, tanto el equipamento como la gema se enviarán automáticamente a la <strong>Store Inbox</strong>.'],
+        ['pt-br' => 'Bônus por vocação (ao equipar)', 'en' => 'Bonus by vocation (when equipped)', 'es' => 'Bonos por vocación (al equipar)'],
+        ['pt-br' => 'Skills com bônus', 'en' => 'Skills with bonus', 'es' => 'Skills con bono'],
+        ['pt-br' => 'Observação', 'en' => 'Note', 'es' => 'Observación'],
+        ['pt-br' => 'Gemas de Skill', 'en' => 'Skill Gems', 'es' => 'Gemas de Skill'],
+        ['pt-br' => 'Grupo', 'en' => 'Group', 'es' => 'Grupo'],
+        ['pt-br' => 'Tabela de custos', 'en' => 'Cost table', 'es' => 'Tabla de costos'],
+        ['pt-br' => 'Bônus nas três skills melee ao equipar.', 'en' => 'Bonus to all three melee skills when equipped.', 'es' => 'Bono en las tres skills melee al equipar.'],
+        ['pt-br' => 'Bônus nas duas skills ao equipar (magic e fist).', 'en' => 'Bonus to both skills when equipped (magic and fist).', 'es' => 'Bono en las dos skills al equipar (magic y fist).'],
+        ['pt-br' => 'Sword, Club e Axe', 'en' => 'Sword, Club and Axe', 'es' => 'Sword, Club y Axe'],
+        ['pt-br' => 'Distance e Shield', 'en' => 'Distance and Shield', 'es' => 'Distance y Shield'],
+        ['pt-br' => 'Magic Level e Fist', 'en' => 'Magic Level and Fist', 'es' => 'Magic Level y Fist'],
+        ['pt-br' => 'Amulet, Ring, Weapon ou Helmet', 'en' => 'Amulet, Ring, Weapon or Helmet', 'es' => 'Amulet, Ring, Weapon o Helmet'],
+        ['pt-br' => 'Armor, Legs, Boots ou Shield/Book/Quiver', 'en' => 'Armor, Legs, Boots or Shield/Book/Quiver', 'es' => 'Armor, Legs, Boots o Shield/Book/Quiver'],
+        ['pt-br' => 'Utilize o Boss Finder, localizado no <strong>+1 do Templo</strong>, para selecionar um boss e ser teleportado diretamente para o waypoint da alavanca.', 'en' => 'Use Boss Finder, located on <strong>Temple +1</strong>, to select a boss and teleport directly to the lever waypoint.', 'es' => 'Usa Boss Finder, ubicado en el <strong>+1 del Templo</strong>, para seleccionar un boss y teletransportarte directamente al waypoint de la palanca.'],
+        ['pt-br' => 'O cooldown é iniciado no momento em que a alavanca é acionada, e <strong>não</strong> após a morte do boss.', 'en' => 'The cooldown starts when the lever is pulled, <strong>not</strong> after the boss dies.', 'es' => 'El cooldown comienza cuando se acciona la palanca, y <strong>no</strong> después de la muerte del boss.'],
+        ['pt-br' => 'O tempo padrão de cooldown é de <strong>20 horas</strong>.', 'en' => 'The default cooldown time is <strong>20 hours</strong>.', 'es' => 'El cooldown estándar es de <strong>20 horas</strong>.'],
+        ['pt-br' => 'Alguns bosses exigem a derrota de todos os Mini Bosses da sua progressão para liberar o acesso ao Boss Final.', 'en' => 'Some bosses require defeating all Mini Bosses in their progression to unlock access to the Final Boss.', 'es' => 'Algunos bosses requieren derrotar todos los Mini Bosses de su progresión para liberar el acceso al Boss final.'],
+        ['pt-br' => 'Ao derrotar o Boss Final, a progressão é reiniciada. Para enfrentá-lo novamente, será necessário derrotar todos os Mini Bosses outra vez.', 'en' => 'When the Final Boss is defeated, the progression resets. To face it again, you must defeat all Mini Bosses once more.', 'es' => 'Al derrotar al Boss final, la progresión se reinicia. Para enfrentarlo de nuevo, será necesario derrotar todos los Mini Bosses otra vez.'],
+        ['pt-br' => 'É obrigatório derrotar todos os Mini Bosses para liberar o acesso ao Boss Final.', 'en' => 'You must defeat all Mini Bosses to unlock access to the Final Boss.', 'es' => 'Es obligatorio derrotar todos los Mini Bosses para liberar el acceso al Boss final.'],
+        ['pt-br' => 'O progresso é individual para cada linha de bosses.', 'en' => 'Progress is individual for each boss line.', 'es' => 'El progreso es individual para cada línea de bosses.'],
+        ['pt-br' => 'Ao derrotar o Boss Final, todos os Mini Bosses da respectiva progressão são resetados.', 'en' => 'When the Final Boss is defeated, all Mini Bosses from that progression are reset.', 'es' => 'Al derrotar al Boss final, todos los Mini Bosses de la progresión respectiva se reinician.'],
+        ['pt-br' => 'Para enfrentar o Boss Final novamente, será necessário refazer toda a progressão.', 'en' => 'To face the Final Boss again, you must redo the entire progression.', 'es' => 'Para enfrentar al Boss final nuevamente, será necesario rehacer toda la progresión.'],
+        ['pt-br' => 'Bosses com cooldown especial: <strong>Ascending Ferumbras</strong> (2 dias) e <strong>Bakragore</strong> (2 dias). Os demais seguem o cooldown padrão do servidor.', 'en' => 'Bosses with special cooldown: <strong>Ascending Ferumbras</strong> (2 days) and <strong>Bakragore</strong> (2 days). The others follow the server default cooldown.', 'es' => 'Bosses con cooldown especial: <strong>Ascending Ferumbras</strong> (2 días) y <strong>Bakragore</strong> (2 días). Los demás siguen el cooldown estándar del servidor.'],
         ['pt-br' => 'Sobre', 'en' => 'About', 'es' => 'Sobre'],
         ['pt-br' => 'Extração', 'en' => 'Extraction', 'es' => 'Extracción'],
         ['pt-br' => 'Aplicação', 'en' => 'Application', 'es' => 'Aplicación'],
@@ -538,15 +648,45 @@ function rc_i18n_start_output_buffer(): void
 
 function rc_lang_url($language): string
 {
-    $uri = $_SERVER['REQUEST_URI'] ?? '';
-    $path = parse_url($uri, PHP_URL_PATH);
-    $query = parse_url($uri, PHP_URL_QUERY);
     $params = [];
-    if (is_string($query) && $query !== '') {
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    $query = parse_url($uri, PHP_URL_QUERY);
+
+    if (is_array($_GET) && !empty($_GET)) {
+        $params = $_GET;
+    } elseif (is_string($query) && $query !== '') {
         parse_str($query, $params);
+    }
+
+    unset($params['lang']);
+
+    $hasPageParam = isset($params['subtopic']) || isset($params['p']);
+    if (!$hasPageParam && defined('PAGE') && PAGE !== '' && PAGE !== '404') {
+        foreach (array_keys($params) as $key) {
+            if (!is_string($key)) {
+                continue;
+            }
+
+            // Remove legacy route markers like ?highscores or ?account/create.
+            if (($params[$key] === '' || $params[$key] === null) && !in_array($key, [
+                'action', 'name', 'list', 'category', 'vocation', 'world', 'world_type', 'order', 'page', 'guild', 'id', 'image', 'template'
+            ], true)) {
+                unset($params[$key]);
+            }
+        }
+
+        $params = array_merge(['subtopic' => PAGE], $params);
+    }
+
+    foreach (['action', 'name', 'list', 'category', 'vocation', 'world', 'world_type', 'order', 'page', 'guild', 'id', 'image'] as $routeParam) {
+        if (!isset($params[$routeParam]) && isset($_REQUEST[$routeParam])) {
+            $params[$routeParam] = $_REQUEST[$routeParam];
+        }
     }
 
     $params['lang'] = rc_i18n_normalize_language($language);
     $queryString = http_build_query($params);
-    return ($path ?: '/') . ($queryString !== '' ? '?' . $queryString : '');
+    $baseUrl = defined('BASE_URL') ? BASE_URL : '/';
+
+    return $baseUrl . ($queryString !== '' ? '?' . $queryString : '');
 }
