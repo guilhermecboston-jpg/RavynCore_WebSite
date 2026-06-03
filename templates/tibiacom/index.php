@@ -49,6 +49,13 @@ if (!function_exists('rc_rashid_city')) {
     }
 }
 
+if (!function_exists('rc_t')) {
+    require_once SYSTEM . 'libs/rc_i18n.php';
+    rc_i18n_init();
+}
+$rcSupportedLanguages = rc_supported_languages($template_path);
+$rcCurrentLang = rc_current_language();
+$rcHtmlLang = rc_html_language();
 $menuCategories = config('menu_categories') ?: [];
 $menus = get_template_menus();
 $templateLinks = isset($template) && is_array($template) ? $template : [];
@@ -146,9 +153,9 @@ $systemMenuItems = [
 ];
 
 $serverName = $config['lua']['serverName'] ?? 'RavynCore';
-$serverTagline = 'Domine, Conquiste, Seja Lendario';
-$headerSubtitle = 'Custom Map';
-$pageTitle = !empty($title) ? $title : ucfirst((string)PAGE);
+$serverTagline = rc_t('Domine, Conquiste, Seja Lendário');
+$headerSubtitle = rc_t('Custom Map');
+$pageTitle = rc_t(!empty($title) ? $title : ucfirst((string)PAGE));
 
 $brandDir = $template_path . '/images/brand';
 $brandLogoPreferred = $brandDir . '/ravyncore-logo.png';
@@ -276,7 +283,7 @@ if ($isStaffAccount) {
 }
 $staffActionsUrl = BASE_URL . '?subtopic=accountmanagement&action=staff_actions';
 if ($isStaffAccount) {
-    $quickLinks[] = ['name' => 'Staff Actions (' . (int)$openTicketsCount . ')', 'url' => $staffActionsUrl];
+    $quickLinks[] = ['name' => rc_t('Staff Actions') . ' (' . (int)$openTicketsCount . ')', 'url' => $staffActionsUrl];
 }
 $discordUrl = !empty($config['discord_link']) ? $config['discord_link'] : null;
 $tiktokUrl = 'https://www.tiktok.com/@ravyncore_';
@@ -293,9 +300,10 @@ $socialLinks = [
 ];
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="<?= escapeHtml($rcHtmlLang); ?>">
 <head>
     <?= template_place_holder('head_start'); ?>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="<?= BASE_URL; ?>images/favicon.ico">
     <link rel="shortcut icon" type="image/x-icon" href="<?= BASE_URL; ?>images/favicon.ico">
@@ -308,7 +316,7 @@ $socialLinks = [
     <script>var JS_DIR_IMAGES = "<?= $template_path; ?>/images/";</script>
     <?= template_place_holder('head_end'); ?>
 </head>
-<body class="rc-page rc-page-<?= escapeHtml((string)PAGE); ?>" style="--rc-bg-image: url('<?= $backgroundUrl; ?>')">
+<body class="rc-page rc-page-<?= escapeHtml((string)PAGE); ?>" data-rc-lang="<?= escapeHtml($rcCurrentLang); ?>" style="--rc-bg-image: url('<?= $backgroundUrl; ?>')">
 <?= template_place_holder('body_start'); ?>
 
 <div class="rc-atmosphere"></div>
@@ -368,12 +376,12 @@ $socialLinks = [
                         $showDropdown = count($items) > 1;
                         ?>
                         <li class="rc-nav-item">
-                            <a href="<?= $categoryLink; ?>"><?= escapeHtml($navItem['label']); ?></a>
+                            <a href="<?= $categoryLink; ?>"><?= escapeHtml(rc_t($navItem['label'])); ?></a>
                             <?php if ($showDropdown): ?>
                                 <div class="rc-nav-dropdown">
                                     <?php foreach ($items as $item): ?>
                                         <a href="<?= $item['link_full']; ?>"<?= $item['blank'] ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
-                                            <?= escapeHtml($item['name']); ?>
+                                            <?= escapeHtml(rc_t($item['name'])); ?>
                                         </a>
                                     <?php endforeach; ?>
                                 </div>
@@ -385,17 +393,17 @@ $socialLinks = [
                 <div class="rc-nav-mobile-actions">
                     <?php if ($logged): ?>
                         <a class="rc-btn rc-btn-play" href="<?= $accountManageUrl; ?>">
-                            <i class="fas fa-user"></i><span>My Account</span>
+                            <i class="fas fa-user"></i><span><?= escapeHtml(rc_t('My Account')); ?></span>
                         </a>
                         <a class="rc-btn rc-btn-danger" href="<?= $accountLogoutUrl; ?>">
-                            <i class="fas fa-right-from-bracket"></i><span>Logout</span>
+                            <i class="fas fa-right-from-bracket"></i><span><?= escapeHtml(rc_t('Logout')); ?></span>
                         </a>
                     <?php else: ?>
                         <a class="rc-btn rc-btn-play" href="<?= $accountManageUrl; ?>">
-                            <i class="fas fa-right-to-bracket"></i><span>Login</span>
+                            <i class="fas fa-right-to-bracket"></i><span><?= escapeHtml(rc_t('Login')); ?></span>
                         </a>
                         <a class="rc-btn rc-btn-violet" href="<?= $accountCreateUrl; ?>">
-                            <i class="fas fa-user-plus"></i><span>Create Account</span>
+                            <i class="fas fa-user-plus"></i><span><?= escapeHtml(rc_t('Create Account')); ?></span>
                         </a>
                     <?php endif; ?>
                 </div>
@@ -403,14 +411,14 @@ $socialLinks = [
 
             <div class="rc-header-actions">
                 <?php if ($logged): ?>
-                    <a class="rc-btn rc-btn-ghost rc-btn-sm" href="<?= $accountManageUrl; ?>">My Account</a>
+                    <a class="rc-btn rc-btn-ghost rc-btn-sm" href="<?= $accountManageUrl; ?>"><?= escapeHtml(rc_t('My Account')); ?></a>
                     <a class="rc-btn rc-btn-violet rc-btn-sm" href="<?= $accountLogoutUrl; ?>">
-                        <i class="fas fa-right-from-bracket"></i><span>Logout</span>
+                        <i class="fas fa-right-from-bracket"></i><span><?= escapeHtml(rc_t('Logout')); ?></span>
                     </a>
                 <?php else: ?>
-                    <a class="rc-btn rc-btn-ghost rc-btn-sm" href="<?= $accountManageUrl; ?>">Login</a>
+                    <a class="rc-btn rc-btn-ghost rc-btn-sm" href="<?= $accountManageUrl; ?>"><?= escapeHtml(rc_t('Login')); ?></a>
                     <a class="rc-btn rc-btn-violet rc-btn-sm" href="<?= $accountCreateUrl; ?>">
-                        <i class="fas fa-user-plus"></i><span>Create Account</span>
+                        <i class="fas fa-user-plus"></i><span><?= escapeHtml(rc_t('Create Account')); ?></span>
                     </a>
                 <?php endif; ?>
             </div>
@@ -427,12 +435,12 @@ $socialLinks = [
 
     <section id="rcSocialLinks" class="rc-social-strip" aria-label="RavynCore social links">
         <div class="rc-social-strip-inner">
-            <h6 class="rc-social-strip-label">Community</h6>
+            <h6 class="rc-social-strip-label"><?= escapeHtml(rc_t('Community')); ?></h6>
             <div class="rc-social-icons">
                 <?php foreach ($socialLinks as $social): ?>
                     <?php if (!empty($social['url'])): ?>
                         <?php $helperTitle = addslashes((string)$social['name']); ?>
-                        <?php $helperText = addslashes((string)$social['tooltip']); ?>
+                        <?php $helperText = addslashes(rc_t((string)$social['tooltip'])); ?>
                         <span class="HelperDivIndicator"
                               onmouseover="ActivateHelperDiv($(this), '<?= $helperTitle; ?>', '<?= $helperText; ?>', '');"
                               onmouseout="$('#HelperDivContainer').hide();">
@@ -447,35 +455,45 @@ $socialLinks = [
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
+            <div class="rc-language-switcher" aria-label="<?= escapeHtml(rc_t('Languages')); ?>">
+                <?php foreach ($rcSupportedLanguages as $languageCode => $language): ?>
+                    <a class="rc-language-option<?= $languageCode === $rcCurrentLang ? ' is-active' : ''; ?>"
+                       href="<?= escapeHtml(rc_lang_url($languageCode)); ?>"
+                       title="<?= escapeHtml($language['label']); ?>"
+                       aria-label="<?= escapeHtml($language['label']); ?>">
+                        <img src="<?= $language['flag']; ?>" alt="<?= escapeHtml($language['short']); ?>">
+                    </a>
+                <?php endforeach; ?>
+            </div>
         </div>
     </section>
 
     <main id="rcMain" class="rc-main-grid">
         <aside class="rc-sidebar">
             <section class="rc-panel">
-                <h3>Server Status</h3>
+                <h3><?= escapeHtml(rc_t('Server Status')); ?></h3>
                 <div class="rc-status-line">
-                    <span>State</span>
+                    <span><?= escapeHtml(rc_t('State')); ?></span>
                     <strong class="<?= !empty($status['online']) ? 'is-online' : 'is-offline'; ?>">
-                        <?= !empty($status['online']) ? 'Online' : 'Offline'; ?>
+                        <?= escapeHtml(rc_t(!empty($status['online']) ? 'Online' : 'Offline')); ?>
                     </strong>
                 </div>
                 <div class="rc-status-line">
-                    <span>Players</span>
+                    <span><?= escapeHtml(rc_t('Players')); ?></span>
                     <strong><?= $playersOnline; ?></strong>
                 </div>
                 <div class="rc-status-line">
-                    <span>Record Online</span>
+                    <span><?= escapeHtml(rc_t('Record Online')); ?></span>
                     <strong><?= $recordOnline; ?></strong>
                 </div>
             </section>
 
             <section class="rc-panel">
-                <h3>Quick Links</h3>
+                <h3><?= escapeHtml(rc_t('Quick Links')); ?></h3>
                 <ul class="rc-links">
                     <?php foreach ($quickLinks as $link): ?>
                         <li>
-                            <a href="<?= $link['url']; ?>"><?= escapeHtml($link['name']); ?></a>
+                            <a href="<?= $link['url']; ?>"><?= escapeHtml(rc_t($link['name'])); ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -486,7 +504,7 @@ $socialLinks = [
         <section class="rc-content-column">
             <?php if (PAGE === 'news'): ?>
                 <section class="rc-panel rc-panel-news">
-                    <h3>Latest News</h3>
+                    <h3><?= escapeHtml(rc_t('Latest News')); ?></h3>
                     <div class="rc-panel-body">
                         <?= tickers(); ?>
                     </div>
@@ -504,10 +522,10 @@ $socialLinks = [
 
         <aside class="rc-sidebar">
             <section class="rc-panel">
-                <h3>Top Players</h3>
+                <h3><?= escapeHtml(rc_t('Top Players')); ?></h3>
                 <div class="rc-ranking">
                     <?php foreach ($topPlayers as $player): ?>
-                        <a class="rc-rank-row" href="<?= getPlayerLink($player['name'], false); ?>" aria-label="View <?= escapeHtml($player['name']); ?>">
+                        <a class="rc-rank-row" href="<?= getPlayerLink($player['name'], false); ?>" aria-label="<?= escapeHtml(rc_t('View') . ' ' . $player['name']); ?>">
                             <span class="rc-rank-position">#<?= (int)$player['rank']; ?></span>
                             <?php if (!empty($player['outfit_html'])): ?>
                                 <?= $player['outfit_html']; ?>
@@ -516,19 +534,19 @@ $socialLinks = [
                             <?php endif; ?>
                             <div class="rc-rank-player">
                                 <strong><?= escapeHtml($player['name']); ?></strong>
-                                <small>Level <?= (int)$player['level']; ?> - <?= escapeHtml($player['vocation_name']); ?></small>
+                                <small><?= escapeHtml(rc_t('Level')); ?> <?= (int)$player['level']; ?> - <?= escapeHtml($player['vocation_name']); ?></small>
                             </div>
                         </a>
                     <?php endforeach; ?>
                 </div>
-                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= getLink('highscores'); ?>">Full Ranking</a>
+                <a class="rc-btn rc-btn-subtle rc-btn-block" href="<?= getLink('highscores'); ?>"><?= escapeHtml(rc_t('Full Ranking')); ?></a>
             </section>
 
             <section class="rc-panel">
-                <h3>Search Character</h3>
+                <h3><?= escapeHtml(rc_t('Search Character')); ?></h3>
                 <form method="post" action="<?= getLink('characters'); ?>" class="rc-search-form">
-                    <input type="text" name="name" maxlength="29" placeholder="Character name" pattern="[A-Za-z\s]+" title="Use only letters and spaces" data-rc-letters-only>
-                    <button type="submit" class="rc-btn rc-btn-subtle rc-btn-block">Search</button>
+                    <input type="text" name="name" maxlength="29" placeholder="<?= escapeHtml(rc_t('Character name')); ?>" pattern="[A-Za-z\s]+" title="<?= escapeHtml(rc_t('Use only letters and spaces')); ?>" data-rc-letters-only>
+                    <button type="submit" class="rc-btn rc-btn-subtle rc-btn-block"><?= escapeHtml(rc_t('Search')); ?></button>
                 </form>
             </section>
         </aside>
@@ -548,7 +566,7 @@ $socialLinks = [
             </a>
         </div>
         <div class="rc-footer-bottom">
-            <span>&copy; <?= date('Y'); ?> RavynCore. All rights reserved.</span>
+            <span>&copy; <?= date('Y'); ?> RavynCore. <?= escapeHtml(rc_t('All rights reserved.')); ?></span>
         </div>
     </footer>
 </div>

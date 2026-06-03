@@ -44,6 +44,11 @@ if (
 ) {
   ob_start('ob_gzhandler');
 }
+if (file_exists(SYSTEM . 'libs/rc_i18n.php')) {
+  require_once SYSTEM . 'libs/rc_i18n.php';
+  rc_i18n_init();
+  rc_i18n_start_output_buffer();
+}
 
 // cache
 require_once SYSTEM . 'libs/cache.php';
