@@ -1,5 +1,5 @@
 -- RavynCore homepage news refresh.
--- Run this on the website database to replace copied Tyron/other-server homepage texts.
+-- Run this on the website database to replace copied/default homepage texts.
 -- MyAAC stores homepage news in myaac_news:
 --   type 1 = main news, type 2 = ticker, type 3 = featured article.
 -- After running, clear the MyAAC news cache (system/cache) or wait for cache expiration.
@@ -39,9 +39,12 @@ WHERE `type` = 1
       `title` LIKE '%Tyron%'
       OR `title` LIKE '%TYRON%'
       OR `title` LIKE '%TyronOT%'
+      OR `title` = 'Hello!'
       OR `body` LIKE '%Tyron%'
       OR `body` LIKE '%TYRON%'
       OR `body` LIKE '%TyronOT%'
+      OR `body` LIKE '%MyAAC is just READY to use%'
+      OR `body` LIKE '%github.com/zimbadev/crystalserver-aac%'
   );
 
 INSERT INTO `myaac_news` (`type`, `date`, `category`, `title`, `body`, `player_id`, `comments`, `hidden`)
@@ -63,10 +66,12 @@ WHERE `type` = 2
       `title` LIKE '%Tyron%'
       OR `title` LIKE '%TYRON%'
       OR `title` LIKE '%TyronOT%'
+      OR `title` = 'Hello tickets!'
       OR `body` LIKE '%Tyron%'
       OR `body` LIKE '%TYRON%'
       OR `body` LIKE '%TyronOT%'
       OR `body` LIKE '%Contentbox headline%'
+      OR `body` LIKE '%github.com/zimbadev/crystalserver-aac%'
   );
 
 INSERT INTO `myaac_news` (`type`, `date`, `category`, `title`, `body`, `player_id`, `comments`, `hidden`)
