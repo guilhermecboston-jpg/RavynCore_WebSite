@@ -37,12 +37,12 @@ if (!function_exists('rc_roulette_pretty_name')) {
 }
 
 if (!function_exists('rc_roulette_render_pool')) {
-    function rc_roulette_render_pool(array $items, $tierClass)
+    function rc_roulette_render_pool(array $items)
     {
         $html = '';
         foreach ($items as $item) {
             $name = rc_roulette_pretty_name($item['name'] ?? '');
-            $html .= '<li class="rc-casino-loot-item rc-casino-tier-' . rc_roulette_esc($tierClass) . '">'
+            $html .= '<li class="rc-casino-loot-item">'
                 . '<span class="rc-casino-loot-icon">' . rc_roulette_item_html((int)$item['id'], $name) . '</span>'
                 . '<span class="rc-casino-loot-name">' . rc_roulette_esc($name) . '</span>'
                 . '</li>';
@@ -57,28 +57,29 @@ $spinOptions = $data['spinOptions'] ?? [1, 5, 10, 25, 50, 100];
 
 $bonusRows = '';
 foreach ($data['spinningBonus'] ?? [] as $row) {
-    $bonusRows .= '<tr><td><strong>' . (int)$row['spins'] . ' giros</strong></td>'
-        . '<td>' . rc_roulette_esc($row['reward'] ?? '') . '</td></tr>';
+    $rewardName = rc_roulette_pretty_name($row['reward'] ?? '');
+    $itemId = (int)($row['itemId'] ?? 0);
+    $bonusRows .= '<tr><td><strong>' . (int)$row['spins'] . ' giros</strong></td><td>'
+        . '<span class="rc-casino-bonus-reward">'
+        . '<span class="rc-casino-loot-icon">' . rc_roulette_item_html($itemId, $rewardName) . '</span>'
+        . '<span>' . rc_roulette_esc($rewardName) . '</span>'
+        . '</span></td></tr>';
 }
 
 $spinList = implode(', ', array_map(static function ($n) {
     return (int)$n . 'x';
 }, $spinOptions));
 
-$commons = rc_roulette_render_pool($data['commons'] ?? [], 'common');
-$rares = rc_roulette_render_pool($data['rares'] ?? [], 'rare');
-$ultras = rc_roulette_render_pool($data['ultraRares'] ?? [], 'ultra');
-
+$commons = $data['commons'] ?? [];
 $rouletteColumns = '';
 foreach ($data['roulettes'] ?? [] as $roleta) {
     $slug = preg_replace('/[^a-z0-9]+/', '-', strtolower((string)($roleta['id'] ?? '')));
+    $pool = array_merge($roleta['exclusive'] ?? [], $commons);
+    $poolHtml = rc_roulette_render_pool($pool);
     $rouletteColumns .= '<section class="rc-st-card rc-casino-roleta-col" id="rc-roleta-' . rc_roulette_esc($slug) . '">'
         . '<h3>' . rc_roulette_esc($roleta['name'] ?? '') . '</h3>'
-        . '<p class="rc-casino-roleta-note">As três roletas compartilham o mesmo pool de prêmios. '
-        . 'Itens mais raros têm probabilidade menor de parar no centro.</p>'
-        . '<h4>Comuns</h4><ul class="rc-casino-loot-grid">' . $commons . '</ul>'
-        . '<h4>Raros</h4><ul class="rc-casino-loot-grid rc-casino-loot-grid-compact">' . $rares . '</ul>'
-        . '<h4>Ultra raros</h4><ul class="rc-casino-loot-grid">' . $ultras . '</ul>'
+        . '<p class="rc-casino-roleta-note">Prêmios exclusivos desta roleta + itens comuns do cassino.</p>'
+        . '<ul class="rc-casino-loot-grid">' . $poolHtml . '</ul>'
         . '</section>';
 }
 
@@ -113,7 +114,6 @@ echo '<div class="rc-st-page rc-tier-page rc-casino-page">'
     . '<div class="rc-bf-table-wrap"><table class="rc-bf-table rc-tier-table">'
     . '<thead><tr><th>Giros acumulados</th><th>Recompensa</th></tr></thead>'
     . '<tbody>' . $bonusRows . '</tbody></table></div>'
-    . '<p class="rc-casino-footnote">O painel Spinning Bonus no cliente OTC usa o módulo <em>game_roulette_progress</em> (Rubini). A integração servidor ↔ cliente ainda precisa ser finalizada para exibir o progresso in-game.</p>'
     . '</section>'
 
     . '<section class="rc-casino-roleta-wrap rc-casino-anchor" id="rc-roulette-prizes">'
@@ -127,17 +127,13 @@ echo '<div class="rc-st-page rc-tier-page rc-casino-page">'
     . '.rc-casino-page .rc-casino-hero-text{flex:1;min-width:260px;font-size:14px;line-height:1.55;color:#d6e4ff}'
     . '.rc-casino-page .rc-casino-hero-text p{margin:0 0 10px}'
     . '.rc-casino-page .rc-di-highlight{color:#f2c16b;font-weight:700}'
-    . '.rc-casino-page .rc-casino-footnote{font-size:12px;color:#9eb4d8;margin-top:10px}'
     . '.rc-casino-page .rc-casino-section-title{margin:0 0 12px 4px;color:#f2c16b}'
     . '.rc-casino-page .rc-casino-roleta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}'
-    . '.rc-casino-page .rc-casino-roleta-col h4{margin:14px 0 8px;font-size:13px;color:#c5d9f5}'
     . '.rc-casino-page .rc-casino-roleta-note{font-size:13px;color:#9eb4d8;margin:0 0 10px}'
     . '.rc-casino-page .rc-casino-loot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px 10px;list-style:none;margin:0 0 8px;padding:0}'
-    . '.rc-casino-page .rc-casino-loot-grid-compact{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}'
     . '.rc-casino-page .rc-casino-loot-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#e8f0ff}'
-    . '.rc-casino-page .rc-casino-loot-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center}'
-    . '.rc-casino-page .rc-casino-tier-rare .rc-casino-loot-name{color:#7ec8ff}'
-    . '.rc-casino-page .rc-casino-tier-ultra .rc-casino-loot-name{color:#f2c16b;font-weight:600}'
+    . '.rc-casino-page .rc-casino-loot-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0}'
+    . '.rc-casino-page .rc-casino-bonus-reward{display:inline-flex;align-items:center;gap:8px}'
     . '</style>'
 
     . '<script>(function(){function rs(a){if(!a)return;var h=document.querySelector(".rc-header"),o=(h?h.offsetHeight:0)+16,t=a.getBoundingClientRect().top+window.pageYOffset-o;window.scrollTo({top:Math.max(0,t),behavior:"smooth"});history.replaceState(null,"",a.id?"#"+a.id:"");}'

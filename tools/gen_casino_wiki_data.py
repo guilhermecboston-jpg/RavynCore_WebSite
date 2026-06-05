@@ -19,12 +19,12 @@ NAME_OVERRIDES = {
     61866: "yellow spark",
     61867: "red spark",
     64087: "Roulette Token",
-    64040: "addon casket outfit 1",
-    64041: "addon casket outfit 2",
-    64042: "addon casket outfit 3",
-    64043: "addon casket outfit 4",
-    64085: "mount casket",
-    64101: "surprise casket",
+    64040: "ruby outfit",
+    64041: "crystal outfit",
+    64042: "emerald outfit",
+    64043: "silver outfit",
+    64085: "bag of stone 0",
+    64101: "boneheart backpack",
     64114: "ultra rare scroll",
     43898: "bag you covet",
     63787: "boss points",
@@ -98,10 +98,10 @@ lines.append("    'tokenId' => 64087,")
 lines.append("    'tokenName' => 'Roulette Token',")
 lines.append("    'spinOptions' => [1, 5, 10, 25, 50, 100],")
 lines.append("    'spinningBonus' => [")
-lines.append("        ['spins' => 25, 'reward' => '2x Roulette Tokens', 'itemId' => 64087, 'count' => 2],")
-lines.append("        ['spins' => 50, 'reward' => '1x Addon Casket', 'itemId' => 64040, 'count' => 1],")
-lines.append("        ['spins' => 75, 'reward' => '1x Mount Casket', 'itemId' => 64085, 'count' => 1],")
-lines.append("        ['spins' => 100, 'reward' => '1x Surprise Casket', 'itemId' => 64101, 'count' => 1],")
+lines.append("        ['spins' => 25, 'reward' => 'Ruby Outfit', 'itemId' => 64040, 'count' => 1],")
+lines.append("        ['spins' => 50, 'reward' => 'Crystal Outfit', 'itemId' => 64041, 'count' => 1],")
+lines.append("        ['spins' => 75, 'reward' => 'Emerald Outfit', 'itemId' => 64042, 'count' => 1],")
+lines.append("        ['spins' => 100, 'reward' => 'Silver Outfit', 'itemId' => 64043, 'count' => 1],")
 lines.append("    ],")
 lines.append("    'roulettes' => [")
 for rid, rname in [('norte', 'Roleta do Norte'), ('esquerda', 'Roleta da Esquerda'), ('sul', 'Roleta do Sul')]:
