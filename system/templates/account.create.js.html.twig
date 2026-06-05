@@ -61,8 +61,10 @@
 		}
 
 		var isPassword = input.attr('type') === 'password';
+		var showLabel = $(button).data('show-label') || 'Show';
+		var hideLabel = $(button).data('hide-label') || 'Hide';
 		input.attr('type', isPassword ? 'text' : 'password');
-		$(button).text(isPassword ? 'Hide' : 'Show');
+		$(button).text(isPassword ? hideLabel : showLabel);
 	}
 
 	function initializeIndicators()

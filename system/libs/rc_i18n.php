@@ -574,7 +574,7 @@ function rc_translate_html($html): string
     }
 
     $protected = [];
-    $html = preg_replace_callback('/<(style|textarea|pre|code)\b[^>]*>.*?<\/\1>/is', static function($matches) use (&$protected) {
+    $html = preg_replace_callback('/<(script|style|textarea|pre|code)\b[^>]*>.*?<\/\1>/is', static function($matches) use (&$protected) {
         $token = '%%RC_I18N_BLOCK_' . count($protected) . '%%';
         $protected[$token] = $matches[0];
         return $token;

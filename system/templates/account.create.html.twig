@@ -88,7 +88,7 @@
 													<td>
 														<div class="rc-password-wrap">
 															<input type="password" name="password" id="password" value="" size="30" maxlength="29" />
-															<button type="button" class="rc-btn rc-btn-subtle rc-password-toggle" data-target="password">Show</button>
+															<button type="button" class="rc-btn rc-btn-subtle rc-password-toggle" data-target="password" data-show-label="Show" data-hide-label="Hide">Show</button>
 															<img id="password_indicator" src="images/global/general/{% if not save or errors.password is defined %}n{% endif %}ok.gif" style="display: none;" />
 														</div>
 													</td>
@@ -101,7 +101,7 @@
 													<td>
 														<div class="rc-password-wrap">
 															<input type="password" name="password2" id="password2" value="" size="30" maxlength="29" />
-															<button type="button" class="rc-btn rc-btn-subtle rc-password-toggle" data-target="password2">Show</button>
+															<button type="button" class="rc-btn rc-btn-subtle rc-password-toggle" data-target="password2" data-show-label="Show" data-hide-label="Hide">Show</button>
 															<img id="password2_indicator" src="images/global/general/{% if not save or errors.password is defined %}n{% endif %}ok.gif" style="display: none;" />
 														</div>
 													</td>
