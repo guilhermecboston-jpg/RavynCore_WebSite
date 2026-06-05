@@ -147,6 +147,8 @@ if (count($charBazaarMenuItems) < 2) {
 $donateMenuItems = $rcGetMenuItemsByNeedles($rcMenuGroups, ['donate', 'shop']);
 $systemMenuItems = [
     ['name' => 'Drops Important', 'link_full' => BASE_URL . '?subtopic=dropsimportant', 'blank' => false],
+    ['name' => 'Box System', 'link_full' => BASE_URL . '?subtopic=boxsystem', 'blank' => false],
+    ['name' => 'Roulette System', 'link_full' => BASE_URL . '?subtopic=roulettesystem', 'blank' => false],
     ['name' => 'Reflect Potion', 'link_full' => BASE_URL . '?subtopic=reflectpotion', 'blank' => false],
     ['name' => 'Boss Finder', 'link_full' => BASE_URL . '?subtopic=bossfinder', 'blank' => false],
     ['name' => 'Hunt Finder', 'link_full' => BASE_URL . '?subtopic=huntfinder', 'blank' => false],
