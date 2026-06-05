@@ -1,5 +1,5 @@
 {{ hook('HOOK_ACCOUNT_CREATE_BEFORE_FORM') }}
-<form action="{{ getLink('account/create') }}" method="post" id="createaccount">
+<form action="{{ constant('BASE_URL') }}?subtopic=createaccount" method="post" id="createaccount">
 	<div class="TableContainer" >
 		<table class="Table5" cellpadding="0" cellspacing="0" >
 			<div class="CaptionContainer" >
@@ -339,7 +339,7 @@
 	</table>
 </form>
 {{ hook('HOOK_ACCOUNT_CREATE_AFTER_FORM') }}
-<script type="text/javascript" src="tools/check_name.js"></script>
+<script type="text/javascript" src="{{ constant('BASE_URL') }}tools/check_name.js"></script>
 <style>
 	#SuggestAccountNumber {
 		font-size: 7pt;

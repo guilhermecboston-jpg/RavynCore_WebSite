@@ -96,7 +96,7 @@ if ($save) {
         $account_id = $_POST['account'];
     }
 
-    $email = $_POST['email'];
+    $email = trim((string)$_POST['email']);
     $password = $_POST['password'];
     $password2 = $_POST['password2'];
 

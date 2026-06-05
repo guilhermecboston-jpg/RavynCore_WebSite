@@ -38,7 +38,7 @@ if (isset($_GET['account'])) {
 
   success_('Good account' . (USE_ACCOUNT_NAME ? ' name' : '') . ' ( ' . $account . ' ).');
 } elseif (isset($_GET['email'])) {
-  $email = $_GET['email'];
+  $email = trim((string)$_GET['email']);
   if (!Validator::email($email)) {
     error_(Validator::getLastError());
   }
@@ -97,6 +97,9 @@ if (isset($_GET['account'])) {
  */
 function success_($desc)
 {
+  if (!headers_sent()) {
+    header('Content-Type: application/json; charset=UTF-8');
+  }
   echo json_encode([
     'success' => $desc,
   ]);
@@ -104,6 +107,9 @@ function success_($desc)
 }
 function error_($desc)
 {
+  if (!headers_sent()) {
+    header('Content-Type: application/json; charset=UTF-8');
+  }
   echo json_encode([
     'error' => $desc,
   ]);

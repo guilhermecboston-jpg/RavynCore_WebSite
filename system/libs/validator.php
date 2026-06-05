@@ -106,7 +106,9 @@ class Validator
 	 * @return bool Is email valid?
 	 */
 	public static function email($email) {
-		if(empty($email)) {
+		$email = trim((string)$email);
+
+		if($email === '') {
 			self::$lastError = 'Please enter your new email address.';
 			return false;
 		}
@@ -116,7 +118,7 @@ class Validator
 			return false;
 		}
 
-		if(!preg_match('/^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9_](?:[A-z0-9_\-](?!\.)){0,61}[a-zA-Z0-9_]?\.)+[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!$)){0,61}[a-zA-Z0-9_]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/', $email)) {
+		if(preg_match('/[\r\n]/', $email) || filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
 			self::$lastError = 'Invalid e-mail format.';
 			return false;
 		}
