@@ -150,6 +150,7 @@ $systemMenuItems = [
     ['name' => 'Box System', 'link_full' => BASE_URL . '?subtopic=boxsystem', 'blank' => false],
     ['name' => 'Roulette System', 'link_full' => BASE_URL . '?subtopic=roulettesystem', 'blank' => false],
     ['name' => 'Reflect Potion', 'link_full' => BASE_URL . '?subtopic=reflectpotion', 'blank' => false],
+    ['name' => 'Exercise Weapons', 'link_full' => BASE_URL . '?subtopic=exerciseweapons', 'blank' => false],
     ['name' => 'Boss Finder', 'link_full' => BASE_URL . '?subtopic=bossfinder', 'blank' => false],
     ['name' => 'Hunt Finder', 'link_full' => BASE_URL . '?subtopic=huntfinder', 'blank' => false],
     ['name' => 'Tier System', 'link_full' => BASE_URL . '?subtopic=tiersystem', 'blank' => false],
