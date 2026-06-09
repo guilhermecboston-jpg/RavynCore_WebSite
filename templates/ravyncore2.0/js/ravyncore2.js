@@ -109,17 +109,20 @@
 
         var introKey = banner.getAttribute('data-intro-key') || 'ravyncore2-launch-banner-intro';
         if (prefersReducedMotion()) {
+            banner.classList.remove('is-intro-standby');
             banner.classList.add('is-intro-skipped');
             return;
         }
 
         if (storageGet(introKey) === 'played') {
+            banner.classList.remove('is-intro-standby');
             banner.classList.add('is-intro-skipped');
             return;
         }
 
         storageSet(introKey, 'played');
         banner.classList.add('is-intro-ready');
+        banner.classList.remove('is-intro-standby');
 
         window.requestAnimationFrame(function () {
             banner.classList.add('is-intro-playing');
@@ -127,17 +130,17 @@
 
         window.setTimeout(function () {
             banner.classList.add('is-impacting');
-        }, 2250);
+        }, 2580);
 
         window.setTimeout(function () {
             banner.classList.remove('is-impacting');
-        }, 2720);
+        }, 3040);
 
         window.setTimeout(function () {
             banner.classList.remove('is-intro-ready');
             banner.classList.remove('is-intro-playing');
             banner.classList.add('is-intro-complete');
-        }, 3180);
+        }, 3420);
     }
 
     initLaunchBannerIntro();

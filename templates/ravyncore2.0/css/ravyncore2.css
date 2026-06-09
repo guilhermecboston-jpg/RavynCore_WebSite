@@ -128,10 +128,15 @@ body.rc-template-ravyncore2 .rc-nav-mobile-actions .rc-btn {
 }
 
 body.rc-template-ravyncore2 .rc-header-language {
-    margin: 0 0 0 2px;
+    margin: 0 0 0 10px;
     padding: 0 2px;
     border-left: 0;
     gap: 5px;
+}
+
+body.rc-template-ravyncore2 .rc-header-actions {
+    justify-content: flex-end;
+    margin-left: auto;
 }
 
 body.rc-template-ravyncore2 .rc-nav-mobile-language {
@@ -866,13 +871,14 @@ body.rc-template-ravyncore2 .rc2-launch-banner__roll {
 }
 
 body.rc-template-ravyncore2 .rc2-launch-banner .rc-launch-countdown__inner {
-    padding-top: clamp(48px, 4vw, 58px);
+    padding-top: 22px;
 }
 
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-standby,
 body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-ready {
     clip-path: polygon(0 0, 100% 0, 100% 2%, 0 2%);
-    transform: translateY(-10px) scaleY(0.04);
-    opacity: 0.96;
+    transform: translateY(-120%) scaleY(0.04);
+    opacity: 0;
 }
 
 body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing {
@@ -961,8 +967,8 @@ body.rc-template-ravyncore2 .rc2-launch-date-flag {
     right: clamp(20px, 4vw, 64px);
     z-index: 7;
     max-width: min(360px, calc(100% - 40px));
-    opacity: 1;
-    transform: rotate(1.5deg);
+    opacity: 0;
+    transform: translate(390px, -88px) rotate(12deg) scale(0.92);
     pointer-events: none;
 }
 
@@ -986,29 +992,33 @@ body.rc-template-ravyncore2 .rc2-launch-date-flag span {
         0 0 18px rgba(255, 215, 106, 0.24);
 }
 
-body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-ready .rc2-launch-date-flag {
-    opacity: 0;
-    transform: translate(120px, -54px) rotate(8deg) scale(0.9);
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-complete .rc2-launch-date-flag {
+    opacity: 1;
+    transform: rotate(1.5deg) scale(1);
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-skipped .rc2-launch-date-flag {
+    display: none;
 }
 
 body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-arrow-impact--one {
-    animation: rc2-arrow-one 0.58s ease-in 1.08s both;
+    animation: rc2-arrow-one 0.58s ease-in 1.34s both;
 }
 
 body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-arrow-impact--two {
-    animation: rc2-arrow-two 0.6s ease-in 1.32s both;
+    animation: rc2-arrow-two 0.6s ease-in 1.56s both;
 }
 
 body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-arrow-impact--three {
-    animation: rc2-arrow-three 0.58s ease-in 1.55s both;
+    animation: rc2-arrow-three 0.58s ease-in 1.78s both;
 }
 
 body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-arrow-impact--flag {
-    animation: rc2-arrow-flag 0.72s ease-in 1.82s both;
+    animation: rc2-arrow-flag 0.86s ease-in 2.02s both;
 }
 
 body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-launch-date-flag {
-    animation: rc2-date-flag-pin 0.58s cubic-bezier(0.2, 1.34, 0.32, 1) 2.12s both;
+    animation: rc2-date-flag-pin 0.86s cubic-bezier(0.2, 1.22, 0.32, 1) 2.02s both;
 }
 
 @keyframes rc2-fade-up {
@@ -1026,12 +1036,17 @@ body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-launch-date
 @keyframes rc2-viking-banner-unroll {
     0% {
         clip-path: polygon(0 0, 100% 0, 100% 2%, 0 2%);
-        transform: translateY(-10px) scaleY(0.04);
+        transform: translateY(-120%) scaleY(0.04);
+        opacity: 0;
         filter: brightness(0.72);
+    }
+    12% {
+        opacity: 1;
     }
     68% {
         clip-path: polygon(0 0, 100% 0, 100% 104%, 0 100%);
         transform: translateY(0) scaleY(1.035);
+        opacity: 1;
         filter: brightness(1.08);
     }
     84% {
@@ -1104,11 +1119,15 @@ body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-launch-date
 @keyframes rc2-date-flag-pin {
     0% {
         opacity: 0;
-        transform: translate(120px, -54px) rotate(8deg) scale(0.9);
+        transform: translate(390px, -88px) rotate(12deg) scale(0.92);
     }
-    72% {
+    18% {
         opacity: 1;
-        transform: translate(-7px, 3px) rotate(-2.5deg) scale(1.04);
+        transform: translate(240px, -54px) rotate(9deg) scale(0.96);
+    }
+    74% {
+        opacity: 1;
+        transform: translate(-8px, 5px) rotate(-2.5deg) scale(1.04);
     }
     100% {
         opacity: 1;
@@ -1245,7 +1264,8 @@ body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-launch-date
         line-height: 1.35;
     }
 
-    body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-ready .rc2-launch-date-flag {
+    body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-ready .rc2-launch-date-flag,
+    body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-standby .rc2-launch-date-flag {
         transform: translateY(-28px) scale(0.94);
     }
 
@@ -1300,6 +1320,7 @@ body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-launch-date
     }
 
     body.rc-template-ravyncore2 .rc2-launch-banner,
+    body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-standby,
     body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-ready,
     body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing,
     body.rc-template-ravyncore2 .rc2-launch-banner.is-impacting,

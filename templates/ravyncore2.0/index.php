@@ -514,9 +514,6 @@ $rc2IsLandingPage = in_array((string)PAGE, $rc2LandingPages, true);
                                 </a>
                             <?php endforeach; ?>
                         </div>
-                        <a class="rc-btn rc-btn-violet" href="<?= $accountCreateUrl; ?>">
-                            <i class="fas fa-user-plus"></i><span><?= escapeHtml(rc_t('Create Account')); ?></span>
-                        </a>
                     <?php endif; ?>
                 </div>
             </nav>
@@ -549,9 +546,6 @@ $rc2IsLandingPage = in_array((string)PAGE, $rc2LandingPages, true);
                             </a>
                         <?php endforeach; ?>
                     </div>
-                    <a class="rc-btn rc-btn-violet rc-btn-sm" href="<?= $accountCreateUrl; ?>">
-                        <i class="fas fa-user-plus"></i><span><?= escapeHtml(rc_t('Create Account')); ?></span>
-                    </a>
                 <?php endif; ?>
             </div>
 
@@ -651,7 +645,7 @@ $rc2IsLandingPage = in_array((string)PAGE, $rc2LandingPages, true);
 
     <?php if ($rc2IsLandingPage): ?>
         <section id="rcLaunchCountdown"
-                 class="rc-launch-countdown rc2-launch-banner"
+                 class="rc-launch-countdown rc2-launch-banner is-intro-standby"
                  data-target="2026-06-13T19:00:00-03:00"
                  data-live-text="<?= escapeHtml($launchText['live']); ?>"
                  data-rc-launch-banner
