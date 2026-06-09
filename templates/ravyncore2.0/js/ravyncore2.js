@@ -78,4 +78,67 @@
         setSlide(0);
         startAutoplay();
     });
+
+    function storageGet(key) {
+        try {
+            return window.sessionStorage ? window.sessionStorage.getItem(key) : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function storageSet(key, value) {
+        try {
+            if (window.sessionStorage) {
+                window.sessionStorage.setItem(key, value);
+            }
+        } catch (error) {
+            // Session storage can be unavailable in strict privacy modes.
+        }
+    }
+
+    function prefersReducedMotion() {
+        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    function initLaunchBannerIntro() {
+        var banner = document.querySelector('[data-rc-launch-banner]');
+        if (!banner) {
+            return;
+        }
+
+        var introKey = banner.getAttribute('data-intro-key') || 'ravyncore2-launch-banner-intro';
+        if (prefersReducedMotion()) {
+            banner.classList.add('is-intro-skipped');
+            return;
+        }
+
+        if (storageGet(introKey) === 'played') {
+            banner.classList.add('is-intro-skipped');
+            return;
+        }
+
+        storageSet(introKey, 'played');
+        banner.classList.add('is-intro-ready');
+
+        window.requestAnimationFrame(function () {
+            banner.classList.add('is-intro-playing');
+        });
+
+        window.setTimeout(function () {
+            banner.classList.add('is-impacting');
+        }, 2250);
+
+        window.setTimeout(function () {
+            banner.classList.remove('is-impacting');
+        }, 2720);
+
+        window.setTimeout(function () {
+            banner.classList.remove('is-intro-ready');
+            banner.classList.remove('is-intro-playing');
+            banner.classList.add('is-intro-complete');
+        }, 3180);
+    }
+
+    initLaunchBannerIntro();
 })();

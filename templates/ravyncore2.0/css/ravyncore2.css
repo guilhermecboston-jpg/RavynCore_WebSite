@@ -15,7 +15,12 @@ body.rc-template-ravyncore2 {
     --rc2-border: rgba(212, 175, 55, 0.34);
     --rc2-border-strong: rgba(255, 215, 106, 0.68);
     --rc2-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+    --tibia-panel-bg: #1e1e1e;
+    --tibia-border-gold: #d4af37;
+    --tibia-border-gold-dark: #8b6d05;
+    --tibia-text-gold: #ffd700;
+    --tibia-text-silver: #c0c0c0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--rc2-black);
 }
 
@@ -25,7 +30,17 @@ body.rc-template-ravyncore2 .rc-btn,
 body.rc-template-ravyncore2 .rc-nav-item > a,
 body.rc-template-ravyncore2 .rc-nav-dropdown a,
 body.rc-template-ravyncore2 .rc-links a {
-    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body.rc-template-ravyncore2 h1,
+body.rc-template-ravyncore2 h2,
+body.rc-template-ravyncore2 h3,
+body.rc-template-ravyncore2 h4,
+body.rc-template-ravyncore2 h5,
+body.rc-template-ravyncore2 h6 {
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 body.rc-template-ravyncore2 .rc-header-inner {
@@ -594,7 +609,7 @@ body.rc-template-ravyncore2 .rc-main-grid {
     margin-top: 26px;
 }
 
-body.rc-template-ravyncore2 .rc-panel h3 {
+body.rc-template-ravyncore2 .rc-panel > h3 {
     color: var(--rc2-gold-hot);
     font-size: 18px;
     line-height: 1.15;
@@ -681,6 +696,321 @@ body.rc-template-ravyncore2 .rc-btn-subtle:focus-visible::after {
     opacity: 1;
 }
 
+body.rc-template-ravyncore2 .rc-panel,
+body.rc-template-ravyncore2 .rc-footer {
+    border: 2px solid rgba(139, 109, 5, 0.72);
+    border-radius: 8px;
+    background:
+        linear-gradient(160deg, rgba(30, 30, 30, 0.92) 0%, rgba(13, 13, 13, 0.94) 100%),
+        var(--tibia-panel-bg);
+    box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.54),
+        0 4px 15px rgba(0, 0, 0, 0.74),
+        0 0 18px rgba(139, 61, 255, 0.08);
+}
+
+body.rc-template-ravyncore2 .rc-panel::after,
+body.rc-template-ravyncore2 .rc-footer::after {
+    inset: 1px;
+    height: auto;
+    border: 1px solid rgba(212, 175, 55, 0.26);
+    border-radius: 6px;
+    background: none;
+}
+
+body.rc-template-ravyncore2 .rc-panel > h3,
+body.rc-template-ravyncore2 .rc2-section-heading h2,
+body.rc-template-ravyncore2 .rc2-page-heading h1 {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    color: var(--rc2-gold-hot);
+    text-shadow: 0 0 18px rgba(255, 215, 106, 0.16);
+}
+
+body.rc-template-ravyncore2 .rc2-section-heading h2,
+body.rc-template-ravyncore2 .rc2-page-heading h1 {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body.rc-template-ravyncore2 .rc-panel > h3::after,
+body.rc-template-ravyncore2 .rc2-section-heading h2::after,
+body.rc-template-ravyncore2 .rc2-page-heading h1::after {
+    content: "";
+    display: block;
+    width: min(96px, 70%);
+    height: 3px;
+    margin-top: 10px;
+    background: linear-gradient(90deg, transparent, var(--rc2-purple-hot), var(--rc2-gold-hot), transparent);
+    box-shadow: 0 0 14px rgba(139, 61, 255, 0.22);
+}
+
+body.rc-template-ravyncore2 .rc-panel > h3::after {
+    width: 72px;
+    margin-top: 8px;
+    background: linear-gradient(90deg, var(--rc2-gold-hot), var(--rc2-purple-hot), transparent);
+}
+
+body.rc-template-ravyncore2 .rc-status-line,
+body.rc-template-ravyncore2 .rc-rank-row,
+body.rc-template-ravyncore2 .rc-rich-content .feature-card,
+body.rc-template-ravyncore2 .rc-rich-content .tool-card {
+    position: relative;
+}
+
+body.rc-template-ravyncore2 .rc-rank-row {
+    overflow: hidden;
+    border-color: rgba(212, 175, 55, 0.24);
+    background:
+        linear-gradient(95deg, rgba(24, 24, 24, 0.86), rgba(18, 15, 26, 0.88)),
+        rgba(30, 30, 30, 0.76);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+    transition:
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
+}
+
+body.rc-template-ravyncore2 .rc-rank-row::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    background: var(--rc2-purple-hot);
+    box-shadow: 0 0 16px rgba(199, 131, 255, 0.5);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+}
+
+body.rc-template-ravyncore2 .rc-rank-row:hover,
+body.rc-template-ravyncore2 .rc-rank-row:focus-visible {
+    border-color: rgba(199, 131, 255, 0.68);
+    background:
+        linear-gradient(95deg, rgba(43, 20, 72, 0.78), rgba(30, 30, 30, 0.9) 54%, rgba(72, 51, 18, 0.62));
+    box-shadow:
+        0 0 25px rgba(139, 61, 255, 0.16),
+        0 8px 24px rgba(0, 0, 0, 0.38);
+    transform: translateX(5px);
+}
+
+body.rc-template-ravyncore2 .rc-rank-row:hover::before,
+body.rc-template-ravyncore2 .rc-rank-row:focus-visible::before {
+    transform: scaleY(1);
+}
+
+body.rc-template-ravyncore2 .rc-rank-position {
+    color: var(--rc2-gold-hot);
+    text-shadow: 0 0 14px rgba(255, 215, 106, 0.22);
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+body.rc-template-ravyncore2 .rc-rank-row:hover .rc-rank-position,
+body.rc-template-ravyncore2 .rc-rank-row:focus-visible .rc-rank-position {
+    color: var(--rc2-purple-hot);
+    text-shadow: 0 0 16px rgba(199, 131, 255, 0.36);
+}
+
+body.rc-template-ravyncore2 .rc-search-form input {
+    border: 1px solid rgba(139, 109, 5, 0.72);
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.38);
+    color: var(--rc2-text);
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.48);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+body.rc-template-ravyncore2 .rc-search-form input:focus {
+    border-color: rgba(199, 131, 255, 0.76);
+    box-shadow:
+        inset 0 0 8px rgba(0, 0, 0, 0.48),
+        0 0 14px rgba(139, 61, 255, 0.24);
+    outline: none;
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner {
+    overflow: hidden;
+    transform-origin: top center;
+    border-color: rgba(212, 175, 55, 0.62);
+    border-radius: 8px;
+    background:
+        radial-gradient(circle at 8% 50%, rgba(178, 48, 32, 0.24), transparent 31%),
+        radial-gradient(circle at 92% 50%, rgba(42, 91, 165, 0.26), transparent 34%),
+        linear-gradient(115deg, rgba(31, 13, 12, 0.96), rgba(10, 17, 31, 0.98) 43%, rgba(8, 14, 27, 0.98));
+    box-shadow:
+        inset 0 0 12px rgba(0, 0, 0, 0.48),
+        0 16px 38px rgba(0, 0, 0, 0.42),
+        0 0 26px rgba(139, 61, 255, 0.1);
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner__roll {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 12px;
+    z-index: 4;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, rgba(66, 36, 8, 0.7), rgba(255, 215, 106, 0.86), rgba(80, 46, 10, 0.72)),
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.2) 0 8px, transparent 8px 18px);
+    box-shadow:
+        0 2px 0 rgba(0, 0, 0, 0.42),
+        0 0 16px rgba(255, 215, 106, 0.2);
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner .rc-launch-countdown__inner {
+    padding-top: clamp(48px, 4vw, 58px);
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-ready {
+    clip-path: polygon(0 0, 100% 0, 100% 2%, 0 2%);
+    transform: translateY(-10px) scaleY(0.04);
+    opacity: 0.96;
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing {
+    animation: rc2-viking-banner-unroll 1.22s cubic-bezier(0.18, 0.86, 0.26, 1.18) both;
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner.is-impacting .rc-launch-countdown__inner {
+    animation: rc2-viking-banner-impact 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner__arrows {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+}
+
+body.rc-template-ravyncore2 .rc2-arrow-impact {
+    position: absolute;
+    width: 140px;
+    height: 6px;
+    opacity: 0;
+    border-radius: 999px;
+    background:
+        linear-gradient(90deg, #2b1708 0 14px, #d2b77c 14px 108px, #4c2b11 108px 100%);
+    box-shadow:
+        0 0 10px rgba(255, 215, 106, 0.3),
+        0 2px 5px rgba(0, 0, 0, 0.42);
+}
+
+body.rc-template-ravyncore2 .rc2-arrow-impact::before {
+    content: "";
+    position: absolute;
+    right: -17px;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    border-left: 20px solid #b9bcc4;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.18));
+    transform: translateY(-50%);
+}
+
+body.rc-template-ravyncore2 .rc2-arrow-impact::after {
+    content: "";
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    width: 24px;
+    height: 22px;
+    background:
+        linear-gradient(135deg, transparent 0 38%, #5a2217 39% 62%, transparent 63%),
+        linear-gradient(45deg, transparent 0 38%, #7b2b1f 39% 62%, transparent 63%);
+    transform: translateY(-50%);
+}
+
+body.rc-template-ravyncore2 .rc2-arrow-impact--one {
+    top: 22%;
+    left: 15%;
+    transform: translate(-360px, -90px) rotate(17deg);
+}
+
+body.rc-template-ravyncore2 .rc2-arrow-impact--two {
+    top: 58%;
+    right: 16%;
+    transform: translate(360px, -70px) rotate(163deg);
+}
+
+body.rc-template-ravyncore2 .rc2-arrow-impact--three {
+    top: 72%;
+    left: 38%;
+    transform: translate(-300px, 120px) rotate(-11deg);
+}
+
+body.rc-template-ravyncore2 .rc2-arrow-impact--flag {
+    top: 18px;
+    right: clamp(26px, 5vw, 72px);
+    width: 168px;
+    transform: translate(390px, -88px) rotate(166deg);
+}
+
+body.rc-template-ravyncore2 .rc2-launch-date-flag {
+    position: absolute;
+    top: 22px;
+    right: clamp(20px, 4vw, 64px);
+    z-index: 7;
+    max-width: min(360px, calc(100% - 40px));
+    opacity: 1;
+    transform: rotate(1.5deg);
+    pointer-events: none;
+}
+
+body.rc-template-ravyncore2 .rc2-launch-date-flag span {
+    display: block;
+    padding: 8px 14px 9px;
+    border: 1px solid rgba(255, 215, 106, 0.58);
+    border-radius: 5px;
+    background:
+        linear-gradient(180deg, rgba(255, 215, 106, 0.92), rgba(139, 95, 19, 0.94)),
+        rgba(30, 20, 8, 0.92);
+    color: #1c1203;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.32);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.42),
+        0 10px 22px rgba(0, 0, 0, 0.35),
+        0 0 18px rgba(255, 215, 106, 0.24);
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-ready .rc2-launch-date-flag {
+    opacity: 0;
+    transform: translate(120px, -54px) rotate(8deg) scale(0.9);
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-arrow-impact--one {
+    animation: rc2-arrow-one 0.58s ease-in 1.08s both;
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-arrow-impact--two {
+    animation: rc2-arrow-two 0.6s ease-in 1.32s both;
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-arrow-impact--three {
+    animation: rc2-arrow-three 0.58s ease-in 1.55s both;
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-arrow-impact--flag {
+    animation: rc2-arrow-flag 0.72s ease-in 1.82s both;
+}
+
+body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-launch-date-flag {
+    animation: rc2-date-flag-pin 0.58s cubic-bezier(0.2, 1.34, 0.32, 1) 2.12s both;
+}
+
 @keyframes rc2-fade-up {
     from {
         opacity: 0;
@@ -690,6 +1020,99 @@ body.rc-template-ravyncore2 .rc-btn-subtle:focus-visible::after {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes rc2-viking-banner-unroll {
+    0% {
+        clip-path: polygon(0 0, 100% 0, 100% 2%, 0 2%);
+        transform: translateY(-10px) scaleY(0.04);
+        filter: brightness(0.72);
+    }
+    68% {
+        clip-path: polygon(0 0, 100% 0, 100% 104%, 0 100%);
+        transform: translateY(0) scaleY(1.035);
+        filter: brightness(1.08);
+    }
+    84% {
+        clip-path: polygon(0 0, 100% 0, 100% 98%, 0 100%);
+        transform: translateY(0) scaleY(0.985);
+    }
+    100% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        transform: translateY(0) scaleY(1);
+        filter: brightness(1);
+    }
+}
+
+@keyframes rc2-viking-banner-impact {
+    0%, 100% { transform: translateX(0) rotate(0); }
+    18% { transform: translateX(-5px) rotate(-0.35deg); }
+    38% { transform: translateX(5px) rotate(0.35deg); }
+    58% { transform: translateX(-3px) rotate(-0.18deg); }
+    78% { transform: translateX(2px) rotate(0.12deg); }
+}
+
+@keyframes rc2-arrow-one {
+    0% {
+        opacity: 0;
+        transform: translate(-360px, -90px) rotate(17deg);
+    }
+    15% { opacity: 1; }
+    100% {
+        opacity: 0.9;
+        transform: translate(0, 0) rotate(17deg);
+    }
+}
+
+@keyframes rc2-arrow-two {
+    0% {
+        opacity: 0;
+        transform: translate(360px, -70px) rotate(163deg);
+    }
+    15% { opacity: 1; }
+    100% {
+        opacity: 0.86;
+        transform: translate(0, 0) rotate(163deg);
+    }
+}
+
+@keyframes rc2-arrow-three {
+    0% {
+        opacity: 0;
+        transform: translate(-300px, 120px) rotate(-11deg);
+    }
+    15% { opacity: 1; }
+    100% {
+        opacity: 0.82;
+        transform: translate(0, 0) rotate(-11deg);
+    }
+}
+
+@keyframes rc2-arrow-flag {
+    0% {
+        opacity: 0;
+        transform: translate(390px, -88px) rotate(166deg);
+    }
+    15% { opacity: 1; }
+    100% {
+        opacity: 0;
+        transform: translate(0, 0) rotate(166deg);
+    }
+}
+
+@keyframes rc2-date-flag-pin {
+    0% {
+        opacity: 0;
+        transform: translate(120px, -54px) rotate(8deg) scale(0.9);
+    }
+    72% {
+        opacity: 1;
+        transform: translate(-7px, 3px) rotate(-2.5deg) scale(1.04);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0) rotate(1.5deg) scale(1);
     }
 }
 
@@ -802,6 +1225,39 @@ body.rc-template-ravyncore2 .rc-btn-subtle:focus-visible::after {
     .rc2-page-heading h1 {
         font-size: 32px;
     }
+
+    body.rc-template-ravyncore2 .rc2-launch-banner .rc-launch-countdown__inner {
+        padding-top: 18px;
+    }
+
+    body.rc-template-ravyncore2 .rc2-launch-date-flag {
+        position: relative;
+        top: auto;
+        right: auto;
+        max-width: calc(100% - 20px);
+        margin: 22px auto -2px;
+        text-align: center;
+        transform: rotate(0);
+    }
+
+    body.rc-template-ravyncore2 .rc2-launch-date-flag span {
+        font-size: 10px;
+        line-height: 1.35;
+    }
+
+    body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-ready .rc2-launch-date-flag {
+        transform: translateY(-28px) scale(0.94);
+    }
+
+    body.rc-template-ravyncore2 .rc2-arrow-impact {
+        width: 108px;
+    }
+
+    body.rc-template-ravyncore2 .rc2-arrow-impact--flag {
+        top: 24px;
+        right: 14%;
+        width: 128px;
+    }
 }
 
 @media (max-width: 520px) {
@@ -841,5 +1297,22 @@ body.rc-template-ravyncore2 .rc-btn-subtle:focus-visible::after {
     .rc2-community-card__icon {
         animation: none;
         transition: none;
+    }
+
+    body.rc-template-ravyncore2 .rc2-launch-banner,
+    body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-ready,
+    body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing,
+    body.rc-template-ravyncore2 .rc2-launch-banner.is-impacting,
+    body.rc-template-ravyncore2 .rc2-launch-date-flag,
+    body.rc-template-ravyncore2 .rc2-arrow-impact {
+        animation: none;
+        clip-path: none;
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    body.rc-template-ravyncore2 .rc2-launch-banner__arrows {
+        display: none;
     }
 }

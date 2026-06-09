@@ -651,9 +651,21 @@ $rc2IsLandingPage = in_array((string)PAGE, $rc2LandingPages, true);
 
     <?php if ($rc2IsLandingPage): ?>
         <section id="rcLaunchCountdown"
-                 class="rc-launch-countdown"
+                 class="rc-launch-countdown rc2-launch-banner"
                  data-target="2026-06-13T19:00:00-03:00"
-                 data-live-text="<?= escapeHtml($launchText['live']); ?>">
+                 data-live-text="<?= escapeHtml($launchText['live']); ?>"
+                 data-rc-launch-banner
+                 data-intro-key="ravyncore2-launch-banner-intro-2026-06-13">
+            <div class="rc2-launch-banner__roll" aria-hidden="true"></div>
+            <div class="rc2-launch-banner__arrows" aria-hidden="true">
+                <span class="rc2-arrow-impact rc2-arrow-impact--one"></span>
+                <span class="rc2-arrow-impact rc2-arrow-impact--two"></span>
+                <span class="rc2-arrow-impact rc2-arrow-impact--three"></span>
+                <span class="rc2-arrow-impact rc2-arrow-impact--flag"></span>
+            </div>
+            <div class="rc2-launch-date-flag" aria-hidden="true">
+                <span>June 13, 2026, at 7:00 PM | Brasília Time</span>
+            </div>
             <div class="rc-launch-countdown__inner">
                 <div class="rc-launch-countdown__copy">
                     <span class="rc-launch-countdown__eyebrow"><?= escapeHtml($launchText['eyebrow']); ?></span>
