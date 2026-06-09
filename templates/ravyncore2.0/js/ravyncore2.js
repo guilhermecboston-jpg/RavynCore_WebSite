@@ -101,6 +101,74 @@
         return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
 
+    function isTransitionableNavClick(link, event) {
+        if (!link || !event) {
+            return false;
+        }
+
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+            return false;
+        }
+
+        if (link.target && link.target.toLowerCase() !== '_self') {
+            return false;
+        }
+
+        if (link.hasAttribute('download')) {
+            return false;
+        }
+
+        var href = link.getAttribute('href');
+        if (!href || href.charAt(0) === '#' || href.indexOf('javascript:') === 0 || href.indexOf('mailto:') === 0 || href.indexOf('tel:') === 0) {
+            return false;
+        }
+
+        var nextUrl;
+        try {
+            nextUrl = new URL(link.href, window.location.href);
+        } catch (error) {
+            return false;
+        }
+
+        if (nextUrl.origin !== window.location.origin) {
+            return false;
+        }
+
+        return nextUrl.href !== window.location.href;
+    }
+
+    function initPageTransitions() {
+        var navLinks = document.querySelectorAll('.rc-nav a');
+        if (!navLinks.length) {
+            return;
+        }
+
+        Array.prototype.forEach.call(navLinks, function (link) {
+            link.addEventListener('click', function (event) {
+                if (!isTransitionableNavClick(link, event)) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                if (prefersReducedMotion()) {
+                    window.location.href = link.href;
+                    return;
+                }
+
+                if (document.body.classList.contains('rc2-page-transition-exit')) {
+                    return;
+                }
+
+                document.body.classList.add('rc2-page-transition-exit');
+
+                window.setTimeout(function () {
+                    window.location.href = link.href;
+                }, 840);
+            });
+        });
+    }
+
     function initLaunchBannerIntro() {
         var banner = document.querySelector('[data-rc-launch-banner]');
         if (!banner) {
@@ -143,5 +211,6 @@
         }, 3420);
     }
 
+    initPageTransitions();
     initLaunchBannerIntro();
 })();

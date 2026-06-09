@@ -24,6 +24,120 @@ body.rc-template-ravyncore2 {
     background-color: var(--rc2-black);
 }
 
+body.rc-template-ravyncore2 .rc2-page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+body.rc-template-ravyncore2 .rc2-page-transition__panel {
+    position: absolute;
+    inset: 0;
+    transform: translateX(0);
+    will-change: transform;
+    animation-duration: 0.8s;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+body.rc-template-ravyncore2 .rc2-page-transition__panel--left {
+    animation-name: rc2-page-transition-left-out;
+}
+
+body.rc-template-ravyncore2 .rc2-page-transition__panel--right {
+    animation-name: rc2-page-transition-right-out;
+}
+
+body.rc-template-ravyncore2 .rc2-page-transition__panel--left-gold {
+    z-index: 6;
+    background: linear-gradient(90deg, var(--rc2-purple-deep), var(--rc2-gold-dark));
+    box-shadow: 16px 0 40px rgba(139, 61, 255, 0.2);
+}
+
+body.rc-template-ravyncore2 .rc2-page-transition__panel--left-dark {
+    z-index: 5;
+    background: var(--rc2-black);
+    animation-delay: 0.2s;
+}
+
+body.rc-template-ravyncore2 .rc2-page-transition__panel--left-panel {
+    z-index: 4;
+    background: var(--tibia-panel-bg);
+    animation-delay: 0.4s;
+}
+
+body.rc-template-ravyncore2 .rc2-page-transition__panel--right-dark {
+    z-index: 6;
+    background: var(--rc2-black);
+    box-shadow: -16px 0 40px rgba(212, 175, 55, 0.16);
+}
+
+body.rc-template-ravyncore2 .rc2-page-transition__panel--right-gold {
+    z-index: 5;
+    background: linear-gradient(90deg, var(--rc2-gold-dark), var(--rc2-purple-deep));
+    animation-delay: 0.2s;
+}
+
+body.rc-template-ravyncore2 .rc2-page-transition__panel--right-panel {
+    z-index: 4;
+    background: var(--tibia-panel-bg);
+    animation-delay: 0.4s;
+}
+
+body.rc-template-ravyncore2.rc2-page-transition-exit .rc2-page-transition {
+    pointer-events: auto;
+}
+
+body.rc-template-ravyncore2.rc2-page-transition-exit .rc2-page-transition__panel--left {
+    animation-name: rc2-page-transition-left-in;
+}
+
+body.rc-template-ravyncore2.rc2-page-transition-exit .rc2-page-transition__panel--right {
+    animation-name: rc2-page-transition-right-in;
+}
+
+@keyframes rc2-page-transition-left-out {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes rc2-page-transition-right-out {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes rc2-page-transition-left-in {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes rc2-page-transition-right-in {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
 body.rc-template-ravyncore2 .rc-panel,
 body.rc-template-ravyncore2 .rc-rich-content,
 body.rc-template-ravyncore2 .rc-btn,
@@ -1309,6 +1423,10 @@ body.rc-template-ravyncore2 .rc2-launch-banner.is-intro-playing .rc2-launch-date
 }
 
 @media (prefers-reduced-motion: reduce) {
+    body.rc-template-ravyncore2 .rc2-page-transition {
+        display: none;
+    }
+
     .rc2-hero__copy,
     .rc2-hero__media,
     .rc2-carousel__slide,

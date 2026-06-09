@@ -411,6 +411,15 @@ $rc2IsLandingPage = in_array((string)PAGE, $rc2LandingPages, true);
 <body class="rc-page rc-template-ravyncore2 rc-page-<?= escapeHtml((string)PAGE); ?>" data-rc-lang="<?= escapeHtml($rcCurrentLang); ?>" style="--rc-bg-image: url('<?= $backgroundUrl; ?>')">
 <?= template_place_holder('body_start'); ?>
 
+<div class="rc2-page-transition" aria-hidden="true">
+    <span class="rc2-page-transition__panel rc2-page-transition__panel--left rc2-page-transition__panel--left-gold"></span>
+    <span class="rc2-page-transition__panel rc2-page-transition__panel--left rc2-page-transition__panel--left-dark"></span>
+    <span class="rc2-page-transition__panel rc2-page-transition__panel--left rc2-page-transition__panel--left-panel"></span>
+    <span class="rc2-page-transition__panel rc2-page-transition__panel--right rc2-page-transition__panel--right-dark"></span>
+    <span class="rc2-page-transition__panel rc2-page-transition__panel--right rc2-page-transition__panel--right-gold"></span>
+    <span class="rc2-page-transition__panel rc2-page-transition__panel--right rc2-page-transition__panel--right-panel"></span>
+</div>
+
 <div class="rc-atmosphere"></div>
 <div class="rc-site">
     <header class="rc-header">
