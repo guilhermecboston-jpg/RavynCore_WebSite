@@ -34,7 +34,7 @@ $config = array(
 	'force_https_urls' => false, // true in config.local.php when the site runs behind nginx/apache with SSL (fixes payment gateway URLs)
 	'public_url' => '', // optional absolute base URL, e.g. https://ravyncore.com/ (overrides auto-detect for Mercado Pago / Stripe)
 
-	'template' => 'tibiacom', // template used by website (kathrine, tibiacom)
+	'template' => 'ravyncore2.0', // template used by website (kathrine, tibiacom, ravyncore2.0)
 	'template_allow_change' => false, // allow users to choose their own template while browsing website?
 
 	'vocations_amount' => 5, // how much basic vocations your server got (without promotion)
@@ -420,4 +420,3 @@ $config = array(
 
 	'enablePagseguroLocal' => false, // set true to enable donate and boxes page on localhost.
 );
-

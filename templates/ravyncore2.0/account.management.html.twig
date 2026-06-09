@@ -1,0 +1,707 @@
+<div style="text-align:center">
+  <table style="margin-left: auto; margin-right: auto;">
+    <tr>
+      <td>
+        <img src="{{ template_path }}/images/content/headline-bracer-left.gif" />
+      </td>
+      <td
+        style="text-align:center;vertical-align:middle;horizontal-align:center;font-size:17px;font-weight:bold;">{{ welcome_message|raw }}
+      </td>
+      <td><img src="{{ template_path }}/images/content/headline-bracer-right.gif" /></td>
+    </tr>
+  </table>
+  {% if verify_message is not empty %}
+    <table style="margin: 7px auto 1px auto">
+      <tr>
+        <td
+          style="text-align:center;vertical-align:middle;horizontal-align:center;font-size:20px;font-weight:bold;">{{ verify_message|raw }}
+        </td>
+      </tr>
+    </table>
+  {% endif %}
+  <br />
+</div>
+<div class="TableContainer">
+  <div class="CaptionContainer">
+    <div class="CaptionInnerContainer">
+      <span class="CaptionEdgeLeftTop"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+      <span class="CaptionEdgeRightTop"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+      <span class="CaptionBorderTop"
+            style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
+      <span class="CaptionVerticalLeft"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
+      <div class="Text">Account Status</div>
+      <span class="CaptionVerticalRight"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
+      <span class="CaptionBorderBottom"
+            style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
+      <span class="CaptionEdgeLeftBottom"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+      <span class="CaptionEdgeRightBottom"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+    </div>
+  </div>
+  <table class="Table5" cellpadding="0" cellspacing="0">
+    <tbody>
+    <tr>
+      <td>
+        <div class="InnerTableContainer">
+          <table style="width:100%;">
+            <tbody>
+            <tr>
+              <td>
+                <div class="TableContentContainer">
+                  <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
+                    <tbody>
+                    <tr>
+                      <td>
+                        {% if account_logged.isPremium() %}
+                          <img class="AccountStatusImage"
+                               src="{{ template_path }}/images/account/account-status_green.gif"
+                               title="{{ tag }} Account" alt="{{ tag }} account">
+                        {% else %}
+                          <img class="AccountStatusImage"
+                               src="{{ template_path }}/images/account/account-status_red.gif"
+                               title="Free Account" alt="free account">
+                        {% endif %}
+                      </td>
+                      <td width="100%" valign="middle">
+                        <span class="BigBoldText" style="font-size: 24px;">
+                        {% autoescape false %}
+                          {{ account_status }}
+                        {% endautoescape %}
+                        </span>
+                        <small><br>{{ account_expire_time[0] }} {% if account_expire_time[1] %}
+                            (<a href="?donate">donate now</a>) {% endif %}</small>
+                      </td>
+                      <td>
+                        {% if config.gifts_system %}
+                          <a href="?donate" target="blank">
+                            <div class="BigButton"
+                                 style="background-image:url({{ template_path }}/images/global/buttons/sbutton_green.gif)">
+                              <div onmouseover="MouseOverBigButton('GetCoinsButton');"
+                                   onmouseout="MouseOutBigButton('GetCoinsButton');">
+                                <div id="GetCoinsButton" class="BigButtonOver"
+                                     style="background-image:url({{ template_path }}/images/global/buttons/sbutton_green_over.gif); visibility: hidden;"></div>
+                                <input class="BigButtonText" type="submit" value="Get Coins"></div>
+                            </div>
+                          </a>
+                        {% endif %}
+                        <div style="font-size:1px;height:4px;"></div>
+
+                        <form action="{{ getLink('account/logout') }}" method="post" style="padding:0px;margin:0px;">
+                          {{ include('buttons.logout.html.twig') }}
+                        </form>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+<h2 class="rc-title-ornate">Support Ticket</h2>
+<div class="TableContainer rc-am-support-ticket">
+  <div class="CaptionContainer">
+    <div class="CaptionInnerContainer">
+      <span class="CaptionEdgeLeftTop"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+      <span class="CaptionEdgeRightTop"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+      <span class="CaptionBorderTop"
+            style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
+      <span class="CaptionVerticalLeft"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
+      <div class="Text rc-caption-title-force">Support Ticket</div>
+      <span class="CaptionVerticalRight"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
+      <span class="CaptionBorderBottom"
+            style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
+      <span class="CaptionEdgeLeftBottom"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+      <span class="CaptionEdgeRightBottom"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+    </div>
+  </div>
+  <table class="Table5" cellpadding="0" cellspacing="0">
+    <tbody>
+    <tr>
+      <td>
+        <div class="InnerTableContainer">
+          <table style="width:100%;">
+            <tbody>
+            <tr>
+              <td>
+                <div class="TableContentContainer">
+                  <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
+                    <tbody>
+                    <tr>
+                      <td>
+                        <div class="rc-ticket-manage-table-wrap">
+                          <table class="rc-ticket-manage-table">
+                            <thead>
+                            <tr>
+                              <th style="width: 70px;">ID</th>
+                              <th style="width: 140px;">Category</th>
+                              <th>Subject</th>
+                              <th style="width: 170px;">Status</th>
+                              <th style="width: 170px;">Updated</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if my_tickets_preview is defined and my_tickets_preview|length > 0 %}
+                              {% for ticket in my_tickets_preview %}
+                                <tr>
+                                  <td>#{{ ticket.id }}</td>
+                                  <td>{{ ticket.ticket_type_label }}</td>
+                                  <td>
+                                    <a href="?subtopic=accountmanagement&action=tickets&view_ticket={{ ticket.id }}">{{ ticket.title }}</a>
+                                  </td>
+                                  <td><span class="rc-ticket-status rc-ticket-status-{{ ticket.status|e('html_attr') }}">{{ ticket.status_label }}</span></td>
+                                  <td>{{ ticket.updated_at|date("d/m/Y H:i") }}</td>
+                                </tr>
+                              {% endfor %}
+                            {% else %}
+                              <tr>
+                                <td colspan="5">No tickets found.</td>
+                              </tr>
+                            {% endif %}
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="rc-ticket-manage-toolbar">
+                          <a href="?subtopic=accountmanagement&action=tickets" class="rc-btn rc-btn-primary">Add Ticket</a>
+                          <a href="?subtopic=accountmanagement&action=tickets" class="rc-btn rc-btn-subtle">Show All</a>
+                          {% if open_tickets_count is defined and open_tickets_count > 0 %}
+                            <span class="rc-ticket-admin-reminder rc-ticket-admin-reminder-inline">{{ open_tickets_count }}</span>
+                          {% endif %}
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+<div class="TopButtonContainer">
+  <div class="TopButton">
+    <a href="#top">
+      <img style="border:0px;" src="{{ template_path }}/images/content/back-to-top.gif" />
+    </a>
+  </div>
+</div>
+<h2 class="rc-title-ornate">Character List</h2>
+<div class="TableContainer rc-am-character-list">
+  <div class="CaptionContainer">
+    <div class="CaptionInnerContainer">
+      <span class="CaptionEdgeLeftTop"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+      <span class="CaptionEdgeRightTop"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+      <span class="CaptionBorderTop"
+            style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
+      <span class="CaptionVerticalLeft"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
+      <div class="Text rc-caption-title-force">Character List</div>
+      <span class="CaptionVerticalRight"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-vertical.gif);"></span>
+      <span class="CaptionBorderBottom"
+            style="background-image:url({{ template_path }}/images/global/content/table-headline-border.gif);"></span>
+      <span class="CaptionEdgeLeftBottom"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+      <span class="CaptionEdgeRightBottom"
+            style="background-image:url({{ template_path }}/images/global/content/box-frame-edge.gif);"></span>
+    </div>
+  </div>
+  <table class="Table5" cellpadding="0" cellspacing="0">
+    <tbody>
+    <tr>
+      <td>
+        <div class="InnerTableContainer">
+          <table style="width:100%;">
+            <tbody>
+            <tr>
+              <td>
+                <div class="TableContentContainer">
+                  <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
+                    <tbody>
+                    <tr class="LabelH">
+                      <td style="width: 15px !important;"></td>
+                      <td>Name</td>
+                      <td style="width: 100px !important;">Status</td>
+                      <td style="width: 100px !important;"></td>
+                    </tr>
+                    {% set i = 0 %}
+                    {% for player in players %}
+                      {% set i = i + 1 %}
+                      <tr style="background-color: {{ getStyle(i) }}; height: 50px;">
+                        <td style="font-weight: bold;">{{ i }}.</td>
+                        <td>
+                          <span style="white-space: nowrap; vertical-align: middle; line-height: 12px;">
+                            <span id="CharacterNameOf_0"
+                                  style="font-size:13pt; font-weight: bold;">{{ player.getName() }}
+                              {% if player.isDeleted() %}
+                                <span style="color: red"><b> [ DELETED ] </b></span>
+                              {% endif %}
+                              {% if player.isMain() %}
+                                <img src="{{ template_path }}/images//account/maincharacter.png"
+                                     alt="(Main Character)" title="Main Character">
+                              {% endif %}
+										        </span>
+										        <br>
+                            <small>
+                              <span
+                                id="CharacterNameOf_0">{{ config.vocations[player.getVocation()] }} - Level {{ player.getLevel() }} - On {{ config['lua']['serverName'] }}
+                              {% if guild.rank is not null %}
+                                <br>
+                                <span>Guild Membership: {{ guild.rank }} of the <a
+                                    href="">{{ guild.link|raw }}</a></span>
+                              {% endif %}
+                              </span>
+                            </small>
+                          </span>
+                        </td>
+                        <td>
+                          <img id="DailyReawardState"
+                               src="{{ template_path }}/images/global/content/icon-status-dailyreward-collected.png"
+                               alt="Daily Reward collected" title="Daily Reward collected">
+                          {% if player.isOnline() %}
+                            <img src="templates/tibiacom/images/on.gif" title="Online">
+                          {% else %}
+                            <img src="templates/tibiacom/images/off.gif" title="Offline">
+                          {% endif %}
+                        </td>
+                        <td align="center">
+                          <span id="CharacterOptionsOf_0">
+                            <span style="font-weight:normal;">{% if not player.isDeleted() %}[<a
+                                href="{{ getLink('account/character/comment/' ~ player.getName|urlencode) }}">Edit</a>]{% endif %}</span>
+                            <br>
+                            <span style="font-weight:normal;">[<a href="{{ getLink('account/character/delete') }}">Delete</a>]</span>
+                          </span>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table class="InnerTableButtonRow" cellpadding="0" cellspacing="0"
+               style="padding-bottom: 0; margin-bottom: -6px">
+          <tbody>
+          <tr>
+            <td>
+              <div class="rc-account-character-actions">
+                <form action="{{ getLink('account/character/create') }}" method="post" class="rc-inline-form">
+                  <button type="submit" class="rc-btn rc-btn-primary">Create New Character</button>
+                </form>
+                {% if config.account_change_character_main and players | length >= 1 %}
+                  <form action="{{ getLink('account/character/main') }}" method="post" class="rc-inline-form">
+                    <button type="submit" class="rc-btn rc-btn-subtle">Change Main</button>
+                  </form>
+                {% endif %}
+                {% if config.account_change_character_name %}
+                  <form action="{{ getLink('account/character/name') }}" method="post" class="rc-inline-form">
+                    {{ include('buttons.change_name.html.twig') }}
+                  </form>
+                {% endif %}
+                {% if config.account_change_character_sex %}
+                  <form action="{{ getLink('account/character/sex') }}" method="post" class="rc-inline-form">
+                    {{ include('buttons.change_sex.html.twig') }}
+                  </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+{# if account dont have recovery key show hint #}
+
+{% if email_request %}
+  <div class="SmallBox">
+    <div class="MessageContainer">
+      <div class="BoxFrameHorizontal"
+           style="background-image:url({{ template_path }}/images/content/box-frame-horizontal.gif);"></div>
+      <div class="BoxFrameEdgeLeftTop"
+           style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></div>
+      <div class="BoxFrameEdgeRightTop"
+           style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></div>
+      <div class="Message">
+        <div class="BoxFrameVerticalLeft"
+             style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></div>
+        <div class="BoxFrameVerticalRight"
+             style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></div>
+        <table>
+          <tr>
+            <td class="LabelV">Note:</td>
+            <td style="width:100%;">A request has been submitted to change the email address of this account to
+              <b>{{ email_new }}</b>. After <b>{{ email_new_time|date("j F Y, G:i:s") }}</b> you can accept the new
+              email address and finish the process. Please cancel the request if you do not want your email address to
+              be changed! Also cancel the request if you have no access to the new email address!
+            </td>
+          </tr>
+        </table>
+        <div style="text-align:center">
+          <table border="0" cellspacing="0" cellpadding="0">
+            <form action="{{ getLink('account/email') }}" method="post">
+              <tr>
+                <td style="border:0px;">
+                  {{ include('buttons.edit.html.twig') }}
+                </td>
+              </tr>
+            </form>
+          </table>
+        </div>
+      </div>
+      <div class="BoxFrameHorizontal"
+           style="background-image:url({{ template_path }}/images/content/box-frame-horizontal.gif);"></div>
+      <div class="BoxFrameEdgeRightBottom"
+           style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></div>
+      <div class="BoxFrameEdgeLeftBottom"
+           style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></div>
+    </div>
+  </div>
+  <br />
+{% endif %}
+<a name="General+Information"></a>
+<div class="TopButtonContainer">
+  <div class="TopButton">
+    <a href="#top">
+      <img style="border:0px;" src="{{ template_path }}/images/content/back-to-top.gif" />
+    </a>
+  </div>
+</div>
+<h2 class="rc-title-ornate">Account Information</h2>
+<div class="TableContainer rc-am-account-information">
+  <table class="Table3" cellpadding="0" cellspacing="0">
+    <div class="CaptionContainer">
+      <div class="CaptionInnerContainer">
+        <span class="CaptionEdgeLeftTop"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionEdgeRightTop"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionBorderTop"
+              style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
+        <span class="CaptionVerticalLeft"
+              style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
+        <div class="Text rc-caption-title-force">Account Information</div>
+        <span class="CaptionVerticalRight"
+              style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
+        <span class="CaptionBorderBottom"
+              style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
+        <span class="CaptionEdgeLeftBottom"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionEdgeRightBottom"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+      </div>
+    </div>
+    <tr>
+      <td>
+        <div class="InnerTableContainer">
+          <table style="width:100%;">
+            <tr>
+              <td>
+                <div class="TableContentAndRightShadow">
+                  <div class="TableContentContainer">
+                    <table class="TableContent" width="100%">
+                      <tr style="background-color: {{ config.lightborder }};">
+                        <td class="LabelV">
+                          Account {% if constant('USE_ACCOUNT_NAME') %}Name{% else %}Number{% endif %}:
+                        </td>
+                        <td style="width:90%;">{{ account }}</td>
+                      </tr>
+                      <tr style="background-color: {{ config.darkborder }};">
+                        <td class="LabelV">Email Address:</td>
+                        <td style="width:90%;">{{ account_email ~ email_change }}</td>
+                      </tr>
+                      <tr style="background-color: {{ config.lightborder }};">
+                        <td class="LabelV">Created:</td>
+                        <td>{{ account_created|date("M d Y, G:i:s") }}</td>
+                      </tr>
+                      <tr style="background-color: {{ config.darkborder }};">
+                        <td class="LabelV">Last Login:</td>
+                        <td>{{ account_web_lastlogin|date("M d Y, G:i:s") }}</td>
+                      </tr>
+                      {% autoescape false %}
+                        <tr style="background-color: {{ config.lightborder }};">
+                          <td class="LabelV">Account Status:</td>
+                          <td>{{ account_status }}</td>
+                        </tr>
+                        <tr style="background-color: {{ config.darkborder }};">
+                          <td class="LabelV">Tibia Coins:</td>
+                          <td>{{ account_coins }} <img src="{{ template_path }}/images/account/icon-tibiacoin.png"
+                                                       class="VSCCoinImages" />
+                            (Including: {{ account_coins_transferable }} <img
+                              src="{{ template_path }}/images/account/icon-tibiacointrusted.png"
+                            class="VSCCoinImages">)
+                          </td>
+                        </tr>
+                        <tr style="background-color: {{ config.lightborder }};">
+                          <td class="LabelV">Tournament Coins:</td>
+                          <td>{{ tournament_coins }} <img
+                              src="{{ template_path }}/images/account/icon-tournamentcoin.png" class="VSCCoinImages">
+                          </td>
+                        </tr>
+                        <tr style="background-color: {{ config.darkborder }};">
+                          <td class="LabelV">Loyalt Title:</td>
+                          <td>{{ account_loyalty_title }}</td>
+                        </tr>
+                        <tr style="background-color: {{ config.lightborder }};">
+                          <td class="LabelV">Loyalt Points:</td>
+                          <td>{{ account_loyalty_points|number_format(0, ',', '.') }}</td>
+                        </tr>
+                        <tr style="background-color: {{ config.darkborder }};">
+                          <td class="LabelV">Registered:</td>
+                          <td>{{ account_registered }}</td>
+                        </tr>
+                      {% endautoescape %}
+                    </table>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table class="InnerTableButtonRow" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td>
+                      <form action="{{ getLink('account/password') }}" method="post" class="rc-inline-form">
+                        <button type="submit" class="rc-btn rc-btn-primary">Change Password</button>
+                      </form>
+                    </td>
+                    <td>
+                      <form action="{{ getLink('account/email') }}" method="post" class="rc-inline-form">
+                        <input type="hidden" name="newemail" value="" />
+                        <input type="hidden" name="newemaildate" value="0">
+                        <button type="submit" class="rc-btn rc-btn-subtle">Change Email</button>
+                      </form>
+                    </td>
+                    <td width="100%"></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<br />
+
+<a name="Register+Account"></a>
+<div class="TopButtonContainer">
+  <div class="TopButton">
+    <a href="#top">
+      <img style="border:0px;" src="{{ template_path }}/images/content/back-to-top.gif" />
+    </a>
+  </div>
+</div>
+<h2 class="rc-title-ornate">Register Account</h2>
+<div class="TableContainer rc-am-register-account">
+  <table class="Table5" cellpadding="0" cellspacing="0">
+    <div class="CaptionContainer">
+      <div class="CaptionInnerContainer">
+          <span class="CaptionEdgeLeftTop"
+                style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionEdgeRightTop"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionBorderTop"
+              style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
+        <span class="CaptionVerticalLeft"
+              style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
+        <div class="Text rc-caption-title-force">Register Account</div>
+        <span class="CaptionVerticalRight"
+              style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
+        <span class="CaptionBorderBottom"
+              style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
+        <span class="CaptionEdgeLeftBottom"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionEdgeRightBottom"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+      </div>
+    </div>
+    <tr>
+      <td>
+        <div class="InnerTableContainer">
+          <table style="width:100%;">
+            <tr>
+              <td>
+                <div class="TableContentAndRightShadow">
+                  <div class="TableContentContainer">
+                    <table class="TableContent" width="100%">
+                      {% if recovery_key is empty %}
+                        <tr>
+                          <td class="LabelV">Your account is not registered!</td>
+                          <td style="text-align:right;">
+                            <form action="{{ getLink('account/register') }}" method="post" class="rc-inline-form">
+                              <button type="submit" class="rc-btn rc-btn-primary">Register Account</button>
+                            </form>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">You can register your account for increased protection. Click on "Register Account" and get your free recovery key today!</td>
+                        </tr>
+                      {% else %}
+                        <tr>
+                          <td class="LabelV">Real Name:</td>
+                          <td style="width:90%;">{{ account_rlname is not empty ? account_rlname : '-' }}</td>
+                        </tr>
+                        <tr>
+                          <td class="LabelV">Address:</td>
+                          <td style="width:90%;">{{ account_location is not empty ? account_location : '-' }}</td>
+                        </tr>
+                        <tr>
+                          <td class="LabelV">Phone:</td>
+                          <td style="width:90%;">{{ account_phone is not empty ? account_phone : '-' }}</td>
+                        </tr>
+                        <tr>
+                          <td class="LabelV">Location:</td>
+                          <td style="width:90%;">{{ account_location is not empty ? account_location : '-' }}</td>
+                        </tr>
+                        {% if account_show_rk and recovery_key is not empty %}
+                          <tr>
+                            <td class="LabelV">RK:</td>
+                            <td style="width:90%;">{{ recovery_key }}</td>
+                          </tr>
+                        {% endif %}
+                      {% endif %}
+                    </table>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% if recovery_key is not empty and not account_update_info_on_register %}
+              <tr>
+                <td>
+                  <table class="InnerTableButtonRow" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="100%"></td>
+                      <td>
+                        <form action="{{ getLink('account/info') }}" method="post" class="rc-inline-form">
+                          <button type="submit" class="rc-btn rc-btn-subtle">Edit Contact Info</button>
+                        </form>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            {% endif %}
+          </table>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<br />
+
+{% if is_staff_webflag3 %}
+<a name="Account+Logs"></a>
+<div class="TopButtonContainer">
+  <div class="TopButton">
+    <a href="#top">
+      <img style="border:0px;" src="{{ template_path }}/images/content/back-to-top.gif" />
+    </a>
+  </div>
+</div>
+<div class="TableContainer">
+  <table class="Table5" cellpadding="0" cellspacing="0">
+    <div class="CaptionContainer">
+      <div class="CaptionInnerContainer">
+        <span class="CaptionEdgeLeftTop"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionEdgeRightTop"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionBorderTop"
+              style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
+        <span class="CaptionVerticalLeft"
+              style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
+        <div class="Text">Account logs</div>
+        <span class="CaptionVerticalRight"
+              style="background-image:url({{ template_path }}/images/content/box-frame-vertical.gif);"></span>
+        <span class="CaptionBorderBottom"
+              style="background-image:url({{ template_path }}/images/content/table-headline-border.gif);"></span>
+        <span class="CaptionEdgeLeftBottom"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+        <span class="CaptionEdgeRightBottom"
+              style="background-image:url({{ template_path }}/images/content/box-frame-edge.gif);"></span>
+      </div>
+    </div>
+    <tr>
+      <td>
+        <div class="InnerTableContainer">
+          <table style="width:100%;">
+            <tr>
+              <td>
+                <div class="TableContent">
+                  <div class="TableContentContainer">
+                    <table class="TableContent" width="100%">
+                      <tr class="LabelH">
+                        <td style="width:60%">Action</td>
+                        <td style="width:30%">Date</td>
+                        <td style="width:10%">IP</td>
+                      </tr>
+                      {% autoescape false %}
+                        {% set i = 0 %}
+                        {% for action in actions %}
+                          {% set i = i + 1 %}
+                          <tr style="background-color: {{ getStyle(i) }}">
+                            <td>{{ action.action }}</td>
+                            <td>{{ action.date|date("d M Y, H:i:s") }}</td>
+                            <td title="{{ action.ipv6 }}">{{ action.ip }}</td>
+                          </tr>
+                        {% endfor %}
+                      {% endautoescape %}
+                    </table>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+{% endif %}
+
