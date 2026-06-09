@@ -5,6 +5,9 @@ body.rc-template-ravyncore2 {
     --rc2-gold: #d4af37;
     --rc2-gold-hot: #ffd76a;
     --rc2-gold-dark: #8b6d05;
+    --rc2-purple: #8b3dff;
+    --rc2-purple-hot: #c783ff;
+    --rc2-purple-deep: #35105f;
     --rc2-red: #6d1f17;
     --rc2-green: #1f5a37;
     --rc2-text: #f4efe2;
@@ -12,7 +15,17 @@ body.rc-template-ravyncore2 {
     --rc2-border: rgba(212, 175, 55, 0.34);
     --rc2-border-strong: rgba(255, 215, 106, 0.68);
     --rc2-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
     background-color: var(--rc2-black);
+}
+
+body.rc-template-ravyncore2 .rc-panel,
+body.rc-template-ravyncore2 .rc-rich-content,
+body.rc-template-ravyncore2 .rc-btn,
+body.rc-template-ravyncore2 .rc-nav-item > a,
+body.rc-template-ravyncore2 .rc-nav-dropdown a,
+body.rc-template-ravyncore2 .rc-links a {
+    font-family: 'Verdana', 'Arial', 'Helvetica', sans-serif;
 }
 
 body.rc-template-ravyncore2 .rc-header-inner {
@@ -22,23 +35,22 @@ body.rc-template-ravyncore2 .rc-header-inner {
 }
 
 body.rc-template-ravyncore2 .rc2-header-brand {
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-}
-
-body.rc-template-ravyncore2 .rc-header-emblem {
-    width: 42px;
-    height: 42px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 14px rgba(255, 215, 106, 0.42));
-}
-
-body.rc-template-ravyncore2 .rc-header-brand-copy {
-    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    line-height: 1;
+    align-items: center;
+    justify-self: start;
+    gap: 0;
+    min-width: 178px;
+}
+
+body.rc-template-ravyncore2 .rc2-header-wordmark {
+    width: 168px;
+    height: 56px;
+    display: block;
+    object-fit: cover;
+    object-position: center center;
+    filter:
+        drop-shadow(0 0 14px rgba(139, 61, 255, 0.36))
+        drop-shadow(0 0 8px rgba(255, 215, 106, 0.2));
 }
 
 body.rc-template-ravyncore2 .rc-header-title {
@@ -49,10 +61,12 @@ body.rc-template-ravyncore2 .rc-header-title {
 }
 
 body.rc-template-ravyncore2 .rc-header-subtitle {
-    margin-top: 4px;
+    margin-top: -8px;
     color: #e8d29a;
-    font-size: 11px;
-    letter-spacing: 0;
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
 body.rc-template-ravyncore2 .rc-nav-item > a {
@@ -60,6 +74,8 @@ body.rc-template-ravyncore2 .rc-nav-item > a {
     color: var(--rc2-muted);
     letter-spacing: 0;
     border-radius: 0;
+    overflow: hidden;
+    transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
 }
 
 body.rc-template-ravyncore2 .rc-nav-item > a::after {
@@ -69,21 +85,24 @@ body.rc-template-ravyncore2 .rc-nav-item > a::after {
     bottom: 4px;
     width: 0;
     height: 2px;
-    background: var(--rc2-gold-hot);
-    box-shadow: 0 0 12px rgba(255, 215, 106, 0.72);
+    background: var(--rc2-purple-hot);
+    box-shadow: 0 0 12px rgba(199, 131, 255, 0.78);
     opacity: 0;
     transform: translateX(-50%);
-    transition: width 0.28s ease, opacity 0.28s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.rc-template-ravyncore2 .rc-nav-item > a:hover {
     color: #fff;
-    text-shadow: 0 0 12px rgba(255, 215, 106, 0.42);
+    text-shadow: 0 0 12px rgba(199, 131, 255, 0.62);
     background: transparent;
+    transform: translateY(-1px);
 }
 
-body.rc-template-ravyncore2 .rc-nav-item > a:hover::after {
-    width: calc(100% - 24px);
+body.rc-template-ravyncore2 .rc-nav-item:hover > a::after,
+body.rc-template-ravyncore2 .rc-nav-item > a:hover::after,
+body.rc-template-ravyncore2 .rc-nav-item > a:focus-visible::after {
+    width: 100%;
     opacity: 1;
 }
 
@@ -93,13 +112,86 @@ body.rc-template-ravyncore2 .rc-nav-mobile-actions .rc-btn {
     border-radius: 6px;
 }
 
+body.rc-template-ravyncore2 .rc-header-language {
+    margin: 0 0 0 2px;
+    padding: 0 2px;
+    border-left: 0;
+    gap: 5px;
+}
+
+body.rc-template-ravyncore2 .rc-nav-mobile-language {
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+    padding: 4px 0;
+    border-left: 0;
+    gap: 7px;
+}
+
+body.rc-template-ravyncore2 .rc-header-language .rc-language-option,
+body.rc-template-ravyncore2 .rc-nav-mobile-language .rc-language-option {
+    width: 31px;
+    height: 22px;
+    border-color: rgba(139, 61, 255, 0.34);
+    background: rgba(20, 10, 31, 0.72);
+}
+
+body.rc-template-ravyncore2 .rc-header-language .rc-language-option:hover,
+body.rc-template-ravyncore2 .rc-header-language .rc-language-option.is-active,
+body.rc-template-ravyncore2 .rc-nav-mobile-language .rc-language-option:hover,
+body.rc-template-ravyncore2 .rc-nav-mobile-language .rc-language-option.is-active {
+    border-color: rgba(199, 131, 255, 0.78);
+    background: rgba(139, 61, 255, 0.16);
+    box-shadow: 0 0 14px rgba(139, 61, 255, 0.3);
+}
+
+body.rc-template-ravyncore2 .rc-nav-dropdown {
+    border-color: rgba(139, 61, 255, 0.34);
+    background: rgba(9, 7, 13, 0.96);
+    box-shadow:
+        0 18px 34px rgba(0, 0, 0, 0.48),
+        0 0 22px rgba(139, 61, 255, 0.12);
+}
+
+body.rc-template-ravyncore2 .rc-nav-dropdown a {
+    position: relative;
+    overflow: hidden;
+    transition: color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+body.rc-template-ravyncore2 .rc-nav-dropdown a::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--rc2-purple-hot);
+    box-shadow: 0 0 12px rgba(199, 131, 255, 0.62);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.26s ease;
+}
+
+body.rc-template-ravyncore2 .rc-nav-dropdown a:hover,
+body.rc-template-ravyncore2 .rc-nav-dropdown a:focus-visible {
+    color: #fff;
+    background: rgba(139, 61, 255, 0.16);
+    transform: translateX(4px);
+}
+
+body.rc-template-ravyncore2 .rc-nav-dropdown a:hover::before,
+body.rc-template-ravyncore2 .rc-nav-dropdown a:focus-visible::before {
+    transform: scaleY(1);
+}
+
 .rc2-hero {
     position: relative;
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-    min-height: 690px;
-    padding: 126px 24px 56px;
+    min-height: 640px;
+    padding: 116px 24px 48px;
     overflow: hidden;
     isolation: isolate;
     border-bottom: 1px solid rgba(212, 175, 55, 0.2);
@@ -144,21 +236,6 @@ body.rc-template-ravyncore2 .rc-nav-mobile-actions .rc-btn {
 
 .rc2-hero__media {
     animation-delay: 0.12s;
-}
-
-.rc2-hero__kicker {
-    display: inline-flex;
-    width: fit-content;
-    margin-bottom: 18px;
-    padding: 8px 13px;
-    border: 1px solid rgba(212, 175, 55, 0.34);
-    background: rgba(30, 25, 16, 0.62);
-    color: var(--rc2-gold-hot);
-    font-size: 13px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0;
-    box-shadow: 0 0 22px rgba(212, 175, 55, 0.12);
 }
 
 .rc2-hero h1 {
@@ -414,8 +491,10 @@ body.rc-template-ravyncore2 .rc-nav-mobile-actions .rc-btn {
 
 .rc2-community {
     width: min(1400px, calc(100% - 16px));
-    margin: 34px auto 22px;
-    padding: 8px 0 0;
+    position: relative;
+    z-index: 3;
+    margin: -28px auto 24px;
+    padding: 0;
 }
 
 .rc2-community-grid {
@@ -448,7 +527,8 @@ body.rc-template-ravyncore2 .rc-nav-mobile-actions .rc-btn {
     top: 0;
     bottom: 0;
     width: 4px;
-    background: var(--rc2-gold);
+    background: var(--rc2-purple-hot);
+    box-shadow: 0 0 16px rgba(199, 131, 255, 0.5);
     transform: scaleY(0);
     transform-origin: top;
     transition: transform 0.26s ease;
@@ -456,9 +536,9 @@ body.rc-template-ravyncore2 .rc-nav-mobile-actions .rc-btn {
 
 .rc2-community-card:hover {
     color: #fff;
-    border-color: rgba(255, 215, 106, 0.68);
+    border-color: rgba(199, 131, 255, 0.68);
     background: rgba(34, 31, 25, 0.86);
-    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.42), 0 0 22px rgba(212, 175, 55, 0.16);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.42), 0 0 24px rgba(139, 61, 255, 0.2);
     transform: translateY(-4px);
 }
 
@@ -487,8 +567,8 @@ body.rc-template-ravyncore2 .rc-nav-mobile-actions .rc-btn {
 }
 
 .rc2-community-card:hover .rc2-community-card__icon {
-    border-color: rgba(255, 215, 106, 0.76);
-    box-shadow: 0 0 18px rgba(255, 215, 106, 0.22);
+    border-color: rgba(199, 131, 255, 0.76);
+    box-shadow: 0 0 18px rgba(139, 61, 255, 0.28);
     transform: scale(1.08);
 }
 
@@ -503,53 +583,6 @@ body.rc-template-ravyncore2 .rc-nav-mobile-actions .rc-btn {
     pointer-events: none;
 }
 
-.rc2-community-tools {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.rc2-community .rc-language-switcher {
-    padding: 8px 10px;
-    margin: 0;
-    border: 1px solid rgba(212, 175, 55, 0.22);
-    border-radius: 999px;
-    background: rgba(10, 9, 7, 0.48);
-}
-
-.rc2-language-strip {
-    position: relative;
-    z-index: 2;
-    width: min(1400px, calc(100% - 16px));
-    margin: 14px auto 4px;
-    display: flex;
-    justify-content: center;
-}
-
-.rc2-language-strip .rc-language-switcher {
-    margin: 0;
-    padding: 7px 10px;
-    border: 1px solid rgba(212, 175, 55, 0.24);
-    border-radius: 999px;
-    background: rgba(10, 9, 7, 0.56);
-    box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
-        0 10px 26px rgba(0, 0, 0, 0.24);
-}
-
-.rc2-community--compact {
-    margin-top: 18px;
-}
-
-.rc2-community--compact .rc2-community-grid {
-    grid-template-columns: repeat(5, minmax(0, 150px));
-    justify-content: center;
-}
-
-.rc2-community--compact .rc2-community-card {
-    min-height: 86px;
-}
-
 .rc2-page-heading {
     width: min(1400px, calc(100% - 16px));
     margin: 18px auto 12px;
@@ -559,6 +592,93 @@ body.rc-template-ravyncore2 .rc-nav-mobile-actions .rc-btn {
 
 body.rc-template-ravyncore2 .rc-main-grid {
     margin-top: 26px;
+}
+
+body.rc-template-ravyncore2 .rc-panel h3 {
+    color: var(--rc2-gold-hot);
+    font-size: 18px;
+    line-height: 1.15;
+    letter-spacing: 0;
+}
+
+body.rc-template-ravyncore2 .rc-panel-body,
+body.rc-template-ravyncore2 .rc-rich-content,
+body.rc-template-ravyncore2 .rc-status-line {
+    font-size: 15px;
+    line-height: 1.58;
+}
+
+body.rc-template-ravyncore2 .rc-links a,
+body.rc-template-ravyncore2 .rc-btn-subtle,
+body.rc-template-ravyncore2 .rc-btn-block {
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0;
+    transition:
+        color 0.26s ease,
+        background 0.26s ease,
+        border-color 0.26s ease,
+        box-shadow 0.26s ease,
+        transform 0.26s ease;
+}
+
+body.rc-template-ravyncore2 .rc-links a::before,
+body.rc-template-ravyncore2 .rc-btn-subtle::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    background: var(--rc2-purple-hot);
+    box-shadow: 0 0 14px rgba(199, 131, 255, 0.58);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+}
+
+body.rc-template-ravyncore2 .rc-links a::after,
+body.rc-template-ravyncore2 .rc-btn-subtle::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 4px;
+    width: 0;
+    height: 2px;
+    background: var(--rc2-purple-hot);
+    box-shadow: 0 0 10px rgba(199, 131, 255, 0.7);
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.rc-template-ravyncore2 .rc-links a:hover,
+body.rc-template-ravyncore2 .rc-links a:focus-visible,
+body.rc-template-ravyncore2 .rc-btn-subtle:hover,
+body.rc-template-ravyncore2 .rc-btn-subtle:focus-visible {
+    color: #fff;
+    border-color: rgba(199, 131, 255, 0.68);
+    background:
+        linear-gradient(95deg, rgba(54, 16, 95, 0.74) 0%, rgba(24, 20, 38, 0.86) 52%, rgba(91, 45, 160, 0.62) 100%);
+    box-shadow:
+        0 0 18px rgba(139, 61, 255, 0.22),
+        inset 0 0 0 1px rgba(199, 131, 255, 0.12);
+    transform: translateX(5px);
+}
+
+body.rc-template-ravyncore2 .rc-links a:hover::before,
+body.rc-template-ravyncore2 .rc-links a:focus-visible::before,
+body.rc-template-ravyncore2 .rc-btn-subtle:hover::before,
+body.rc-template-ravyncore2 .rc-btn-subtle:focus-visible::before {
+    transform: scaleY(1);
+}
+
+body.rc-template-ravyncore2 .rc-links a:hover::after,
+body.rc-template-ravyncore2 .rc-links a:focus-visible::after,
+body.rc-template-ravyncore2 .rc-btn-subtle:hover::after,
+body.rc-template-ravyncore2 .rc-btn-subtle:focus-visible::after {
+    width: calc(100% - 26px);
+    opacity: 1;
 }
 
 @keyframes rc2-fade-up {
@@ -603,11 +723,6 @@ body.rc-template-ravyncore2 .rc-main-grid {
         text-align: center;
     }
 
-    .rc2-hero__kicker {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
     .rc2-hero__description {
         margin-left: auto;
         margin-right: auto;
@@ -622,16 +737,15 @@ body.rc-template-ravyncore2 .rc-main-grid {
         aspect-ratio: 16 / 9;
     }
 
-    .rc2-community-grid,
-    .rc2-community--compact .rc2-community-grid {
+    .rc2-community-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 760px) {
-    body.rc-template-ravyncore2 .rc-header-emblem {
-        width: 36px;
-        height: 36px;
+    body.rc-template-ravyncore2 .rc2-header-wordmark {
+        width: 132px;
+        height: 46px;
     }
 
     body.rc-template-ravyncore2 .rc-header-title {
@@ -691,24 +805,19 @@ body.rc-template-ravyncore2 .rc-main-grid {
 }
 
 @media (max-width: 520px) {
-    body.rc-template-ravyncore2 .rc-header-brand-copy {
-        max-width: 140px;
+    body.rc-template-ravyncore2 .rc2-header-brand {
+        min-width: 132px;
     }
 
     .rc2-hero h1 {
         font-size: 32px;
     }
 
-    .rc2-hero__kicker {
-        font-size: 12px;
-    }
-
     .rc2-btn-create {
         min-height: 54px;
     }
 
-    .rc2-community-grid,
-    .rc2-community--compact .rc2-community-grid {
+    .rc2-community-grid {
         grid-template-columns: 1fr;
     }
 

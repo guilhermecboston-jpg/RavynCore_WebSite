@@ -386,6 +386,8 @@ $rc2CommunityLinks = [
     ['name' => 'TikTok', 'url' => $tiktokUrl, 'icon' => 'fab fa-tiktok', 'icon_path' => ''],
     ['name' => 'Facebook', 'url' => $facebookUrl ?: $xUrl, 'icon' => $facebookUrl ? 'fab fa-facebook-f' : 'fab fa-x-twitter', 'icon_path' => $facebookUrl ? $socialIconBase . '/icon-facebook.png' : ''],
 ];
+$rc2LandingPages = ['news', 'latestnews', 'lastnews', ''];
+$rc2IsLandingPage = in_array((string)PAGE, $rc2LandingPages, true);
 ?>
 <!doctype html>
 <html lang="<?= escapeHtml($rcHtmlLang); ?>">
@@ -414,13 +416,12 @@ $rc2CommunityLinks = [
     <header class="rc-header">
         <div class="rc-header-inner">
             <a class="rc-header-brand rc2-header-brand" href="<?= getLink('news'); ?>">
-                <?php if (file_exists(BASE . $brandLogoPreferred)): ?>
-                    <img class="rc-header-emblem" src="<?= $brandLogoPreferred; ?>" alt="" aria-hidden="true">
-                <?php endif; ?>
-                <span class="rc-header-brand-copy">
+                <?php if ($hasBrandSlogan): ?>
+                    <img class="rc-header-wordmark rc-logo-wordmark rc2-header-wordmark" src="<?= $brandSloganPreferred; ?>" alt="RavynCore">
+                <?php else: ?>
                     <strong class="rc-header-title">RavynCore</strong>
-                    <span class="rc-header-subtitle"><?= escapeHtml($headerSubtitle); ?></span>
-                </span>
+                <?php endif; ?>
+                <span class="rc-header-subtitle"><?= escapeHtml($headerSubtitle); ?></span>
             </a>
 
             <nav id="rcNav" class="rc-nav" aria-label="Primary">
@@ -486,6 +487,16 @@ $rc2CommunityLinks = [
                         <a class="rc-btn rc-btn-play" href="<?= $accountManageUrl; ?>">
                             <i class="fas fa-user"></i><span><?= escapeHtml(rc_t('My Account')); ?></span>
                         </a>
+                        <div class="rc-nav-mobile-language rc-language-switcher" aria-label="<?= escapeHtml(rc_t('Languages')); ?>">
+                            <?php foreach ($rcSupportedLanguages as $languageCode => $language): ?>
+                                <a class="rc-language-option<?= $languageCode === $rcCurrentLang ? ' is-active' : ''; ?>"
+                                   href="<?= escapeHtml(rc_lang_url($languageCode)); ?>"
+                                   title="<?= escapeHtml($language['label']); ?>"
+                                   aria-label="<?= escapeHtml($language['label']); ?>">
+                                    <img src="<?= $language['flag']; ?>" alt="<?= escapeHtml($language['short']); ?>">
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
                         <a class="rc-btn rc-btn-danger" href="<?= $accountLogoutUrl; ?>">
                             <i class="fas fa-right-from-bracket"></i><span><?= escapeHtml(rc_t('Logout')); ?></span>
                         </a>
@@ -493,6 +504,16 @@ $rc2CommunityLinks = [
                         <a class="rc-btn rc-btn-play" href="<?= $accountManageUrl; ?>">
                             <i class="fas fa-right-to-bracket"></i><span><?= escapeHtml(rc_t('Login')); ?></span>
                         </a>
+                        <div class="rc-nav-mobile-language rc-language-switcher" aria-label="<?= escapeHtml(rc_t('Languages')); ?>">
+                            <?php foreach ($rcSupportedLanguages as $languageCode => $language): ?>
+                                <a class="rc-language-option<?= $languageCode === $rcCurrentLang ? ' is-active' : ''; ?>"
+                                   href="<?= escapeHtml(rc_lang_url($languageCode)); ?>"
+                                   title="<?= escapeHtml($language['label']); ?>"
+                                   aria-label="<?= escapeHtml($language['label']); ?>">
+                                    <img src="<?= $language['flag']; ?>" alt="<?= escapeHtml($language['short']); ?>">
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
                         <a class="rc-btn rc-btn-violet" href="<?= $accountCreateUrl; ?>">
                             <i class="fas fa-user-plus"></i><span><?= escapeHtml(rc_t('Create Account')); ?></span>
                         </a>
@@ -503,11 +524,31 @@ $rc2CommunityLinks = [
             <div class="rc-header-actions">
                 <?php if ($logged): ?>
                     <a class="rc-btn rc-btn-ghost rc-btn-sm" href="<?= $accountManageUrl; ?>"><?= escapeHtml(rc_t('My Account')); ?></a>
+                    <div class="rc-header-language rc-language-switcher" aria-label="<?= escapeHtml(rc_t('Languages')); ?>">
+                        <?php foreach ($rcSupportedLanguages as $languageCode => $language): ?>
+                            <a class="rc-language-option<?= $languageCode === $rcCurrentLang ? ' is-active' : ''; ?>"
+                               href="<?= escapeHtml(rc_lang_url($languageCode)); ?>"
+                               title="<?= escapeHtml($language['label']); ?>"
+                               aria-label="<?= escapeHtml($language['label']); ?>">
+                                <img src="<?= $language['flag']; ?>" alt="<?= escapeHtml($language['short']); ?>">
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
                     <a class="rc-btn rc-btn-violet rc-btn-sm" href="<?= $accountLogoutUrl; ?>">
                         <i class="fas fa-right-from-bracket"></i><span><?= escapeHtml(rc_t('Logout')); ?></span>
                     </a>
                 <?php else: ?>
                     <a class="rc-btn rc-btn-ghost rc-btn-sm" href="<?= $accountManageUrl; ?>"><?= escapeHtml(rc_t('Login')); ?></a>
+                    <div class="rc-header-language rc-language-switcher" aria-label="<?= escapeHtml(rc_t('Languages')); ?>">
+                        <?php foreach ($rcSupportedLanguages as $languageCode => $language): ?>
+                            <a class="rc-language-option<?= $languageCode === $rcCurrentLang ? ' is-active' : ''; ?>"
+                               href="<?= escapeHtml(rc_lang_url($languageCode)); ?>"
+                               title="<?= escapeHtml($language['label']); ?>"
+                               aria-label="<?= escapeHtml($language['label']); ?>">
+                                <img src="<?= $language['flag']; ?>" alt="<?= escapeHtml($language['short']); ?>">
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
                     <a class="rc-btn rc-btn-violet rc-btn-sm" href="<?= $accountCreateUrl; ?>">
                         <i class="fas fa-user-plus"></i><span><?= escapeHtml(rc_t('Create Account')); ?></span>
                     </a>
@@ -520,12 +561,11 @@ $rc2CommunityLinks = [
         </div>
     </header>
 
-    <?php if (PAGE === 'news'): ?>
+    <?php if ($rc2IsLandingPage): ?>
         <section class="rc2-hero" aria-label="RavynCore Servers">
             <div class="rc2-hero__backdrop" aria-hidden="true"></div>
             <div class="rc2-hero__inner">
                 <div class="rc2-hero__copy">
-                    <span class="rc2-hero__kicker">RavynCore</span>
                     <h1>
                         <span>WELCOME TO RAVYNCORE</span>
                         <span>SERVERS</span>
@@ -577,7 +617,7 @@ $rc2CommunityLinks = [
         </section>
     <?php endif; ?>
 
-    <?php if (PAGE === 'news'): ?>
+    <?php if ($rc2IsLandingPage): ?>
         <section id="rcSocialLinks" class="rc2-community" aria-label="RavynCore community">
             <div class="rc2-section-heading">
                 <span>RavynCore Servers</span>
@@ -606,35 +646,10 @@ $rc2CommunityLinks = [
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
-            <div class="rc2-community-tools">
-                <div class="rc-language-switcher" aria-label="<?= escapeHtml(rc_t('Languages')); ?>">
-                    <?php foreach ($rcSupportedLanguages as $languageCode => $language): ?>
-                        <a class="rc-language-option<?= $languageCode === $rcCurrentLang ? ' is-active' : ''; ?>"
-                           href="<?= escapeHtml(rc_lang_url($languageCode)); ?>"
-                           title="<?= escapeHtml($language['label']); ?>"
-                           aria-label="<?= escapeHtml($language['label']); ?>">
-                            <img src="<?= $language['flag']; ?>" alt="<?= escapeHtml($language['short']); ?>">
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </section>
-    <?php else: ?>
-        <section class="rc2-language-strip" aria-label="<?= escapeHtml(rc_t('Languages')); ?>">
-            <div class="rc-language-switcher">
-                <?php foreach ($rcSupportedLanguages as $languageCode => $language): ?>
-                    <a class="rc-language-option<?= $languageCode === $rcCurrentLang ? ' is-active' : ''; ?>"
-                       href="<?= escapeHtml(rc_lang_url($languageCode)); ?>"
-                       title="<?= escapeHtml($language['label']); ?>"
-                       aria-label="<?= escapeHtml($language['label']); ?>">
-                        <img src="<?= $language['flag']; ?>" alt="<?= escapeHtml($language['short']); ?>">
-                    </a>
-                <?php endforeach; ?>
-            </div>
         </section>
     <?php endif; ?>
 
-    <?php if (PAGE === 'news'): ?>
+    <?php if ($rc2IsLandingPage): ?>
         <section id="rcLaunchCountdown"
                  class="rc-launch-countdown"
                  data-target="2026-06-13T19:00:00-03:00"
@@ -709,7 +724,7 @@ $rc2CommunityLinks = [
         </aside>
 
         <section class="rc-content-column">
-            <?php if (PAGE === 'news'): ?>
+            <?php if ($rc2IsLandingPage): ?>
                 <section class="rc-panel rc-panel-news">
                     <h3><?= escapeHtml(rc_t('Latest News')); ?></h3>
                     <div class="rc-panel-body">
