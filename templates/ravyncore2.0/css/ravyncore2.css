@@ -517,6 +517,26 @@ body.rc-template-ravyncore2 .rc-nav-mobile-actions .rc-btn {
     background: rgba(10, 9, 7, 0.48);
 }
 
+.rc2-language-strip {
+    position: relative;
+    z-index: 2;
+    width: min(1400px, calc(100% - 16px));
+    margin: 14px auto 4px;
+    display: flex;
+    justify-content: center;
+}
+
+.rc2-language-strip .rc-language-switcher {
+    margin: 0;
+    padding: 7px 10px;
+    border: 1px solid rgba(212, 175, 55, 0.24);
+    border-radius: 999px;
+    background: rgba(10, 9, 7, 0.56);
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        0 10px 26px rgba(0, 0, 0, 0.24);
+}
+
 .rc2-community--compact {
     margin-top: 18px;
 }

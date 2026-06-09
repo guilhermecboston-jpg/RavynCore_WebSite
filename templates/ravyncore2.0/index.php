@@ -577,36 +577,51 @@ $rc2CommunityLinks = [
         </section>
     <?php endif; ?>
 
-    <section id="rcSocialLinks" class="rc2-community<?= PAGE !== 'news' ? ' rc2-community--compact' : ''; ?>" aria-label="RavynCore community">
-        <div class="rc2-section-heading">
-            <span>RavynCore Servers</span>
-            <h2>COMMUNITY</h2>
-        </div>
-        <div class="rc2-community-grid">
-            <?php foreach ($rc2CommunityLinks as $community): ?>
-                <?php $isCommunityEnabled = !empty($community['url']); ?>
-                <?php if ($isCommunityEnabled): ?>
-                <a class="rc2-community-card" href="<?= escapeHtml($community['url']); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= escapeHtml($community['name']); ?>">
-                <?php else: ?>
-                <span class="rc2-community-card is-disabled" aria-label="<?= escapeHtml($community['name']); ?>">
-                <?php endif; ?>
-                    <span class="rc2-community-card__icon">
-                        <?php if (!empty($community['icon_path']) && file_exists(BASE . $community['icon_path'])): ?>
-                            <img src="<?= $community['icon_path']; ?>" alt="">
-                        <?php else: ?>
-                            <i class="<?= escapeHtml($community['icon']); ?>"></i>
-                        <?php endif; ?>
+    <?php if (PAGE === 'news'): ?>
+        <section id="rcSocialLinks" class="rc2-community" aria-label="RavynCore community">
+            <div class="rc2-section-heading">
+                <span>RavynCore Servers</span>
+                <h2>COMMUNITY</h2>
+            </div>
+            <div class="rc2-community-grid">
+                <?php foreach ($rc2CommunityLinks as $community): ?>
+                    <?php $isCommunityEnabled = !empty($community['url']); ?>
+                    <?php if ($isCommunityEnabled): ?>
+                    <a class="rc2-community-card" href="<?= escapeHtml($community['url']); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?= escapeHtml($community['name']); ?>">
+                    <?php else: ?>
+                    <span class="rc2-community-card is-disabled" aria-label="<?= escapeHtml($community['name']); ?>">
+                    <?php endif; ?>
+                        <span class="rc2-community-card__icon">
+                            <?php if (!empty($community['icon_path']) && file_exists(BASE . $community['icon_path'])): ?>
+                                <img src="<?= $community['icon_path']; ?>" alt="">
+                            <?php else: ?>
+                                <i class="<?= escapeHtml($community['icon']); ?>"></i>
+                            <?php endif; ?>
+                        </span>
+                        <strong><?= escapeHtml($community['name']); ?></strong>
+                    <?php if ($isCommunityEnabled): ?>
+                    </a>
+                    <?php else: ?>
                     </span>
-                    <strong><?= escapeHtml($community['name']); ?></strong>
-                <?php if ($isCommunityEnabled): ?>
-                </a>
-                <?php else: ?>
-                </span>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </div>
-        <div class="rc2-community-tools">
-            <div class="rc-language-switcher" aria-label="<?= escapeHtml(rc_t('Languages')); ?>">
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+            <div class="rc2-community-tools">
+                <div class="rc-language-switcher" aria-label="<?= escapeHtml(rc_t('Languages')); ?>">
+                    <?php foreach ($rcSupportedLanguages as $languageCode => $language): ?>
+                        <a class="rc-language-option<?= $languageCode === $rcCurrentLang ? ' is-active' : ''; ?>"
+                           href="<?= escapeHtml(rc_lang_url($languageCode)); ?>"
+                           title="<?= escapeHtml($language['label']); ?>"
+                           aria-label="<?= escapeHtml($language['label']); ?>">
+                            <img src="<?= $language['flag']; ?>" alt="<?= escapeHtml($language['short']); ?>">
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+    <?php else: ?>
+        <section class="rc2-language-strip" aria-label="<?= escapeHtml(rc_t('Languages')); ?>">
+            <div class="rc-language-switcher">
                 <?php foreach ($rcSupportedLanguages as $languageCode => $language): ?>
                     <a class="rc-language-option<?= $languageCode === $rcCurrentLang ? ' is-active' : ''; ?>"
                        href="<?= escapeHtml(rc_lang_url($languageCode)); ?>"
@@ -616,8 +631,8 @@ $rc2CommunityLinks = [
                     </a>
                 <?php endforeach; ?>
             </div>
-        </div>
-    </section>
+        </section>
+    <?php endif; ?>
 
     <?php if (PAGE === 'news'): ?>
         <section id="rcLaunchCountdown"
