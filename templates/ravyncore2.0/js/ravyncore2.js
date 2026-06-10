@@ -206,6 +206,100 @@
         }
     }
 
+    function cleanQuickLinkLabel(label) {
+        return (label || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function shouldSkipGeneratedQuickLinks() {
+        return document.body.classList.contains('rc-page-news')
+            || document.body.classList.contains('rc-page-latestnews')
+            || document.body.classList.contains('rc-page-lastnews');
+    }
+
+    function buildGeneratedQuickLinks(list) {
+        var content = document.querySelector('.rc-rich-content');
+        if (!content || shouldSkipGeneratedQuickLinks()) {
+            return [];
+        }
+
+        var candidates = Array.prototype.slice.call(content.querySelectorAll('section[id], article[id], details[id], div[id]'));
+        var seen = {};
+        var generated = [];
+
+        candidates.forEach(function (node) {
+            if (generated.length >= 10 || !node.id || seen[node.id]) {
+                return;
+            }
+
+            if (node.closest('table') || node.classList.contains('rc-st-page-title')) {
+                return;
+            }
+
+            var titleNode = node.querySelector(':scope > h2, :scope > h3, :scope > h4, :scope > summary, :scope .rc-vl-title, :scope .esb-title, :scope .rc-si-title');
+            var label = cleanQuickLinkLabel(titleNode ? titleNode.textContent : '');
+
+            if (!label && node.classList.contains('rc-am-table-area')) {
+                label = node.getAttribute('data-kind') === 'mounts' ? 'Mounts' : 'Outfits';
+            }
+
+            if (!label || label.length > 48) {
+                return;
+            }
+
+            seen[node.id] = true;
+            generated.push({
+                label: label,
+                href: '#' + node.id,
+                target: node
+            });
+        });
+
+        if (!generated.length) {
+            Array.prototype.slice.call(content.querySelectorAll('h2, h3')).forEach(function (heading, index) {
+                var label = cleanQuickLinkLabel(heading.textContent);
+                if (generated.length >= 8 || !label || label.length > 48 || heading.closest('table')) {
+                    return;
+                }
+
+                if (heading.closest('.rc-st-page-title')) {
+                    return;
+                }
+
+                if (!heading.id) {
+                    heading.id = 'rc2-generated-section-' + index;
+                }
+
+                generated.push({
+                    label: label,
+                    href: '#' + heading.id,
+                    target: heading
+                });
+            });
+        }
+
+        if (!generated.length) {
+            return [];
+        }
+
+        list.innerHTML = '';
+        generated.forEach(function (entry) {
+            var item = document.createElement('li');
+            var link = document.createElement('a');
+            link.href = entry.href;
+            link.className = 'js-rc-page-anchor';
+            link.textContent = entry.label;
+            item.appendChild(link);
+            list.appendChild(item);
+        });
+
+        var panel = list.closest('.rc-quick-panel');
+        if (panel) {
+            panel.classList.add('is-page-quick-links');
+        }
+
+        return Array.prototype.slice.call(list.querySelectorAll('a[href^="#"]'));
+    }
+
     function initPageQuickLinks() {
         var list = document.querySelector('[data-rc-page-quick-links]');
         if (!list) {
@@ -213,6 +307,10 @@
         }
 
         var links = Array.prototype.slice.call(list.querySelectorAll('a[href^="#"]'));
+        if (!links.length) {
+            links = buildGeneratedQuickLinks(list);
+        }
+
         var targets = links.map(function (link) {
             return {
                 link: link,

@@ -1,4 +1,5 @@
 body.rc-template-ravyncore2 {
+    --rc2-font-ui: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --rc2-black: #070604;
     --rc2-panel: rgba(22, 20, 16, 0.82);
     --rc2-panel-strong: rgba(32, 28, 21, 0.92);
@@ -20,7 +21,10 @@ body.rc-template-ravyncore2 {
     --tibia-border-gold-dark: #8b6d05;
     --tibia-text-gold: #ffd700;
     --tibia-text-silver: #c0c0c0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--rc2-text);
+    font-family: var(--rc2-font-ui);
+    font-size: 16px;
+    line-height: 1.6;
     background-color: var(--rc2-black);
 }
 
@@ -143,8 +147,12 @@ body.rc-template-ravyncore2 .rc-rich-content,
 body.rc-template-ravyncore2 .rc-btn,
 body.rc-template-ravyncore2 .rc-nav-item > a,
 body.rc-template-ravyncore2 .rc-nav-dropdown a,
-body.rc-template-ravyncore2 .rc-links a {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+body.rc-template-ravyncore2 .rc-links a,
+body.rc-template-ravyncore2 input,
+body.rc-template-ravyncore2 select,
+body.rc-template-ravyncore2 textarea,
+body.rc-template-ravyncore2 button {
+    font-family: var(--rc2-font-ui);
 }
 
 body.rc-template-ravyncore2 h1,
@@ -153,7 +161,7 @@ body.rc-template-ravyncore2 h3,
 body.rc-template-ravyncore2 h4,
 body.rc-template-ravyncore2 h5,
 body.rc-template-ravyncore2 h6 {
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
 }
 
@@ -737,15 +745,39 @@ body.rc-template-ravyncore2 .rc-panel > h3 {
 
 body.rc-template-ravyncore2 .rc-panel-content > h3,
 body.rc-template-ravyncore2 .rc-rich-content .rc-st-page-title,
-body.rc-template-ravyncore2 .rc-rich-content .rc-tier-nav-below {
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-nav-below,
+body.rc-template-ravyncore2 .rc-rich-content nav[class*="-nav-below"] {
     display: none !important;
 }
 
 body.rc-template-ravyncore2 .rc-panel-body,
 body.rc-template-ravyncore2 .rc-rich-content,
 body.rc-template-ravyncore2 .rc-status-line {
-    font-size: 15px;
-    line-height: 1.58;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content,
+body.rc-template-ravyncore2 .rc-rich-content :where(p, li, td, th, label, input, select, textarea, button, a, span, small) {
+    font-family: var(--rc2-font-ui) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(h2, h3, h4, h5, h6) {
+    font-family: var(--rc2-font-ui) !important;
+    letter-spacing: 1px;
+    line-height: 1.18;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content h2 {
+    font-size: clamp(28px, 3vw, 40px) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content h3 {
+    font-size: clamp(22px, 2.2vw, 30px) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content h4 {
+    font-size: 18px !important;
 }
 
 body.rc-template-ravyncore2 .rc-links a,
@@ -1026,6 +1058,7 @@ body.rc-template-ravyncore2 .rc-rich-content .rc-tier-nav a:focus-visible {
 }
 
 body.rc-template-ravyncore2 .rc-rich-content .rc-bf-table-wrap,
+body.rc-template-ravyncore2 .rc-rich-content .rc-hf-table-wrap,
 body.rc-template-ravyncore2 .rc-rich-content .rc-tier-item-spot,
 body.rc-template-ravyncore2 .rc-rich-content .rc-st-feature-media {
     border-color: rgba(212, 175, 55, 0.28) !important;
@@ -1034,11 +1067,13 @@ body.rc-template-ravyncore2 .rc-rich-content .rc-st-feature-media {
 }
 
 body.rc-template-ravyncore2 .rc-rich-content .rc-bf-table,
+body.rc-template-ravyncore2 .rc-rich-content .rc-hf-table,
 body.rc-template-ravyncore2 .rc-rich-content .rc-tier-table {
     background: rgba(10, 8, 14, 0.72) !important;
 }
 
 body.rc-template-ravyncore2 .rc-rich-content .rc-bf-table th,
+body.rc-template-ravyncore2 .rc-rich-content .rc-hf-table th,
 body.rc-template-ravyncore2 .rc-rich-content .rc-tier-table th {
     border-color: rgba(212, 175, 55, 0.24) !important;
     background: rgba(54, 16, 95, 0.3) !important;
@@ -1046,14 +1081,456 @@ body.rc-template-ravyncore2 .rc-rich-content .rc-tier-table th {
 }
 
 body.rc-template-ravyncore2 .rc-rich-content .rc-bf-table td,
+body.rc-template-ravyncore2 .rc-rich-content .rc-hf-table td,
 body.rc-template-ravyncore2 .rc-rich-content .rc-tier-table td {
     border-color: rgba(212, 175, 55, 0.16) !important;
     background: rgba(8, 7, 12, 0.54) !important;
 }
 
 body.rc-template-ravyncore2 .rc-rich-content .rc-bf-table tr:nth-child(even) td,
+body.rc-template-ravyncore2 .rc-rich-content .rc-hf-table tr:nth-child(even) td,
 body.rc-template-ravyncore2 .rc-rich-content .rc-tier-table tr:nth-child(even) td {
     background: rgba(54, 16, 95, 0.12) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-hs-card,
+    .rc-hs-filter-wrap,
+    .rc-hs-table-wrap,
+    .rc-vl-section,
+    .rc-vl-body,
+    .rc-vl-note,
+    .rc-vl-mount-grid,
+    .rc-vl-mount-card,
+    .esb-section,
+    .esb-body,
+    .esb-chip,
+    .esb-level-box,
+    .esb-element-details,
+    .esb-stone-tile,
+    .rc-si-section,
+    .rc-si-body,
+    .rc-si-note,
+    .rc-am-warning,
+    .rc-am-toolbar,
+    .rc-am-tabs,
+    .rc-am-table-area,
+    .rc-am-outfit-slot,
+    .rc-am-mount-visual,
+    .rc-exercise-compare,
+    .rc-exercise-card,
+    .rc-exercise-img-wrap,
+    .rc-exercise-faq details,
+    .rc-reflect-stat,
+    .rc-reflect-limit-grid article,
+    .rc-reflect-flow div,
+    .rc-tier-extractor,
+    .rc-upg-stone-card,
+    .rc-sg-remove-card,
+    .rc-sg-look-wrap,
+    .rc-sg-transfer-wrap,
+    .rc-casino-roleta-col,
+    .rc-st-top-categories,
+    .rc-st-cat-link,
+    .rc-cbz-card,
+    .rc-cbz-panel,
+    .rc-cbz-item-card,
+    .NewsHeadline,
+    .NewsHeadlineBackground,
+    .TableContent,
+    .InnerTableContainer,
+    .BoxContent,
+    .Message,
+    .Odd,
+    .Even
+) {
+    border-color: rgba(212, 175, 55, 0.28) !important;
+    background:
+        radial-gradient(circle at 12% 0%, rgba(139, 61, 255, 0.13), transparent 34%),
+        linear-gradient(160deg, rgba(22, 18, 30, 0.94), rgba(8, 7, 12, 0.96)) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 215, 106, 0.035),
+        0 10px 24px rgba(0, 0, 0, 0.34) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-vl-title,
+    .esb-title,
+    .esb-subtitle,
+    .rc-si-title,
+    .rc-hs-title,
+    .rc-am-title,
+    .rc-am-table th,
+    .rc-hs-table th,
+    .rc-vl-table th,
+    .esb-table th,
+    .rc-si-table th,
+    .rc-sg-gem-name,
+    .rc-cbz-title,
+    .LabelH td,
+    .LabelH th,
+    .BorderTitleText,
+    .NewsHeadlineDate,
+    .NewsHeadlineText
+) {
+    color: var(--rc2-gold-hot) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-vl-body,
+    .rc-vl-table td,
+    .rc-vl-note,
+    .rc-vl-footer-note,
+    .rc-vl-mount-title,
+    .esb-body,
+    .esb-text,
+    .esb-table td,
+    .esb-item-id,
+    .esb-item-code,
+    .esb-figure-caption,
+    .esb-element-summary,
+    .esb-stone-tile-label,
+    .rc-si-body,
+    .rc-si-text,
+    .rc-si-note,
+    .rc-si-table td,
+    .rc-hs-field label,
+    .rc-hs-world-type,
+    .rc-hs-showing,
+    .rc-hs-empty,
+    .rc-hs-table td,
+    .rc-exercise-meta,
+    .rc-exercise-faq p,
+    .rc-reflect-lead,
+    .rc-reflect-limit-grid small,
+    .rc-reflect-flow small,
+    .rc-casino-loot-name,
+    .rc-cbz-meta,
+    .rc-cbz-empty,
+    .NewsTickerText,
+    .NewsTickerShortText,
+    .NewsTickerFullText,
+    .Text
+) {
+    color: var(--rc2-muted) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="image"]),
+    select,
+    textarea,
+    .rc-am-search-input,
+    .rc-hs-field select
+) {
+    border: 1px solid rgba(139, 109, 5, 0.72) !important;
+    border-radius: 6px !important;
+    background: rgba(0, 0, 0, 0.38) !important;
+    color: var(--rc2-text) !important;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.48) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="image"]),
+    select,
+    textarea,
+    .rc-am-search-input,
+    .rc-hs-field select
+):focus {
+    border-color: rgba(199, 131, 255, 0.76) !important;
+    box-shadow:
+        inset 0 0 8px rgba(0, 0, 0, 0.48),
+        0 0 14px rgba(139, 61, 255, 0.24) !important;
+    outline: none !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(input[type="checkbox"], input[type="radio"]) {
+    accent-color: var(--rc2-purple);
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-hs-page-btn,
+    .rc-am-tab,
+    .rc-bf-nav a,
+    .rc-hf-nav a,
+    .rc-st-nav a,
+    .rc-esb-nav a,
+    .rc-tier-nav a,
+    .BigButton,
+    .MediumButtonBackground,
+    .BigButtonText,
+    .MediumButtonText,
+    input[type="submit"],
+    input[type="button"],
+    button
+) {
+    border-color: rgba(139, 61, 255, 0.44) !important;
+    background:
+        linear-gradient(180deg, rgba(43, 20, 72, 0.92), rgba(18, 13, 27, 0.95)) !important;
+    color: var(--rc2-text) !important;
+    text-shadow: none !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 215, 106, 0.05),
+        0 0 14px rgba(139, 61, 255, 0.12) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-hs-page-btn:hover,
+    .rc-hs-page-btn.is-current,
+    .rc-am-tab:hover,
+    .rc-am-tab.is-active,
+    .rc-bf-nav a:hover,
+    .rc-hf-nav a:hover,
+    .rc-st-nav a:hover,
+    .rc-esb-nav a:hover,
+    .rc-tier-nav a:hover,
+    .BigButton:hover,
+    .BigButtonText:hover,
+    input[type="submit"]:hover,
+    input[type="button"]:hover,
+    button:hover
+) {
+    border-color: rgba(199, 131, 255, 0.72) !important;
+    background:
+        linear-gradient(180deg, rgba(80, 36, 132, 0.96), rgba(35, 18, 56, 0.98)) !important;
+    color: #fff !important;
+    box-shadow:
+        0 0 18px rgba(139, 61, 255, 0.24),
+        inset 0 0 0 1px rgba(255, 215, 106, 0.08) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-hs-table,
+    .rc-vl-table,
+    .esb-table,
+    .rc-si-table,
+    .rc-am-table,
+    .rc-bf-table,
+    .rc-hf-table,
+    .rc-st-table,
+    .rc-tier-table,
+    table.TableContent
+) {
+    border-color: rgba(212, 175, 55, 0.24) !important;
+    background: rgba(8, 7, 12, 0.72) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-hs-table th,
+    .rc-vl-table th,
+    .esb-table th,
+    .rc-si-table th,
+    .rc-am-table th,
+    .rc-bf-table th,
+    .rc-hf-table th,
+    .rc-st-table th,
+    .rc-tier-table th,
+    table.TableContent th,
+    table.TableContent .LabelH td
+) {
+    border-color: rgba(212, 175, 55, 0.24) !important;
+    background: rgba(54, 16, 95, 0.34) !important;
+    color: var(--rc2-gold-hot) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-hs-table td,
+    .rc-vl-table td,
+    .esb-table td,
+    .rc-si-table td,
+    .rc-am-table td,
+    .rc-bf-table td,
+    .rc-hf-table td,
+    .rc-st-table td,
+    .rc-tier-table td,
+    table.TableContent td
+) {
+    border-color: rgba(212, 175, 55, 0.16) !important;
+    background: rgba(8, 7, 12, 0.54) !important;
+    color: var(--rc2-muted) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-hs-table tr:nth-child(even) td,
+    .rc-vl-table tr:nth-child(even) td,
+    .esb-table tr:nth-child(even) td,
+    .rc-si-table tr:nth-child(even) td,
+    .rc-am-table tr:nth-child(even) td,
+    .rc-hf-table tr:nth-child(even) td,
+    .rc-st-table tr:nth-child(even) td,
+    table.TableContent tr:nth-child(even) td
+) {
+    background: rgba(54, 16, 95, 0.12) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-hs-name a,
+    .rc-upg-link,
+    .rc-sg-price-link,
+    .rc-di-highlight,
+    .rc-sg-highlight,
+    .rc-esb-highlight,
+    strong,
+    a
+) {
+    color: var(--rc2-gold-hot) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(a:hover, a:focus-visible) {
+    color: #fff !important;
+    text-shadow: 0 0 12px rgba(199, 131, 255, 0.36);
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-reflect-hero::before {
+    background: radial-gradient(circle, rgba(139, 61, 255, 0.24), transparent 62%) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-reflect-orb {
+    border-color: rgba(255, 215, 106, 0.45) !important;
+    background:
+        radial-gradient(circle at 38% 30%, #fff3b7, var(--rc2-gold-hot) 30%, var(--rc2-purple) 66%, #100718) !important;
+    box-shadow:
+        0 0 26px rgba(139, 61, 255, 0.34),
+        inset 0 0 24px rgba(255, 255, 255, 0.16) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-reflect-flow > span {
+    color: var(--rc2-purple-hot) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-exercise-pill,
+    .rc-am-results,
+    .rc-hs-meta-value,
+    .rc-rank-position,
+    .esb-item-qty
+) {
+    color: var(--rc2-gold-hot) !important;
+    border-color: rgba(199, 131, 255, 0.36) !important;
+    background: rgba(54, 16, 95, 0.18) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .TableContainer,
+    .TableContentContainer,
+    .TableShadowContainer,
+    .CaptionContainer,
+    .MessageContainer,
+    .SmallBox,
+    .NewsTicker,
+    .NewsTickerIcon,
+    .rc-hf-preview-wrap,
+    .rc-hf-teleport-wrap,
+    .rc-hf-return-row,
+    .rc-hf-note,
+    .rc-st-category,
+    .rc-st-category-body,
+    .rc-st-rewards-box,
+    .rc-st-table-wrap,
+    .rc-st-preview-wrap,
+    .rc-st-chip,
+    .rc-st-summary-toggle,
+    .rc-exercise-note,
+    .rc-exercise-compare,
+    .rc-exercise-img-wrap,
+    .rc-exercise-faq details,
+    .rc-reflect-note,
+    .rc-esb-figure-duo,
+    .rc-hs-toolbar,
+    .rc-hs-world-type,
+    .rc-hs-footer
+) {
+    border-color: rgba(212, 175, 55, 0.28) !important;
+    background:
+        radial-gradient(circle at 12% 0%, rgba(139, 61, 255, 0.12), transparent 34%),
+        linear-gradient(160deg, rgba(20, 17, 28, 0.94), rgba(8, 7, 12, 0.96)) !important;
+    color: var(--rc2-muted) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 215, 106, 0.035),
+        0 10px 24px rgba(0, 0, 0, 0.34) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    tr[bgcolor],
+    td[bgcolor],
+    th[bgcolor],
+    .Odd,
+    .Even
+) {
+    background:
+        linear-gradient(160deg, rgba(17, 14, 24, 0.95), rgba(8, 7, 12, 0.96)) !important;
+    color: var(--rc2-muted) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-hf-lead,
+    .rc-hf-note,
+    .rc-hf-rules-list,
+    .rc-exercise-note,
+    .rc-exercise-compare ul,
+    .rc-exercise-tier-head p,
+    .rc-exercise-faq summary,
+    .rc-reflect-note,
+    .rc-reflect-note span,
+    .rc-st-legend,
+    .rc-st-reward-text,
+    .rc-st-summary-toggle,
+    .rc-st-table td,
+    .NewsTickerText,
+    .NewsTickerShortText,
+    .NewsTickerFullText
+) {
+    color: var(--rc2-muted) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-hf-highlight,
+    .rc-st-summary-title,
+    .rc-st-table th,
+    .rc-st-chip,
+    .rc-exercise-compare h4,
+    .rc-reflect-note strong,
+    .rc-reflect-stat strong,
+    .rc-reflect-limit-grid strong
+) {
+    color: var(--rc2-gold-hot) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-exercise-compare-durable,
+    .rc-exercise-compare-lasting,
+    .rc-exercise-compare-mystic,
+    .rc-exercise-compare-legendary
+) {
+    border-top-color: rgba(199, 131, 255, 0.72) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-exercise-pill-durable,
+    .rc-exercise-pill-lasting,
+    .rc-exercise-pill-mystic,
+    .rc-exercise-pill-legendary,
+    .rc-exercise-pill-boxes,
+    .rc-hf-diff-badge
+) {
+    color: var(--rc2-gold-hot) !important;
+    border-color: rgba(199, 131, 255, 0.38) !important;
+    background: rgba(54, 16, 95, 0.18) !important;
+}
+
+body.rc-template-ravyncore2.rc-page-highscores .rc-rich-content .rc-hs-rank-top1,
+body.rc-template-ravyncore2.rc-page-highscores .rc-rich-content .rc-hs-rank-top2,
+body.rc-template-ravyncore2.rc-page-highscores .rc-rich-content .rc-hs-rank-top3 {
+    color: var(--rc2-gold-hot) !important;
+    text-shadow: 0 0 12px rgba(255, 215, 106, 0.26) !important;
+}
+
+body.rc-template-ravyncore2.rc-page-highscores .rc-rich-content .rc-hs-name a,
+body.rc-template-ravyncore2.rc-page-highscores .rc-rich-content .rc-hs-name a:hover {
+    color: var(--rc2-gold-hot) !important;
+}
+
+body.rc-template-ravyncore2.rc-page-serverinfo .rc-rich-content .rc-si-stat-mp {
+    color: var(--rc2-purple-hot) !important;
 }
 
 body.rc-template-ravyncore2 .rc2-launch-banner {

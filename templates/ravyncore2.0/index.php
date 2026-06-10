@@ -78,11 +78,6 @@ if (!function_exists('rc2_extract_page_quick_links')) {
 
         if (preg_match_all('/<nav\b([^>]*)>(.*?)<\/nav>/is', $html, $navMatches, PREG_SET_ORDER)) {
             foreach ($navMatches as $navMatch) {
-                $navAttrs = $navMatch[1] ?? '';
-                if (stripos($navAttrs, 'rc-tier-nav') === false) {
-                    continue;
-                }
-
                 if (!preg_match_all('/<a\b([^>]*)>(.*?)<\/a>/is', $navMatch[2] ?? '', $anchorMatches, PREG_SET_ORDER)) {
                     continue;
                 }
@@ -169,6 +164,14 @@ $libraryMenuItems = array_values(array_filter($libraryMenuItems, static function
 
     return !in_array($link, $libraryHiddenLinks, true);
 }));
+foreach ($libraryMenuItems as &$libraryMenuItem) {
+    $itemLink = strtolower(trim((string)($libraryMenuItem['link'] ?? '')));
+    $itemLinkFull = strtolower((string)($libraryMenuItem['link_full'] ?? ''));
+    if ($itemLink === 'viployalt' || strpos($itemLinkFull, 'subtopic=viployalt') !== false) {
+        $libraryMenuItem['name'] = 'VIP & Loyalty';
+    }
+}
+unset($libraryMenuItem);
 
 $hasVipLoyalt = false;
 foreach ($libraryMenuItems as $item) {
@@ -182,7 +185,7 @@ foreach ($libraryMenuItems as $item) {
 
 if (!$hasVipLoyalt) {
     array_unshift($libraryMenuItems, [
-        'name' => 'VIP & Loyalt',
+        'name' => 'VIP & Loyalty',
         'link' => 'viployalt',
         'link_full' => BASE_URL . '?subtopic=viployalt',
         'blank' => false,
@@ -212,7 +215,7 @@ $systemMenuItems = [
     ['name' => 'Tier System', 'link_full' => BASE_URL . '?subtopic=tiersystem', 'blank' => false],
     ['name' => 'Upgrade System', 'link_full' => BASE_URL . '?subtopic=upgradesystem', 'blank' => false],
     ['name' => 'Skill Gem System', 'link_full' => BASE_URL . '?subtopic=skillgemsystem', 'blank' => false],
-    ['name' => 'Supreme Tasks', 'link_full' => BASE_URL . '?subtopic=supremetasks', 'blank' => false],
+    ['name' => 'Taskfinder', 'link_full' => BASE_URL . '?subtopic=supremetasks', 'blank' => false],
     ['name' => 'Addon&Mount Bonuses', 'link_full' => BASE_URL . '?subtopic=addonmountbonuses', 'blank' => false],
     ['name' => "Elemental's Stones Bonuses", 'link_full' => BASE_URL . '?subtopic=elementalstonesbonuses', 'blank' => false],
 ];
@@ -221,6 +224,13 @@ $serverName = $config['lua']['serverName'] ?? 'RavynCore';
 $serverTagline = rc_t('Domine, Conquiste, Seja Lendário');
 $headerSubtitle = rc_t('Custom Map');
 $pageTitle = rc_t(!empty($title) ? $title : ucfirst((string)PAGE));
+$rc2PageTitleOverrides = [
+    'supremetasks' => 'Taskfinder',
+    'viployalt' => 'VIP & Loyalty',
+];
+if (isset($rc2PageTitleOverrides[(string)PAGE])) {
+    $pageTitle = $rc2PageTitleOverrides[(string)PAGE];
+}
 $launchTexts = [
     'pt-br' => [
         'eyebrow' => 'A contagem começou',
@@ -815,7 +825,16 @@ $rc2SidebarQuickLinks = $rc2QuickLinksArePageLinks ? $rc2PageQuickLinks : $quick
                 <h3><?= escapeHtml($pageTitle); ?></h3>
                 <div class="rc-panel-body rc-rich-content">
                     <?php $hooks->trigger(HOOK_TIBIACOM_BORDER_3); ?>
-                    <?= function_exists('rc_translate_html') ? rc_translate_html(template_place_holder('center_top') . $content) : template_place_holder('center_top') . $content; ?>
+                    <?php
+                    $rc2MainContentHtml = template_place_holder('center_top') . $content;
+                    if (function_exists('rc_translate_html')) {
+                        $rc2MainContentHtml = rc_translate_html($rc2MainContentHtml);
+                    }
+                    if ((string)PAGE === 'supremetasks') {
+                        $rc2MainContentHtml = str_replace(['Supreme Tasks', 'Supreme tasks'], 'Taskfinder', $rc2MainContentHtml);
+                    }
+                    ?>
+                    <?= $rc2MainContentHtml; ?>
                 </div>
             </section>
         </section>
