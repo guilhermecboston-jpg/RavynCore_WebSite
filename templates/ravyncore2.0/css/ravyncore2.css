@@ -1533,6 +1533,254 @@ body.rc-template-ravyncore2.rc-page-serverinfo .rc-rich-content .rc-si-stat-mp {
     color: var(--rc2-purple-hot) !important;
 }
 
+body.rc-template-ravyncore2 :where(.rc-btn-subtle, .rc-btn-block),
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-btn,
+    .rc-btn-subtle,
+    .rc-btn-primary,
+    .rc-btn-block,
+    .rc-character-mini-btn,
+    .rc-bazaar-view-btn,
+    .rc-cbz-buy-btn,
+    .rc-cbz-back-btn,
+    .rc-cbz-inline-btn,
+    .BigButtonText,
+    .MediumButtonText,
+    input[type="submit"],
+    input[type="button"],
+    button
+) {
+    border: 1px solid rgba(139, 61, 255, 0.56) !important;
+    border-radius: 8px !important;
+    background:
+        linear-gradient(180deg, rgba(45, 22, 72, 0.96), rgba(18, 13, 27, 0.98)) !important;
+    color: var(--rc2-text) !important;
+    text-shadow: none !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 215, 106, 0.05),
+        0 0 14px rgba(139, 61, 255, 0.16) !important;
+}
+
+body.rc-template-ravyncore2 :where(.rc-btn-subtle:hover, .rc-btn-subtle:focus-visible),
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-btn:hover,
+    .rc-btn:focus-visible,
+    .rc-btn-subtle:hover,
+    .rc-btn-subtle:focus-visible,
+    .rc-btn-primary:hover,
+    .rc-btn-primary:focus-visible,
+    .rc-character-mini-btn:hover,
+    .rc-bazaar-view-btn:hover,
+    .rc-cbz-buy-btn:hover,
+    .rc-cbz-back-btn:hover,
+    .rc-cbz-inline-btn:hover,
+    .BigButtonText:hover,
+    .MediumButtonText:hover,
+    input[type="submit"]:hover,
+    input[type="button"]:hover,
+    button:hover
+) {
+    border-color: rgba(199, 131, 255, 0.78) !important;
+    background:
+        linear-gradient(180deg, rgba(80, 36, 132, 0.98), rgba(35, 18, 56, 0.98)) !important;
+    color: #fff !important;
+    box-shadow:
+        0 0 22px rgba(139, 61, 255, 0.3),
+        inset 0 0 0 1px rgba(255, 215, 106, 0.08) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .CaptionInnerContainer,
+    .CaptionContainer,
+    .rc-title-ornate,
+    .rc-title-ornate-inline
+) {
+    border-color: rgba(212, 175, 55, 0.48) !important;
+    background:
+        radial-gradient(circle at 14% 0%, rgba(139, 61, 255, 0.26), transparent 36%),
+        linear-gradient(180deg, rgba(53, 16, 95, 0.92), rgba(18, 13, 27, 0.96)) !important;
+    color: var(--rc2-gold-hot) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 215, 106, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+        0 0 18px rgba(139, 61, 255, 0.16) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .CaptionInnerContainer .Text {
+    color: var(--rc2-gold-hot) !important;
+    font-family: var(--rc2-font-ui) !important;
+    text-shadow: 0 0 16px rgba(255, 215, 106, 0.16);
+}
+
+body.rc-template-ravyncore2.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer {
+    border-color: rgba(212, 175, 55, 0.48) !important;
+    background:
+        radial-gradient(circle at 14% 0%, rgba(139, 61, 255, 0.28), transparent 36%),
+        linear-gradient(180deg, rgba(53, 16, 95, 0.92), rgba(18, 13, 27, 0.96)) !important;
+}
+
+body.rc-template-ravyncore2.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .Text.rc-caption-title-force::before {
+    border-color: var(--rc2-gold-hot) !important;
+    box-shadow: 0 0 10px rgba(199, 131, 255, 0.34);
+}
+
+body.rc-template-ravyncore2.rc-page-accountmanagement .rc-rich-content .CaptionInnerContainer .Text.rc-caption-title-force::after {
+    background: var(--rc2-gold-hot) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-ticket-card,
+    .rc-ticket-toolbar,
+    .rc-ticket-filter,
+    .rc-ticket-manage-table-wrap,
+    .rc-ticket-manage-table,
+    .rc-ticket-description-full,
+    .rc-ticket-history,
+    .rc-ticket-message,
+    .rc-ticket-reply-form,
+    .rc-ticket-card-sub,
+    .rc-ticket-admin-reminder,
+    .rc-character-table,
+    .rc-character-table-wrap
+) {
+    border-color: rgba(212, 175, 55, 0.24) !important;
+    background:
+        radial-gradient(circle at 12% 0%, rgba(139, 61, 255, 0.12), transparent 34%),
+        linear-gradient(160deg, rgba(18, 15, 26, 0.94), rgba(8, 7, 12, 0.96)) !important;
+    color: var(--rc2-muted) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-ticket-table,
+    .rc-ticket-manage-table,
+    .rc-character-table
+) th {
+    border-color: rgba(212, 175, 55, 0.2) !important;
+    background: rgba(54, 16, 95, 0.34) !important;
+    color: var(--rc2-gold-hot) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-ticket-table,
+    .rc-ticket-manage-table,
+    .rc-character-table
+) td {
+    border-color: rgba(212, 175, 55, 0.14) !important;
+    background: rgba(8, 7, 12, 0.52) !important;
+    color: var(--rc2-muted) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-ticket-status {
+    border-color: rgba(199, 131, 255, 0.42) !important;
+    background: rgba(54, 16, 95, 0.18) !important;
+    color: var(--rc2-gold-hot) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-cbz-stepper-item,
+    #ProgressBar .SingleStepContainer,
+    .rc-cbz-profile,
+    .rc-cbz-section,
+    .rc-cbz-outfit,
+    .rc-cbz-equip,
+    .rc-cbz-content,
+    .rc-cbz-grid-two > div,
+    .rc-cbz-skills-grid > div,
+    .rc-cbz-mini-equip > div,
+    .rc-cbz-price-box,
+    .rc-cbz-list-card,
+    .rc-cbz-item-card,
+    .rc-cbz-item-icon,
+    .rc-cbz-item-tabs,
+    .rc-cbz-item-panel,
+    .rc-cbz-confirm-top .InnerTableContainer,
+    .rc-cbz-sale-compact .InnerTableContainer,
+    .rc-cbz-price-host .InnerTableContainer,
+    .rc-cbz-price-host .TableContent
+) {
+    border-color: rgba(212, 175, 55, 0.26) !important;
+    background:
+        radial-gradient(circle at 12% 0%, rgba(139, 61, 255, 0.14), transparent 34%),
+        linear-gradient(180deg, rgba(18, 15, 28, 0.94), rgba(8, 7, 12, 0.96)) !important;
+    color: var(--rc2-muted) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 215, 106, 0.035),
+        0 10px 24px rgba(0, 0, 0, 0.34) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-cbz-stepper-item.is-active,
+    #ProgressBar .SingleStepContainer:has(.StepIcon[src*="-green"]),
+    #ProgressBar .SingleStepContainer:has(.StepText)
+) {
+    border-color: rgba(199, 131, 255, 0.64) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 215, 106, 0.08),
+        0 0 18px rgba(139, 61, 255, 0.18) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-cbz-stepper-item span,
+    #ProgressBar .StepText,
+    .rc-cbz-profile strong,
+    .rc-cbz-section h3,
+    .rc-cbz-outfit h4,
+    .rc-cbz-equip h5,
+    .rc-cbz-item-meta strong,
+    .rc-cbz-list-head .AuctionCharacterName,
+    .rc-cbz-price-box strong
+) {
+    color: var(--rc2-text) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-cbz-tab,
+    .rc-cbz-tab.is-active,
+    .rc-cbz-tab:hover
+) {
+    border-color: rgba(139, 61, 255, 0.5) !important;
+    background: rgba(35, 18, 56, 0.9) !important;
+    color: var(--rc2-text) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-cbz-tab.is-active,
+    .rc-cbz-tab:hover
+) {
+    border-color: rgba(199, 131, 255, 0.76) !important;
+    color: #fff !important;
+    box-shadow: 0 0 14px rgba(139, 61, 255, 0.22) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content #ProgressBar .StepText {
+    font-family: var(--rc2-font-ui) !important;
+    font-size: 18px !important;
+    line-height: 1.2 !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content :where(
+    .rc-cbz-price-input,
+    input[name="auction_price"],
+    input[name="recovery_key"],
+    input[name="character_name"],
+    input[name="search"]
+) {
+    border-color: rgba(199, 131, 255, 0.46) !important;
+    background:
+        linear-gradient(180deg, rgba(20, 16, 31, 0.96), rgba(10, 8, 16, 0.98)) !important;
+    color: var(--rc2-text) !important;
+    box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.52),
+        0 0 14px rgba(139, 61, 255, 0.12) !important;
+}
+
+body.rc-template-ravyncore2 .rc-search-form input,
+body.rc-template-ravyncore2 .rc-search-form button {
+    border-color: rgba(139, 61, 255, 0.5) !important;
+    background:
+        linear-gradient(180deg, rgba(24, 17, 38, 0.94), rgba(10, 8, 16, 0.98)) !important;
+}
+
 body.rc-template-ravyncore2 .rc2-launch-banner {
     overflow: hidden;
     transform-origin: top center;
