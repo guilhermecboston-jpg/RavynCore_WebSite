@@ -735,6 +735,12 @@ body.rc-template-ravyncore2 .rc-panel > h3 {
     letter-spacing: 0;
 }
 
+body.rc-template-ravyncore2 .rc-panel-content > h3,
+body.rc-template-ravyncore2 .rc-rich-content .rc-st-page-title,
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-nav-below {
+    display: none !important;
+}
+
 body.rc-template-ravyncore2 .rc-panel-body,
 body.rc-template-ravyncore2 .rc-rich-content,
 body.rc-template-ravyncore2 .rc-status-line {
@@ -811,6 +817,29 @@ body.rc-template-ravyncore2 .rc-links a:hover::after,
 body.rc-template-ravyncore2 .rc-links a:focus-visible::after,
 body.rc-template-ravyncore2 .rc-btn-subtle:hover::after,
 body.rc-template-ravyncore2 .rc-btn-subtle:focus-visible::after {
+    width: calc(100% - 26px);
+    opacity: 1;
+}
+
+body.rc-template-ravyncore2 .rc-quick-panel.is-page-quick-links .rc-links a {
+    padding-left: 18px;
+}
+
+body.rc-template-ravyncore2 .rc-quick-panel.is-page-quick-links .rc-links a.is-active {
+    color: #fff;
+    border-color: rgba(199, 131, 255, 0.78);
+    background:
+        linear-gradient(95deg, rgba(54, 16, 95, 0.82) 0%, rgba(24, 20, 38, 0.9) 52%, rgba(91, 45, 160, 0.68) 100%);
+    box-shadow:
+        0 0 18px rgba(139, 61, 255, 0.24),
+        inset 0 0 0 1px rgba(199, 131, 255, 0.14);
+}
+
+body.rc-template-ravyncore2 .rc-quick-panel.is-page-quick-links .rc-links a.is-active::before {
+    transform: scaleY(1);
+}
+
+body.rc-template-ravyncore2 .rc-quick-panel.is-page-quick-links .rc-links a.is-active::after {
     width: calc(100% - 26px);
     opacity: 1;
 }
@@ -951,6 +980,80 @@ body.rc-template-ravyncore2 .rc-search-form input:focus {
         inset 0 0 8px rgba(0, 0, 0, 0.48),
         0 0 14px rgba(139, 61, 255, 0.24);
     outline: none;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-st-card {
+    border-color: rgba(212, 175, 55, 0.3) !important;
+    border-radius: 8px !important;
+    background:
+        radial-gradient(circle at 12% 0%, rgba(139, 61, 255, 0.13), transparent 34%),
+        linear-gradient(160deg, rgba(22, 18, 30, 0.96), rgba(8, 7, 12, 0.97)) !important;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 215, 106, 0.04),
+        0 10px 24px rgba(0, 0, 0, 0.42),
+        0 0 18px rgba(139, 61, 255, 0.08) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-st-card h3,
+body.rc-template-ravyncore2 .rc-rich-content .rc-casino-section-title {
+    color: var(--rc2-gold-hot) !important;
+    text-shadow: 0 0 16px rgba(255, 215, 106, 0.14);
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-st-card p,
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-subtitle,
+body.rc-template-ravyncore2 .rc-rich-content .rc-casino-hero-text,
+body.rc-template-ravyncore2 .rc-rich-content .rc-di-hero-text,
+body.rc-template-ravyncore2 .rc-rich-content .rc-di-lead,
+body.rc-template-ravyncore2 .rc-rich-content .rc-casino-roleta-note {
+    color: var(--rc2-muted) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-nav a {
+    border-color: rgba(139, 61, 255, 0.42) !important;
+    background: rgba(24, 13, 36, 0.78) !important;
+    color: var(--rc2-text) !important;
+    transition: color 0.22s ease, border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-nav a:hover,
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-nav a:focus-visible {
+    border-color: rgba(199, 131, 255, 0.72) !important;
+    background: rgba(139, 61, 255, 0.18) !important;
+    color: #fff !important;
+    box-shadow: 0 0 14px rgba(139, 61, 255, 0.22);
+    transform: translateY(-1px);
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-bf-table-wrap,
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-item-spot,
+body.rc-template-ravyncore2 .rc-rich-content .rc-st-feature-media {
+    border-color: rgba(212, 175, 55, 0.28) !important;
+    background:
+        radial-gradient(circle at center, rgba(139, 61, 255, 0.18), rgba(10, 8, 14, 0.9)) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-bf-table,
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-table {
+    background: rgba(10, 8, 14, 0.72) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-bf-table th,
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-table th {
+    border-color: rgba(212, 175, 55, 0.24) !important;
+    background: rgba(54, 16, 95, 0.3) !important;
+    color: var(--rc2-gold-hot) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-bf-table td,
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-table td {
+    border-color: rgba(212, 175, 55, 0.16) !important;
+    background: rgba(8, 7, 12, 0.54) !important;
+}
+
+body.rc-template-ravyncore2 .rc-rich-content .rc-bf-table tr:nth-child(even) td,
+body.rc-template-ravyncore2 .rc-rich-content .rc-tier-table tr:nth-child(even) td {
+    background: rgba(54, 16, 95, 0.12) !important;
 }
 
 body.rc-template-ravyncore2 .rc2-launch-banner {

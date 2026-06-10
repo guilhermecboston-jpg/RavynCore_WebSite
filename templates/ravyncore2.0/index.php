@@ -65,6 +65,62 @@ $rcBuildPageUrl = static function($page, array $params = []) use ($rcCurrentLang
     return BASE_URL . '?' . http_build_query($params);
 };
 
+if (!function_exists('rc2_extract_page_quick_links')) {
+    function rc2_extract_page_quick_links($html): array
+    {
+        $html = (string)$html;
+        $links = [];
+        $seen = [];
+
+        if ($html === '') {
+            return [];
+        }
+
+        if (preg_match_all('/<nav\b([^>]*)>(.*?)<\/nav>/is', $html, $navMatches, PREG_SET_ORDER)) {
+            foreach ($navMatches as $navMatch) {
+                $navAttrs = $navMatch[1] ?? '';
+                if (stripos($navAttrs, 'rc-tier-nav') === false) {
+                    continue;
+                }
+
+                if (!preg_match_all('/<a\b([^>]*)>(.*?)<\/a>/is', $navMatch[2] ?? '', $anchorMatches, PREG_SET_ORDER)) {
+                    continue;
+                }
+
+                foreach ($anchorMatches as $anchorMatch) {
+                    $anchorAttrs = $anchorMatch[1] ?? '';
+                    if (!preg_match('/\bhref\s*=\s*(["\'])(.*?)\1/i', $anchorAttrs, $hrefMatch)) {
+                        continue;
+                    }
+
+                    $href = html_entity_decode(trim((string)$hrefMatch[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                    if ($href === '' || $href[0] !== '#') {
+                        continue;
+                    }
+
+                    $label = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags((string)$anchorMatch[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+                    if ($label === '' || isset($seen[$href])) {
+                        continue;
+                    }
+
+                    $seen[$href] = true;
+                    $links[] = [
+                        'name' => $label,
+                        'url' => $href,
+                        'is_page_link' => true,
+                    ];
+
+                    if (count($links) >= 10) {
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        return $links;
+    }
+}
+
 $rcMenuGroups = [];
 if (!empty($menus)) {
     foreach ($menus as $categoryId => $items) {
@@ -388,6 +444,9 @@ $rc2CommunityLinks = [
 ];
 $rc2LandingPages = ['news', 'latestnews', 'lastnews', ''];
 $rc2IsLandingPage = in_array((string)PAGE, $rc2LandingPages, true);
+$rc2PageQuickLinks = $rc2IsLandingPage ? [] : rc2_extract_page_quick_links((string)$content);
+$rc2QuickLinksArePageLinks = !empty($rc2PageQuickLinks);
+$rc2SidebarQuickLinks = $rc2QuickLinksArePageLinks ? $rc2PageQuickLinks : $quickLinks;
 ?>
 <!doctype html>
 <html lang="<?= escapeHtml($rcHtmlLang); ?>">
@@ -725,12 +784,16 @@ $rc2IsLandingPage = in_array((string)PAGE, $rc2LandingPages, true);
                 </div>
             </section>
 
-            <section class="rc-panel">
+            <section class="rc-panel rc-quick-panel<?= $rc2QuickLinksArePageLinks ? ' is-page-quick-links' : ''; ?>">
                 <h3><?= escapeHtml(rc_t('Quick Links')); ?></h3>
-                <ul class="rc-links">
-                    <?php foreach ($quickLinks as $link): ?>
+                <ul class="rc-links rc-page-quick-links" data-rc-page-quick-links>
+                    <?php foreach ($rc2SidebarQuickLinks as $link): ?>
+                        <?php
+                        $isPageQuickLink = !empty($link['is_page_link']);
+                        $quickLinkLabel = $isPageQuickLink ? (string)$link['name'] : rc_t($link['name']);
+                        ?>
                         <li>
-                            <a href="<?= escapeHtml($link['url']); ?>"><?= escapeHtml(rc_t($link['name'])); ?></a>
+                            <a href="<?= escapeHtml($link['url']); ?>"<?= $isPageQuickLink ? ' class="js-rc-page-anchor"' : ''; ?>><?= escapeHtml($quickLinkLabel); ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
